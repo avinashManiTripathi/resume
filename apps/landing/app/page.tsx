@@ -5,18 +5,254 @@ import { Footer } from "@repo/ui/footer";
 export default function Home() {
   return (
     <main className="landing-page">
-      {/* Modern Navigation */}
+      {/* Mega Menu Navigation */}
       <nav className="nav">
         <div className="nav-container">
           <div className="logo">Resume<span className="logo-accent">Pro</span></div>
+
           <div className="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#pricing">Pricing</a>
+            {/* Product Dropdown */}
+            <div className="nav-item">
+              <button className="nav-trigger">
+                Product
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <div className="mega-dropdown mega-dropdown-wide">
+                <div className="dropdown-grid">
+                  <div className="dropdown-column">
+                    <a href="#features" className="dropdown-item">
+                      <div className="item-icon">🎯</div>
+                      <div className="item-text">
+                        <div className="item-title">Features</div>
+                        <div className="item-desc">Powerful resume building tools</div>
+                      </div>
+                    </a>
+                    <a href="/templates" className="dropdown-item">
+                      <div className="item-icon">📄</div>
+                      <div className="item-text">
+                        <div className="item-title">Templates</div>
+                        <div className="item-desc">ATS-friendly designs</div>
+                      </div>
+                    </a>
+                    <a href="/pricing" className="dropdown-item">
+                      <div className="item-icon">💎</div>
+                      <div className="item-text">
+                        <div className="item-title">Pricing</div>
+                        <div className="item-desc">Simple, transparent pricing</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div className="dropdown-column">
+                    <a href="/use-cases" className="dropdown-item">
+                      <div className="item-icon">👥</div>
+                      <div className="item-text">
+                        <div className="item-title">Use Cases</div>
+                        <div className="item-desc">For students, professionals & more</div>
+                      </div>
+                    </a>
+                    <a href="/examples" className="dropdown-item">
+                      <div className="item-icon">✨</div>
+                      <div className="item-text">
+                        <div className="item-title">Examples</div>
+                        <div className="item-desc">Real resume showcases</div>
+                      </div>
+                    </a>
+                    <a href="/integrations" className="dropdown-item">
+                      <div className="item-icon">🔗</div>
+                      <div className="item-text">
+                        <div className="item-title">Integrations</div>
+                        <div className="item-desc">Connect with LinkedIn & more</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Resources Dropdown */}
+            <div className="nav-item">
+              <button className="nav-trigger">
+                Resources
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <div className="mega-dropdown mega-dropdown-wide">
+                <div className="dropdown-grid">
+                  <div className="dropdown-column">
+                    <div className="column-header">Guides</div>
+                    <a href="/resources/resume-guide" className="dropdown-item">
+                      <div className="item-icon">📖</div>
+                      <div className="item-text">
+                        <div className="item-title">Resume Writing Guide</div>
+                        <div className="item-desc">Complete guide to writing resumes</div>
+                      </div>
+                    </a>
+                    <a href="/resources/cover-letter-guide" className="dropdown-item">
+                      <div className="item-icon">✍️</div>
+                      <div className="item-text">
+                        <div className="item-title">Cover Letter Guide</div>
+                        <div className="item-desc">Write compelling cover letters</div>
+                      </div>
+                    </a>
+                    <a href="/resources/ats-guide" className="dropdown-item">
+                      <div className="item-icon">🤖</div>
+                      <div className="item-text">
+                        <div className="item-title">ATS Guide</div>
+                        <div className="item-desc">Beat applicant tracking systems</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div className="dropdown-column">
+                    <div className="column-header">Learn</div>
+                    <a href="/blog" className="dropdown-item">
+                      <div className="item-icon">📝</div>
+                      <div className="item-text">
+                        <div className="item-title">Blog</div>
+                        <div className="item-desc">Career tips and insights</div>
+                      </div>
+                    </a>
+                    <a href="/resources/career-tips" className="dropdown-item">
+                      <div className="item-icon">💼</div>
+                      <div className="item-text">
+                        <div className="item-title">Career Tips</div>
+                        <div className="item-desc">Job search strategies</div>
+                      </div>
+                    </a>
+                    <a href="/resources/industry-examples" className="dropdown-item">
+                      <div className="item-icon">🏭</div>
+                      <div className="item-text">
+                        <div className="item-title">Industry Examples</div>
+                        <div className="item-desc">Resumes by industry</div>
+                      </div>
+                    </a>
+                    <a href="/help" className="dropdown-item">
+                      <div className="item-icon">❓</div>
+                      <div className="item-text">
+                        <div className="item-title">Help & FAQ</div>
+                        <div className="item-desc">Get answers quickly</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Company Dropdown */}
+            <div className="nav-item">
+              <button className="nav-trigger">
+                Company
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <div className="mega-dropdown mega-dropdown-wide">
+                <div className="dropdown-grid">
+                  <div className="dropdown-column">
+                    <div className="column-header">About</div>
+                    <a href="/about" className="dropdown-item">
+                      <div className="item-icon">🏢</div>
+                      <div className="item-text">
+                        <div className="item-title">About Us</div>
+                        <div className="item-desc">Our mission and story</div>
+                      </div>
+                    </a>
+                    <a href="/contact" className="dropdown-item">
+                      <div className="item-icon">✉️</div>
+                      <div className="item-text">
+                        <div className="item-title">Contact</div>
+                        <div className="item-desc">Get in touch with us</div>
+                      </div>
+                    </a>
+                  </div>
+                  <div className="dropdown-column">
+                    <div className="column-header">Trust</div>
+                    <a href="/reviews" className="dropdown-item">
+                      <div className="item-icon">⭐</div>
+                      <div className="item-text">
+                        <div className="item-title">Reviews</div>
+                        <div className="item-desc">What our users say</div>
+                      </div>
+                    </a>
+                    <a href="/success-stories" className="dropdown-item">
+                      <div className="item-icon">🎉</div>
+                      <div className="item-text">
+                        <div className="item-title">Success Stories</div>
+                        <div className="item-desc">Real career transformations</div>
+                      </div>
+                    </a>
+                    <a href="/vs" className="dropdown-item">
+                      <div className="item-icon">⚖️</div>
+                      <div className="item-text">
+                        <div className="item-title">Comparison</div>
+                        <div className="item-desc">Why choose ResumePro</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <a href="/editor" className="nav-cta">Start Free →</a>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button className="mobile-menu-btn" id="mobile-menu-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className="mobile-menu" id="mobile-menu">
+          <div className="mobile-section">
+            <div className="mobile-section-title">Product</div>
+            <a href="#features" className="mobile-link">🎯 Features</a>
+            <a href="/templates" className="mobile-link">📄 Templates</a>
+            <a href="/pricing" className="mobile-link">💎 Pricing</a>
+            <a href="/use-cases" className="mobile-link">👥 Use Cases</a>
+            <a href="/examples" className="mobile-link">✨ Examples</a>
+            <a href="/integrations" className="mobile-link">🔗 Integrations</a>
+          </div>
+          <div className="mobile-section">
+            <div className="mobile-section-title">Resources</div>
+            <a href="/resources/resume-guide" className="mobile-link">📖 Resume Guide</a>
+            <a href="/resources/cover-letter-guide" className="mobile-link">✍️ Cover Letter Guide</a>
+            <a href="/resources/ats-guide" className="mobile-link">🤖 ATS Guide</a>
+            <a href="/blog" className="mobile-link">📝 Blog</a>
+            <a href="/resources/career-tips" className="mobile-link">💼 Career Tips</a>
+            <a href="/resources/industry-examples" className="mobile-link">🏭 Industry Examples</a>
+            <a href="/help" className="mobile-link">❓ Help & FAQ</a>
+          </div>
+          <div className="mobile-section">
+            <div className="mobile-section-title">Company</div>
+            <a href="/about" className="mobile-link">🏢 About Us</a>
+            <a href="/contact" className="mobile-link">✉️ Contact</a>
+            <a href="/reviews" className="mobile-link">⭐ Reviews</a>
+            <a href="/success-stories" className="mobile-link">🎉 Success Stories</a>
+            <a href="/vs" className="mobile-link">⚖️ Comparison</a>
+          </div>
+          <a href="/editor" className="mobile-cta">Start Free →</a>
         </div>
       </nav>
+
+      <script dangerouslySetInnerHTML={{
+        __html: `
+        document.addEventListener('DOMContentLoaded', function() {
+          const mobileBtn = document.getElementById('mobile-menu-btn');
+          const mobileMenu = document.getElementById('mobile-menu');
+          
+          if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', function() {
+              mobileBtn.classList.toggle('active');
+              mobileMenu.classList.toggle('active');
+            });
+          }
+        });
+      `}} />
 
       {/* Split Hero Section */}
       <section className="hero">
@@ -295,7 +531,7 @@ export default function Home() {
         .nav {
           position: sticky;
           top: 0;
-          background: rgba(255, 255, 255, 0.8);
+          background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);
           border-bottom: 1px solid #E5E7EB;
           z-index: 1000;
@@ -309,12 +545,14 @@ export default function Home() {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          position: relative;
         }
 
         .logo {
           font-size: 1.5rem;
           font-weight: 800;
           color: #111827;
+          cursor: pointer;
         }
 
         .logo-accent {
@@ -323,30 +561,258 @@ export default function Home() {
 
         .nav-links {
           display: flex;
-          gap: 2rem;
+          gap: 0.5rem;
           align-items: center;
         }
 
-        .nav-links a {
+        /* Mega Menu Items */
+        .nav-item {
+          position: relative;
+        }
+
+        .nav-trigger {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          background: none;
+          border: none;
           color: #6B7280;
           font-weight: 500;
+          font-size: 1rem;
+          padding: 0.5rem 1rem;
+          cursor: pointer;
           transition: color 0.2s;
+          border-radius: 0.5rem;
         }
 
-        .nav-links a:hover {
+        .nav-trigger:hover {
           color: #111827;
+          background: #F3F4F6;
         }
 
+        .nav-trigger svg {
+          transition: transform 0.2s;
+        }
+
+        .nav-item:hover .nav-trigger svg {
+          transform: rotate(180deg);
+        }
+
+        /* Mega Dropdown */
+        .mega-dropdown {
+          position: absolute;
+          top: calc(100% + 0.5rem);
+          left: 50%;
+          transform: translateX(-50%);
+          background: white;
+          border-radius: 1rem;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          padding: 0.5rem;
+          min-width: 280px;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.2s ease-in-out;
+          pointer-events: none;
+          border: 1px solid #E5E7EB;
+        }
+
+        .nav-item:hover .mega-dropdown {
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+          transform: translateX(-50%) translateY(0);
+        }
+
+        /* Wide Dropdown for 2-column layout */
+        .mega-dropdown-wide {
+          min-width: 520px;
+        }
+
+        /* Dropdown Grid */
+        .dropdown-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0.5rem;
+        }
+
+        .dropdown-column {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .column-header {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #6B7280;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          padding: 0.5rem 1rem 0.25rem;
+        }
+
+        .dropdown-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.875rem 1rem;
+          border-radius: 0.75rem;
+          transition: all 0.15s;
+          text-decoration: none;
+        }
+
+        .dropdown-item:hover {
+          background: #F9FAFB;
+        }
+
+        .item-icon {
+          font-size: 1.75rem;
+          flex-shrink: 0;
+        }
+
+        .item-text {
+          flex: 1;
+        }
+
+        .item-title {
+          font-weight: 600;
+          color: #111827;
+          font-size: 0.9375rem;
+          margin-bottom: 0.125rem;
+        }
+
+        .item-desc {
+          font-size: 0.8125rem;
+          color: #6B7280;
+          line-height: 1.3;
+        }
+
+        /* CTA Button */
         .nav-cta {
           background: #111827;
           color: white !important;
-          padding: 0.5rem 1.5rem;
+          padding: 0.625rem 1.5rem;
           border-radius: 0.5rem;
           font-weight: 600;
+          transition: all 0.2s;
+          text-decoration: none;
+          margin-left: 0.5rem;
         }
 
         .nav-cta:hover {
           background: #1F2937;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+          display: none;
+          flex-direction: column;
+          gap: 4px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+        }
+
+        .mobile-menu-btn span {
+          width: 24px;
+          height: 2px;
+          background: #111827;
+          transition: all 0.3s;
+          border-radius: 2px;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+          transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+          transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+          display: none;
+          position: fixed;
+          top: 73px;
+          left: 0;
+          right: 0;
+          background: white;
+          border-bottom: 1px solid #E5E7EB;
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease-in-out;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.active {
+          max-height: calc(100vh - 73px);
+          overflow-y: auto;
+        }
+
+        .mobile-section {
+          padding: 1.5rem 2rem;
+          border-bottom: 1px solid #F3F4F6;
+        }
+
+        .mobile-section-title {
+          font-weight: 700;
+          color: #111827;
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 1rem;
+        }
+
+        .mobile-link {
+          display: block;
+          padding: 0.75rem 0;
+          color: #6B7280;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.2s;
+        }
+
+        .mobile-link:hover {
+          color: #111827;
+        }
+
+        .mobile-cta {
+          display: block;
+          margin: 1.5rem 2rem;
+          background: #111827;
+          color: white;
+          padding: 0.875rem 1.5rem;
+          border-radius: 0.5rem;
+          font-weight: 600;
+          text-align: center;
+          text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .nav-links {
+            display: none;
+          }
+
+          .mobile-menu-btn {
+            display: flex;
+          }
+
+          .mobile-menu {
+            display: block;
+          }
         }
 
         /* Hero Section */
