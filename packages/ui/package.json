@@ -3,7 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
-    "./*": "./src/*.tsx"
+    "./*": "./src/*.tsx",
+    "./hero": "./src/hero.tsx",
+    "./feature-card": "./src/feature-card.tsx",
+    "./cta-section": "./src/cta-section.tsx",
+    "./footer": "./src/footer.tsx",
+    "./header": "./src/header.tsx",
+    "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx",
+    "./code": "./src/code.tsx",
+    "./input": "./src/input.tsx",
+    "./testimonials": "./src/testimonials.tsx",
+    "./pricing": "./src/pricing.tsx",
+    "./stats": "./src/stats.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

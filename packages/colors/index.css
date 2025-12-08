@@ -1,38 +1,208 @@
-
 :root {
-    /* Primary Blue */
-    --blue-100: #223DC5;
-    --blue-70: #6F84E6;
-    --blue-55: #8F9FEC;
-    --blue-35: #B8C2F3;
-    --blue-25: #CCD3F6;
-    --blue-15: #E1E5FA;
+  /* ===== Base Color Palette ===== */
   
-    /* Secondary Red */
-    --red-100: #E5503A;
-    --red-70: #F59081;
-    --red-55: #F8A89D;
-    --red-35: #FBC8C1;
-    --red-25: #FCD7D2;
-    --red-15: #FDE8E4;
+  /* Primary Blue */
+  --blue-100: #223DC5;
+  --blue-70: #6F84E6;
+  --blue-55: #8F9FEC;
+  --blue-35: #B8C2F3;
+  --blue-25: #CCD3F6;
+  --blue-15: #E1E5FA;
+
+  /* Secondary Red */
+  --red-100: #E5503A;
+  --red-70: #F59081;
+  --red-55: #F8A89D;
+  --red-35: #FBC8C1;
+  --red-25: #FCD7D2;
+  --red-15: #FDE8E4;
+
+  /* Yellow */
+  --yellow-100: #FFD053;
+  --yellow-70: #FFE39A;
+  --yellow-55: #FFEAB0;
+  --yellow-35: #FFF2CD;
+  --yellow-25: #FFF5DB;
+  --yellow-15: #FFF9EA;
+
+  /* Neutral */
+  --black: #212121;
+  --grey-1: #5C5C5C;
+  --grey-2: #A4A4A4;
+  --grey-3: #B6B6B6;
+  --grey-4: #CECECE;
+  --grey-5: #E0E0E0;
+  --grey-6: #F0F0F0;
+  --grey-7: #F7F7F7;
+  --white: #FFFFFF;
+
+  /* ===== Semantic Colors ===== */
   
-    /* Yellow */
-    --yellow-100: #FFD053;
-    --yellow-70: #FFE39A;
-    --yellow-55: #FFEAB0;
-    --yellow-35: #FFF2CD;
-    --yellow-25: #FFF5DB;
-    --yellow-15: #FFF9EA;
-  
-    /* Neutral */
-    --black: #212121;
-    --grey-1: #5C5C5C;
-    --grey-2: #A4A4A4;
-    --grey-3: #B6B6B6;
-    --grey-4: #CECECE;
-    --grey-5: #E0E0E0;
-    --grey-6: #F0F0F0;
-    --grey-7: #F7F7F7;
-    --white: #FFFFFF;
+  /* Primary - Main brand color */
+  --color-primary: var(--blue-100);
+  --color-primary-hover: #1a2f9e;
+  --color-primary-light: var(--blue-35);
+  --color-primary-lighter: var(--blue-15);
+
+  /* Secondary - Accent color */
+  --color-secondary: var(--red-100);
+  --color-secondary-hover: #c43e2a;
+  --color-secondary-light: var(--red-35);
+  --color-secondary-lighter: var(--red-15);
+
+  /* Accent - Highlight color */
+  --color-accent: var(--yellow-100);
+  --color-accent-hover: #e6b83d;
+  --color-accent-light: var(--yellow-35);
+
+  /* Success */
+  --color-success: #10b981;
+  --color-success-hover: #059669;
+  --color-success-light: #d1fae5;
+
+  /* Danger */
+  --color-danger: var(--red-100);
+  --color-danger-hover: var(--red-70);
+  --color-danger-light: var(--red-15);
+
+  /* Warning */
+  --color-warning: var(--yellow-100);
+  --color-warning-hover: var(--yellow-70);
+  --color-warning-light: var(--yellow-15);
+
+  /* Info */
+  --color-info: var(--blue-70);
+  --color-info-hover: var(--blue-100);
+  --color-info-light: var(--blue-15);
+
+  /* ===== Background Colors ===== */
+  --bg-primary: var(--white);
+  --bg-secondary: var(--grey-7);
+  --bg-tertiary: var(--grey-6);
+  --bg-dark: var(--black);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* ===== Text Colors ===== */
+  --text-primary: var(--black);
+  --text-secondary: var(--grey-1);
+  --text-tertiary: var(--grey-2);
+  --text-muted: var(--grey-3);
+  --text-on-primary: var(--white);
+  --text-on-dark: var(--white);
+
+  /* ===== Border Colors ===== */
+  --border-primary: var(--grey-5);
+  --border-secondary: var(--grey-6);
+  --border-focus: var(--blue-100);
+  --border-error: var(--red-100);
+
+  /* ===== Input Colors ===== */
+  --input-border: #D0D5DD;
+  --input-bg: var(--grey-7);
+  --input-text: var(--black);
+  --input-placeholder: var(--grey-3);
+  --input-focus-border: var(--blue-100);
+  --input-disabled-bg: var(--grey-6);
+
+  /* ===== Gradients ===== */
+  --gradient-primary: linear-gradient(135deg, var(--blue-100) 0%, var(--blue-70) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--red-100) 0%, var(--red-70) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--yellow-100) 0%, var(--yellow-70) 100%);
+  --gradient-hero: linear-gradient(135deg, #1e3a8a 0%, var(--blue-100) 50%, var(--blue-70) 100%);
+  --gradient-dark: linear-gradient(180deg, var(--black) 0%, var(--grey-1) 100%);
+  --gradient-light: linear-gradient(180deg, var(--white) 0%, var(--grey-7) 100%);
+
+  /* ===== Shadows ===== */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* ===== Spacing Scale ===== */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+  --spacing-3xl: 4rem;      /* 64px */
+  --spacing-4xl: 6rem;      /* 96px */
+
+  /* ===== Border Radius ===== */
+  --radius-sm: 0.25rem;     /* 4px */
+  --radius-md: 0.5rem;      /* 8px */
+  --radius-lg: 0.75rem;     /* 12px */
+  --radius-xl: 1rem;        /* 16px */
+  --radius-2xl: 1.5rem;     /* 24px */
+  --radius-full: 9999px;
+
+  /* ===== Typography Scale ===== */
+  --font-size-xs: 0.75rem;      /* 12px */
+  --font-size-sm: 0.875rem;     /* 14px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 1.25rem;      /* 20px */
+  --font-size-2xl: 1.5rem;      /* 24px */
+  --font-size-3xl: 1.875rem;    /* 30px */
+  --font-size-4xl: 2.25rem;     /* 36px */
+  --font-size-5xl: 3rem;        /* 48px */
+  --font-size-6xl: 3.75rem;     /* 60px */
+
+  /* ===== Font Weights ===== */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* ===== Transitions ===== */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* ===== Z-Index Scale ===== */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}
+
+/* ===== Dark Mode ===== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Background Colors */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
+
+    /* Text Colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-muted: #64748b;
+
+    /* Border Colors */
+    --border-primary: #334155;
+    --border-secondary: #1e293b;
+
+    /* Input Colors */
+    --input-bg: #1e293b;
+    --input-border: #334155;
+    --input-text: #f1f5f9;
+
+    /* Shadows (darker for dark mode) */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
-  
+}
