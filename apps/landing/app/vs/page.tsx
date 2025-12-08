@@ -1,10 +1,13 @@
 "use client";
 
 import { Footer } from "@repo/ui/footer";
+import { Navigation } from "../../components/Navigation";
 
 export default function ComparisonPage() {
     return (
         <main className="page">
+            <Navigation />
+
             <section className="hero-simple">
                 <div className="container">
                     <h1>Why Choose ResumePro?</h1>

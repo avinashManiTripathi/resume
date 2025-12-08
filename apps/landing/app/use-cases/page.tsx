@@ -1,10 +1,13 @@
 "use client";
 
 import { Footer } from "@repo/ui/footer";
+import { Navigation } from "../../components/Navigation";
 
 export default function UseCasesPage() {
   return (
     <main className="page">
+      <Navigation />
+
       {/* Hero Section */}
       <section className="hero-simple">
         <div className="container">
