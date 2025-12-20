@@ -1,183 +1,274 @@
 import express from "express";
-import { htmlToPdf } from "./utils";
+import { htmlToPdf } from "@repo/utils-server"
+
+import bodyParser from "body-parser";
+import cors from "cors";
 
 const app = express();
 
-app.get("/convert-html-to-pdf", async (req, res) => {
+app.use(cors());
+
+app.use(bodyParser.json());
 
 
-  const html = `<!DOCTYPE html>
+const userInfo = {
+  "personalInfo": {
+    "firstName": "John Bro",
+    "lastName": "Doe",
+    "jobTitle": "Full Stack Developer",
+    "summary": "Experienced Full Stack Developer with 5+ years of experience building scalable web applications and REST APIs.",
+    "email": "john.doe@email.com",
+    "phone": "+1-555-123-4567",
+    "address": "123 Main Street",
+    "city": "San Francisco",
+    "state": "California",
+    "country": "USA",
+    "postalCode": "94105",
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "github": "https://github.com/johndoe",
+    "portfolio": "https://johndoe.dev"
+  },
+
+  "education": [
+    {
+      "degree": "Bachelor of Technology",
+      "fieldOfStudy": "Computer Science",
+      "institution": "University of California",
+      "location": "Berkeley, CA",
+      "startDate": "2015-08",
+      "endDate": "2019-05",
+      "grade": "3.7 GPA",
+      "description": "Focused on software engineering, data structures, and web development."
+    }
+  ],
+
+  "experience": [
+    {
+      "jobTitle": "Senior Software Engineer",
+      "company": "Tech Solutions Inc.",
+      "location": "San Francisco, CA",
+      "startDate": "2021-01",
+      "endDate": "",
+      "currentlyWorking": true,
+      "responsibilities": [
+        "Decccccccccccccveloped REST APIs using Node.js and Express",
+        "Built rescccponsive UI using React and Tailwind CSS",
+        "Improved accccpplication performance by 30%",
+        "Mentored junior developers"
+      ]
+    },
+    {
+      "jobTitle": "Software Developer",
+      "company": "Innovate Labs",
+      "location": "San Jose, CA",
+      "startDate": "2019-06",
+      "endDate": "2020-12",
+      "currentlyWorking": false,
+      "responsibilities": [
+        "Designed frontend components using Angular",
+        "Integrated third-party APIs",
+        "Collaborated with cross-functional teams"
+      ]
+    }
+  ],
+
+  "skills": [
+    { "name": "JavaScript", "level": "Expert" },
+    { "name": "React", "level": "Advanced" },
+    { "name": "Node.js", "level": "Advanced" },
+    { "name": "MongoDB", "level": "Intermediate" },
+    { "name": "Docker", "level": "Intermediate" }
+  ],
+
+  "projects": [
+    {
+      "title": "E-commerce Platform",
+      "description": "A full-featured e-commerce web application with payment integration.",
+      "technologies": ["React", "Node.js", "MongoDB", "Stripe"],
+      "link": "https://github.com/johndoe/ecommerce-platform"
+    },
+    {
+      "title": "Task Management App",
+      "description": "A productivity app to manage daily tasks and deadlines.",
+      "technologies": ["Vue.js", "Firebase"],
+      "link": "https://taskapp.johndoe.dev"
+    }
+  ],
+
+  "certifications": [
+    {
+      "name": "AWS Certified Developer – Associate",
+      "organization": "Amazon Web Services",
+      "issueDate": "2022-06",
+      "expiryDate": "2025-06",
+      "credentialUrl": "https://aws.amazon.com/certification/"
+    }
+  ],
+
+  "languages": [
+    { "language": "English", "proficiency": "Native" },
+    { "language": "Spanish", "proficiency": "Intermediate" }
+  ],
+
+  "achievements": [
+    "Employee of the Year – 2022",
+    "Winner of Internal Hackathon 2021"
+  ],
+
+  "hobbies": [
+    "Open-source contribution",
+    "Photography",
+    "Cycling"
+  ],
+
+  "references": [
+    {
+      "name": "Jane Smith",
+      "designation": "Engineering Manager",
+      "company": "Tech Solutions Inc.",
+      "email": "jane.smith@techsolutions.com",
+      "phone": "+1-555-987-6543"
+    }
+  ],
+
+  "settings": {
+    "resumeTemplate": "modern",
+    "font": "Roboto",
+    "color": "#1a73e8",
+    "pageSize": "A4"
+  }
+}
+
+
+
+function generateResumeHTML(userInfo: any) {
+  const { personalInfo = {}, experience, education, skills, languages, achievements } = userInfo;
+
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Herman Walton - Financial Analyst</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .divider {
-            border-top: 2px solid #000;
-            margin: 1.5rem 0;
-        }
-        .section-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .company-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        .skill-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .skill-table td {
-            padding: 0.25rem 0;
-            vertical-align: top;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>${personalInfo.firstName} ${personalInfo.lastName} - Resume</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-4xl mx-auto bg-white shadow-md p-8">
-        <!-- Header Section -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-2">HERMAN WALTON</h1>
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">FINANCIAL ANALYST</h2>
-            <div class="text-gray-600 mb-4">
-                <p>Market Street 12, New York, 1021, The USA | (412) 479-6342 | example@gmail.com</p>
-            </div>
-            <div class="divider"></div>
-        </header>
 
-        <!-- Main Content -->
-        <main>
-            <!-- Summary Section -->
-            <section class="mb-8">
-                <h2 class="section-title">SUMMARY</h2>
-                <p class="text-gray-700 leading-relaxed">
-                    Experienced and driven Financial Analyst with an impressive background of managing multi-million dollar budgets while providing analysis and account support within product development departments. Worked to reduce business expenses and develop logical and advantageous operating plan budgets. Experience creating quarterly accruals based on trends and forecasted expenses.
-                </p>
-            </section>
+<body class="font-sans">
+  <div class="max-w-4xl mx-auto bg-white">
 
-            <!-- Professional Experience -->
-            <section class="mb-8">
-                <h2 class="section-title">PROFESSIONAL EXPERIENCE</h2>
-                
-                <!-- GEO Corp Experience -->
-                <div class="mb-6">
-                    <h3 class="company-title">Financial Analyst, GEO Corp.</h3>
-                    <ul class="list-disc pl-5 text-gray-700 space-y-1">
-                        <li>Created budgets and ensured that labor and material costs were decreased by 15 percent.</li>
-                        <li>Created financial reports on completed projects, indicating advantageous results.</li>
-                        <li>Generated financial statements including cash flow charts and balance sheets.</li>
-                        <li>Created analysis and performance reports for management teams to review.</li>
-                        <li>Introduced and implemented a different type of software to enhance communication of different organization.</li>
-                    </ul>
-                </div>
-                
-                <!-- Sisco Enterprises Experience -->
-                <div>
-                    <h3 class="company-title">Financial Analyst, Sisco Enterprises</h3>
-                    <ul class="list-disc pl-5 text-gray-700 space-y-1">
-                        <li>Provide reports, ad-hoc analysis, annual operations plan budgets, monthly cash forecasts, and revenue forecasts.</li>
-                        <li>Analyzed supplier contracts and advised in negotiations bringing budgets down by 6%.</li>
-                        <li>Created weekly labor finance reports and presented the results to management.</li>
-                    </ul>
-                </div>
-            </section>
+    <!-- Header -->
+    <header class="text-center mb-6">
+      <h1 class="text-3xl font-bold">
+        ${personalInfo.firstName.toUpperCase()} ${personalInfo.lastName.toUpperCase()}
+      </h1>
+      <h2 class="text-xl text-gray-600">${personalInfo.jobTitle}</h2>
+      <p class="text-gray-500 mt-2">
+        ${personalInfo.address}, ${personalInfo.city}, ${personalInfo.state}, ${personalInfo.country} |
+        ${personalInfo.phone} | ${personalInfo.email}
+      </p>
+      <hr class="my-4" />
+    </header>
 
-            <!-- Education Section -->
-            <section class="mb-8">
-                <h2 class="section-title">EDUCATION</h2>
-                
-                <table class="w-full mb-4">
-                    <tbody>
-                        <tr>
-                            <td class="font-medium py-1">Diploma in Computer Engineering</td>
-                            <td class="text-right py-1">Aug 2006 — Oct 2008</td>
-                        </tr>
-                        <tr>
-                            <td class="text-gray-600 pb-2" colspan="2">University of Arizona</td>
-                        </tr>
-                        <tr>
-                            <td class="text-gray-600 pb-4" colspan="2">Graduated with High Honors.</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div>
-                    <p class="font-medium">Bachelor in Computer Engineering</p>
-                    <p class="text-gray-600">University of Arizona</p>
-                    <ul class="list-disc pl-5 text-gray-700 mt-1">
-                        <li>Graduated with High Honors.</li>
-                    </ul>
-                </div>
-            </section>
+    <!-- Summary -->
+    <section class="mb-6">
+      <h3 class="font-semibold uppercase mb-2">Summary</h3>
+      <p class="text-gray-700">${personalInfo.summary}</p>
+    </section>
 
-            <!-- Technical Skills -->
-            <section class="mb-8">
-                <h2 class="section-title">TECHNICAL SKILLS</h2>
-                
-                <table class="skill-table">
-                    <tr>
-                        <td class="font-medium">Solution Strategies</td>
-                        <td class="font-medium">Analytical Thinker</td>
-                        <td class="font-medium">Innovation</td>
-                        <td class="font-medium">Agile Methodologies</td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium">Effective Team leader</td>
-                        <td class="font-medium">Market Assessment</td>
-                        <td class="font-medium">Collaboration</td>
-                        <td class="font-medium">Creative Problem Solving</td>
-                    </tr>
-                    <tr>
-                        <td class="font-medium">Customer-centric Selling</td>
-                        <td class="font-medium">Trend Analysis</td>
-                        <td class="font-medium">Source Control</td>
-                        <td class="font-medium">Networking</td>
-                    </tr>
-                </table>
-            </section>
+    <!-- Experience -->
+    <section class="mb-6">
+      <h3 class="font-semibold uppercase mb-2">Professional Experience</h3>
 
-            <!-- Additional Information -->
-            <section>
-                <h2 class="section-title">ADDITIONAL INFORMATION</h2>
-                
-                <div class="flex flex-col md:flex-row md:space-x-12">
-                    <div class="mb-4 md:mb-0">
-                        <p class="font-medium">Languages:</p>
-                        <p class="text-gray-700">English, French</p>
-                    </div>
-                    
-                    <div class="mb-4 md:mb-0">
-                        <p class="font-medium">Certificates:</p>
-                        <p class="text-gray-700">Financial Analyst License</p>
-                    </div>
-                    
-                    <div>
-                        <p class="font-medium">Awards/Activities:</p>
-                        <p class="text-gray-700">Most Innovate Employer of the Year (2011), Overall Best Employee Division Two (2009)</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
+      ${experience.map((exp: any) => `
+        <div class="mb-4">
+          <h4 class="font-medium">
+            ${exp.jobTitle} – ${exp.company}
+          </h4>
+          <p class="text-sm text-gray-500">
+            ${exp.startDate} – ${exp.currentlyWorking ? "Present" : exp.endDate}
+          </p>
+          <ul class="list-disc pl-5 mt-1 text-gray-700">
+            ${exp.responsibilities.map((r: any) => `<li>${r}</li>`).join("")}
+          </ul>
+        </div>
+      `).join("")}
+    </section>
+
+    <!-- Education -->
+    <section class="mb-6">
+      <h3 class="font-semibold uppercase mb-2">Education</h3>
+
+      ${education.map((edu: any) => `
+        <div class="mb-3">
+          <p class="font-medium">
+            ${edu.degree} in ${edu.fieldOfStudy}
+          </p>
+          <p class="text-gray-600">
+            ${edu.institution} (${edu.startDate} – ${edu.endDate})
+          </p>
+          <p class="text-sm text-gray-500">${edu.description}</p>
+        </div>
+      `).join("")}
+    </section>
+
+    <!-- Skills -->
+    <section class="mb-6">
+      <h3 class="font-semibold uppercase mb-2">Skills</h3>
+      <ul class="grid grid-cols-2 gap-2 text-gray-700">
+        ${skills.map((skill: any) => `<li>${skill.name} (${skill.level})</li>`).join("")}
+      </ul>
+    </section>
+
+    <!-- Languages -->
+    <section class="mb-6">
+      <h3 class="font-semibold uppercase mb-2">Languages</h3>
+      <p class="text-gray-700">
+        ${languages.map((l: any) => `${l.language} (${l.proficiency})`).join(", ")}
+      </p>
+    </section>
+
+    <!-- Achievements -->
+    <section>
+      <h3 class="font-semibold uppercase mb-2">Achievements</h3>
+      <ul class="list-disc pl-5 text-gray-700">
+        ${achievements.map((a: any) => `<li>${a}</li>`).join("")}
+      </ul>
+    </section>
+
+  </div>
 </body>
 </html>`;
+}
 
-  // Convert HTML to PDF
-  htmlToPdf(html, 'output.pdf');
-  const pdf = await htmlToPdf(html, "output.pdf");
-  res.json({ message: "PDF generated successfully" });
+
+app.post("/convert-html-to-pdf", async (req, res) => {
+
+  const user = JSON.parse(JSON.stringify(userInfo));
+  user.personalInfo.firstName = req.body.firstName || "Avinash";
+
+  console.log({ user: req.body.firstName })
+  try {
+    const html = generateResumeHTML(user);
+
+
+    const pdfBuffer = await htmlToPdf(html, "output.pdf");
+
+    // Set response headers
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Length': pdfBuffer.length,
+      // inline = preview in browser, attachment = download
+      'Content-Disposition': 'inline; filename="example.pdf"',
+    });
+
+    res.send(pdfBuffer);
+
+    // res.json({ message: "PDF generated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "PDF generation failed" });
+  }
 });
+
 
 app.get("/", (req, res) => {
   res.json({ message: "TypeScript backend is running!" });

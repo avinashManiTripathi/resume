@@ -1,5 +1,1 @@
-{
-"name": "@repo/colors",
-"version": "1.0.0",
-"main": "index.css"
-}
+{"name":"@repo/colors","version":"1.0.0","main":"index.css","dependencies":{"lucide-react":"^0.562.0"}}

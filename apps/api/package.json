@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
+  "dependencies": {
+    "lucide-react": "^0.562.0"
   }
 }

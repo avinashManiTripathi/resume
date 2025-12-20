@@ -2,17 +2,17 @@
 
 interface InputProps {
   type: string;
-  placeholder: string;
+  placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
-  className: string;
+  className?: string;
 }
 
 export const Input = ({ type, placeholder, value, onChange, name, className }: InputProps) => {
-  const defaultClassName = "border border-[var(--input-border)] rounded h-[52px] w-full bg-[var(--input-bg)] text-[var(--input-text)]";
+
   return <input
-    className={`${defaultClassName} ${className}`}
+    className="w-full h-12 rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-300 focus:outline-none focus:ring-0"
     type={type}
     name={name}
     placeholder={placeholder}

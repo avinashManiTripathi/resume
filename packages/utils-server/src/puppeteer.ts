@@ -1,10 +1,11 @@
+
 import puppeteer from 'puppeteer';
 
 export const htmlToPdf = async (htmlContent: string, outputPath: string) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-    await page.pdf({
+    const pdfBuffer = await page.pdf({
         path: outputPath,
         format: 'A4',
         printBackground: true,
@@ -16,4 +17,5 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string) => {
         },
     });
     await browser.close();
+    return pdfBuffer;
 };

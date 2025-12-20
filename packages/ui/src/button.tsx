@@ -1,105 +1,37 @@
-"use client";
+import { ReactNode } from "react";
 
-import { ReactNode, ButtonHTMLAttributes } from "react";
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonProps = {
   children: ReactNode;
-  variant?: "primary" | "secondary" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
+  variant?: "primary" | "outline";
+  icon?: ReactNode;
+  onClick?: () => void;
   className?: string;
-}
+};
 
 export const Button = ({
   children,
-  variant = "primary",
-  size = "md",
+  variant = "outline",
+  icon,
+  onClick,
   className = "",
-  ...props
 }: ButtonProps) => {
+  const baseStyles =
+    "flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400";
+
+  const primaryStyles =
+    "bg-blue-600 text-white hover:bg-blue-700";
+
+  const outlineStyles =
+    "border border-blue-500 text-blue-600 hover:bg-blue-50";
+
   return (
-    <>
-      <button className={`btn btn-${variant} btn-${size} ${className}`} {...props}>
-        {children}
-      </button>
-
-      <style jsx>{`
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: var(--font-weight-semibold);
-          border-radius: var(--radius-lg);
-          text-decoration: none;
-          transition: all var(--transition-base);
-          cursor: pointer;
-          border: 2px solid transparent;
-          font-family: inherit;
-        }
-
-        .btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        /* Sizes */
-        .btn-sm {
-          padding: var(--spacing-sm) var(--spacing-md);
-          font-size: var(--font-size-sm);
-        }
-
-        .btn-md {
-          padding: var(--spacing-md) var(--spacing-lg);
-          font-size: var(--font-size-base);
-        }
-
-        .btn-lg {
-          padding: var(--spacing-lg) var(--spacing-xl);
-          font-size: var(--font-size-lg);
-        }
-
-        /* Variants */
-        .btn-primary {
-          background: var(--gradient-primary);
-          color: var(--text-on-primary);
-          box-shadow: var(--shadow-sm);
-        }
-
-        .btn-primary:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
-        }
-
-        .btn-secondary {
-          background: var(--gradient-secondary);
-          color: var(--text-on-primary);
-          box-shadow: var(--shadow-sm);
-        }
-
-        .btn-secondary:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-md);
-        }
-
-        .btn-outline {
-          background: transparent;
-          color: var(--color-primary);
-          border-color: var(--color-primary);
-        }
-
-        .btn-outline:hover:not(:disabled) {
-          background: var(--color-primary);
-          color: var(--text-on-primary);
-        }
-
-        .btn-ghost {
-          background: transparent;
-          color: var(--text-primary);
-        }
-
-        .btn-ghost:hover:not(:disabled) {
-          background: var(--bg-secondary);
-        }
-      `}</style>
-    </>
+    <button
+      onClick={onClick}
+      className={`${baseStyles} ${variant === "primary" ? primaryStyles : outlineStyles
+        } ${className}`}
+    >
+      {icon && <span className="text-lg">{icon}</span>}
+      {children}
+    </button>
   );
-};
+}

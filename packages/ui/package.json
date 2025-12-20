@@ -15,7 +15,11 @@
     "./input": "./src/input.tsx",
     "./testimonials": "./src/testimonials.tsx",
     "./pricing": "./src/pricing.tsx",
-    "./stats": "./src/stats.tsx"
+    "./stats": "./src/stats.tsx",
+    "./form-input": "./src/form-input.tsx",
+    "./form-textarea": "./src/form-textarea.tsx",
+    "./form-select": "./src/form-select.tsx",
+    "./section-card": "./src/section-card.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -32,6 +36,7 @@
     "typescript": "5.9.2"
   },
   "dependencies": {
+    "lucide-react": "^0.562.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   }
