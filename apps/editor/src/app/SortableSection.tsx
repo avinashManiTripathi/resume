@@ -10,10 +10,11 @@ interface SortableSectionProps {
     id: string;
     title: string;
     defaultOpen?: boolean;
+    isCollapsible?: boolean;
     children: React.ReactNode;
 }
 
-export function SortableSection({ id, title, defaultOpen, children }: SortableSectionProps) {
+export function SortableSection({ id, title, defaultOpen, isCollapsible, children }: SortableSectionProps) {
     const [mounted, setMounted] = useState(false);
 
     const {
@@ -49,6 +50,7 @@ export function SortableSection({ id, title, defaultOpen, children }: SortableSe
                     )
                 }
                 defaultOpen={defaultOpen}
+                isCollapsible={isCollapsible}
             >
                 {children}
             </CollapsibleSection>

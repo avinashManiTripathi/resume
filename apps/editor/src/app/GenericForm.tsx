@@ -28,16 +28,20 @@ interface Props {
     data: ResumeData;
     onChange: (data: ResumeData) => void;
     onSchemaChange?: (schema: FormSchema) => void;
+    sectionOrder: string[];
+    setSectionOrder: (order: string[]) => void;
 }
 
-const GenericForm = ({ schema, data, onChange, onSchemaChange }: Props) => {
+const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, setSectionOrder }: Props) => {
     // Track section order
-    const [sectionOrder, setSectionOrder] = useState<string[]>(Object.keys(schema));
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    console.log({ sectionOrder })
 
     useEffect(() => {
         // Update section order if schema changes
         const schemaKeys = Object.keys(schema);
+        console.log({ schemaKeys })
         if (schemaKeys.length !== sectionOrder.length) {
             setSectionOrder(schemaKeys);
         }
@@ -80,7 +84,8 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange }: Props) => {
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
-            setSectionOrder((items) => {
+            //@ts-ignore
+            setSectionOrder((items: any) => {
                 const oldIndex = items.indexOf(active.id as string);
                 const newIndex = items.indexOf(over.id as string);
                 return arrayMove(items, oldIndex, newIndex);
@@ -145,14 +150,20 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange }: Props) => {
                                     id={key}
                                     title={config.label}
                                     defaultOpen={key === "personalInfo"}
+                                    isCollapsible={config.isCollapsible}
                                 >
                                     {config.type === "object" && (
                                         <div className="flex flex-wrap gap-2">
                                             {Object.entries(config.fields).map(([fieldKey, field]) => (
                                                 <div key={fieldKey} className={"mb-4 " + field.className}>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                                    <label className="block text-sm font-bold text-gray-700 mb-1">
                                                         {field.label}
                                                     </label>
+                                                    {field.description && (
+                                                        <p className="text-sm text-gray-500 mb-2">
+                                                            {field.description}
+                                                        </p>
+                                                    )}
                                                     <FieldRenderer
                                                         field={field}
                                                         value={data[key]?.[fieldKey] || ""}

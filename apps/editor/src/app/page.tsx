@@ -6,24 +6,28 @@ import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "./FieldRenderer";
 import GenericForm from "./GenericForm";
 import SettingsSidebar from "./SettingsSidebar";
+import TemplateSelector from "./TemplateSelector";
+import { downloadPdf } from "@repo/utils-client";
 
 export const resumeSchema: FormSchema = {
   personalInfo: {
     label: "Personal Info",
     type: "object",
+    isCollapsible: false,
     fields: {
       jobTitle: { label: "Job Title", type: "text", className: "w-full" },
       firstName: { label: "First Name", type: "text", className: "w-[calc(50%-4px)]" },
       lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
       email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
       phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
-      summary: { label: "Short Bio", type: "richtext", className: "w-full" }
+      summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
     }
   },
 
   experience: {
     label: "Employment History",
     type: "array",
+    isCollapsible: true,
     item: {
       jobTitle: { label: "Job Title", type: "text", className: "w-[calc(50%-4px)]" },
       company: { label: "Employer", type: "text", className: "w-[calc(50%-4px)]" },
@@ -36,6 +40,7 @@ export const resumeSchema: FormSchema = {
   education: {
     label: "Education",
     type: "array",
+    isCollapsible: true,
     item: {
       degree: { label: "Degree", type: "text", className: "w-[calc(50%-4px)]" },
       institution: { label: "Institution", type: "text", className: "w-[calc(50%-4px)]" },
@@ -47,6 +52,7 @@ export const resumeSchema: FormSchema = {
   projects: {
     label: "Projects",
     type: "array",
+    isCollapsible: true,
     item: {
       name: { label: "Project Name", type: "text", className: "w-[calc(50%-4px)]" },
       companyName: { label: "Company Name", type: "text", className: "w-[calc(50%-4px)]" },
@@ -59,6 +65,7 @@ export const resumeSchema: FormSchema = {
   skills: {
     label: "Skills",
     type: "array",
+    isCollapsible: true,
     item: {
       name: { label: "Skill Name", type: "text", className: "w-[calc(50%-4px)]" },
       level: {
@@ -99,14 +106,17 @@ const initialResume = {
   "skills": [
     { "name": "JavaScript", "level": "Expert" },
     { "name": "React", "level": "Advanced" }
-  ]
+  ],
 };
 
 export default function ResumeLayout() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   const [resume, setResume] = useState(initialResume);
   const [schema, setSchema] = useState(resumeSchema);
+  const [showTemplates, setShowTemplates] = useState(false);
   const debouncedResume = useDebounce(resume, 500);
+  const [sectionOrder, setSectionOrder] = useState<string[]>(Object.keys(schema));
+
 
   const [totalPages, setTotalPages] = useState(0);
   const [pageCount, setPageCount] = useState(1);
@@ -117,33 +127,16 @@ export default function ResumeLayout() {
   const renderTaskRef = useRef<any>(null);
   const requestIdRef = useRef(0);
 
-  const downloadPdf = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/convert-html-to-pdf`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resume),
-      });
-
-      if (!res.ok) throw new Error("Failed to download PDF");
-
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `${resume?.personalInfo?.firstName || "Resume"}_${resume?.personalInfo?.lastName || ""}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("PDF download error:", err);
-    }
-  };
+  const apiUrl = `${API_BASE}/convert-html-to-pdf`
 
   const handleExport = (format: "pdf" | "doc") => {
     if (format === "pdf") {
-      downloadPdf();
+      const resumeData = {
+        ...resume,
+        order: sectionOrder
+      }
+
+      downloadPdf(apiUrl, "resume", resumeData);
     } else {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
@@ -154,11 +147,15 @@ export default function ResumeLayout() {
     if (!mainRef.current) return;
 
     const requestId = ++requestIdRef.current;
+    const resumeData = {
+      ...resume,
+      order: sectionOrder
+    }
 
     const res = await fetch(`${API_BASE}/convert-html-to-pdf`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(resume),
+      body: JSON.stringify(resumeData),
     });
 
     if (requestId !== requestIdRef.current) return;
@@ -216,13 +213,16 @@ export default function ResumeLayout() {
 
   useEffect(() => {
     renderPdf();
-  }, [debouncedResume, pageCount]);
+  }, [debouncedResume, pageCount, sectionOrder]);
 
   useLayoutEffect(() => {
     const onResize = () => renderPdf();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+
+
 
   return (
     <div className="flex flex-col h-screen w-full bg-gray-100">
@@ -232,21 +232,35 @@ export default function ResumeLayout() {
         title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
         progress={50}
         onShare={() => console.log("Share")}
-        onDownload={downloadPdf}
+        onDownload={() => downloadPdf(apiUrl, "resume", resume)}
         onUndo={() => console.log("Undo")}
         onRedo={() => console.log("Redo")}
       />
 
       {/* Main Content - 3 Column Layout */}
       <div className="flex flex-1 overflow-hidden gap-2 mr-[10px] ml-[10px]">
-        {/* Left Sidebar - Form (40%) */}
+        {/* Left Sidebar - Form or Template Selector (40%) */}
         <aside className="w-[40%] rounded-lg bg-white border-r border-gray-200 overflow-y-auto">
-          <GenericForm
-            schema={schema}
-            data={resume}
-            onChange={setResume as any}
-            onSchemaChange={setSchema}
-          />
+          {showTemplates ? (
+            <TemplateSelector
+              apiBase={API_BASE || 'http://localhost:4000'}
+              onBack={() => setShowTemplates(false)}
+              onSelectTemplate={(template) => {
+                console.log('Selected template:', template);
+                // TODO: Apply template to resume
+                setShowTemplates(false);
+              }}
+            />
+          ) : (
+            <GenericForm
+              schema={schema}
+              data={resume}
+              sectionOrder={sectionOrder}
+              setSectionOrder={setSectionOrder}
+              onChange={setResume as any}
+              onSchemaChange={setSchema}
+            />
+          )}
         </aside>
 
         {/* Center Canvas - Preview (60% minus right sidebar) */}
@@ -259,7 +273,7 @@ export default function ResumeLayout() {
         {/* Right Sidebar - Settings */}
         <SettingsSidebar
           onExport={handleExport}
-          onTemplateChange={() => console.log("Change template")}
+          onTemplateChange={() => setShowTemplates(true)}
         />
       </div>
     </div>

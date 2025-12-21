@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, CircleMinus, CirclePlus } from "lucide-react";
 
 interface CollapsibleSectionProps {
     title: string;
@@ -9,6 +9,7 @@ interface CollapsibleSectionProps {
     defaultOpen?: boolean;
     icon?: React.ReactNode;
     actions?: React.ReactNode;
+    isCollapsible?: boolean;
 }
 
 export function CollapsibleSection({
@@ -16,12 +17,17 @@ export function CollapsibleSection({
     children,
     defaultOpen = true,
     icon,
+    isCollapsible = true,
     actions,
 }: CollapsibleSectionProps) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
+    const overrideClass = "bg-white m-3 " + (isCollapsible ? "border rounded-lg border-gray-200" : "");
+
+    console.log({ isOpen, isCollapsible, title });
+
     return (
-        <div className="border-b border-gray-200 bg-white">
+        <div className={overrideClass}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
@@ -32,14 +38,14 @@ export function CollapsibleSection({
                 </div>
                 <div className="flex items-center gap-2">
                     {actions}
-                    {isOpen ? (
-                        <ChevronUp className="w-5 h-5 text-gray-500" />
+                    {isCollapsible && (isOpen ? (
+                        <CircleMinus className="w-5 h-5 text-gray-500" />
                     ) : (
-                        <ChevronDown className="w-5 h-5 text-gray-500" />
-                    )}
+                        <CirclePlus className="w-5 h-5 text-gray-500" />
+                    ))}
                 </div>
             </button>
-            {isOpen && <div className="px-6 pb-6">{children}</div>}
+            {(isOpen || !isCollapsible) && <div className="px-6 pb-6">{children}</div>}
         </div>
     );
 }

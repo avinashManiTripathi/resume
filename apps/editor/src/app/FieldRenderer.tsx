@@ -15,17 +15,20 @@ export interface BaseField {
     type: FieldType;
     options?: string[];
     className?: string;
+    description?: string;
 }
 
 export interface ObjectSchema {
     label: string;
     type: "object";
+    isCollapsible?: boolean;
     fields: Record<string, BaseField>;
 }
 
 export interface ArraySchema {
     label: string;
     type: "array";
+    isCollapsible?: boolean;
     item: Record<string, BaseField>;
 }
 

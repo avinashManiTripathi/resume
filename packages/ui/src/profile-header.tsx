@@ -1,6 +1,6 @@
 "use client";
 
-import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut } from "lucide-react";
+import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2 } from "lucide-react";
 import { Button } from "./button";
 
 interface ProfileHeaderProps {
@@ -87,32 +87,38 @@ export function ProfileHeader({
                             className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900"
                             title="Undo"
                         >
-                            <Undo className="w-4 h-4" />
+                            <CircleArrowUp className="color-[#5C5C5C]" size={20} />
                         </button>
                         <button
                             onClick={onRedo}
                             className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900"
                             title="Redo"
                         >
-                            <Redo className="w-4 h-4" />
+                            <CircleArrowDown className="color-[#5C5C5C]" size={20} />
                         </button>
-                        <div className="w-px h-6 bg-gray-300 mx-1" />
+                        <span className="px-2 text-sm text-gray-600 bg-[#F5F5F5] rounded p-2">1/1</span>
                         <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Left">
-                            <RotateCcw className="w-4 h-4" />
+                            <MousePointer className="color-[#5C5C5C]" size={20} />
                         </button>
                         <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Right">
-                            <RotateCw className="w-4 h-4" />
+                            <Hand className="color-[#5C5C5C]" size={20} />
                         </button>
-                        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Left">
+                            <Undo2 className="color-[#5C5C5C]" size={20} />
+                        </button>
+                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Right">
+                            <Redo2 className="color-[#5C5C5C]" size={20} />
+                        </button>
+
                         <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Zoom Out">
-                            <ZoomOut className="w-4 h-4" />
+                            <ZoomOut className="color-[#5C5C5C]" size={20} />
                         </button>
                         <span className="px-2 text-sm font-medium text-gray-700">50%</span>
                         <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Zoom In">
-                            <ZoomIn className="w-4 h-4" />
+                            <ZoomIn className="color-[#5C5C5C]" size={20} />
                         </button>
-                        <div className="w-px h-6 bg-gray-300 mx-1" />
-                        <span className="px-2 text-sm text-gray-600">1/1</span>
+
                     </div>
                     <div className="flex items-center gap-3">
                         <Button onClick={onShare} variant="outline">
