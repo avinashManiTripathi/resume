@@ -1,55 +1,35 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useDebounce } from "@repo/utils-client";
-import { Input } from "@repo/ui/input";
-import { Button } from "@repo/ui/button"
-import { HtmlEditor } from "@repo/ui/html-editor";
-import {
-  Download, LayoutGrid, Share2, Undo, Redo, ArrowUp, ArrowDown
-} from "lucide-react";
-
-
-
+import { useDebounce, exportToPdf, exportToDoc } from "@repo/utils-client";
+import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "./FieldRenderer";
 import GenericForm from "./GenericForm";
+import SettingsSidebar from "./SettingsSidebar";
 
 export const resumeSchema: FormSchema = {
   personalInfo: {
-    label: "Personal Information",
+    label: "Personal Info",
     type: "object",
     fields: {
       jobTitle: { label: "Job Title", type: "text", className: "w-full" },
       firstName: { label: "First Name", type: "text", className: "w-[calc(50%-4px)]" },
       lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
-      summary: { label: "Summary", type: "textarea", className: "w-full" },
       email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
-      phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" }
+      phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
+      summary: { label: "Short Bio", type: "richtext", className: "w-full" }
     }
   },
 
-
-
-
   experience: {
-    label: "Experience",
+    label: "Employment History",
     type: "array",
     item: {
       jobTitle: { label: "Job Title", type: "text", className: "w-[calc(50%-4px)]" },
-      company: { label: "Company", type: "text", className: "w-[calc(50%-4px)]" },
+      company: { label: "Employer", type: "text", className: "w-[calc(50%-4px)]" },
       startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" }
-    }
-  },
-
-  projects: {
-    label: "Projects",
-    type: "array",
-    item: {
-      title: { label: "Project Title", type: "text", className: "w-full" },
-      description: { label: "Description", type: "textarea", className: "w-full" },
-      technologies: { label: "Technologies", type: "text", className: "w-full" },
-      link: { label: "Link", type: "url", className: "w-full" }
+      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      description: { label: "Description", type: "richtext", className: "w-full" }
     }
   },
 
@@ -60,7 +40,19 @@ export const resumeSchema: FormSchema = {
       degree: { label: "Degree", type: "text", className: "w-[calc(50%-4px)]" },
       institution: { label: "Institution", type: "text", className: "w-[calc(50%-4px)]" },
       startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" }
+      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      description: { label: "Description", type: "richtext", className: "w-full" }
+    }
+  },
+  projects: {
+    label: "Projects",
+    type: "array",
+    item: {
+      name: { label: "Project Name", type: "text", className: "w-[calc(50%-4px)]" },
+      companyName: { label: "Company Name", type: "text", className: "w-[calc(50%-4px)]" },
+      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
+      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      description: { label: "Description", type: "richtext", className: "w-full" }
     }
   },
 
@@ -68,163 +60,53 @@ export const resumeSchema: FormSchema = {
     label: "Skills",
     type: "array",
     item: {
-      name: { label: "Skill Name", type: "text" },
+      name: { label: "Skill Name", type: "text", className: "w-[calc(50%-4px)]" },
       level: {
         label: "Level",
         type: "select",
-        options: ["Beginner", "Intermediate", "Advanced", "Expert"]
+        options: ["Beginner", "Intermediate", "Advanced", "Expert"],
+        className: "w-[calc(50%-4px)]"
       }
     }
   }
 };
 
-
 const initialResume = {
   "personalInfo": {
-    "firstName": "John Bro",
-    "lastName": "Doe",
-    "jobTitle": "Full Stack Developer",
-    "summary": "Experienced Full Stack Developer with 5+ years of experience building scalable web applications and REST APIs.",
-    "email": "john.doe@email.com",
-    "phone": "+1-555-123-4567",
-    "address": "123 Main Street",
-    "city": "San Francisco",
-    "state": "California",
-    "country": "USA",
-    "postalCode": "94105",
-    "linkedin": "https://linkedin.com/in/johndoe",
-    "github": "https://github.com/johndoe",
-    "portfolio": "https://johndoe.dev"
+    "firstName": "Avinash Mani",
+    "lastName": "Tripathi",
+    "jobTitle": "Senior Product Designer",
+    "summary": "Product designer with 3+ years of experience in tech industry",
+    "email": "olivia@untitledui.com",
+    "phone": "+91-7823232322"
   },
-
+  "experience": [
+    {
+      "jobTitle": "Product Designer",
+      "company": "Agworks",
+      "startDate": "2021-01",
+      "endDate": ""
+    }
+  ],
   "education": [
     {
       "degree": "Bachelor of Technology",
-      "fieldOfStudy": "Computer Science",
       "institution": "University of California",
-      "location": "Berkeley, CA",
       "startDate": "2015-08",
-      "endDate": "2019-05",
-      "grade": "3.7 GPA",
-      "description": "Focused on software engineering, data structures, and web development."
+      "endDate": "2019-05"
     }
   ],
-
-  "experience": [
-    {
-      "jobTitle": "Senior Software Engineer",
-      "company": "Tech Solutions Inc.",
-      "location": "San Francisco, CA",
-      "startDate": "2021-01",
-      "endDate": "",
-      "currentlyWorking": true,
-      "responsibilities": [
-        "Decccccccccccccveloped REST APIs using Node.js and Express",
-        "Built rescccponsive UI using React and Tailwind CSS",
-        "Improved accccpplication performance by 30%",
-        "Mentored junior developers"
-      ]
-    },
-    {
-      "jobTitle": "Software Developer",
-      "company": "Innovate Labs",
-      "location": "San Jose, CA",
-      "startDate": "2019-06",
-      "endDate": "2020-12",
-      "currentlyWorking": false,
-      "responsibilities": [
-        "Designed frontend components using Angular",
-        "Integrated third-party APIs",
-        "Collaborated with cross-functional teams"
-      ]
-    }
-  ],
-
   "skills": [
     { "name": "JavaScript", "level": "Expert" },
-    { "name": "React", "level": "Advanced" },
-    { "name": "Node.js", "level": "Advanced" },
-    { "name": "MongoDB", "level": "Intermediate" },
-    { "name": "Docker", "level": "Intermediate" }
-  ],
-
-  "projects": [
-    {
-      "title": "E-commerce Platform",
-      "description": "A full-featured e-commerce web application with payment integration.",
-      "technologies": ["React", "Node.js", "MongoDB", "Stripe"],
-      "link": "https://github.com/johndoe/ecommerce-platform"
-    },
-    {
-      "title": "Task Management App",
-      "description": "A productivity app to manage daily tasks and deadlines.",
-      "technologies": ["Vue.js", "Firebase"],
-      "link": "https://taskapp.johndoe.dev"
-    }
-  ],
-
-  "certifications": [
-    {
-      "name": "AWS Certified Developer – Associate",
-      "organization": "Amazon Web Services",
-      "issueDate": "2022-06",
-      "expiryDate": "2025-06",
-      "credentialUrl": "https://aws.amazon.com/certification/"
-    }
-  ],
-
-  "languages": [
-    { "language": "English", "proficiency": "Native" },
-    { "language": "Spanish", "proficiency": "Intermediate" }
-  ],
-
-  "achievements": [
-    "Employee of the Year – 2022",
-    "Winner of Internal Hackathon 2021"
-  ],
-
-  "hobbies": [
-    "Open-source contribution",
-    "Photography",
-    "Cycling"
-  ],
-
-  "references": [
-    {
-      "name": "Jane Smith",
-      "designation": "Engineering Manager",
-      "company": "Tech Solutions Inc.",
-      "email": "jane.smith@techsolutions.com",
-      "phone": "+1-555-987-6543"
-    }
-  ],
-
-  "settings": {
-    "resumeTemplate": "modern",
-    "font": "Roboto",
-    "color": "#1a73e8",
-    "pageSize": "A4"
-  }
-}
-
-export const Section = ({ children, title }: { children: React.ReactNode, title: string }) => {
-  return (
-    <div className="flex flex-col gap-[16px] border-b border-[#A4A4A4] pb-[16px]">
-      <div className="font-bold text-lg truncate">
-        {title}
-      </div>
-      {children}
-    </div>
-  )
-}
-
+    { "name": "React", "level": "Advanced" }
+  ]
+};
 
 export default function ResumeLayout() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   const [resume, setResume] = useState(initialResume);
-
-  const [name, setName] = useState("sds");
-  const debouncedName = useDebounce(resume, 500);
+  const [schema, setSchema] = useState(resumeSchema);
+  const debouncedResume = useDebounce(resume, 500);
 
   const [totalPages, setTotalPages] = useState(0);
   const [pageCount, setPageCount] = useState(1);
@@ -232,10 +114,8 @@ export default function ResumeLayout() {
   const mainRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
-
   const renderTaskRef = useRef<any>(null);
   const requestIdRef = useRef(0);
-
 
   const downloadPdf = async () => {
     try {
@@ -249,14 +129,11 @@ export default function ResumeLayout() {
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
       link.href = url;
       link.download = `${resume?.personalInfo?.firstName || "Resume"}_${resume?.personalInfo?.lastName || ""}.pdf`;
-
       document.body.appendChild(link);
       link.click();
-
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
@@ -264,7 +141,14 @@ export default function ResumeLayout() {
     }
   };
 
-
+  const handleExport = (format: "pdf" | "doc") => {
+    if (format === "pdf") {
+      downloadPdf();
+    } else {
+      const content = mainRef.current?.innerHTML || "";
+      exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
+    }
+  };
 
   const renderPdf = async (page = pageCount) => {
     if (!mainRef.current) return;
@@ -286,14 +170,10 @@ export default function ResumeLayout() {
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
-
     setTotalPages(pdf.numPages);
-    console.log(pdf.numPages);
 
-    // clamp page in case totalPages changed
     const safePage = Math.min(Math.max(page, 1), pdf.numPages);
-
-    const pdfPage = await pdf.getPage(page);
+    const pdfPage = await pdf.getPage(safePage);
 
     const containerWidth = mainRef.current.clientWidth;
     const dpr = window.devicePixelRatio || 1;
@@ -301,8 +181,7 @@ export default function ResumeLayout() {
     const scale = containerWidth / baseViewport.width;
     const viewport = pdfPage.getViewport({ scale });
 
-    const offscreen =
-      offscreenRef.current ?? document.createElement("canvas");
+    const offscreen = offscreenRef.current ?? document.createElement("canvas");
     offscreenRef.current = offscreen;
 
     offscreen.width = viewport.width * dpr;
@@ -335,10 +214,9 @@ export default function ResumeLayout() {
     ctx.drawImage(offscreen, 0, 0);
   };
 
-
   useEffect(() => {
     renderPdf();
-  }, [debouncedName, pageCount]);
+  }, [debouncedResume, pageCount]);
 
   useLayoutEffect(() => {
     const onResize = () => renderPdf();
@@ -349,67 +227,40 @@ export default function ResumeLayout() {
   return (
     <div className="flex flex-col h-screen w-full bg-gray-100">
       {/* Header */}
-      <header className="flex gap-2 h-24 p-2">
-        {/* Left Box */}
-        <div className="flex flex-shrink-0 items-center w-full lg:w-[500px] bg-white border border-gray-200 rounded p-3">
-          <div className="font-bold text-lg truncate">
-            {resume?.personalInfo?.firstName || 'John Doe'} {resume?.personalInfo?.lastName || 'Doe'}’s Resume
-          </div>
-        </div>
+      <ProfileHeader
+        name={`${resume?.personalInfo?.firstName || "Avinash Mani"} ${resume?.personalInfo?.lastName || "Tripathi"}'s Resume`}
+        title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
+        progress={50}
+        onShare={() => console.log("Share")}
+        onDownload={downloadPdf}
+        onUndo={() => console.log("Undo")}
+        onRedo={() => console.log("Redo")}
+      />
 
-        {/* Right Box */}
-        <div className="flex items-center justify-between w-full bg-white border border-gray-200 rounded p-2">
-          {/* Undo/Redo Icons */}
-          <div className="flex gap-2">
-            <ArrowUp onClick={() => setPageCount(pageCount + 1)} size={18} />
-            <ArrowDown onClick={() => setPageCount(pageCount - 1)} size={18} />
-          </div>
-
-          {/* Share / Download Buttons */}
-          <div className="flex gap-2">
-            <Button>
-              <div className="flex items-center gap-2">
-                <Share2 size={18} /> Share
-              </div>
-            </Button>
-            <Button variant="primary" onClick={downloadPdf}>
-              <div className="flex items-center gap-2">
-                <Download size={18} /> Download
-              </div>
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden gap-2 m-[10px]">
-        {/* Left Sidebar */}
-        <aside className="hidden lg:flex flex-col w-[500px] bg-white border-r p-4 overflow-y-auto rounded-lg">
-          <div className="space-y-4">
-
-
-            <GenericForm
-              schema={resumeSchema}
-              data={resume}
-              onChange={setResume as any}
-            />
-
-          </div>
+      {/* Main Content - 3 Column Layout */}
+      <div className="flex flex-1 overflow-hidden gap-2 mr-[10px] ml-[10px]">
+        {/* Left Sidebar - Form (40%) */}
+        <aside className="w-[40%] rounded-lg bg-white border-r border-gray-200 overflow-y-auto">
+          <GenericForm
+            schema={schema}
+            data={resume}
+            onChange={setResume as any}
+            onSchemaChange={setSchema}
+          />
         </aside>
 
-        {/* Main Canvas */}
-        <main ref={mainRef} className="flex-1 overflow-y-auto flex justify-center py-8">
-          <canvas ref={canvasRef} />
+        {/* Center Canvas - Preview (60% minus right sidebar) */}
+        <main ref={mainRef} className="flex-1 rounded-lg overflow-y-auto bg-gray-100 flex justify-center py-8 px-4">
+          <div className="bg-white shadow-lg">
+            <canvas ref={canvasRef} />
+          </div>
         </main>
 
-        {/* Right Sidebar */}
-        <aside className="hidden xl:flex w-[250px] flex-col bg-white border-l p-4 rounded-lg items-center gap-2">
-          <Button>
-            <div className="flex items-center gap-2">
-              <LayoutGrid size={18} /> Change Template
-            </div>
-          </Button>
-        </aside>
+        {/* Right Sidebar - Settings */}
+        <SettingsSidebar
+          onExport={handleExport}
+          onTemplateChange={() => console.log("Change template")}
+        />
       </div>
     </div>
   );

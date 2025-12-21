@@ -1,10 +1,12 @@
 import { TextArea } from "@repo/ui/text-area"
 import { Input } from "@repo/ui/input"
+import { RichTextEditor } from "@repo/ui/rich-text-editor"
 
 export type FieldType =
     | "text"
     | "email"
     | "textarea"
+    | "richtext"
     | "select"
     | "month";
 
@@ -42,6 +44,16 @@ interface Props {
 
 
 const FieldRenderer = ({ field, value, onChange }: Props) => {
+    if (field.type === "richtext") {
+        return (
+            <RichTextEditor
+                value={value || ""}
+                onChange={onChange}
+                placeholder="Write your bio..."
+            />
+        );
+    }
+
     if (field.type === "textarea") {
         return (
 

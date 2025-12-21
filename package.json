@@ -26,10 +26,15 @@
     "packages/*"
   ],
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "pdfjs-dist": "^5.4.449",
-    "puppeteer": "^24.32.0"
+    "puppeteer": "^24.32.0",
+    "quill": "^2.0.3",
+    "react-quill": "^2.0.0"
   }
 }

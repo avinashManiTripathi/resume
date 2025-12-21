@@ -19,7 +19,16 @@
     "./form-input": "./src/form-input.tsx",
     "./form-textarea": "./src/form-textarea.tsx",
     "./form-select": "./src/form-select.tsx",
-    "./section-card": "./src/section-card.tsx"
+    "./section-card": "./src/section-card.tsx",
+    "./collapsible-section": "./src/collapsible-section.tsx",
+    "./rich-text-toolbar": "./src/rich-text-toolbar.tsx",
+    "./color-picker": "./src/color-picker.tsx",
+    "./theme-selector": "./src/theme-selector.tsx",
+    "./export-options": "./src/export-options.tsx",
+    "./profile-header": "./src/profile-header.tsx",
+    "./language-selector": "./src/language-selector.tsx",
+    "./number-input": "./src/number-input.tsx",
+    "./rich-text-editor": "./src/rich-text-editor.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

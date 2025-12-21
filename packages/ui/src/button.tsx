@@ -6,6 +6,7 @@ type ButtonProps = {
   icon?: ReactNode;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 };
 
 export const Button = ({
@@ -14,19 +15,21 @@ export const Button = ({
   icon,
   onClick,
   className = "",
+  disabled = false,
 }: ButtonProps) => {
   const baseStyles =
-    "flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400";
+    "flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const primaryStyles =
-    "bg-blue-600 text-white hover:bg-blue-700";
+    "bg-blue-600 text-white hover:bg-blue-700 disabled:hover:bg-blue-600";
 
   const outlineStyles =
-    "border border-blue-500 text-blue-600 hover:bg-blue-50";
+    "border border-blue-500 text-blue-600 hover:bg-blue-50 disabled:hover:bg-transparent";
 
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={`${baseStyles} ${variant === "primary" ? primaryStyles : outlineStyles
         } ${className}`}
     >
