@@ -29,7 +29,7 @@ interface Skill {
 }
 
 interface ResumeData {
-    order: Array<"profile" | "summary" | "experience" | "education" | "skills">;
+    order: Array<"personalInfo" | "summary" | "experience" | "education" | "skills" | "projects">;
     personalInfo: PersonalInfo;
     experience: Experience[];
     education: Education[];
@@ -42,15 +42,17 @@ export const inject = (data: ResumeData): void => {
     /* ---------- PROFILE ---------- */
     const p = data.personalInfo;
 
-    const fullName = document.getElementById("full-name") as HTMLElement;
-    const jobTitle = document.getElementById("job-title") as HTMLElement;
-    const summaryText = document.getElementById("summary-text") as HTMLElement;
-    const contactInfo = document.getElementById("contact-info") as HTMLElement;
+    const fullName = document.getElementById("full-name");
+    const jobTitle = document.getElementById("job-title");
+    const summaryText = document.getElementById("summary-text");
+    const email = document.getElementById("email");
+    const phone = document.getElementById("phone");
 
-    fullName.textContent = `${p.firstName} ${p.lastName}`;
-    jobTitle.textContent = p.jobTitle;
-    summaryText.textContent = p.summary;
-    contactInfo.textContent = `${p.phone} | ${p.email}`;
+    if (fullName) fullName.textContent = `${p.firstName} ${p.lastName}`;
+    if (jobTitle) jobTitle.textContent = p.jobTitle;
+    if (summaryText) summaryText.textContent = p.summary;
+    if (email) email.textContent = p.email;
+    if (phone) phone.textContent = p.phone;
 
     /* ---------- EXPERIENCE ---------- */
     // const exp = document.getElementById("experience-list") as HTMLElement;
@@ -97,14 +99,18 @@ export const inject = (data: ResumeData): void => {
     const root = document.getElementById("resume-root") as HTMLElement;
 
     const map: Record<string, HTMLElement | null> = {
-        profile: document.getElementById("section-profile"),
-        // summary: document.getElementById("section-summary"),
-        // experience: document.getElementById("section-experience"),
-        // education: document.getElementById("section-education"),
-        // skills: document.getElementById("section-skills")
+        summary: document.getElementById("section-summary"),
+        experience: document.getElementById("section-experience"),
+        education: document.getElementById("section-education"),
+        skills: document.getElementById("section-skills"),
+        projects: document.getElementById("section-projects")
     };
 
+    // Only reorder content sections, keep personalInfo (header) at the top
     data.order?.forEach((key) => {
+        // Skip personalInfo as it should always stay at the top
+        if (key === 'personalInfo') return;
+
         const section = map[key];
         if (section) root.appendChild(section);
     });

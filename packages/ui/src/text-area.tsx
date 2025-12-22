@@ -1,7 +1,5 @@
 import { ChangeEventHandler } from "react";
 
-
-
 interface TextAreaProps {
     placeholder?: string;
     value: string;
@@ -20,3 +18,4 @@ export const TextArea = ({ placeholder, value, onChange, name, className }: Text
         onChange={onChange}
     />;
 };
+

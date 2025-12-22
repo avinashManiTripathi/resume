@@ -1,6 +1,6 @@
 "use client";
 
-import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2 } from "lucide-react";
+import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2, PencilLine } from "lucide-react";
 import { Button } from "./button";
 
 interface ProfileHeaderProps {
@@ -31,14 +31,16 @@ export function ProfileHeader({
                 <div className="w-[40%] bg-white justify-between rounded-lg px-4 py-3 flex items-center gap-4">
                     <div className="flex items-center gap-4">
                         <div className="relative">
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden">
+                            <div className="w-14 border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden">
                                 {profileImage ? (
                                     <img src={profileImage} alt={name} className="w-full h-full object-cover" />
                                 ) : (
                                     name.split(" ").map(n => n[0]).join("").toUpperCase()
                                 )}
                             </div>
-                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white" />
+                            <div className="flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white">
+                                <PencilLine size={12} />
+                            </div>
                         </div>
                         <div>
                             <h1 className="font-semibold text-gray-900">{name}</h1>
@@ -46,7 +48,7 @@ export function ProfileHeader({
                         </div>
                     </div>
                     <div className="ml-4 flex items-center gap-2">
-                        <svg className="w-8 h-8" viewBox="0 0 36 36">
+                        <svg className="w-12 h-12" viewBox="0 0 36 36">
                             <circle
                                 cx="18"
                                 cy="18"
@@ -60,7 +62,7 @@ export function ProfileHeader({
                                 cy="18"
                                 r="16"
                                 fill="none"
-                                stroke="#3B82F6"
+                                stroke="#223DC5"
                                 strokeWidth="3"
                                 strokeDasharray={`${progress} ${100 - progress}`}
                                 strokeDashoffset="25"
@@ -135,3 +137,9 @@ export function ProfileHeader({
         </div>
     );
 }
+
+
+
+
+
+

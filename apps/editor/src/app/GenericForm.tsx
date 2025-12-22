@@ -36,8 +36,6 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
     // Track section order
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    console.log({ sectionOrder })
-
     useEffect(() => {
         // Update section order if schema changes
         const schemaKeys = Object.keys(schema);
@@ -156,7 +154,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
                                         <div className="flex flex-wrap gap-2">
                                             {Object.entries(config.fields).map(([fieldKey, field]) => (
                                                 <div key={fieldKey} className={"mb-4 " + field.className}>
-                                                    <label className="block text-sm font-bold text-gray-700 mb-1">
+                                                    <label className="block text-sm font-medium text-gray-700 mb-1">
                                                         {field.label}
                                                     </label>
                                                     {field.description && (
@@ -219,8 +217,8 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
                                                         onClick={() => addItem(key)}
                                                         className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
                                                     >
-                                                        <CirclePlus className="w-4 h-4" />
-                                                        <span>Add {config.label}</span>
+                                                        <CirclePlus className="w-4 h-4 text-[#223DC5]" />
+                                                        <span className="text-[#223DC5]">Add {config.label}</span>
                                                     </button>
                                                 </div>
                                             </SortableContext>

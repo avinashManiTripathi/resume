@@ -41,6 +41,8 @@ export interface Language {
 }
 
 export interface ResumeData {
+    templateId?: string;
+    order?: string[];
     personalInfo?: PersonalInfo;
     experience?: Experience[];
     education?: Education[];

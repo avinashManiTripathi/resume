@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/jsdom": "^27.0.0",
     "@types/node": "^24.10.1",
     "prettier": "^3.6.2",
     "ts-node-dev": "^2.0.0",
@@ -32,6 +33,7 @@
     "body-parser": "^2.2.1",
     "cors": "^2.8.5",
     "express": "^5.2.1",
+    "jsdom": "^27.3.0",
     "pdfjs-dist": "^5.4.449",
     "puppeteer": "^24.32.0",
     "quill": "^2.0.3",

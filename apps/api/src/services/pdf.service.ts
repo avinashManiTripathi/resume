@@ -1,12 +1,12 @@
 import { htmlToPdf } from '@repo/utils-server';
 import { ResumeData, PdfGenerationOptions } from '../types/resume.types';
-import { TemplateService } from './template.service';
+import { TemplateInjectorService } from './template-injector.service';
 
 export class PdfService {
-    private templateService: TemplateService;
+    private templateInjectorService: TemplateInjectorService;
 
     constructor() {
-        this.templateService = new TemplateService();
+        this.templateInjectorService = new TemplateInjectorService();
     }
 
     /**
@@ -19,6 +19,11 @@ export class PdfService {
 
         if (typeof data !== 'object') {
             throw new Error('Resume data must be an object');
+        }
+
+        // Validate template ID if provided
+        if (data.templateId && typeof data.templateId !== 'string') {
+            throw new Error('Template ID must be a string');
         }
 
         // Add more validation as needed
@@ -38,8 +43,8 @@ export class PdfService {
             // Validate input
             this.validateResumeData(resumeData);
 
-            // Generate HTML
-            const html = this.templateService.generateResumeHTML(resumeData);
+            // Generate HTML using template injector
+            const html = this.templateInjectorService.generateHTML(resumeData);
 
             // Generate filename
             const filename = options.filename || this.generateFilename(resumeData);

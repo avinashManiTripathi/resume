@@ -24,8 +24,6 @@ export function CollapsibleSection({
 
     const overrideClass = "bg-white m-3 " + (isCollapsible ? "border rounded-lg border-gray-200" : "");
 
-    console.log({ isOpen, isCollapsible, title });
-
     return (
         <div className={overrideClass}>
             <button
@@ -39,9 +37,9 @@ export function CollapsibleSection({
                 <div className="flex items-center gap-2">
                     {actions}
                     {isCollapsible && (isOpen ? (
-                        <CircleMinus className="w-5 h-5 text-gray-500" />
+                        <CircleMinus className="w-5 h-5 text-[#223DC5]" />
                     ) : (
-                        <CirclePlus className="w-5 h-5 text-gray-500" />
+                        <CirclePlus className="w-5 h-5 text-[#223DC5]" />
                     ))}
                 </div>
             </button>
