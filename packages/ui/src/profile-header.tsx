@@ -86,8 +86,8 @@ export function ProfileHeader({
                             </label>
                         </div>
                         <div>
-                            <h1 className="font-semibold text-gray-900">{name}</h1>
-                            <p className="text-sm text-gray-500">{title}</p>
+                            <h1 className="text-sm font-semibold text-gray-900">{name}</h1>
+                            <p className="text-xs text-gray-500">{title}</p>
                         </div>
                     </div>
                     <div className="ml-4 flex items-center gap-2">
@@ -116,7 +116,7 @@ export function ProfileHeader({
                                 y="18"
                                 textAnchor="middle"
                                 dy=".3em"
-                                className="text-xs font-semibold fill-gray-700"
+                                className="text-[10px] font-semibold fill-gray-700"
                             >
                                 {progress}%
                             </text>

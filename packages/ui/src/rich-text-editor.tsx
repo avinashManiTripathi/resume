@@ -143,6 +143,25 @@ export function RichTextEditor({
           .rich-text-editor [contenteditable]:focus {
             outline: none;
           }
+          .rich-text-editor ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+          }
+          .rich-text-editor ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+          }
+          .rich-text-editor li {
+            margin: 0.25rem 0;
+          }
+          .rich-text-editor ul ul {
+            list-style-type: circle;
+          }
+          .rich-text-editor ul ul ul {
+            list-style-type: square;
+          }
         `
             }} />
         </div>

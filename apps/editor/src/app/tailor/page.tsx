@@ -14,6 +14,15 @@ export default function TailorResume() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [dragActive, setDragActive] = useState(false);
 
+    // Progress tracking
+    const [currentStage, setCurrentStage] = useState(0);
+    const stages = [
+        { id: 1, name: 'Uploading', icon: Upload, description: 'Uploading your resume...' },
+        { id: 2, name: 'Extracting', icon: FileText, description: 'Extracting text from PDF...' },
+        { id: 3, name: 'Analyzing', icon: Sparkles, description: 'AI analyzing and tailoring...' },
+        { id: 4, name: 'Preparing', icon: ArrowRight, description: 'Preparing your editor...' }
+    ];
+
     const handleFileUpload = (file: File) => {
         if (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
             setUploadedFile(file);
@@ -54,8 +63,12 @@ export default function TailorResume() {
         }
 
         setIsAnalyzing(true);
+        setCurrentStage(1); // Uploading
 
         try {
+            // Stage 1: Uploading
+            await new Promise(resolve => setTimeout(resolve, 800));
+
             // Call the new parse API endpoint
             const formData = new FormData();
 
@@ -66,12 +79,16 @@ export default function TailorResume() {
                 // For now, show an error
                 alert('Please upload a resume file. Using current resume is coming soon!');
                 setIsAnalyzing(false);
+                setCurrentStage(0);
                 return;
             }
 
             formData.append('jobDescription', jobDescription);
             if (jobTitle) formData.append('jobTitle', jobTitle);
             if (company) formData.append('company', company);
+
+            // Stage 2: Extracting
+            setCurrentStage(2);
 
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/tailor/parse`, {
                 method: 'POST',
@@ -83,9 +100,17 @@ export default function TailorResume() {
                 throw new Error(errorData.message || 'Failed to parse resume');
             }
 
+            // Stage 3: Analyzing
+            setCurrentStage(3);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
             const result = await response.json();
 
             if (result.success && result.data) {
+                // Stage 4: Preparing
+                setCurrentStage(4);
+                await new Promise(resolve => setTimeout(resolve, 500));
+
                 // Store the resume data in sessionStorage to avoid URL encoding issues
                 const resumeData = result.data;
                 sessionStorage.setItem('parsedResumeData', JSON.stringify(resumeData));
@@ -98,6 +123,7 @@ export default function TailorResume() {
         } catch (error: any) {
             console.error('Analysis failed:', error);
             alert(`Failed to parse resume: ${error.message}`);
+            setCurrentStage(0);
         } finally {
             setIsAnalyzing(false);
         }
@@ -108,6 +134,111 @@ export default function TailorResume() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+            {/* Professional Progress Modal */}
+            {isAnalyzing && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4 overflow-hidden">
+                        {/* Header */}
+                        <div className="px-8 pt-8 pb-6 border-b border-gray-100">
+                            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+                                Processing Resume
+                            </h2>
+                            <p className="text-sm text-gray-600">
+                                {stages[currentStage - 1]?.description || 'Initializing...'}
+                            </p>
+                        </div>
+
+                        {/* Progress Steps */}
+                        <div className="px-8 py-6">
+                            <div className="space-y-3">
+                                {stages.map((stage) => {
+                                    const isActive = currentStage === stage.id;
+                                    const isCompleted = currentStage > stage.id;
+                                    const Icon = stage.icon;
+
+                                    return (
+                                        <div
+                                            key={stage.id}
+                                            className="flex items-center gap-3 transition-opacity duration-300"
+                                            style={{ opacity: isActive || isCompleted ? 1 : 0.4 }}
+                                        >
+                                            {/* Icon */}
+                                            <div
+                                                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${isCompleted
+                                                        ? 'bg-green-500'
+                                                        : isActive
+                                                            ? 'bg-blue-500'
+                                                            : 'bg-gray-200'
+                                                    }`}
+                                            >
+                                                {isCompleted ? (
+                                                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                ) : (
+                                                    <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-gray-400'}`} />
+                                                )}
+                                            </div>
+
+                                            {/* Text */}
+                                            <div className="flex-1 min-w-0">
+                                                <p
+                                                    className={`text-sm font-medium ${isCompleted
+                                                            ? 'text-green-700'
+                                                            : isActive
+                                                                ? 'text-blue-700'
+                                                                : 'text-gray-500'
+                                                        }`}
+                                                >
+                                                    {stage.name}
+                                                </p>
+                                            </div>
+
+                                            {/* Status */}
+                                            {isActive && (
+                                                <div className="flex items-center gap-1.5">
+                                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
+                                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                                                </div>
+                                            )}
+                                            {isCompleted && (
+                                                <span className="text-xs text-green-600 font-medium">Done</span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div className="mt-6">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-xs font-medium text-gray-700">
+                                        Step {currentStage} of {stages.length}
+                                    </span>
+                                    <span className="text-xs font-medium text-gray-700">
+                                        {Math.round((currentStage / stages.length) * 100)}%
+                                    </span>
+                                </div>
+                                <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-blue-500 rounded-full transition-all duration-500 ease-out"
+                                        style={{ width: `${(currentStage / stages.length) * 100}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="px-8 py-4 bg-gray-50 border-t border-gray-100">
+                            <p className="text-xs text-gray-600 text-center">
+                                Please wait while we optimize your resume...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="bg-white border-b border-gray-200 px-8 py-4">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">

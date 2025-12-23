@@ -184,6 +184,64 @@ export default function ResumeLayout() {
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
 
+
+  // Calculate dynamic progress based on resume completion
+  const calculateProgress = () => {
+    let totalFields = 0;
+    let filledFields = 0;
+
+    // Personal Info (6 fields)
+    if (resume?.personalInfo) {
+      const personalFields = ['firstName', 'lastName', 'email', 'phone', 'jobTitle', 'summary'] as const;
+      personalFields.forEach(field => {
+        totalFields++;
+        const value = resume.personalInfo?.[field];
+        if (value && typeof value === 'string' && value.trim()) {
+          filledFields++;
+        }
+      });
+    }
+
+    // Experience (at least 1 entry with key fields)
+    if (resume?.experience && resume.experience.length > 0) {
+      totalFields += 3; // jobTitle, company, startDate
+      const exp = resume.experience[0] as any;
+      if (exp.jobTitle && exp.jobTitle.trim()) filledFields++;
+      if (exp.company && exp.company.trim()) filledFields++;
+      if (exp.startDate) filledFields++;
+    } else {
+      totalFields += 3;
+    }
+
+    // Education (at least 1 entry with key fields)
+    if (resume?.education && resume.education.length > 0) {
+      totalFields += 4; // degree, institution, startDate, endDate
+      const edu = resume.education[0];
+      if (edu.degree && edu.degree.trim()) filledFields++;
+      if (edu.institution && edu.institution.trim()) filledFields++;
+      if (edu.startDate) filledFields++;
+      if (edu.endDate) filledFields++;
+    } else {
+      totalFields += 4;
+    }
+
+    // Skills (at least 2 skills)
+    if (resume?.skills && resume.skills.length >= 2) {
+      totalFields += 2;
+      filledFields += Math.min(resume.skills.length, 2);
+    } else {
+      totalFields += 2;
+      if (resume?.skills) {
+        filledFields += resume.skills.length;
+      }
+    }
+
+    return totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+  };
+
+  const progress = calculateProgress();
+
+
   // Undo/Redo functions
   const addToHistory = (newState: any) => {
     const newHistory = history.slice(0, historyIndex + 1);
@@ -395,7 +453,7 @@ export default function ResumeLayout() {
       <ProfileHeader
         name={`${resume?.personalInfo?.firstName || "Avinash Mani"} ${resume?.personalInfo?.lastName || "Tripathi"}'s Resume`}
         title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
-        progress={50}
+        progress={progress}
         profileImage={profileImage}
         onProfileImageChange={handleProfileImageChange}
         onShare={() => setShowShareModal(true)}
