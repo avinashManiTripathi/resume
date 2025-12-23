@@ -2,10 +2,19 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
-
+import { AIAnalysis } from '@repo/utils-server';
+const { PDFParse } = require("pdf-parse");
+const pdfParse = PDFParse;
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const tailorService = new TailorService();
+
+
+router.get("/ai", async (req: Request, res: Response) => {
+
+    const response = await AIAnalysis();
+    res.send(response)
+})
 
 /**
  * POST /api/tailor/analyze
@@ -13,6 +22,9 @@ const tailorService = new TailorService();
  */
 router.post('/analyze', upload.single('resume'), async (req: Request, res: Response) => {
     try {
+
+        console.log("typeof ", typeof pdfParse);
+
         const { jobDescription, jobTitle, company } = req.body;
 
         if (!jobDescription) {
@@ -22,7 +34,7 @@ router.post('/analyze', upload.single('resume'), async (req: Request, res: Respo
         // For now, use mock resume data if no file uploaded
         // In production, extract text from uploaded file
         const resumeText = req.file
-            ? await extractTextFromFile(req.file)
+            ? await extractTextFromFile(req.file.buffer)
             : getMockResumeText();
 
         const analysis = await tailorService.analyzeResume(resumeText, jobDescription, {
@@ -60,13 +72,72 @@ router.post('/apply-suggestions', async (req: Request, res: Response) => {
     }
 });
 
+
+
+/**
+ * POST /api/tailor/parse
+ * Parse resume PDF and tailor it to job description using AI
+ * Returns structured JSON data for the editor
+ */
+router.post('/parse', upload.single('resume'), async (req: Request, res: Response) => {
+    try {
+        const { jobDescription, jobTitle, company } = req.body;
+
+        if (!jobDescription) {
+            return res.status(400).json({ error: 'Job description is required' });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'Resume file is required' });
+        }
+
+        // Extract text from PDF
+        const resumeText = await extractTextFromFile(req.file.buffer);
+
+        // Parse resume with AI
+        const { parseResumeWithAI } = await import('@repo/utils-server');
+        const parsedData = await parseResumeWithAI(
+            resumeText,
+            jobDescription,
+            jobTitle,
+            company
+        );
+
+        res.json({
+            success: true,
+            data: parsedData,
+            message: 'Resume parsed and tailored successfully'
+        });
+    } catch (error: any) {
+        console.error('Parse error:', error);
+        res.status(500).json({
+            error: 'Failed to parse resume',
+            message: error.message
+        });
+    }
+});
+
 /**
  * Helper function to extract text from uploaded file
  */
-async function extractTextFromFile(file: Express.Multer.File): Promise<string> {
-    // TODO: Implement PDF/DOCX text extraction
-    // For now, return mock data
-    return getMockResumeText();
+async function extractTextFromFile(file: Buffer): Promise<string> {
+    try {
+        // pdf-parse v2 API: create parser instance with buffer
+        const parser = new pdfParse({ data: file });
+
+        // Extract text using getText() method
+        const result = await parser.getText();
+
+        if (!result || !result.text) {
+            throw new Error('No text extracted from PDF');
+        }
+
+        console.log('PDF parsed successfully, text length:', result.text.length);
+        return result.text;
+    } catch (error: any) {
+        console.error('PDF parsing error:', error);
+        throw new Error(`Failed to extract text from PDF: ${error.message}`);
+    }
 }
 
 /**

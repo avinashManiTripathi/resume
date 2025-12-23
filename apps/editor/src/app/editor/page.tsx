@@ -59,6 +59,39 @@ export default function ResumeLayout() {
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
 
+  // Check for resume data from tailor page
+  useEffect(() => {
+    const fromTailor = searchParams.get('fromTailor');
+    if (fromTailor === 'true') {
+      try {
+        // Get data from sessionStorage
+        const storedData = sessionStorage.getItem('parsedResumeData');
+        if (storedData) {
+          const parsedData = JSON.parse(storedData);
+
+          console.log('Loading resume data from sessionStorage:', parsedData);
+
+          // Update resume state with parsed data
+          setResume(parsedData);
+
+          // Reset history with new data
+          setHistory([parsedData]);
+          setHistoryIndex(0);
+
+          // Clean up sessionStorage and URL parameter
+          sessionStorage.removeItem('parsedResumeData');
+          const url = new URL(window.location.href);
+          url.searchParams.delete('fromTailor');
+          window.history.replaceState({}, '', url.toString());
+
+          console.log('Resume data loaded successfully');
+        }
+      } catch (error) {
+        console.error('Failed to load resume data from sessionStorage:', error);
+      }
+    }
+  }, [searchParams]);
+
   const [schema, setSchema] = useState<FormSchema>({
     personalInfo: {
       label: "Personal Info",

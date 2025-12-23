@@ -817,7 +817,7 @@ export default function Home() {
 
         /* Hero Section */
         .hero {
-          padding: 6rem 2rem;
+          padding: 2rem 2rem;
           background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
         }
 

@@ -638,3 +638,7 @@ export const RESUMES = [
 </html>`
   }
 ]
+
+
+
+export const GEMINI_API = "AIzaSyATXJG5bmetauJKiOHKt8hNlYot3DpSZAU"

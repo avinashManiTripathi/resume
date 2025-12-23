@@ -48,42 +48,56 @@ export default function TailorResume() {
             return;
         }
 
+        if (resumeSource === 'upload' && !uploadedFile) {
+            alert('Please upload a resume file');
+            return;
+        }
+
         setIsAnalyzing(true);
 
         try {
-            // Store data in sessionStorage for results page
-            sessionStorage.setItem('tailorData', JSON.stringify({
-                resumeSource,
-                jobDescription,
-                jobTitle,
-                company,
-                fileName: uploadedFile?.name
-            }));
-
-            // Call API
+            // Call the new parse API endpoint
             const formData = new FormData();
+
             if (resumeSource === 'upload' && uploadedFile) {
                 formData.append('resume', uploadedFile);
+            } else {
+                // For 'current' resume, we'd need to get the current resume data
+                // For now, show an error
+                alert('Please upload a resume file. Using current resume is coming soon!');
+                setIsAnalyzing(false);
+                return;
             }
-            formData.append('jobDescription', jobDescription);
-            formData.append('jobTitle', jobTitle);
-            formData.append('company', company);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/tailor/analyze`, {
+            formData.append('jobDescription', jobDescription);
+            if (jobTitle) formData.append('jobTitle', jobTitle);
+            if (company) formData.append('company', company);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/tailor/parse`, {
                 method: 'POST',
                 body: formData,
             });
 
-            const results = await response.json();
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to parse resume');
+            }
 
-            // Store results
-            sessionStorage.setItem('tailorResults', JSON.stringify(results));
+            const result = await response.json();
 
-            // Navigate to results
-            router.push('/tailor/results');
-        } catch (error) {
+            if (result.success && result.data) {
+                // Store the resume data in sessionStorage to avoid URL encoding issues
+                const resumeData = result.data;
+                sessionStorage.setItem('parsedResumeData', JSON.stringify(resumeData));
+
+                // Redirect to editor with a flag
+                router.push('/editor?fromTailor=true');
+            } else {
+                throw new Error('Invalid response from server');
+            }
+        } catch (error: any) {
             console.error('Analysis failed:', error);
-            alert('Failed to analyze resume. Please try again.');
+            alert(`Failed to parse resume: ${error.message}`);
         } finally {
             setIsAnalyzing(false);
         }
@@ -271,12 +285,12 @@ export default function TailorResume() {
                         {isAnalyzing ? (
                             <>
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Analyzing Resume...
+                                Parsing Resume with AI...
                             </>
                         ) : (
                             <>
                                 <Sparkles className="w-5 h-5" />
-                                Analyze Resume
+                                Parse & Edit Resume
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
@@ -309,9 +323,9 @@ export default function TailorResume() {
                         <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                             <ArrowRight className="w-6 h-6 text-green-600" />
                         </div>
-                        <h3 className="font-semibold text-gray-900 mb-2">One-Click Apply</h3>
+                        <h3 className="font-semibold text-gray-900 mb-2">Edit & Customize</h3>
                         <p className="text-sm text-gray-600">
-                            Apply suggested improvements to your resume with a single click
+                            Review AI-parsed data in the editor, select templates, and customize before downloading
                         </p>
                     </div>
                 </div>
