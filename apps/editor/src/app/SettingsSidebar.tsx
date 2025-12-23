@@ -1,13 +1,12 @@
-"use client";
-
 import { useState } from "react";
-import { ChevronDown, ChevronUp, LayoutGrid } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutGrid, Sparkles } from "lucide-react";
 import { ColorPicker } from "@repo/ui/color-picker";
 import { ThemeSelector } from "@repo/ui/theme-selector";
 import { ExportOptions } from "@repo/ui/export-options";
 import { LanguageSelector } from "@repo/ui/language-selector";
 import { NumberInput } from "@repo/ui/number-input";
 import { Button } from "@repo/ui/button";
+import { useRouter } from "next/navigation";
 
 interface SettingsSidebarProps {
     onExport: (format: "pdf" | "doc") => void;
@@ -15,6 +14,7 @@ interface SettingsSidebarProps {
 }
 
 export default function SettingsSidebar({ onExport, onTemplateChange }: SettingsSidebarProps) {
+    const router = useRouter();
     const [language, setLanguage] = useState("en");
     const [fontSize, setFontSize] = useState(12);
     const [themeColor, setThemeColor] = useState("#000000");
@@ -33,9 +33,16 @@ export default function SettingsSidebar({ onExport, onTemplateChange }: Settings
 
     return (
         <div className="w-70 rounded-lg  bg-gray-50 border-l border-gray-200 overflow-y-auto">
-            <div className="p-6 bg-white border-b border-gray-200">
+            <div className="p-6 bg-white border-b border-gray-200 space-y-3">
                 <Button onClick={onTemplateChange} variant="outline" className="w-full">
                     <LayoutGrid size={18} /> Change Template
+                </Button>
+                <Button 
+                    onClick={() => router.push('/tailor')} 
+                    variant="primary" 
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                    <Sparkles size={18} /> Tailor My Resume
                 </Button>
             </div>
 

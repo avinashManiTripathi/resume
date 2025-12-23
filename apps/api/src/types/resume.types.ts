@@ -40,6 +40,29 @@ export interface Language {
     proficiency?: string;
 }
 
+export interface CustomSectionField {
+    label: string;
+    value: string;
+    type: 'text' | 'richtext' | 'date' | 'month' | 'email' | 'select';
+}
+
+export interface CustomSectionItem {
+    id: string;
+    fields: Record<string, CustomSectionField>;
+}
+
+export interface CustomSection {
+    id: string;
+    label: string;
+    icon?: string;
+    items: CustomSectionItem[];
+    fieldDefinitions: Record<string, {
+        label: string;
+        type: 'text' | 'richtext' | 'date' | 'month' | 'email' | 'select';
+        options?: string[];
+    }>;
+}
+
 export interface ResumeData {
     templateId?: string;
     order?: string[];
@@ -56,6 +79,7 @@ export interface ResumeData {
     volunteer?: any[];
     interests?: any[];
     references?: any[];
+    customSections?: CustomSection[];
 }
 
 export interface PdfGenerationOptions {

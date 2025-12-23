@@ -2,7 +2,7 @@ export const RESUMES = [
   {
     id: "692bcfd239561eef09d89aa9",
     name: "Professional Classic",
-    image: "https://resume.io/cdn-cgi/image/width=852,format=auto/assets/templates/professional-f47a4c42d8b8c5c0e5c98e6a7c8f9d3e2b1a0c9d8e7f6a5b4c3d2e1f0a9b8c7d.jpg",
+    image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272",
     html: `<!DOCTYPE html>
 <html lang="en">
 <head>

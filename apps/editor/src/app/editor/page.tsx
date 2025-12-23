@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
 import { useDebounce, exportToDoc } from "@repo/utils-client";
 import { useSearchParams } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
@@ -9,77 +9,10 @@ import GenericForm from "../GenericForm";
 import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
-
-export const resumeSchema: FormSchema = {
-  personalInfo: {
-    label: "Personal Info",
-    type: "object",
-    isCollapsible: false,
-    fields: {
-      jobTitle: { label: "Job Title", type: "text", className: "w-full" },
-      firstName: { label: "First Name", type: "text", className: "w-[calc(50%-4px)]" },
-      lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
-      email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
-      phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
-      summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
-    }
-  },
-
-  experience: {
-    label: "Employment History",
-    type: "array",
-    isCollapsible: true,
-    item: {
-      jobTitle: { label: "Job Title", type: "text", className: "w-[calc(50%-4px)]" },
-      company: { label: "Employer", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
-      description: { label: "Description", type: "richtext", className: "w-full" }
-    }
-  },
-
-  education: {
-    label: "Education",
-    type: "array",
-    isCollapsible: true,
-    item: {
-      degree: { label: "Degree", type: "text", className: "w-[calc(50%-4px)]" },
-      institution: { label: "Institution", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
-      description: { label: "Description", type: "richtext", className: "w-full" }
-    }
-  },
-  projects: {
-    label: "Projects",
-    type: "array",
-    isCollapsible: true,
-    item: {
-      name: { label: "Project Name", type: "text", className: "w-[calc(50%-4px)]" },
-      companyName: { label: "Company Name", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
-      description: { label: "Description", type: "richtext", className: "w-full" }
-    }
-  },
-
-  skills: {
-    label: "Skills",
-    type: "array",
-    isCollapsible: true,
-    item: {
-      name: { label: "Skill Name", type: "text", className: "w-[calc(50%-4px)]" },
-      level: {
-        label: "Level",
-        type: "select",
-        options: ["Beginner", "Intermediate", "Advanced", "Expert"],
-        className: "w-[calc(50%-4px)]"
-      }
-    }
-  }
-};
+import ShareModal from "../ShareModal";
 
 const initialResume = {
+
   "personalInfo": {
     "firstName": "Avinash Mani",
     "lastName": "Tripathi",
@@ -118,16 +51,97 @@ export default function ResumeLayout() {
   const urlTemplateId = searchParams.get('templateId');
   const defaultTemplateId = "692bcfd239561eef09d89aa9";
 
+  // Undo/Redo history
+  const [history, setHistory] = useState<any[]>([initialResume]);
+  const [historyIndex, setHistoryIndex] = useState(0);
   const [resume, setResume] = useState(initialResume);
-  const [schema, setSchema] = useState(resumeSchema);
+
+  // Profile image
+  const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
+
+  const [schema, setSchema] = useState<FormSchema>({
+    personalInfo: {
+      label: "Personal Info",
+      type: "object",
+      isCollapsible: false,
+      fields: {
+        jobTitle: { label: "Job Title", type: "text", className: "w-full" },
+        firstName: { label: "First Name", type: "text", className: "w-[calc(50%-4px)]" },
+        lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
+        email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
+        phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
+        summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
+      }
+    },
+    experience: {
+      label: "Employment History",
+      type: "array",
+      isCollapsible: true,
+      item: {
+        jobTitle: { label: "Job Title", type: "text", className: "w-[calc(50%-4px)]" },
+        company: { label: "Employer", type: "text", className: "w-[calc(50%-4px)]" },
+        startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
+        endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+        description: { label: "Description", type: "richtext", className: "w-full" }
+      }
+    },
+    education: {
+      label: "Education",
+      type: "array",
+      isCollapsible: true,
+      item: {
+        degree: { label: "Degree", type: "text", className: "w-[calc(50%-4px)]" },
+        institution: { label: "Institution", type: "text", className: "w-[calc(50%-4px)]" },
+        startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
+        endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+        description: { label: "Description", type: "richtext", className: "w-full" }
+      }
+    },
+    projects: {
+      label: "Projects",
+      type: "array",
+      isCollapsible: true,
+      item: {
+        name: { label: "Project Name", type: "text", className: "w-[calc(50%-4px)]" },
+        companyName: { label: "Company Name", type: "text", className: "w-[calc(50%-4px)]" },
+        startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
+        endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+        description: { label: "Description", type: "richtext", className: "w-full" }
+      }
+    },
+    skills: {
+      label: "Skills",
+      type: "array",
+      isCollapsible: true,
+      item: {
+        name: { label: "Skill Name", type: "text", className: "w-[calc(50%-4px)]" },
+        level: {
+          label: "Level",
+          type: "select",
+          options: ["Beginner", "Intermediate", "Advanced", "Expert"],
+          className: "w-[calc(50%-4px)]"
+        }
+      }
+    }
+  });
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
+
   const debouncedResume = useDebounce(resume, 500);
-  const [sectionOrder, setSectionOrder] = useState<string[]>(Object.keys(schema));
 
+  // Initialize section order based on schema keys
+  const initialSectionOrder = useMemo(() => Object.keys(schema), []);
+  const [sectionOrder, setSectionOrder] = useState<string[]>(initialSectionOrder);
+  const debouncedSectionOrder = useDebounce(sectionOrder, 500);
 
-  const [, setTotalPages] = useState(0);
-  const [pageCount, setPageCount] = useState(1);
+  // Page navigation
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Zoom control
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const zoomLevels = [50, 75, 100, 125, 150, 200];
 
   const mainRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -136,6 +150,70 @@ export default function ResumeLayout() {
   const requestIdRef = useRef(0);
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
+
+  // Undo/Redo functions
+  const addToHistory = (newState: any) => {
+    const newHistory = history.slice(0, historyIndex + 1);
+    newHistory.push(JSON.parse(JSON.stringify(newState)));
+    if (newHistory.length > 50) newHistory.shift();
+    setHistory(newHistory);
+    setHistoryIndex(newHistory.length - 1);
+  };
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      const newIndex = historyIndex - 1;
+      setHistoryIndex(newIndex);
+      setResume(JSON.parse(JSON.stringify(history[newIndex])));
+    }
+  };
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      const newIndex = historyIndex + 1;
+      setHistoryIndex(newIndex);
+      setResume(JSON.parse(JSON.stringify(history[newIndex])));
+    }
+  };
+
+  // Page navigation
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Zoom controls
+  const zoomIn = () => {
+    const currentIndex = zoomLevels.indexOf(zoomLevel);
+    if (currentIndex < zoomLevels.length - 1) {
+      setZoomLevel(zoomLevels[currentIndex + 1]);
+    }
+  };
+
+  const zoomOut = () => {
+    const currentIndex = zoomLevels.indexOf(zoomLevel);
+    if (currentIndex > 0) {
+      setZoomLevel(zoomLevels[currentIndex - 1]);
+    }
+  };
+
+  // Handle resume changes with history
+  const handleResumeChange = (newResume: any) => {
+    setResume(newResume);
+    addToHistory(newResume);
+  };
+
+  // Handle profile image change
+  const handleProfileImageChange = (imageUrl: string) => {
+    setProfileImage(imageUrl);
+  };
 
   const handleExport = (format: "pdf" | "doc") => {
     if (format === "pdf") {
@@ -152,14 +230,14 @@ export default function ResumeLayout() {
     }
   };
 
-  const renderPdf = async (page = pageCount) => {
+  const renderPdf = async (page = currentPage) => {
     if (!mainRef.current) return;
 
     const requestId = ++requestIdRef.current;
     const resumeData = {
       templateId,
       ...resume,
-      order: sectionOrder
+      order: debouncedSectionOrder
     };
 
     const res = await fetch(`${API_BASE}/convert-html-to-pdf`, {
@@ -185,7 +263,9 @@ export default function ResumeLayout() {
     const containerWidth = mainRef.current.clientWidth;
     const dpr = window.devicePixelRatio || 1;
     const baseViewport = pdfPage.getViewport({ scale: 1 });
-    const scale = containerWidth / baseViewport.width;
+
+    // Apply zoom level
+    const scale = (containerWidth / baseViewport.width) * (zoomLevel / 100);
     const viewport = pdfPage.getViewport({ scale });
 
     const offscreen = offscreenRef.current ?? document.createElement("canvas");
@@ -221,10 +301,43 @@ export default function ResumeLayout() {
     ctx.drawImage(offscreen, 0, 0);
   };
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Undo/Redo
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      } else if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
+        e.preventDefault();
+        redo();
+      }
+      // Page navigation
+      else if (e.key === 'ArrowUp' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        prevPage();
+      } else if (e.key === 'ArrowDown' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        nextPage();
+      }
+      // Zoom
+      else if ((e.metaKey || e.ctrlKey) && (e.key === '=' || e.key === '+')) {
+        e.preventDefault();
+        zoomIn();
+      } else if ((e.metaKey || e.ctrlKey) && (e.key === '-' || e.key === '_')) {
+        e.preventDefault();
+        zoomOut();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [historyIndex, history, currentPage, totalPages, zoomLevel]);
+
   useEffect(() => {
     renderPdf();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedResume, pageCount, sectionOrder, templateId]);
+  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel]);
 
   useLayoutEffect(() => {
     const onResize = () => renderPdf();
@@ -242,6 +355,7 @@ export default function ResumeLayout() {
 
 
 
+
   return (
     <div className="flex flex-col h-screen w-full bg-gray-100">
       {/* Header */}
@@ -249,8 +363,9 @@ export default function ResumeLayout() {
         name={`${resume?.personalInfo?.firstName || "Avinash Mani"} ${resume?.personalInfo?.lastName || "Tripathi"}'s Resume`}
         title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
         progress={50}
-        profileImage="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-        onShare={() => console.log("Share")}
+        profileImage={profileImage}
+        onProfileImageChange={handleProfileImageChange}
+        onShare={() => setShowShareModal(true)}
         onDownload={() => {
           const resumeData = {
             templateId,
@@ -259,8 +374,17 @@ export default function ResumeLayout() {
           };
           downloadPdf(apiUrl, "resume", resumeData);
         }}
-        onUndo={() => console.log("Undo")}
-        onRedo={() => console.log("Redo")}
+        onUndo={undo}
+        onRedo={redo}
+        canUndo={historyIndex > 0}
+        canRedo={historyIndex < history.length - 1}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPrevPage={prevPage}
+        onNextPage={nextPage}
+        zoomLevel={zoomLevel}
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
       />
 
       {/* Main Content - 3 Column Layout */}
@@ -270,11 +394,12 @@ export default function ResumeLayout() {
           {showTemplates ? (
             <TemplateSelector
               apiBase={API_BASE || 'http://localhost:4000'}
+              selectedTemplateId={templateId}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {
                 console.log('Selected template:', template);
                 setTemplateId(template.id);
-                setShowTemplates(false);
+                // Don't close template selector - user must click back button
               }}
             />
           ) : (
@@ -283,7 +408,7 @@ export default function ResumeLayout() {
               data={resume}
               sectionOrder={sectionOrder}
               setSectionOrder={setSectionOrder}
-              onChange={setResume as any}
+              onChange={handleResumeChange}
               onSchemaChange={setSchema}
             />
           )}
@@ -302,6 +427,13 @@ export default function ResumeLayout() {
           onTemplateChange={() => setShowTemplates(true)}
         />
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        resumeUrl={typeof window !== 'undefined' ? window.location.href : ''}
+      />
     </div>
   );
 }

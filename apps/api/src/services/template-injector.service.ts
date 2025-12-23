@@ -223,6 +223,148 @@ export class TemplateInjectorService {
     }
 
     /**
+     * Create a custom section container dynamically
+     */
+    private createCustomSectionContainer(document: Document, section: any): HTMLElement {
+        const sectionEl = document.createElement('section');
+        sectionEl.id = `section-${section.id}`;
+        sectionEl.className = 'mb-6';
+        sectionEl.style.display = 'none';
+
+        // Create title
+        const title = document.createElement('h2');
+        title.className = 'text-lg font-serif font-bold border-b border-gray-400 pb-1';
+        title.textContent = section.label;
+        sectionEl.appendChild(title);
+
+        // Create items container
+        const itemsList = document.createElement('div');
+        itemsList.id = `${section.id}-list`;
+        sectionEl.appendChild(itemsList);
+
+        // Create item template
+        const itemTemplate = this.createCustomItemTemplate(document, section);
+        sectionEl.appendChild(itemTemplate);
+
+        return sectionEl;
+    }
+
+    /**
+     * Create item template for custom section
+     */
+    private createCustomItemTemplate(document: Document, section: any): HTMLElement {
+        const template = document.createElement('div');
+        template.className = `${section.id}-item item-template mt-4`;
+        template.setAttribute('data-template', section.id);
+
+        // Create fields based on field definitions
+        if (section.fieldDefinitions) {
+            Object.entries(section.fieldDefinitions).forEach(([fieldKey, fieldDef]: [string, any]) => {
+                const fieldEl = document.createElement(fieldDef.type === 'richtext' ? 'div' : 'p');
+                fieldEl.className = `${section.id}-${fieldKey} text-sm`;
+
+                if (fieldDef.type !== 'richtext') {
+                    const label = document.createElement('span');
+                    label.className = 'font-bold';
+                    label.textContent = `${fieldDef.label}: `;
+                    fieldEl.appendChild(label);
+
+                    const valueSpan = document.createElement('span');
+                    valueSpan.className = `${section.id}-${fieldKey}-value`;
+                    fieldEl.appendChild(valueSpan);
+                } else {
+                    fieldEl.className = `${section.id}-${fieldKey} text-sm text-gray-700 mt-2`;
+                }
+
+                template.appendChild(fieldEl);
+            });
+        }
+
+        return template;
+    }
+
+    /**
+     * Inject custom sections by cloning template
+     */
+    private injectCustomSections(dom: JSDOM, customSections?: any[], insertAfter?: HTMLElement | null): void {
+        if (!customSections || customSections.length === 0) return;
+
+        const document = dom.window.document;
+
+        customSections.forEach(section => {
+            if (!section.items || section.items.length === 0) return;
+
+            // Find or create custom section container
+            let sectionContainer = document.getElementById(`section-${section.id}`);
+
+            if (!sectionContainer) {
+                // Create new section dynamically
+                sectionContainer = this.createCustomSectionContainer(document, section);
+                const resumeRoot = document.getElementById('resume-root') ||
+                    document.querySelector('main') ||
+                    document.body;
+
+                // Insert in proper position based on order
+                if (resumeRoot) {
+                    if (insertAfter && insertAfter.parentNode === resumeRoot) {
+                        // Insert after the reference element
+                        if (insertAfter.nextSibling) {
+                            resumeRoot.insertBefore(sectionContainer, insertAfter.nextSibling);
+                        } else {
+                            resumeRoot.appendChild(sectionContainer);
+                        }
+                    } else {
+                        // No valid reference, append to end
+                        resumeRoot.appendChild(sectionContainer);
+                    }
+                }
+            }
+
+            if (!sectionContainer) return;
+
+            sectionContainer.style.display = 'block';
+
+            // Update section title
+            const titleElement = sectionContainer.querySelector('h2');
+            if (titleElement) {
+                titleElement.textContent = section.label;
+            }
+
+            // Inject items
+            const itemsList = sectionContainer.querySelector(`#${section.id}-list`);
+            const itemTemplate = sectionContainer.querySelector(`.${section.id}-item.item-template`) as HTMLElement;
+
+            if (itemsList && itemTemplate && section.items) {
+                section.items.forEach((item: any) => {
+                    const clone = itemTemplate.cloneNode(true) as HTMLElement;
+                    clone.classList.remove('item-template');
+                    clone.style.display = 'block';
+
+                    // Inject field values
+                    if (item.fields) {
+                        Object.entries(item.fields).forEach(([fieldKey, field]: [string, any]) => {
+                            const fieldElement = clone.querySelector(`.${section.id}-${fieldKey}`);
+                            const valueElement = clone.querySelector(`.${section.id}-${fieldKey}-value`);
+
+                            if (field.type === 'richtext' && fieldElement) {
+                                fieldElement.innerHTML = field.value || '';
+                            } else if (valueElement) {
+                                valueElement.textContent = field.value || '';
+                            } else if (fieldElement) {
+                                // Fallback: set text content directly
+                                fieldElement.textContent = field.value || '';
+                            }
+                        });
+                    }
+
+                    itemsList.appendChild(clone);
+                });
+            }
+        });
+    }
+
+
+    /**
      * Main method to generate HTML from template and data
      */
     public generateHTML(data: ResumeData): string {
@@ -234,15 +376,55 @@ export class TemplateInjectorService {
 
         // Create JSDOM instance for DOM manipulation
         const dom = new JSDOM(html);
+        const document = dom.window.document;
 
-        // Inject personal information
+        // Inject personal information (always first)
         this.injectPersonalInfo(dom, data.personalInfo);
 
-        // Inject array-based sections by cloning templates
-        this.injectExperience(dom, data.experience);
-        this.injectEducation(dom, data.education);
-        this.injectProjects(dom, data.projects);
-        this.injectSkills(dom, data.skills);
+        // Get section order, default to standard order if not provided
+        const order = data.order || ['experience', 'education', 'projects', 'skills'];
+
+        // Track last inserted section for proper ordering
+        let lastSection: HTMLElement | null = document.getElementById('section-personalInfo');
+
+        // Inject sections in the specified order
+        order.forEach(sectionKey => {
+            let currentSection: HTMLElement | null = null;
+
+            switch (sectionKey) {
+                case 'experience':
+                    this.injectExperience(dom, data.experience);
+                    currentSection = document.getElementById('section-experience');
+                    break;
+                case 'education':
+                    this.injectEducation(dom, data.education);
+                    currentSection = document.getElementById('section-education');
+                    break;
+                case 'projects':
+                    this.injectProjects(dom, data.projects);
+                    currentSection = document.getElementById('section-projects');
+                    break;
+                case 'skills':
+                    this.injectSkills(dom, data.skills);
+                    currentSection = document.getElementById('section-skills');
+                    break;
+                default:
+                    // Check if this is a custom section
+                    if (data.customSections) {
+                        const customSection = data.customSections.find(cs => cs.id === sectionKey);
+                        if (customSection) {
+                            this.injectCustomSections(dom, [customSection], lastSection);
+                            currentSection = document.getElementById(`section-${sectionKey}`);
+                        }
+                    }
+                    break;
+            }
+
+            // Update last section if current section was successfully injected
+            if (currentSection && currentSection.style.display !== 'none') {
+                lastSection = currentSection;
+            }
+        });
 
         // Return the modified HTML
         return dom.serialize();

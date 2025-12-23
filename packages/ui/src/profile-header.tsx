@@ -12,6 +12,19 @@ interface ProfileHeaderProps {
     onDownload?: () => void;
     onUndo?: () => void;
     onRedo?: () => void;
+    canUndo?: boolean;
+    canRedo?: boolean;
+    // Page navigation
+    currentPage?: number;
+    totalPages?: number;
+    onPrevPage?: () => void;
+    onNextPage?: () => void;
+    // Zoom controls
+    zoomLevel?: number;
+    onZoomIn?: () => void;
+    onZoomOut?: () => void;
+    // Profile image upload
+    onProfileImageChange?: (imageUrl: string) => void;
 }
 
 export function ProfileHeader({
@@ -23,7 +36,26 @@ export function ProfileHeader({
     onDownload,
     onUndo,
     onRedo,
+    canUndo = false,
+    canRedo = false,
+    currentPage = 1,
+    totalPages = 1,
+    onPrevPage,
+    onNextPage,
+    zoomLevel = 100,
+    onZoomIn,
+    onZoomOut,
+    onProfileImageChange,
 }: ProfileHeaderProps) {
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file && onProfileImageChange) {
+            // Create a local URL for the image
+            const imageUrl = URL.createObjectURL(file);
+            onProfileImageChange(imageUrl);
+        }
+    };
+
     return (
         <div className="m-[10px]">
             <div className="flex items-stretch justify-between gap-2">
@@ -38,9 +70,20 @@ export function ProfileHeader({
                                     name.split(" ").map(n => n[0]).join("").toUpperCase()
                                 )}
                             </div>
-                            <div className="flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white">
+                            <label
+                                htmlFor="profile-image-upload"
+                                className="flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white cursor-pointer hover:bg-[#d1d5ea] transition-colors"
+                                title="Change profile picture"
+                            >
                                 <PencilLine size={12} />
-                            </div>
+                                <input
+                                    id="profile-image-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="hidden"
+                                />
+                            </label>
                         </div>
                         <div>
                             <h1 className="font-semibold text-gray-900">{name}</h1>
@@ -84,43 +127,75 @@ export function ProfileHeader({
                 {/* Right: Toolbar */}
                 <div className="flex bg-white rounded-lg px-4 py-3 flex-grow items-center gap-1 justify-between">
                     <div className="flex items-center gap-3">
+                        {/* Undo/Redo */}
                         <button
                             onClick={onUndo}
-                            className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900"
-                            title="Undo"
+                            disabled={!canUndo}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${canUndo ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Undo (Cmd+Z)"
                         >
-                            <CircleArrowUp className="color-[#5C5C5C]" size={20} />
+                            <Undo2 size={20} />
                         </button>
                         <button
                             onClick={onRedo}
-                            className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900"
-                            title="Redo"
+                            disabled={!canRedo}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${canRedo ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Redo (Cmd+Shift+Z)"
                         >
-                            <CircleArrowDown className="color-[#5C5C5C]" size={20} />
-                        </button>
-                        <span className="px-2 text-sm text-gray-600 bg-[#F5F5F5] rounded p-2">1/1</span>
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Left">
-                            <MousePointer className="color-[#5C5C5C]" size={20} />
-                        </button>
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Right">
-                            <Hand className="color-[#5C5C5C]" size={20} />
+                            <Redo2 size={20} />
                         </button>
 
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Left">
-                            <Undo2 className="color-[#5C5C5C]" size={20} />
+                        <div className="w-px h-6 bg-gray-200 mx-1"></div>
+
+                        {/* Page Navigation */}
+                        <button
+                            onClick={onPrevPage}
+                            disabled={currentPage <= 1}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${currentPage > 1 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Previous Page (↑)"
+                        >
+                            <CircleArrowUp size={20} />
                         </button>
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Rotate Right">
-                            <Redo2 className="color-[#5C5C5C]" size={20} />
+                        <span className="px-3 py-1 text-sm text-gray-700 bg-[#F5F5F5] rounded min-w-[60px] text-center">
+                            {currentPage}/{totalPages}
+                        </span>
+                        <button
+                            onClick={onNextPage}
+                            disabled={currentPage >= totalPages}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${currentPage < totalPages ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Next Page (↓)"
+                        >
+                            <CircleArrowDown size={20} />
                         </button>
 
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Zoom Out">
-                            <ZoomOut className="color-[#5C5C5C]" size={20} />
-                        </button>
-                        <span className="px-2 text-sm font-medium text-gray-700">50%</span>
-                        <button className="p-2 hover:bg-gray-50 rounded transition-colors text-gray-600 hover:text-gray-900" title="Zoom In">
-                            <ZoomIn className="color-[#5C5C5C]" size={20} />
-                        </button>
+                        <div className="w-px h-6 bg-gray-200 mx-1"></div>
 
+                        {/* Zoom Controls */}
+                        <button
+                            onClick={onZoomOut}
+                            disabled={zoomLevel <= 50}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${zoomLevel > 50 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Zoom Out (Cmd+-)"
+                        >
+                            <ZoomOut size={20} />
+                        </button>
+                        <span className="px-3 py-1 text-sm font-medium text-gray-700 min-w-[50px] text-center">
+                            {zoomLevel}%
+                        </span>
+                        <button
+                            onClick={onZoomIn}
+                            disabled={zoomLevel >= 200}
+                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${zoomLevel < 200 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
+                                }`}
+                            title="Zoom In (Cmd++)"
+                        >
+                            <ZoomIn size={20} />
+                        </button>
                     </div>
                     <div className="flex items-center gap-3">
                         <Button onClick={onShare} variant="outline">
@@ -137,9 +212,5 @@ export function ProfileHeader({
         </div>
     );
 }
-
-
-
-
 
 

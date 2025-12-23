@@ -39,11 +39,16 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
     useEffect(() => {
         // Update section order if schema changes
         const schemaKeys = Object.keys(schema);
-        console.log({ schemaKeys })
-        if (schemaKeys.length !== sectionOrder.length) {
+
+        // Only update if the keys are actually different (not just length)
+        const hasChanged = schemaKeys.length !== sectionOrder.length ||
+            schemaKeys.some((key, index) => !sectionOrder.includes(key));
+
+        if (hasChanged) {
+            console.log('Schema changed, updating section order:', schemaKeys);
             setSectionOrder(schemaKeys);
         }
-    }, [schema]);
+    }, [schema, sectionOrder, setSectionOrder]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -57,7 +62,35 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
     };
 
     const addItem = (key: string) => {
-        updateSection(key, [...(data[key] || []), {}]);
+        const newItem = {};
+        const updated = [...(data[key] || []), newItem];
+        const newData = { ...data, [key]: updated };
+
+        // Also update customSections if this is a custom section
+        if (newData.customSections) {
+            const customSectionIndex = newData.customSections.findIndex((cs: any) => cs.id === key);
+            if (customSectionIndex !== -1) {
+                const customSection = { ...newData.customSections[customSectionIndex] };
+
+                // Add new item to customSection.items
+                customSection.items = updated.map((item, idx) => ({
+                    id: `${key}-${idx}`,
+                    fields: Object.entries(item).reduce((acc, [fieldKey, fieldValue]) => {
+                        const fieldDef = customSection.fieldDefinitions[fieldKey];
+                        acc[fieldKey] = {
+                            label: fieldDef?.label || fieldKey,
+                            value: fieldValue as string || '',
+                            type: fieldDef?.type || 'text'
+                        };
+                        return acc;
+                    }, {} as Record<string, any>)
+                }));
+
+                newData.customSections[customSectionIndex] = customSection;
+            }
+        }
+
+        onChange(newData);
     };
 
     const updateArrayItem = (
@@ -68,7 +101,34 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
     ) => {
         const updated = [...data[key]];
         updated[index] = { ...updated[index], [field]: value };
-        updateSection(key, updated);
+
+        const newData = { ...data, [key]: updated };
+
+        // Also update customSections if this is a custom section
+        if (newData.customSections) {
+            const customSectionIndex = newData.customSections.findIndex((cs: any) => cs.id === key);
+            if (customSectionIndex !== -1) {
+                const customSection = { ...newData.customSections[customSectionIndex] };
+
+                // Sync items with the updated data
+                customSection.items = updated.map((item, idx) => ({
+                    id: `${key}-${idx}`,
+                    fields: Object.entries(item).reduce((acc, [fieldKey, fieldValue]) => {
+                        const fieldDef = customSection.fieldDefinitions[fieldKey];
+                        acc[fieldKey] = {
+                            label: fieldDef?.label || fieldKey,
+                            value: fieldValue as string,
+                            type: fieldDef?.type || 'text'
+                        };
+                        return acc;
+                    }, {} as Record<string, any>)
+                }));
+
+                newData.customSections[customSectionIndex] = customSection;
+            }
+        }
+
+        onChange(newData);
     };
 
     const removeItem = (key: string, index: number) => {
@@ -115,19 +175,48 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
             [sectionId]: {
                 label: sectionLabel,
                 type: "array" as const,
+                isCollapsible: true,
+                icon: template.icon,
                 item: template.fields
             }
         };
 
+        // Initialize custom section in data
+        const newData = { ...data };
+        if (!newData.customSections) {
+            newData.customSections = [];
+        }
+
+        // Add custom section definition
+        newData.customSections.push({
+            id: sectionId,
+            label: sectionLabel,
+            icon: template.icon,
+            items: [],
+            fieldDefinitions: Object.entries(template.fields).reduce((acc, [key, field]) => {
+                acc[key] = {
+                    label: field.label,
+                    type: field.type,
+                    options: field.options
+                };
+                return acc;
+            }, {} as Record<string, any>)
+        });
+
+        // Also initialize the section data array for form rendering
+        newData[sectionId] = [];
+
+        onChange(newData);
+
         // Update section order
         setSectionOrder([...sectionOrder, sectionId]);
 
-        // Initialize empty data for this section
-        onChange({ ...data, [sectionId]: [] });
-
         // Update schema
         onSchemaChange(newSchema);
+
+        setIsModalOpen(false);
     };
+
 
     return (
         <>

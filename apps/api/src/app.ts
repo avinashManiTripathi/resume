@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { config } from './config';
 import pdfRoutes from './routes/pdf.routes';
+import tailorRoutes from './routes/tailor.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 
@@ -32,24 +33,26 @@ export class App {
 
         // Request logging
         this.app.use(requestLogger);
-
-        // Health check (before other routes)
-        this.app.get('/', (req, res) => {
-            res.json({
-                status: 'ok',
-                message: 'Resume PDF API is running',
-                version: '1.0.0',
-                timestamp: new Date().toISOString(),
-            });
-        });
     }
 
     /**
      * Initialize routes
      */
     private initializeRoutes(): void {
+        // Health check endpoint
+        this.app.get('/health', (req, res) => {
+            res.json({
+                status: 'healthy',
+                timestamp: new Date().toISOString(),
+                uptime: process.uptime()
+            });
+        });
+
         // API routes
         this.app.use('/api', pdfRoutes);
+
+        // Tailor routes
+        this.app.use('/api/tailor', tailorRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);
