@@ -10,6 +10,7 @@ import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
+import { CloudCheck } from "lucide-react";
 
 const initialResume = {
 
@@ -58,6 +59,9 @@ export default function ResumeLayout() {
 
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
+
+  // Loading state for PDF generation
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -321,25 +325,10 @@ export default function ResumeLayout() {
     }
   };
 
-  const renderPdf = async (page = currentPage) => {
-    if (!mainRef.current) return;
+  const renderPDFPage = async (pdfData: ArrayBuffer, page: number) => {
+    if (!mainRef.current || !canvasRef.current) return;
 
     const requestId = ++requestIdRef.current;
-    const resumeData = {
-      templateId,
-      ...resume,
-      order: debouncedSectionOrder
-    };
-
-    const res = await fetch(`${API_BASE}/convert-html-to-pdf`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(resumeData),
-    });
-
-    if (requestId !== requestIdRef.current) return;
-
-    const pdfData = await res.arrayBuffer();
     const pdfjsLib = (window as any).pdfjsLib;
 
     pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -403,27 +392,38 @@ export default function ResumeLayout() {
         e.preventDefault();
         redo();
       }
-      // Page navigation
-      else if (e.key === 'ArrowUp' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        prevPage();
-      } else if (e.key === 'ArrowDown' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        nextPage();
-      }
-      // Zoom
-      else if ((e.metaKey || e.ctrlKey) && (e.key === '=' || e.key === '+')) {
-        e.preventDefault();
-        zoomIn();
-      } else if ((e.metaKey || e.ctrlKey) && (e.key === '-' || e.key === '_')) {
-        e.preventDefault();
-        zoomOut();
-      }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [historyIndex, history, currentPage, totalPages, zoomLevel]);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [historyIndex, history]);
+
+  // Render PDF with loading state
+  const renderPdf = async (page = currentPage) => {
+    if (!canvasRef.current || !mainRef.current) return;
+
+    setIsGeneratingPDF(true);
+    try {
+      const resumeData = {
+        templateId,
+        ...resume,
+        order: debouncedSectionOrder
+      };
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(resumeData),
+      });
+
+      const pdfData = await response.arrayBuffer();
+      await renderPDFPage(pdfData, page);
+    } catch (error) {
+      console.error("Error rendering PDF:", error);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
 
   useEffect(() => {
     renderPdf();
@@ -506,9 +506,28 @@ export default function ResumeLayout() {
         </aside>
 
         {/* Center Canvas - Preview (60% minus right sidebar) */}
-        <main ref={mainRef} className="flex-1 rounded-lg overflow-y-auto bg-gray-100 flex justify-center py-8 px-4">
-          <div className="bg-white shadow-lg">
-            <canvas ref={canvasRef} />
+        <main ref={mainRef} className="flex-1 relative rounded-lg overflow-y-auto bg-gray-100 py-8 px-4">
+          {/* Save Progress Indicator */}
+          <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none z-10">
+            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200 pointer-events-auto">
+              {isGeneratingPDF ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-xs text-gray-600 leading-none">Saving...</span>
+                </>
+              ) : (
+                <>
+                  <CloudCheck size={14} className="text-green-500 flex-shrink-0" />
+                  <span className="text-xs text-gray-600 leading-none">Saved</span>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <div className="bg-white shadow-lg">
+              <canvas ref={canvasRef} />
+            </div>
           </div>
         </main>
 

@@ -86,8 +86,8 @@ export function ProfileHeader({
                             </label>
                         </div>
                         <div>
-                            <h1 className="text-sm font-semibold text-gray-900">{name}</h1>
-                            <p className="text-xs text-gray-500">{title}</p>
+                            <h1 className="text-lg font-semibold text-gray-900">{name}</h1>
+                            <p className="text-sm text-gray-500">{title}</p>
                         </div>
                     </div>
                     <div className="ml-4 flex items-center gap-2">
