@@ -12,6 +12,18 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "lucide-react": "^0.562.0"
+    "cookie-parser": "^1.4.7",
+    "express-session": "^1.18.2",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.562.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express-session": "^1.18.2",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.17"
   }
 }

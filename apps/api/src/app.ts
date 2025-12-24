@@ -1,11 +1,16 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
 import { config } from './config';
 import pdfRoutes from './routes/pdf.routes';
 import tailorRoutes from './routes/tailor.routes';
+import authRoutes from './routes/auth.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
+import { configurePassport } from './config/passport';
 
 export class App {
     public app: Application;
@@ -13,6 +18,7 @@ export class App {
     constructor() {
         this.app = express();
         this.initializeMiddlewares();
+        this.initializePassport();
         this.initializeRoutes();
         this.initializeErrorHandling();
     }
@@ -31,8 +37,31 @@ export class App {
         this.app.use(bodyParser.json({ limit: '10mb' }));
         this.app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
+        // Cookie parser
+        this.app.use(cookieParser());
+
+        // Session
+        this.app.use(session({
+            secret: process.env.SESSION_SECRET || 'your-session-secret',
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            },
+        }));
+
         // Request logging
         this.app.use(requestLogger);
+    }
+
+    /**
+     * Initialize Passport
+     */
+    private initializePassport(): void {
+        configurePassport();
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
     }
 
     /**
@@ -54,12 +83,15 @@ export class App {
         // Tailor routes
         this.app.use('/api/tailor', tailorRoutes);
 
+        // Auth routes
+        this.app.use('/api/auth', authRoutes);
+
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);
     }
 
 
-     
+
 
 
     /**
