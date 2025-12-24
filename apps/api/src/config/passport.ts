@@ -9,7 +9,7 @@ export const configurePassport = () => {
     passport.use(
         new GoogleStrategy(
             {
-                clientID: process.env.GOOGLE_CLIENT_ID || '',
+                clientID: "272529485120-hrdnd3udkueh4cindr8v2mbej8lc6ut4.apps.googleusercontent.com",
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
                 callbackURL: `${process.env.API_URL || 'http://localhost:4000'}/api/auth/google/callback`,
             },

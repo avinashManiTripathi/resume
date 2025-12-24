@@ -8,6 +8,9 @@ import { config } from './config';
 import pdfRoutes from './routes/pdf.routes';
 import tailorRoutes from './routes/tailor.routes';
 import authRoutes from './routes/auth.routes';
+import subscriptionRoutes from './routes/subscription.routes';
+import paymentRoutes from './routes/payment.routes';
+import atsRoutes from './routes/ats.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -85,6 +88,15 @@ export class App {
 
         // Auth routes
         this.app.use('/api/auth', authRoutes);
+
+        // Subscription routes
+        this.app.use('/api/subscription', subscriptionRoutes);
+
+        // Payment routes
+        this.app.use('/api/payment', paymentRoutes);
+
+        // ATS routes
+        this.app.use('/api/ats', atsRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
-import { useDebounce, exportToDoc } from "@repo/utils-client";
-import { useSearchParams } from "next/navigation";
+import { useDebounce, exportToDoc, canDownload, setSubscription, getSubscription, type SubscriptionTier } from "@repo/utils-client";
+import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "../FieldRenderer";
 import GenericForm from "../GenericForm";
@@ -10,6 +10,7 @@ import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
+import { PricingModal } from "@repo/ui/pricing-modal";
 import { CloudCheck } from "lucide-react";
 
 const initialResume = {
@@ -47,6 +48,7 @@ const initialResume = {
 export default function ResumeLayout() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
@@ -62,6 +64,26 @@ export default function ResumeLayout() {
 
   // Loading state for PDF generation
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+
+  // Check subscription on mount - redirect if no active subscription
+  useEffect(() => {
+    const subscription = getSubscription();
+    const fromSubscription = searchParams.get('fromSubscription');
+
+    // Skip check if user just came from subscription page
+    if (fromSubscription === 'true') {
+      // Clean up URL parameter
+      const url = new URL(window.location.href);
+      url.searchParams.delete('fromSubscription');
+      window.history.replaceState({}, '', url.toString());
+      return;
+    }
+
+    // Redirect to subscription page if no subscription exists
+    if (!subscription) {
+      router.push('/subscription?returnTo=editor');
+    }
+  }, [router, searchParams]);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -163,6 +185,8 @@ export default function ResumeLayout() {
   });
   const [showTemplates, setShowTemplates] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
+  const [pendingDownload, setPendingDownload] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
 
   const debouncedResume = useDebounce(resume, 500);
@@ -311,6 +335,13 @@ export default function ResumeLayout() {
   };
 
   const handleExport = (format: "pdf" | "doc") => {
+    // Check subscription before allowing download
+    if (!canDownload()) {
+      setShowPricingModal(true);
+      setPendingDownload(true);
+      return;
+    }
+
     if (format === "pdf") {
       const resumeData = {
         templateId,
@@ -322,6 +353,27 @@ export default function ResumeLayout() {
     } else {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
+    }
+  };
+
+  const handleSubscribe = (tier: SubscriptionTier) => {
+    // Save subscription to localStorage
+    setSubscription(tier, tier === 'free' ? undefined : 1);
+
+    // Close modal
+    setShowPricingModal(false);
+
+    // If there was a pending download and user subscribed to pro/premium, trigger it
+    if (pendingDownload && (tier === 'pro' || tier === 'premium')) {
+      setPendingDownload(false);
+      const resumeData = {
+        templateId,
+        ...resume,
+        order: sectionOrder
+      };
+      downloadPdf(apiUrl, "resume", resumeData);
+    } else {
+      setPendingDownload(false);
     }
   };
 
@@ -458,6 +510,13 @@ export default function ResumeLayout() {
         onProfileImageChange={handleProfileImageChange}
         onShare={() => setShowShareModal(true)}
         onDownload={() => {
+          // Check subscription before allowing download
+          if (!canDownload()) {
+            setShowPricingModal(true);
+            setPendingDownload(true);
+            return;
+          }
+
           const resumeData = {
             templateId,
             ...resume,
@@ -543,6 +602,16 @@ export default function ResumeLayout() {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         resumeUrl={typeof window !== 'undefined' ? window.location.href : ''}
+      />
+
+      {/* Pricing Modal */}
+      <PricingModal
+        isOpen={showPricingModal}
+        onClose={() => {
+          setShowPricingModal(false);
+          setPendingDownload(false);
+        }}
+        onSubscribe={handleSubscribe}
       />
     </div>
   );

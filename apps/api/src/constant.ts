@@ -641,4 +641,4 @@ export const RESUMES = [
 
 
 
-export const GEMINI_API = "AIzaSyATXJG5bmetauJKiOHKt8hNlYot3DpSZAU"
+export const GEMINI_API = "AIzaSyDkDm9CcAvoxwZeym5VhL9zE92ZXBQPNF0"

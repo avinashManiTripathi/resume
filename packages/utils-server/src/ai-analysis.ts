@@ -1,18 +1,18 @@
 import { GoogleGenAI } from "@google/genai";
-const ai = new GoogleGenAI({ apiKey: 'AIzaSyATXJG5bmetauJKiOHKt8hNlYot3DpSZAU' });
+const ai = new GoogleGenAI({ apiKey: 'AIzaSyDkDm9CcAvoxwZeym5VhL9zE92ZXBQPNF0' });
 
 export const AIAnalysis = async (
-    prompt: string = "Explain Node.js in simple terms"
+  prompt: string = "Explain Node.js in simple terms"
 ) => {
-    try {
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-        });
-        return response.text
-    } catch (error) {
-        console.log({ error })
-    }
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
+    return response.text
+  } catch (error) {
+    console.log({ error })
+  }
 };
 
 /**
@@ -24,13 +24,13 @@ export const AIAnalysis = async (
  * @returns Structured resume data in JSON format
  */
 export const parseResumeWithAI = async (
-    resumeText: string,
-    jobDescription: string,
-    jobTitle?: string,
-    company?: string
+  resumeText: string,
+  jobDescription: string,
+  jobTitle?: string,
+  company?: string
 ): Promise<any> => {
-    try {
-        const prompt = `You are an expert resume parser and ATS optimization specialist. Your task is to:
+  try {
+    const prompt = `You are an expert resume parser and ATS optimization specialist. Your task is to:
 
 1. Extract all information from the provided resume text
 2. Tailor the resume content to match the job description to increase chances of getting shortlisted
@@ -127,32 +127,32 @@ ${company ? `**COMPANY:** ${company}` : ''}
 
 Return ONLY the JSON object, nothing else.`;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-        });
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
 
-        const responseText = response.text;
+    const responseText = response.text;
 
-        if (!responseText) {
-            throw new Error('AI returned empty response');
-        }
-
-        // Clean the response - remove markdown code blocks if present
-        let cleanedText = responseText.trim();
-        if (cleanedText.startsWith('```json')) {
-            cleanedText = cleanedText.replace(/^```json\n/, '').replace(/\n```$/, '');
-        } else if (cleanedText.startsWith('```')) {
-            cleanedText = cleanedText.replace(/^```\n/, '').replace(/\n```$/, '');
-        }
-
-        // Parse the JSON
-        const parsedData = JSON.parse(cleanedText);
-
-        return parsedData;
-    } catch (error) {
-        console.error('AI Resume Parsing Error:', error);
-        throw new Error('Failed to parse resume with AI: ' + (error as Error).message);
+    if (!responseText) {
+      throw new Error('AI returned empty response');
     }
+
+    // Clean the response - remove markdown code blocks if present
+    let cleanedText = responseText.trim();
+    if (cleanedText.startsWith('```json')) {
+      cleanedText = cleanedText.replace(/^```json\n/, '').replace(/\n```$/, '');
+    } else if (cleanedText.startsWith('```')) {
+      cleanedText = cleanedText.replace(/^```\n/, '').replace(/\n```$/, '');
+    }
+
+    // Parse the JSON
+    const parsedData = JSON.parse(cleanedText);
+
+    return parsedData;
+  } catch (error) {
+    console.error('AI Resume Parsing Error:', error);
+    throw new Error('Failed to parse resume with AI: ' + (error as Error).message);
+  }
 };
 

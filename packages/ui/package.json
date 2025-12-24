@@ -28,7 +28,11 @@
     "./profile-header": "./src/profile-header.tsx",
     "./language-selector": "./src/language-selector.tsx",
     "./number-input": "./src/number-input.tsx",
-    "./rich-text-editor": "./src/rich-text-editor.tsx"
+    "./rich-text-editor": "./src/rich-text-editor.tsx",
+    "./pricing-modal": "./src/pricing-modal.tsx",
+    "./payment-method-selector": "./src/payment-method-selector.tsx",
+    "./billing-form": "./src/billing-form.tsx",
+    "./subscription-dashboard": "./src/subscription-dashboard.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
