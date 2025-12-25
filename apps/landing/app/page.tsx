@@ -513,10 +513,10 @@ export default function LandingPage() {
       {/* Final CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-6">
             Ready to Land Your Dream Job?
           </h2>
-          <p className="text-xl text-blue-100 mb-8">
+          <p className="text-xl text-gray-700 mb-8">
             Join 50,000+ professionals who've transformed their careers with ResumePro
           </p>
           <Link href="/editor" className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl">

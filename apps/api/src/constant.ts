@@ -553,7 +553,7 @@ export const RESUMES = [
   },
   {
     id: "692bcfddd39561eef09d89aa8",
-    name: "Compact Professional jjjdjd",
+    name: "Compact Professional",
     image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/441/persistent-resource/sydney-resume-templates.jpg?v=1651657428",
     html: `<!DOCTYPE html>
 <html lang="en">
@@ -641,7 +641,7 @@ export const RESUMES = [
   },
   {
     id: "692bcfd239561eef09d89aa8",
-    name: "Modern Professional 22",
+    name: "Modern Professional",
     image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272",
     html: `<!DOCTYPE html>
 <html lang="en">
@@ -993,4 +993,4 @@ export const RESUMES = [
 
 
 
-export const GEMINI_API = "AIzaSyDXnSbU0ktL_rZrdGXkWoEGzQXP7JadXEA"
+export const GEMINI_API = "AIzaSyCL8YQpOH_h-1j1gIkJzDzCLLT_n1ndHKc"

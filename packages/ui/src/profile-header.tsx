@@ -57,13 +57,13 @@ export function ProfileHeader({
     };
 
     return (
-        <div className="m-[10px]">
-            <div className="flex items-stretch justify-between gap-2">
+        <div className="md:m-[10px] m-0">
+            <div className="flex flex-col md:flex-row items-stretch justify-between gap-2">
                 {/* Left: Profile Info */}
-                <div className="w-[40%] bg-white justify-between rounded-lg px-4 py-3 flex items-center gap-4">
-                    <div className="flex items-center gap-4">
+                <div className="w-full md:w-[40%] bg-white justify-between rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-2 md:gap-4">
                         <div className="relative">
-                            <div className="w-14 border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden">
+                            <div className="w-10 md:w-14 border-[3px] md:border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-10 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden text-xs md:text-base">
                                 {profileImage ? (
                                     <img src={profileImage} alt={name} className="w-full h-full object-cover" />
                                 ) : (
@@ -72,7 +72,7 @@ export function ProfileHeader({
                             </div>
                             <label
                                 htmlFor="profile-image-upload"
-                                className="flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white cursor-pointer hover:bg-[#d1d5ea] transition-colors"
+                                className="hidden md:flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white cursor-pointer hover:bg-[#d1d5ea] transition-colors"
                                 title="Change profile picture"
                             >
                                 <PencilLine size={12} />
@@ -85,13 +85,13 @@ export function ProfileHeader({
                                 />
                             </label>
                         </div>
-                        <div>
-                            <h1 className="text-lg font-semibold text-gray-900">{name}</h1>
-                            <p className="text-sm text-gray-500">{title}</p>
+                        <div className="min-w-0 flex-1">
+                            <h1 className="text-sm md:text-lg font-semibold text-gray-900 truncate">{name}</h1>
+                            <p className="text-xs md:text-sm text-gray-500 truncate">{title}</p>
                         </div>
                     </div>
-                    <div className="ml-4 flex items-center gap-2">
-                        <svg className="w-12 h-12" viewBox="0 0 36 36">
+                    <div className="ml-2 md:ml-4 flex items-center gap-2">
+                        <svg className="w-8 h-8 md:w-12 md:h-12" viewBox="0 0 36 36">
                             <circle
                                 cx="18"
                                 cy="18"
@@ -116,7 +116,7 @@ export function ProfileHeader({
                                 y="18"
                                 textAnchor="middle"
                                 dy=".3em"
-                                className="text-[10px] font-semibold fill-gray-700"
+                                className="text-[8px] md:text-[10px] font-semibold fill-gray-700"
                             >
                                 {progress}%
                             </text>
@@ -124,9 +124,10 @@ export function ProfileHeader({
                     </div>
                 </div>
 
-                {/* Right: Toolbar */}
-                <div className="flex bg-white rounded-lg px-4 py-3 flex-grow items-center gap-1 justify-between">
-                    <div className="flex items-center gap-3">
+                {/* Right: Toolbar - Hidden on mobile except Share/Download */}
+                <div className="flex bg-white rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex-grow items-center gap-1 justify-between">
+                    {/* Toolbar controls - Hidden on mobile */}
+                    <div className="hidden md:flex items-center gap-3">
                         {/* Undo/Redo */}
                         <button
                             onClick={onUndo}
@@ -197,14 +198,14 @@ export function ProfileHeader({
                             <ZoomIn size={20} />
                         </button>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <Button onClick={onShare} variant="outline">
-                            <Share2 className="w-4 h-4 mr-2" />
-                            Share
+                    <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
+                        <Button onClick={onShare} variant="outline" className="flex-1 md:flex-initial">
+                            <Share2 className="w-4 h-4 md:mr-2" />
+                            <span className="hidden md:inline">Share</span>
                         </Button>
-                        <Button onClick={onDownload} variant="primary">
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
+                        <Button onClick={onDownload} variant="primary" className="flex-1 md:flex-initial">
+                            <Download className="w-4 h-4 md:mr-2" />
+                            <span className="hidden md:inline">Download</span>
                         </Button>
                     </div>
                 </div>

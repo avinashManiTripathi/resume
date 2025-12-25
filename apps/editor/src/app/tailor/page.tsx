@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Upload, FileText, Sparkles, ArrowRight, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@repo/ui/button';
 
 export default function TailorResume() {
     const router = useRouter();
@@ -165,10 +166,10 @@ export default function TailorResume() {
                                             {/* Icon */}
                                             <div
                                                 className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${isCompleted
-                                                        ? 'bg-green-500'
-                                                        : isActive
-                                                            ? 'bg-blue-500'
-                                                            : 'bg-gray-200'
+                                                    ? 'bg-green-500'
+                                                    : isActive
+                                                        ? 'bg-blue-500'
+                                                        : 'bg-gray-200'
                                                     }`}
                                             >
                                                 {isCompleted ? (
@@ -184,10 +185,10 @@ export default function TailorResume() {
                                             <div className="flex-1 min-w-0">
                                                 <p
                                                     className={`text-sm font-medium ${isCompleted
-                                                            ? 'text-green-700'
-                                                            : isActive
-                                                                ? 'text-blue-700'
-                                                                : 'text-gray-500'
+                                                        ? 'text-green-700'
+                                                        : isActive
+                                                            ? 'text-blue-700'
+                                                            : 'text-gray-500'
                                                         }`}
                                                 >
                                                     {stage.name}
@@ -408,10 +409,10 @@ export default function TailorResume() {
 
                 {/* Analyze Button */}
                 <div className="mt-8 flex justify-center">
-                    <button
+                    <Button
+                        variant='primary'
                         onClick={handleAnalyze}
                         disabled={isAnalyzing || !jobDescription.trim()}
-                        className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3"
                     >
                         {isAnalyzing ? (
                             <>
@@ -425,7 +426,7 @@ export default function TailorResume() {
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Info Cards */}

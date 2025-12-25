@@ -133,10 +133,10 @@ export default function ResumeGuidePage() {
             {/* CTA Section */}
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-4xl font-extrabold text-white mb-6">
+                    <h2 className="text-4xl font-extrabold text-blue-600 mb-6">
                         Ready to Create Your Professional Resume?
                     </h2>
-                    <p className="text-xl text-blue-100 mb-8">
+                    <p className="text-xl text-gray-700 mb-8">
                         Use our resume builder to create an ATS-friendly resume in minutes.
                     </p>
                     <Link

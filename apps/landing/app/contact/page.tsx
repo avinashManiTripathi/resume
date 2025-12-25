@@ -63,20 +63,20 @@ export default function ContactPage() {
                             {
                                 icon: <Mail size={32} />,
                                 title: "Email Us",
-                                content: "support@resumebuilder.com",
+                                content: "avinashmanitripathi97@email.com",
                                 subtext: "We'll respond within 24 hours"
                             },
                             {
                                 icon: <Phone size={32} />,
                                 title: "Call Us",
-                                content: "+1 (555) 123-4567",
+                                content: "+91 6393177038",
                                 subtext: "Mon-Fri, 9am-6pm EST"
                             },
                             {
                                 icon: <MapPin size={32} />,
                                 title: "Visit Us",
-                                content: "123 Resume Street",
-                                subtext: "San Francisco, CA 94102"
+                                content: "Gorakhpur, Uttar Pradesh",
+                                subtext: "Mahrarajanj 273303"
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 text-center">

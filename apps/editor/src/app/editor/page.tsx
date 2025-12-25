@@ -281,6 +281,8 @@ export default function ResumeLayout() {
     }
   });
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
 
@@ -619,9 +621,28 @@ export default function ResumeLayout() {
       />
 
       {/* Main Content - 3 Column Layout */}
-      <div className="flex flex-1 overflow-hidden gap-2 mx-[10px]">
-        {/* Left Sidebar - Form or Template Selector (40%) */}
-        <aside className="w-[40%] rounded-lg bg-white border-r border-gray-200 overflow-y-auto">
+      <div className="flex flex-1 overflow-hidden gap-2 md:mx-[10px] mx-0">
+        {/* Left Sidebar - Form or Template Selector (40%) - Hidden on mobile when preview is shown */}
+        <aside className={`w-full md:w-[40%] relative md:rounded-lg bg-white md:border-r border-gray-200 overflow-y-auto ${showMobilePreview ? 'hidden md:block' : 'block'}`}>
+
+          {/* Save Progress Indicator */}
+          <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
+              {isGeneratingPDF ? (
+                <>
+                  <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                  <span className="text-xs font-semibold text-blue-700 leading-none">Saving...</span>
+                </>
+              ) : (
+                <>
+                  <CloudCheck size={14} className="text-blue-700 flex-shrink-0" />
+                  <span className="text-xs font-semibold text-blue-700 leading-none">Saved</span>
+                </>
+              )}
+            </div>
+          </div>
+
+
           {showTemplates ? (
             <TemplateSelector
               apiBase={API_BASE || 'http://localhost:4000'}
@@ -666,43 +687,133 @@ export default function ResumeLayout() {
           )}
         </aside>
 
-        {/* Center Canvas - Preview (60% minus right sidebar) */}
-        <main ref={mainRef} className="flex-1 relative rounded-lg overflow-y-auto bg-gray-100 ">
-          {/* Save Progress Indicator */}
-          <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none z-10">
-            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200 pointer-events-auto">
-              {isGeneratingPDF ? (
-                <>
-                  <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-xs text-gray-600 leading-none">Saving...</span>
-                </>
-              ) : (
-                <>
-                  <CloudCheck size={14} className="text-green-500 flex-shrink-0" />
-                  <span className="text-xs text-gray-600 leading-none">Saved</span>
-                </>
-              )}
-            </div>
-          </div>
+        {/* Center Canvas - Preview (60% minus right sidebar) - Hidden on mobile unless preview is shown */}
+        <main ref={mainRef} className={`flex-1 relative md:rounded-lg overflow-y-auto bg-gray-100 ${showMobilePreview ? 'block' : 'hidden md:block'}`}>
 
-          <div className="flex justify-center">
-            <div className="bg-white shadow-lg">
+
+          <div className="flex justify-center py-4 md:py-0">
+            <div className="bg-white shadow-lg w-full md:w-auto">
               <canvas
                 ref={canvasRef}
                 width={794}
                 height={1123}
-                className="max-w-full h-auto"
+                className="w-full md:max-w-full h-auto"
               />
             </div>
           </div>
         </main>
 
-        {/* Right Sidebar - Settings */}
-        <SettingsSidebar
-          onExport={handleExport}
-          onTemplateChange={() => setShowTemplates(true)}
-        />
+        {/* Right Sidebar - Settings - Hidden on mobile */}
+        <aside className="hidden lg:block">
+          <SettingsSidebar
+            onExport={handleExport}
+            onTemplateChange={() => setShowTemplates(true)}
+          />
+        </aside>
       </div>
+
+      {/* Floating Preview Button - Only visible on mobile */}
+      <button
+        onClick={() => setShowMobilePreview(!showMobilePreview)}
+        className="md:hidden fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+        aria-label={showMobilePreview ? "Show Form" : "Show Preview"}
+      >
+        {showMobilePreview ? (
+          <>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span className="text-sm font-semibold">Edit</span>
+          </>
+        ) : (
+          <>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span className="text-sm font-semibold">Preview</span>
+          </>
+        )}
+      </button>
+
+      {/* Mobile Menu Button - Only visible on mobile */}
+      <button
+        onClick={() => setShowMobileMenu(!showMobileMenu)}
+        className="md:hidden fixed bottom-6 left-6 z-50 bg-white text-gray-700 p-4 rounded-full shadow-lg hover:bg-gray-50 transition-all border-2 border-gray-200"
+        aria-label="Menu"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      {/* Mobile Menu Panel - Slides up from bottom */}
+      {showMobileMenu && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setShowMobileMenu(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50 animate-slide-up">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-gray-900">Actions</h3>
+                <button
+                  onClick={() => setShowMobileMenu(false)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {/* Tailor My Resume */}
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    router.push('/tailor');
+                  }}
+                  className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl hover:border-purple-400 transition-all"
+                >
+                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="font-semibold text-gray-900">Tailor My Resume</div>
+                    <div className="text-xs text-gray-600">AI-powered customization</div>
+                  </div>
+                </button>
+
+                {/* Change Template */}
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    setShowTemplates(true);
+                  }}
+                  className="w-full flex items-center gap-3 p-4 bg-gray-50 border-2 border-gray-200 rounded-xl hover:border-gray-400 transition-all"
+                >
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="font-semibold text-gray-900">Change Template</div>
+                    <div className="text-xs text-gray-600">Choose a new design</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Share Modal */}
       <ShareModal
