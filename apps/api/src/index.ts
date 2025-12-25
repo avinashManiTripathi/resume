@@ -1,4 +1,5 @@
 import { App } from './app';
+import { database } from './config/database';
 require('dotenv').config()
 import { initAI } from '@repo/utils-server';
 initAI(process.env.GOOGLE_API_KEY as string);
@@ -9,12 +10,14 @@ const app = new App();
 app.listen();
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
     console.log('SIGTERM signal received: closing HTTP server');
+    await database.disconnect();
     process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
     console.log('SIGINT signal received: closing HTTP server');
+    await database.disconnect();
     process.exit(0);
 });

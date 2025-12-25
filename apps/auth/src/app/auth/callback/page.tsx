@@ -8,17 +8,19 @@ export default function AuthCallbackPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const token = searchParams.get("token");
+        const success = searchParams.get("success");
+        const error = searchParams.get("error");
 
-        if (token) {
-            // Store token in localStorage
-            localStorage.setItem("auth_token", token);
-
+        if (success === "true") {
+            // Authentication successful, token is in HTTP-only cookie
             // Redirect to editor
             window.location.href = "http://localhost:3000/editor";
+        } else if (error) {
+            // Authentication failed, redirect to sign in with error
+            router.push(`/signin?error=${error}`);
         } else {
-            // No token, redirect to sign in with error
-            router.push("/signin?error=no_token");
+            // No success or error parameter, redirect to sign in
+            router.push("/signin?error=invalid_callback");
         }
     }, [searchParams, router]);
 

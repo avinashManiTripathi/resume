@@ -8,13 +8,15 @@ export interface AuthRequest extends Request {
     user?: JWTPayload;
 }
 
-export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     try {
+        const authReq = req as AuthRequest;
+
         // Get token from Authorization header or cookie
-        const authHeader = req.headers.authorization;
+        const authHeader = authReq.headers.authorization;
         const token = authHeader?.startsWith('Bearer ')
             ? authHeader.substring(7)
-            : req.cookies?.token;
+            : authReq.cookies?.token;
 
         if (!token) {
             return res.status(401).json({ error: 'No token provided' });
@@ -22,7 +24,7 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
 
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-        req.user = decoded;
+        authReq.user = decoded;
         next();
     } catch (error) {
         return res.status(401).json({ error: 'Invalid or expired token' });

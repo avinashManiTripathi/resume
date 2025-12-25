@@ -39,6 +39,7 @@
     "express": "^5.2.1",
     "jsdom": "^27.3.0",
     "mammoth": "^1.11.0",
+    "mongoose": "^9.0.2",
     "multer": "^2.0.2",
     "pdf-parse": "^2.4.5",
     "pdfjs-dist": "^5.4.449",

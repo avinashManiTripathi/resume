@@ -4,155 +4,185 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resume</title>
+    <title>John Doe - Resume</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+            }
+        }
+
+        .item-template {
+            display: none;
+        }
+    </style>
 </head>
 
-<body class="bg-gray-100 py-10">
-    <main class="max-w-4xl mx-auto bg-white px-10 py-8 shadow">
+<body class="bg-gray-100">
 
-        <!-- Header -->
-        <header class="flex items-center gap-6 mb-6">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"
-                alt="Profile" class="w-24 h-24 object-cover border" />
+    <main id="resume-root" class="max-w-5xl mx-auto bg-white p-10 grid grid-cols-3 gap-x-10">
 
-            <div>
-                <h1 class="text-3xl font-serif font-bold">Edward Smith</h1>
-                <p class="text-sm text-gray-700 mt-1">
-                    Market Street 12, New York |
-                    example@gmail.com |
-                    (412) 479-6342 |
-                    in/cbloomberg
+        <!-- LEFT COLUMN -->
+        <section class="col-span-2">
+
+            <!-- HEADER -->
+            <header id="section-personalInfo" class="mb-8">
+                <h1 id="full-name" class="text-4xl font-serif font-bold text-red-700 mb-1">
+                    John Doe
+                </h1>
+                <p class="text-sm text-gray-700">
+                    <span id="email">john.doe@email.com</span> ·
+                    <span id="phone">+1 (555) 123-4567</span>
                 </p>
-            </div>
-        </header>
+            </header>
 
-        <!-- Section -->
-        <section class="mb-6">
-            <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">
-                Professional Summary
-            </h2>
-            <p class="text-sm text-gray-800 mt-3 leading-relaxed">
-                Experienced and driven Financial Analyst with an impressive background
-                of managing multi-million dollar budgets while providing analysis and
-                account support within product development departments. Worked to reduce
-                business expenses and develop logical and advantageous operating plan
-                budgets. Experience creating quarterly accruals based on trends and
-                forecasted expenses.
-            </p>
+            <!-- SUMMARY -->
+            <section id="section-summary" class="mb-8">
+                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-3">
+                    Professional Summary
+                </h2>
+                <p id="summary-text" class="text-sm text-gray-800 leading-relaxed">
+                    Experienced software engineer with 6+ years of expertise in building scalable web applications,
+                    leading cross-functional teams, and delivering high-quality products using modern technologies.
+                </p>
+            </section>
+
+            <!-- EXPERIENCE -->
+            <section id="section-experience" class="mb-8">
+                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+                    Professional Experience
+                </h2>
+
+                <div id="experience-list"></div>
+
+                <div class="experience-item mt-5">
+                    <h3 class="font-bold text-sm">
+                        <span class="exp-company">Tech Solutions Inc.</span>,
+                        <span class="exp-job-title">Senior Software Engineer</span>
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        <span class="exp-start-date">Jan 2021</span> –
+                        <span class="exp-end-date">Present</span>
+                    </p>
+                    <div class="exp-description text-sm text-gray-800 leading-relaxed">
+                        Led development of enterprise web applications, optimized system performance by 30%,
+                        mentored junior developers, and collaborated with product teams to deliver new features.
+                    </div>
+                </div>
+
+                <div class="experience-item mt-5">
+                    <h3 class="font-bold text-sm">
+                        <span class="exp-company">Digital Labs</span>,
+                        <span class="exp-job-title">Software Engineer</span>
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        <span class="exp-start-date">Jun 2018</span> –
+                        <span class="exp-end-date">Dec 2020</span>
+                    </p>
+                    <div class="exp-description text-sm text-gray-800 leading-relaxed">
+                        Developed REST APIs, implemented responsive UI components, and improved code quality
+                        through testing and peer reviews.
+                    </div>
+                </div>
+            </section>
+
+            <!-- PROJECTS -->
+            <section id="section-projects" class="mb-8">
+                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+                    Projects
+                </h2>
+
+                <div id="projects-list"></div>
+
+                <div class="project-item mt-4">
+                    <h3 class="font-bold text-sm proj-name">
+                        Resume Builder Platform
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        <span class="proj-start-date">Mar 2023</span> –
+                        <span class="proj-end-date">Aug 2023</span>
+                    </p>
+                    <div class="proj-description text-sm text-gray-800 leading-relaxed">
+                        Built a dynamic resume builder with multiple templates, real-time preview,
+                        and PDF export using modern frontend technologies.
+                    </div>
+                </div>
+
+                <div class="project-item mt-4">
+                    <h3 class="font-bold text-sm proj-name">
+                        E-Commerce Dashboard
+                    </h3>
+                    <p class="text-xs text-gray-600 mb-2">
+                        <span class="proj-start-date">Jan 2022</span> –
+                        <span class="proj-end-date">May 2022</span>
+                    </p>
+                    <div class="proj-description text-sm text-gray-800 leading-relaxed">
+                        Designed and developed an admin dashboard with analytics, order management,
+                        and role-based access control.
+                    </div>
+                </div>
+            </section>
+
+            <!-- EDUCATION -->
+            <section id="section-education" class="mb-8">
+                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+                    Education
+                </h2>
+
+                <div id="education-list"></div>
+
+                <div class="education-item mt-4">
+                    <p class="font-bold text-sm edu-degree">
+                        Bachelor of Technology in Computer Science
+                    </p>
+                    <p class="text-sm text-gray-700">
+                        <span class="edu-institution">University of California, Berkeley</span> —
+                        <span class="edu-end-date">2018</span>
+                    </p>
+                </div>
+            </section>
+
         </section>
 
-        <!-- Experience -->
-        <section class="mb-6">
-            <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">
-                Professional Experience
-            </h2>
+        <!-- RIGHT COLUMN -->
+        <aside class="col-span-1">
 
-            <!-- Job -->
-            <div class="mt-4">
-                <h3 class="font-bold text-sm">
-                    Apple, Engineer, Cupertino, US
-                </h3>
-                <p class="text-xs text-gray-600 mb-2">May 2015 – Present</p>
-
-                <ul class="list-disc list-inside text-sm space-y-1">
-                    <li>Created budgets and ensured labor and material costs were decreased by 15 percent.</li>
-                    <li>Created financial reports on completed projects.</li>
-                    <li>Generated financial statements including cash flow charts and balance sheets.</li>
-                    <li>Created analysis and performance reports for management teams.</li>
-                    <li>Introduced software to enhance department communication.</li>
-                    <li>Assessed new development projects generating over $4.5M in revenue.</li>
-                </ul>
+            <!-- PROFILE IMAGE -->
+            <div class="mb-8 flex justify-center">
+                <img id="profile-image"
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60"
+                    alt="Profile" class="w-32 h-32 object-cover border" />
             </div>
 
-            <!-- Job -->
-            <div class="mt-5">
-                <h3 class="font-bold text-sm">
-                    GEO Corp., Engineer, Berlin, Germany
-                </h3>
-                <p class="text-xs text-gray-600 mb-2">Oct 2013 – Apr 2015</p>
+            <!-- SKILLS -->
+            <section id="section-skills">
+                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+                    Skills
+                </h2>
 
-                <ul class="list-disc list-inside text-sm space-y-1">
-                    <li>Prepared reports, ad-hoc analysis, and revenue forecasts.</li>
-                    <li>Analyzed supplier contracts, reducing budgets by 6%.</li>
-                    <li>Presented weekly labor finance reports to management.</li>
-                </ul>
-            </div>
+                <div id="skills-list" class="space-y-2 text-sm"></div>
 
-            <!-- Job -->
-            <div class="mt-5">
-                <h3 class="font-bold text-sm">
-                    Cisco Enterprises, Engineer, Berlin, Germany
-                </h3>
-                <p class="text-xs text-gray-600 mb-2">Nov 2010 – Sept 2013</p>
+                <div class="skill-item">
+                    <p><span class="font-bold skill-name">JavaScript</span>: <span class="skill-level">Advanced</span>
+                    </p>
+                    <p><span class="font-bold skill-name">React</span>: <span class="skill-level">Advanced</span></p>
+                    <p><span class="font-bold skill-name">Node.js</span>: <span class="skill-level">Intermediate</span>
+                    </p>
+                    <p><span class="font-bold skill-name">Tailwind CSS</span>: <span class="skill-level">Advanced</span>
+                    </p>
+                    <p><span class="font-bold skill-name">SQL</span>: <span class="skill-level">Intermediate</span></p>
+                </div>
+            </section>
 
-                <ul class="list-disc list-inside text-sm space-y-1">
-                    <li>Produced financial forecasts and cash flow analysis.</li>
-                    <li>Negotiated supplier contracts.</li>
-                    <li>Delivered weekly financial performance reports.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Consultancy -->
-        <section class="mb-6">
-            <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">
-                Consultancy
-            </h2>
-
-            <div class="mt-3">
-                <h3 class="font-bold text-sm">
-                    Independent Startup Consultant, Early-Stage Startup
-                </h3>
-                <p class="text-xs text-gray-600 mb-2">May 2015 – Present</p>
-
-                <ul class="list-disc list-inside text-sm space-y-1">
-                    <li>Worked with 3 global founders to launch MVPs using no-code methodologies.</li>
-                    <li>Flashfeed, media creation platform; SharedHomes rental platform.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Education -->
-        <section class="mb-6">
-            <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">
-                Education
-            </h2>
-
-            <div class="mt-3 text-sm">
-                <p class="font-bold">Bachelor in Computer Engineering</p>
-                <p class="text-gray-700">University of Arizona — 2013</p>
-            </div>
-        </section>
-
-        <!-- Skills -->
-        <section>
-            <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">
-                Expert-Level Skills
-            </h2>
-
-            <div class="mt-3 text-sm space-y-2">
-                <p>
-                    <span class="font-bold">Leadership:</span>
-                    Speaking, Fundraising, Product Development, Communication,
-                    Partnerships, International Marketing
-                </p>
-                <p>
-                    <span class="font-bold">Front End:</span>
-                    HTML, CSS, Bootstrap, Webflow
-                </p>
-                <p>
-                    <span class="font-bold">Design:</span>
-                    Photoshop, Illustrator, Sketch
-                </p>
-                <p>
-                    <span class="font-bold">Fields of Interest:</span>
-                    Early-Stage Fundraising, Global Entrepreneurship, Web Design, Growth
-                </p>
-            </div>
-        </section>
+        </aside>
 
     </main>
+
 </body>
 
 </html>

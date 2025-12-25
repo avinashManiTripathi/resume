@@ -5,12 +5,14 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { config } from './config';
+import { database } from './config/database';
 import pdfRoutes from './routes/pdf.routes';
 import tailorRoutes from './routes/tailor.routes';
 import authRoutes from './routes/auth.routes';
 import subscriptionRoutes from './routes/subscription.routes';
 import paymentRoutes from './routes/payment.routes';
 import atsRoutes from './routes/ats.routes';
+import templateRoutes from './routes/template.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -20,10 +22,23 @@ export class App {
 
     constructor() {
         this.app = express();
+        this.initializeDatabase();
         this.initializeMiddlewares();
         this.initializePassport();
         this.initializeRoutes();
         this.initializeErrorHandling();
+    }
+
+    /**
+     * Initialize database connection
+     */
+    private async initializeDatabase(): Promise<void> {
+        try {
+            await database.connect();
+        } catch (error) {
+            console.error('Failed to connect to database:', error);
+            // Don't exit process, let app run without database
+        }
     }
 
     /**
@@ -73,10 +88,15 @@ export class App {
     private initializeRoutes(): void {
         // Health check endpoint
         this.app.get('/health', (req, res) => {
+            const dbStatus = database.getConnectionStatus();
             res.json({
-                status: 'healthy',
+                status: dbStatus ? 'healthy' : 'degraded',
                 timestamp: new Date().toISOString(),
-                uptime: process.uptime()
+                uptime: process.uptime(),
+                database: {
+                    connected: dbStatus,
+                    status: dbStatus ? 'connected' : 'disconnected'
+                }
             });
         });
 
@@ -97,6 +117,9 @@ export class App {
 
         // ATS routes
         this.app.use('/api/ats', atsRoutes);
+
+        // Template routes
+        this.app.use('/api/templates', templateRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

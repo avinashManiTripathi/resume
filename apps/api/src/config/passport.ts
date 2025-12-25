@@ -1,17 +1,14 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { User } from '../types/user.types';
-
-// In-memory user store (replace with database in production)
-const users: Map<string, User> = new Map();
+import { User } from '../models';
 
 export const configurePassport = () => {
     passport.use(
         new GoogleStrategy(
             {
-                clientID: "272529485120-hrdnd3udkueh4cindr8v2mbej8lc6ut4.apps.googleusercontent.com",
+                clientID: process.env.GOOGLE_CLIENT_ID || '',
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-                callbackURL: `${process.env.API_URL || 'http://localhost:4000'}/api/auth/google/callback`,
+                callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:4000/api/auth/google/callback',
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
@@ -20,24 +17,36 @@ export const configurePassport = () => {
                         return done(new Error('No email found in Google profile'));
                     }
 
-                    // Check if user exists
-                    let user = Array.from(users.values()).find(u => u.googleId === profile.id);
+                    // Check if user exists in MongoDB
+                    let user = await User.findOne({ googleId: profile.id });
 
                     if (!user) {
-                        // Create new user
-                        user = {
-                            id: `user_${Date.now()}`,
+                        // Create new user in MongoDB
+                        user = await User.create({
+                            googleId: profile.id,
                             email,
                             name: profile.displayName || email,
                             picture: profile.photos?.[0]?.value || '',
-                            googleId: profile.id,
-                            createdAt: new Date(),
-                        };
-                        users.set(user.id, user);
+                        });
+                        console.log('✅ New user created:', user.email);
+                    } else {
+                        // Update user info if changed
+                        user.name = profile.displayName || email;
+                        user.picture = profile.photos?.[0]?.value || '';
+                        await user.save();
+                        console.log('✅ User updated:', user.email);
                     }
 
-                    return done(null, user);
+                    // Return user object compatible with JWT
+                    return done(null, {
+                        id: user._id.toString(),
+                        email: user.email,
+                        name: user.name,
+                        picture: user.picture,
+                        googleId: user.googleId,
+                    });
                 } catch (error) {
+                    console.error('❌ Passport authentication error:', error);
                     return done(error as Error);
                 }
             }
@@ -48,10 +57,12 @@ export const configurePassport = () => {
         done(null, user.id);
     });
 
-    passport.deserializeUser((id: string, done) => {
-        const user = users.get(id);
-        done(null, user || null);
+    passport.deserializeUser(async (id: string, done) => {
+        try {
+            const user = await User.findById(id);
+            done(null, user);
+        } catch (error) {
+            done(error, null);
+        }
     });
 };
-
-export { users };

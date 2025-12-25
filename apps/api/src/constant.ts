@@ -13,6 +13,8 @@ export const RESUMES = [
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
+    section { display: block !important; }
+    #resume-root > section { display: block !important; width: 100%; }
   </style>
 </head>
 <body>
@@ -33,13 +35,13 @@ export const RESUMES = [
     </header>
 
     <!-- Summary -->
-    <section id="section-summary" class="mb-6" style="display: none;">
+    <section id="section-summary" class="mb-6 block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Summary</h2>
       <p id="summary-text" class="text-sm text-gray-800 mt-3 leading-relaxed">{{summary}}</p>
     </section>
 
     <!-- Experience -->
-    <section id="section-experience" class="mb-6" style="display: none;">
+    <section id="section-experience" class="mb-6 block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Experience</h2>
       <div id="experience-list"></div>
       <div class="experience-item item-template mt-4" data-template="experience">
@@ -49,12 +51,12 @@ export const RESUMES = [
         <p class="text-xs text-gray-600 mb-2">
           <span class="exp-start-date">{{experience.startDate}}</span> – <span class="exp-end-date">{{experience.endDate}}</span>
         </p>
-        <div class="exp-description text-sm text-gray-800">{{experience.description}}</div>
+        <ul class="exp-description text-sm text-gray-800 list-disc ml-5"></ul>
       </div>
     </section>
 
     <!-- Projects -->
-    <section id="section-projects" class="mb-6" style="display: none;">
+    <section id="section-projects" class="mb-6 block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Projects</h2>
       <div id="projects-list"></div>
       <div class="project-item item-template mt-3" data-template="projects">
@@ -62,12 +64,12 @@ export const RESUMES = [
         <p class="text-xs text-gray-600 mb-2">
           <span class="proj-start-date">{{projects.startDate}}</span> – <span class="proj-end-date">{{projects.endDate}}</span>
         </p>
-        <div class="proj-description text-sm text-gray-800">{{projects.description}}</div>
+        <ul class="proj-description text-sm text-gray-800 list-disc ml-5"></ul>
       </div>
     </section>
 
     <!-- Education -->
-    <section id="section-education" class="mb-6" style="display: none;">
+    <section id="section-education" class="mb-6 block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Education</h2>
       <div id="education-list"></div>
       <div class="education-item item-template mt-3" data-template="education">
@@ -81,7 +83,7 @@ export const RESUMES = [
     </section>
 
     <!-- Skills -->
-    <section id="section-skills" style="display: none;">
+    <section id="section-skills" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Skills</h2>
       <div id="skills-list" class="mt-3 text-sm space-y-2"></div>
       <div class="skill-item item-template" data-template="skills">
@@ -164,7 +166,7 @@ export const RESUMES = [
           <p class="text-xs text-gray-500 mb-2">
             <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
           </p>
-          <div class="exp-description text-sm text-gray-700">{{experience.description}}</div>
+          <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
 
@@ -176,7 +178,7 @@ export const RESUMES = [
           <p class="text-xs text-gray-500 mb-2">
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </p>
-          <div class="proj-description text-sm text-gray-700">{{projects.description}}</div>
+          <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
     </main>
@@ -233,7 +235,7 @@ export const RESUMES = [
           <p class="text-sm text-gray-500 mb-2">
             <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
           </p>
-          <div class="exp-description text-sm text-gray-700">{{experience.description}}</div>
+          <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
 
@@ -259,7 +261,7 @@ export const RESUMES = [
           <p class="text-sm text-gray-500 mb-2">
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </p>
-          <div class="proj-description text-sm text-gray-700">{{projects.description}}</div>
+          <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
 
@@ -351,7 +353,7 @@ export const RESUMES = [
             <p class="text-xs text-gray-500 mb-2">
               <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
             </p>
-            <div class="exp-description text-sm text-gray-700">{{experience.description}}</div>
+            <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
           </div>
         </section>
 
@@ -363,7 +365,7 @@ export const RESUMES = [
             <p class="text-xs text-gray-500 mb-2">
               <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
             </p>
-            <div class="proj-description text-sm text-gray-700">{{projects.description}}</div>
+            <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
           </div>
         </section>
       </div>
@@ -419,7 +421,7 @@ export const RESUMES = [
           </span>
         </div>
         <p class="text-sm text-gray-600 mb-2 exp-company">{{experience.company}}</p>
-        <div class="exp-description text-sm text-gray-700">{{experience.description}}</div>
+        <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
       </div>
     </section>
 
@@ -445,7 +447,7 @@ export const RESUMES = [
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </span>
         </div>
-        <div class="proj-description text-sm text-gray-700">{{projects.description}}</div>
+        <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
       </div>
     </section>
 
@@ -519,7 +521,7 @@ export const RESUMES = [
           <p class="text-sm text-gray-500 mb-2">
             <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
           </p>
-          <div class="exp-description text-sm text-gray-700">{{experience.description}}</div>
+          <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
 
@@ -541,7 +543,7 @@ export const RESUMES = [
           <p class="text-sm text-gray-500 mb-2">
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </p>
-          <div class="proj-description text-sm text-gray-700">{{projects.description}}</div>
+          <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
         </div>
       </section>
     </main>
@@ -550,8 +552,8 @@ export const RESUMES = [
 </html>`
   },
   {
-    id: "692bcfd239561eef09d89aa8",
-    name: "Compact Professional",
+    id: "692bcfddd39561eef09d89aa8",
+    name: "Compact Professional jjjdjd",
     image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/441/persistent-resource/sydney-resume-templates.jpg?v=1651657428",
     html: `<!DOCTYPE html>
 <html lang="en">
@@ -594,7 +596,7 @@ export const RESUMES = [
           </span>
         </div>
         <p class="text-xs text-gray-600 mb-2 exp-company">{{experience.company}}</p>
-        <div class="exp-description text-xs text-gray-700">{{experience.description}}</div>
+        <ul class="exp-description text-xs text-gray-700 list-disc ml-4"></ul>
       </div>
     </section>
 
@@ -620,7 +622,7 @@ export const RESUMES = [
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </span>
         </div>
-        <div class="proj-description text-xs text-gray-700">{{projects.description}}</div>
+        <ul class="proj-description text-xs text-gray-700 list-disc ml-4"></ul>
       </div>
     </section>
 
@@ -634,6 +636,356 @@ export const RESUMES = [
       </div>
     </section>
   </main>
+</body>
+</html>`
+  },
+  {
+    id: "692bcfd239561eef09d89aa8",
+    name: "Modern Professional 22",
+    image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272",
+    html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{firstName}} {{lastName}} - Resume</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    .item-template {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+
+  <main id="resume-root" class="max-w-5xl mx-auto bg-white p-10 flex gap-x-10">
+
+    <!-- LEFT COLUMN -->
+    <section class="flex-1">
+
+      <!-- HEADER -->
+      <header id="section-personalInfo" class="mb-8">
+        <h1 id="full-name" class="text-4xl font-serif font-bold text-red-700 mb-1">
+          {{firstName}} {{lastName}}
+        </h1>
+        <p class="text-sm text-gray-700">
+          <span id="email">{{email}}</span> · <span id="phone">{{phone}}</span>
+        </p>
+      </header>
+
+      <!-- SUMMARY -->
+      <section id="section-summary" class="mb-8" style="display: none;">
+        <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-3">
+          Professional Summary
+        </h2>
+        <p id="summary-text" class="text-sm text-gray-800 leading-relaxed">
+          {{summary}}
+        </p>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section id="section-experience" class="mb-8" style="display: none;">
+        <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+          Professional Experience
+        </h2>
+
+        <div id="experience-list"></div>
+
+        <div class="experience-item item-template mt-5" data-template="experience">
+          <h3 class="font-bold text-sm">
+            <span class="exp-company">{{experience.company}}</span>,
+            <span class="exp-job-title">{{experience.jobTitle}}</span>
+          </h3>
+          <p class="text-xs text-gray-600 mb-2">
+            <span class="exp-start-date">{{experience.startDate}}</span> –
+            <span class="exp-end-date">{{experience.endDate}}</span>
+          </p>
+          <ul class="exp-description text-sm text-gray-800 leading-relaxed list-disc ml-5">
+          </ul>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section id="section-projects" class="mb-8" style="display: none;">
+        <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+          Projects
+        </h2>
+
+        <div id="projects-list"></div>
+
+        <div class="project-item item-template mt-4" data-template="projects">
+          <h3 class="font-bold text-sm proj-name">
+            {{projects.name}}
+          </h3>
+          <p class="text-xs text-gray-600 mb-2">
+            <span class="proj-start-date">{{projects.startDate}}</span> –
+            <span class="proj-end-date">{{projects.endDate}}</span>
+          </p>
+          <ul class="proj-description text-sm text-gray-800 leading-relaxed list-disc ml-5">
+          </ul>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section id="section-education" class="mb-8" style="display: none;">
+        <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+          Education
+        </h2>
+
+        <div id="education-list"></div>
+
+        <div class="education-item item-template mt-4" data-template="education">
+          <p class="font-bold text-sm edu-degree">
+            {{education.degree}}
+          </p>
+          <p class="text-sm text-gray-700">
+            <span class="edu-institution">{{education.institution}}</span> —
+            <span class="edu-end-date">{{education.endDate}}</span>
+          </p>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- RIGHT COLUMN -->
+    <aside class="w-1/3">
+
+      <!-- PROFILE IMAGE -->
+      <div class="mb-8 flex justify-center">
+        <img
+          id="profile-image"
+          src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60"
+          alt="Profile"
+          class="w-32 h-32 object-cover border"
+        />
+      </div>
+
+      <!-- SKILLS -->
+      <section id="section-skills" style="display: none;">
+        <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
+          Skills
+        </h2>
+
+        <div id="skills-list" class="space-y-2 text-sm"></div>
+
+        <div class="skill-item item-template" data-template="skills">
+          <p>
+            <span class="font-bold skill-name">{{skills.name}}</span>
+            <span class="skill-level">: {{skills.level}}</span>
+          </p>
+        </div>
+      </section>
+
+    </aside>
+
+  </main>
+
+</body>
+</html>
+`
+
+  },
+  {
+    id: "692bcfd239561eef09d89ats",
+    name: "ATS Professional",
+    image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/441/persistent-resource/sydney-resume-templates.jpg?v=1651657428",
+    html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{firstName}} {{lastName}} - Resume</title>
+  <style>
+    @media print { 
+      body { margin: 0; padding: 0; }
+      @page { margin: 0.5in; }
+    }
+    .item-template { display: none; }
+    
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      line-height: 1.4;
+      color: #000000;
+      background-color: #ffffff;
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.5in;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      margin: 0;
+      padding: 0;
+      font-weight: bold;
+    }
+    
+    h1 {
+      font-size: 18pt;
+      margin-bottom: 4pt;
+      text-transform: uppercase;
+      letter-spacing: 1pt;
+    }
+    
+    h2 {
+      font-size: 12pt;
+      margin-top: 12pt;
+      margin-bottom: 6pt;
+      padding-bottom: 2pt;
+      border-bottom: 1pt solid #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.5pt;
+    }
+    
+    h3 {
+      font-size: 11pt;
+      margin-top: 8pt;
+      margin-bottom: 2pt;
+    }
+    
+    p, ul, li {
+      margin: 0;
+      padding: 0;
+    }
+    
+    ul {
+      margin-left: 20pt;
+      margin-top: 4pt;
+      margin-bottom: 8pt;
+    }
+    
+    li {
+      margin-bottom: 3pt;
+      line-height: 1.3;
+    }
+    
+    .contact-info {
+      text-align: center;
+      margin-bottom: 12pt;
+      font-size: 10pt;
+    }
+    
+    .section {
+      margin-bottom: 12pt;
+      display: block;
+      width: 100%;
+    }
+    
+    .job-header {
+      margin-bottom: 2pt;
+    }
+    
+    .job-title {
+      font-weight: bold;
+      font-size: 11pt;
+    }
+    
+    .company-name {
+      font-weight: bold;
+    }
+    
+    .date-range {
+      font-style: italic;
+      font-size: 10pt;
+      color: #333333;
+    }
+    
+    .skills-list {
+      margin-left: 0;
+      list-style: none;
+    }
+    
+    .skills-list li {
+      margin-bottom: 4pt;
+    }
+    
+    .skill-category {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="resume-root">
+    
+    <!-- HEADER -->
+    <header id="section-personalInfo">
+      <h1 id="full-name">{{firstName}} {{lastName}}</h1>
+      <div class="contact-info">
+        <span id="email">{{email}}</span> | <span id="phone">{{phone}}</span>
+      </div>
+    </header>
+
+    <!-- PROFESSIONAL SUMMARY -->
+    <section id="section-summary" class="section" style="display: none;">
+      <h2>PROFESSIONAL SUMMARY</h2>
+      <p id="summary-text">{{summary}}</p>
+    </section>
+
+    <!-- CORE SKILLS -->
+    <section id="section-skills" class="section" style="display: none;">
+      <h2>CORE SKILLS</h2>
+      <ul id="skills-list" class="skills-list"></ul>
+      <li class="skill-item item-template" data-template="skills">
+        <span class="skill-name">{{skills.name}}</span>: <span class="skill-level">{{skills.level}}</span>
+      </li>
+    </section>
+
+    <!-- PROFESSIONAL EXPERIENCE -->
+    <section id="section-experience" class="section" style="display: none;">
+      <h2>PROFESSIONAL EXPERIENCE</h2>
+      <div id="experience-list"></div>
+      <div class="experience-item item-template" data-template="experience">
+        <div class="job-header">
+          <h3 class="job-title exp-job-title">{{experience.jobTitle}}</h3>
+          <p><span class="company-name exp-company">{{experience.company}}</span> | <span class="date-range"><span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span></span></p>
+        </div>
+        <ul class="exp-description" style="margin-left: 20pt; list-style-type: disc;"></ul>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="section-projects" class="section" style="display: none;">
+      <h2>KEY PROJECTS</h2>
+      <div id="projects-list"></div>
+      <div class="project-item item-template" data-template="projects">
+        <div class="job-header">
+          <h3 class="proj-name">{{projects.name}}</h3>
+          <p class="date-range"><span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span></p>
+        </div>
+        <ul class="proj-description" style="margin-left: 20pt; list-style-type: disc;"></ul>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="section-education" class="section" style="display: none;">
+      <h2>EDUCATION</h2>
+      <div id="education-list"></div>
+      <div class="education-item item-template" data-template="education">
+        <h3 class="edu-degree">{{education.degree}}</h3>
+        <p><span class="edu-institution">{{education.institution}}</span> | <span class="date-range edu-end-date">{{education.endDate}}</span></p>
+      </div>
+    </section>
+
+    <!-- CERTIFICATIONS -->
+    <section id="section-certifications" class="section" style="display: none;">
+      <h2>CERTIFICATIONS</h2>
+      <div id="certifications-list"></div>
+      <div class="certification-item item-template" data-template="certifications">
+        <h3 class="cert-name">{{certifications.name}}</h3>
+        <p><span class="cert-issuer">{{certifications.issuer}}</span> | <span class="date-range cert-date">{{certifications.date}}</span></p>
+      </div>
+    </section>
+
+  </div>
 </body>
 </html>`
   }

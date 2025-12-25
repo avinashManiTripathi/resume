@@ -45,6 +45,104 @@ const initialResume = {
   ]
 };
 
+const dummyData = {
+  "personalInfo": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "jobTitle": "Senior Software Engineer",
+    "summary": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
+    "email": "john.doe@email.com",
+    "phone": "+1 (555) 123-4567"
+  },
+  "experience": [
+    {
+      "jobTitle": "Senior Software Engineer",
+      "company": "Tech Solutions Inc.",
+      "startDate": "2021-01",
+      "endDate": "",
+      "description": "Led development of enterprise web applications using React and Node.js. Optimized system performance by 30%, mentored 5 junior developers, and collaborated with product teams to deliver new features. Implemented CI/CD pipelines and improved code quality through testing."
+    },
+    {
+      "jobTitle": "Software Engineer",
+      "company": "Digital Labs",
+      "startDate": "2018-06",
+      "endDate": "2020-12",
+      "description": "Developed REST APIs and microservices, implemented responsive UI components using React, and improved code quality through unit testing and peer reviews. Reduced API response time by 40% through optimization."
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Science in Computer Science",
+      "institution": "Stanford University",
+      "startDate": "2016-09",
+      "endDate": "2018-05"
+    },
+    {
+      "degree": "Bachelor of Technology in Computer Engineering",
+      "institution": "University of California, Berkeley",
+      "startDate": "2012-08",
+      "endDate": "2016-05"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Resume Builder Platform",
+      "startDate": "2023-03",
+      "endDate": "2023-08",
+      "description": "Built a dynamic resume builder with multiple templates, real-time preview, and PDF export using React, Next.js, and Tailwind CSS. Implemented drag-and-drop functionality and template customization features."
+    },
+    {
+      "name": "E-Commerce Dashboard",
+      "startDate": "2022-01",
+      "endDate": "2022-05",
+      "description": "Designed and developed an admin dashboard with analytics, order management, and role-based access control using React, TypeScript, and Chart.js. Integrated with REST APIs and implemented real-time updates."
+    }
+  ],
+  "skills": [
+    { "name": "JavaScript", "level": "Expert" },
+    { "name": "TypeScript", "level": "Advanced" },
+    { "name": "React", "level": "Expert" },
+    { "name": "Node.js", "level": "Advanced" },
+    { "name": "Next.js", "level": "Advanced" },
+    { "name": "Tailwind CSS", "level": "Advanced" },
+    { "name": "MongoDB", "level": "Intermediate" },
+    { "name": "PostgreSQL", "level": "Intermediate" },
+    { "name": "Docker", "level": "Intermediate" },
+    { "name": "AWS", "level": "Intermediate" }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect",
+      "issuer": "Amazon Web Services",
+      "date": "2022-06"
+    },
+    {
+      "name": "Google Cloud Professional Developer",
+      "issuer": "Google Cloud",
+      "date": "2021-09"
+    }
+  ],
+  "languages": [
+    { "name": "English", "proficiency": "Native" },
+    { "name": "Spanish", "proficiency": "Intermediate" },
+    { "name": "French", "proficiency": "Basic" }
+  ],
+  "awards": [
+    {
+      "title": "Employee of the Year",
+      "organization": "Tech Solutions Inc.",
+      "date": "2023-12",
+      "description": "Recognized for outstanding contributions to product development and team leadership."
+    },
+    {
+      "title": "Innovation Award",
+      "organization": "Digital Labs",
+      "date": "2020-06",
+      "description": "Awarded for developing innovative solutions that improved system performance."
+    }
+  ]
+};
+
 export default function ResumeLayout() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   const searchParams = useSearchParams();
@@ -377,6 +475,12 @@ export default function ResumeLayout() {
     }
   };
 
+  const fillDummyData = () => {
+    const newData = JSON.parse(JSON.stringify(dummyData));
+    setResume(newData);
+    addToHistory(newData);
+  };
+
   const renderPDFPage = async (pdfData: ArrayBuffer, page: number) => {
     if (!mainRef.current || !canvasRef.current) return;
 
@@ -553,14 +657,35 @@ export default function ResumeLayout() {
               }}
             />
           ) : (
-            <GenericForm
-              schema={schema}
-              data={resume}
-              sectionOrder={sectionOrder}
-              setSectionOrder={setSectionOrder}
-              onChange={handleResumeChange}
-              onSchemaChange={setSchema}
-            />
+            <div className="h-full flex flex-col">
+              {/* Fill Dummy Data Button */}
+              {/* <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+                <button
+                  onClick={fillDummyData}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group"
+                >
+                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  <span>Fill with Dummy Data</span>
+                </button>
+                <p className="text-xs text-gray-600 mt-2 text-center">
+                  Instantly populate all fields with sample data for testing
+                </p>
+              </div> */}
+
+              {/* Form */}
+              <div className="flex-1 overflow-y-auto">
+                <GenericForm
+                  schema={schema}
+                  data={resume}
+                  sectionOrder={sectionOrder}
+                  setSectionOrder={setSectionOrder}
+                  onChange={handleResumeChange}
+                  onSchemaChange={setSchema}
+                />
+              </div>
+            </div>
           )}
         </aside>
 

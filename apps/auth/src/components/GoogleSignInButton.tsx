@@ -6,10 +6,25 @@ export default function GoogleSignInButton() {
     const [isLoading, setIsLoading] = useState(false);
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-    const handleSignIn = () => {
-        setIsLoading(true);
-        // Redirect to Google OAuth
-        window.location.href = `${API_URL}/api/auth/google`;
+    const handleSignIn = async () => {
+        try {
+            setIsLoading(true);
+
+            // Call backend to get Google OAuth URL
+            const response = await fetch(`${API_URL}/api/auth/google/url`);
+            const data = await response.json();
+
+            if (data.url) {
+                // Redirect to Google OAuth URL
+                window.location.href = data.url;
+            } else {
+                console.error('No OAuth URL received from backend');
+                setIsLoading(false);
+            }
+        } catch (error) {
+            console.error('Error initiating Google sign-in:', error);
+            setIsLoading(false);
+        }
     };
 
     return (
