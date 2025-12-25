@@ -180,8 +180,8 @@ export default function ATSCheckerPage() {
                                 >
                                     {!file ? (
                                         <div className="text-center">
-                                            <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                                                <Upload size={48} className="text-white" />
+                                            <div className="w-24 h-24 bg-indigo-600 from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                                <Upload size={48} className="font-bold  text-white" />
                                             </div>
                                             <h3 className="text-2xl font-bold text-gray-900 mb-3">Upload Your Resume</h3>
                                             <p className="text-gray-600 mb-6">Drag & drop your resume here, or click to browse</p>
@@ -194,7 +194,7 @@ export default function ATSCheckerPage() {
                                             />
                                             <label
                                                 htmlFor="resume-upload"
-                                                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-xl font-semibold cursor-pointer hover:shadow-lg hover:shadow-indigo-300 transition-all"
+                                                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer hover:shadow-lg hover:shadow-indigo-300 transition-all"
                                             >
                                                 Choose File
                                             </label>

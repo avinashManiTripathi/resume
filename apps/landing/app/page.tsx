@@ -1,5 +1,6 @@
 "use client";
 
+import { Navigation } from "@/components/Navigation";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, TrendingUp, FileText, Download, Edit3 } from "lucide-react";
 import Link from "next/link";
 
@@ -7,173 +8,10 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Mega Menu Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900">ResumePro</span>
-            </Link>
-
-            <div className="hidden md:flex items-center gap-2">
-              {/* Product Dropdown */}
-              <div className="nav-item group relative">
-                <button className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                  Product
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:rotate-180">
-                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all p-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="#features" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="text-2xl">🎯</div>
-                      <div>
-                        <div className="font-semibold text-gray-900">Features</div>
-                        <div className="text-sm text-gray-600">Powerful resume building tools</div>
-                      </div>
-                    </Link>
-                    <Link href="/templates" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="text-2xl">📄</div>
-                      <div>
-                        <div className="font-semibold text-gray-900">Templates</div>
-                        <div className="text-sm text-gray-600">ATS-friendly designs</div>
-                      </div>
-                    </Link>
-                    <Link href="#pricing" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="text-2xl">💎</div>
-                      <div>
-                        <div className="font-semibold text-gray-900">Pricing</div>
-                        <div className="text-sm text-gray-600">Simple, transparent pricing</div>
-                      </div>
-                    </Link>
-                    <Link href="/use-cases" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                      <div className="text-2xl">👥</div>
-                      <div>
-                        <div className="font-semibold text-gray-900">Use Cases</div>
-                        <div className="text-sm text-gray-600">For students & professionals</div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Resources Dropdown */}
-              <div className="nav-item group relative">
-                <button className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                  Resources
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:rotate-180">
-                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all p-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <div className="text-xs font-bold text-gray-500 uppercase px-3 py-2">Guides</div>
-                      <Link href="/resources/resume-guide" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">📖</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Resume Writing Guide</div>
-                          <div className="text-sm text-gray-600">Complete guide to writing resumes</div>
-                        </div>
-                      </Link>
-                      <Link href="/resources/ats-guide" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">🤖</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">ATS Guide</div>
-                          <div className="text-sm text-gray-600">Beat applicant tracking systems</div>
-                        </div>
-                      </Link>
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-gray-500 uppercase px-3 py-2">Learn</div>
-                      <Link href="/blog" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">📝</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Blog</div>
-                          <div className="text-sm text-gray-600">Career tips and insights</div>
-                        </div>
-                      </Link>
-                      <Link href="/help" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">❓</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Help & FAQ</div>
-                          <div className="text-sm text-gray-600">Get answers quickly</div>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Company Dropdown */}
-              <div className="nav-item group relative">
-                <button className="flex items-center gap-1 px-4 py-2 text-gray-600 hover:text-gray-900 font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                  Company
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:rotate-180">
-                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[520px] bg-white rounded-xl shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all p-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <div className="text-xs font-bold text-gray-500 uppercase px-3 py-2">About</div>
-                      <Link href="/about" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">🏢</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">About Us</div>
-                          <div className="text-sm text-gray-600">Our mission and story</div>
-                        </div>
-                      </Link>
-                      <Link href="/contact" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">✉️</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Contact</div>
-                          <div className="text-sm text-gray-600">Get in touch with us</div>
-                        </div>
-                      </Link>
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-gray-500 uppercase px-3 py-2">Trust</div>
-                      <Link href="/reviews" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">⭐</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Reviews</div>
-                          <div className="text-sm text-gray-600">What our users say</div>
-                        </div>
-                      </Link>
-                      <Link href="/success-stories" className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="text-2xl">🎉</div>
-                        <div>
-                          <div className="font-semibold text-gray-900">Success Stories</div>
-                          <div className="text-sm text-gray-600">Real career transformations</div>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <Link href="/editor" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 ml-2">
-                Get Started
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button className="md:hidden p-2">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 12h18M3 6h18M3 18h18" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navigation />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}
@@ -194,13 +32,32 @@ export default function LandingPage() {
                 Build professional, ATS-friendly resumes that get you hired. No design skills required. Just fill in your details and download.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link href="/editor" className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Resume Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link href="#how-it-works" className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition-all flex items-center justify-center gap-2">
                   See How It Works
+                </Link>
+              </div>
+
+              {/* ATS Checker Button */}
+              <div className="mb-12">
+                <Link
+                  href="/ats-checker"
+                  className="inline-flex items-center gap-3 px-6 py-4 bg-white border-2 border-blue-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all group"
+                >
+                  <Shield className="w-5 h-5 text-blue-600" />
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      Check Your Resume's ATS Score
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Free • Instant Results • No Sign-up Required
+                    </div>
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-blue-600 ml-auto" />
                 </Link>
               </div>
 
