@@ -10,8 +10,8 @@ import {
     getTierDisplayName,
     type SubscriptionTier
 } from "@repo/utils-client";
-import { Check, Sparkles, Shield, Zap, Crown } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Check, Sparkles, Shield, Zap, Crown, ArrowLeft, CreditCard, Wallet } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const pricingTiers = [
     {
@@ -20,13 +20,7 @@ const pricingTiers = [
         price: 0,
         period: 'forever',
         description: 'Perfect for getting started',
-        icon: <Sparkles size={32} />,
-        features: [
-            'Create and edit resume',
-            'Real-time preview',
-            'Basic templates',
-            'Auto-save functionality',
-        ],
+        features: ['1 Resume', '3 Basic Templates', 'Auto-save', 'Real-time Preview'],
     },
     {
         id: 'pro' as SubscriptionTier,
@@ -34,16 +28,8 @@ const pricingTiers = [
         price: 9,
         period: 'month',
         description: 'Best for job seekers',
-        icon: <Zap size={32} />,
         popular: true,
-        features: [
-            'Everything in Free',
-            'Unlimited PDF downloads',
-            'Access to 5+ premium templates',
-            'Export to Word format',
-            'Basic customer support',
-            'Remove watermarks',
-        ],
+        features: ['Unlimited Resumes', '10+ Premium Templates', 'PDF Downloads', 'Word Export', 'Email Support'],
     },
     {
         id: 'premium' as SubscriptionTier,
@@ -51,44 +37,45 @@ const pricingTiers = [
         price: 19,
         period: 'month',
         description: 'For professionals',
-        icon: <Crown size={32} />,
-        features: [
-            'Everything in Pro',
-            'Unlimited premium templates',
-            'Priority customer support',
-            'Custom branding options',
-            'Advanced formatting tools',
-            'Resume analytics',
-            'Cover letter builder',
-        ],
+        features: ['Everything in Pro', 'All Templates', 'Priority Support', 'AI Features', 'Analytics', 'Cover Letters'],
     },
 ];
 
 export default function SubscriptionPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const returnTo = searchParams.get('returnTo');
     const existingSubscription = getSubscription();
 
+    const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
     const [isProcessing, setIsProcessing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showDashboard, setShowDashboard] = useState(!!existingSubscription);
 
+    const steps = [
+        { number: 1, title: 'Select Plan', completed: currentStep > 1 },
+        { number: 2, title: 'Payment Method', completed: currentStep > 2 },
+        { number: 3, title: 'Confirmation', completed: false },
+    ];
+
     const handleTierSelect = (tier: SubscriptionTier) => {
         setSelectedTier(tier);
-        // Scroll to payment section
-        setTimeout(() => {
-            document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        if (tier === 'free') {
+            setSubscription('free');
+            const redirectPath = returnTo ? `/${returnTo}?fromSubscription=true` : '/editor?fromSubscription=true';
+            router.push(redirectPath);
+        } else {
+            setCurrentStep(2);
+        }
     };
 
     const handlePaymentSubmit = async (data: any) => {
         setIsProcessing(true);
-
-        // Simulate payment processing
+        setCurrentStep(3);
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Save subscription
         if (selectedTier) {
             setSubscription(selectedTier, selectedTier === 'free' ? undefined : 1);
         }
@@ -96,25 +83,28 @@ export default function SubscriptionPage() {
         setIsProcessing(false);
         setShowSuccess(true);
 
-        // Redirect to editor after success
         setTimeout(() => {
-            router.push('/editor?fromSubscription=true');
-        }, 3000);
+            const redirectPath = returnTo ? `/${returnTo}?fromSubscription=true` : '/editor?fromSubscription=true';
+            router.push(redirectPath);
+        }, 2000);
     };
 
     if (showSuccess) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-                <div className="bg-white rounded-2xl shadow-2xl p-12 max-w-md w-full text-center animate-slideUp">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl shadow-xl p-12 max-w-lg w-full text-center border border-gray-200">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Check size={48} className="text-green-600" />
+                        <Check size={40} className="text-green-600" />
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-3">Payment Successful!</h2>
-                    <p className="text-gray-600 mb-2">
-                        Welcome to {selectedTier && getTierDisplayName(selectedTier)} plan
+                    <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                        Payment Successful!
+                    </h2>
+                    <p className="text-gray-600 text-lg mb-2">
+                        Welcome to <span className="font-bold text-blue-600">{selectedTier && getTierDisplayName(selectedTier)}</span>
                     </p>
-                    <p className="text-sm text-gray-500">
-                        Redirecting to editor...
+                    <p className="text-sm text-gray-500 flex items-center justify-center gap-2 mt-4">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-600 border-t-transparent"></div>
+                        Redirecting...
                     </p>
                 </div>
             </div>
@@ -123,204 +113,251 @@ export default function SubscriptionPage() {
 
     if (showDashboard) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-12 px-4">
-                <div className="max-w-4xl mx-auto">
-                    {/* Header */}
-                    <div className="mb-8">
-                        <button
-                            onClick={() => router.push('/editor')}
-                            className="text-blue-600 hover:text-blue-700 font-medium mb-4 flex items-center gap-2"
-                        >
-                            ← Back to Editor
-                        </button>
-                        <h1 className="text-4xl font-extrabold text-gray-900 mb-2">
+            <div className="min-h-screen bg-gray-50 py-12 px-4">
+                <div className="max-w-6xl mx-auto">
+                    <button
+                        onClick={() => router.push('/editor')}
+                        className="group mb-8 flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-all"
+                    >
+                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                        Back to Editor
+                    </button>
+
+                    <div className="mb-12">
+                        <h1 className="text-4xl font-bold text-gray-900 mb-3">
                             Subscription Management
                         </h1>
-                        <p className="text-gray-600">
+                        <p className="text-lg text-gray-600">
                             Manage your subscription and billing details
                         </p>
                     </div>
 
-                    {/* Dashboard */}
                     <SubscriptionDashboard onUpgrade={() => setShowDashboard(false)} />
                 </div>
             </div>
         );
     }
 
+    const selectedTierData = pricingTiers.find(t => t.id === selectedTier);
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-12 px-4">
-            <div className="max-w-7xl mx-auto">
-                {/* Header */}
-                <div className="text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                        <Sparkles size={16} />
-                        Simple, Transparent Pricing
-                    </div>
-                    <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
-                        Choose Your Perfect Plan
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Unlock premium features and take your resume to the next level
-                    </p>
-                </div>
+        <div className="min-h-screen bg-gray-50">
+            {/* Header with Stepper */}
+            <div className="bg-white border-b border-gray-200">
+                <div className="max-w-6xl mx-auto px-4 py-6">
+                    <button
+                        onClick={() => {
+                            if (currentStep > 1) {
+                                setCurrentStep((currentStep - 1) as 1 | 2 | 3);
+                            } else {
+                                const redirectPath = returnTo ? `/${returnTo}` : '/editor';
+                                router.push(redirectPath);
+                            }
+                        }}
+                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium mb-6 transition-colors"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                        Back
+                    </button>
 
-                {/* Pricing Cards */}
-                <div className="grid md:grid-cols-3 gap-8 mb-16">
-                    {pricingTiers.map((tier, index) => (
-                        <div
-                            key={tier.id}
-                            className={`relative rounded-2xl border-2 p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${tier.popular
-                                ? 'border-blue-500 shadow-xl scale-105 bg-gradient-to-br from-blue-50 to-purple-50'
-                                : 'border-gray-200 bg-white hover:border-blue-300'
-                                } ${selectedTier === tier.id ? 'ring-4 ring-blue-300' : ''}`}
-                            style={{ animationDelay: `${index * 100}ms` }}
-                        >
-                            {/* Popular Badge */}
-                            {tier.popular && (
-                                <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-bold rounded-full shadow-md">
-                                    Most Popular
+                    {/* Stepper */}
+                    <div className="flex items-center justify-center">
+                        {steps.map((step, index) => (
+                            <div key={step.number} className="flex items-center">
+                                <div className="flex flex-col items-center">
+                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${step.completed
+                                        ? 'bg-blue-600 text-white'
+                                        : currentStep === step.number
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-gray-200 text-gray-500'
+                                        }`}>
+                                        {step.completed ? <Check className="w-5 h-5" /> : step.number}
+                                    </div>
+                                    <span className={`text-sm mt-2 font-medium ${currentStep === step.number ? 'text-blue-600' : 'text-gray-500'
+                                        }`}>
+                                        {step.title}
+                                    </span>
                                 </div>
-                            )}
-
-                            {/* Icon */}
-                            <div className={`mb-4 ${tier.popular ? 'text-blue-600' : 'text-gray-600'}`}>
-                                {tier.icon}
+                                {index < steps.length - 1 && (
+                                    <div className={`w-24 h-0.5 mx-4 mb-6 ${step.completed ? 'bg-blue-600' : 'bg-gray-200'
+                                        }`}></div>
+                                )}
                             </div>
-
-                            {/* Tier Name */}
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                                {tier.name}
-                            </h3>
-
-                            {/* Price */}
-                            <div className="mb-4">
-                                <span className="text-5xl font-extrabold text-gray-900">
-                                    ${tier.price}
-                                </span>
-                                <span className="text-gray-600 ml-2">
-                                    /{tier.period}
-                                </span>
-                            </div>
-
-                            {/* Description */}
-                            <p className="text-gray-600 mb-6">
-                                {tier.description}
-                            </p>
-
-                            {/* Features */}
-                            <ul className="space-y-3 mb-8">
-                                {tier.features.map((feature, idx) => (
-                                    <li key={idx} className="flex items-start gap-3">
-                                        <div className={`flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center ${tier.popular ? 'bg-blue-500' : 'bg-green-500'
-                                            }`}>
-                                            <Check size={14} className="text-white" />
-                                        </div>
-                                        <span className="text-gray-700 text-sm leading-tight">
-                                            {feature}
-                                        </span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* CTA Button */}
-                            <button
-                                onClick={() => handleTierSelect(tier.id)}
-                                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${tier.popular
-                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
-                                    : 'bg-gray-900 text-white hover:bg-gray-800'
-                                    } ${selectedTier === tier.id ? 'ring-4 ring-blue-300' : ''}`}
-                            >
-                                {selectedTier === tier.id ? 'Selected' : tier.id === 'free' ? 'Continue with Free' : 'Get Started'}
-                            </button>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Payment Section */}
-                {selectedTier && selectedTier !== 'free' && (
-                    <div id="payment-section" className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 animate-slideUp">
-                        <div className="mb-8">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                                Complete Your Purchase
-                            </h2>
-                            <p className="text-gray-600">
-                                You've selected the <span className="font-semibold text-blue-600">{getTierDisplayName(selectedTier)}</span> plan
-                            </p>
-                        </div>
-
-                        {/* Payment Method Selector */}
-                        <div className="mb-8">
-                            <PaymentMethodSelector
-                                selected={paymentMethod}
-                                onSelect={setPaymentMethod}
-                            />
-                        </div>
-
-                        {/* Billing Form */}
-                        <BillingForm
-                            paymentMethod={paymentMethod}
-                            onSubmit={handlePaymentSubmit}
-                            isProcessing={isProcessing}
-                        />
-                    </div>
-                )}
-
-                {/* Free Tier Confirmation */}
-                {selectedTier === 'free' && (
-                    <div id="payment-section" className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 text-center animate-slideUp">
-                        <div className="text-6xl mb-4">🎉</div>
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                            You're All Set!
-                        </h2>
-                        <p className="text-gray-600 mb-8">
-                            Start creating your professional resume with our free plan
-                        </p>
-                        <button
-                            onClick={() => {
-                                setSubscription('free');
-                                router.push('/editor?fromSubscription=true');
-                            }}
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-8 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                        >
-                            Go to Editor
-                        </button>
-                    </div>
-                )}
-
-                {/* Trust Badges */}
-                <div className="mt-16 flex items-center justify-center gap-8 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                        <Shield size={20} className="text-green-600" />
-                        <span>Secure Payment</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Check size={20} className="text-green-600" />
-                        <span>30-Day Money Back</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Sparkles size={20} className="text-green-600" />
-                        <span>Cancel Anytime</span>
+                        ))}
                     </div>
                 </div>
             </div>
 
-            <style jsx>{`
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+            <div className="max-w-6xl mx-auto px-4 py-12">
+                {/* Step 1: Select Plan */}
+                {currentStep === 1 && (
+                    <div>
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                                Choose Your Plan
+                            </h1>
+                            <p className="text-xl text-gray-600">
+                                Select the perfect plan for your needs
+                            </p>
+                        </div>
 
-        .animate-slideUp {
-          animation: slideUp 0.5s ease-out;
-        }
-      `}</style>
+                        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                            {pricingTiers.map((tier) => (
+                                <div
+                                    key={tier.id}
+                                    className={`bg-white rounded-2xl p-8 border-2 transition-all cursor-pointer hover:shadow-xl ${tier.popular
+                                        ? 'border-blue-600 shadow-lg relative'
+                                        : 'border-gray-200 hover:border-blue-300'
+                                        } ${selectedTier === tier.id ? 'ring-4 ring-blue-200' : ''}`}
+                                    onClick={() => handleTierSelect(tier.id)}
+                                >
+                                    {tier.popular && (
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                                            Most Popular
+                                        </div>
+                                    )}
+
+                                    <div className="text-center mb-6">
+                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">{tier.name}</h3>
+                                        <p className="text-gray-600 text-sm mb-4">{tier.description}</p>
+                                        <div className="mb-4">
+                                            <span className="text-5xl font-bold text-gray-900">${tier.price}</span>
+                                            <span className="text-gray-600">/{tier.period}</span>
+                                        </div>
+                                    </div>
+
+                                    <ul className="space-y-3 mb-6">
+                                        {tier.features.map((feature, idx) => (
+                                            <li key={idx} className="flex items-start gap-2">
+                                                <Check className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                                <span className="text-sm text-gray-700">{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <button
+                                        className={`w-full py-3 rounded-lg font-semibold transition-all ${tier.popular
+                                            ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                            }`}
+                                    >
+                                        {tier.id === 'free' ? 'Start Free' : 'Select Plan'}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 2: Payment Method */}
+                {currentStep === 2 && selectedTierData && (
+                    <div className="max-w-4xl mx-auto">
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Left Side - Payment Method Selection */}
+                            <div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                                    Select Payment Method
+                                </h2>
+
+                                <div className="space-y-3 mb-8">
+                                    <button
+                                        onClick={() => setPaymentMethod('card')}
+                                        className={`w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all ${paymentMethod === 'card'
+                                            ? 'border-blue-600 bg-blue-50'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <CreditCard className="w-5 h-5 text-blue-600" />
+                                            <span className="font-medium text-gray-900">Credit / Debit Card</span>
+                                        </div>
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'card' ? 'border-blue-600' : 'border-gray-300'
+                                            }`}>
+                                            {paymentMethod === 'card' && (
+                                                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                                            )}
+                                        </div>
+                                    </button>
+
+                                    <button
+                                        onClick={() => setPaymentMethod('paypal')}
+                                        className={`w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all ${paymentMethod === 'paypal'
+                                            ? 'border-blue-600 bg-blue-50'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <Wallet className="w-5 h-5 text-blue-600" />
+                                            <span className="font-medium text-gray-900">PayPal</span>
+                                        </div>
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'paypal' ? 'border-blue-600' : 'border-gray-300'
+                                            }`}>
+                                            {paymentMethod === 'paypal' && (
+                                                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                                            )}
+                                        </div>
+                                    </button>
+                                </div>
+
+                                {/* Summary Box */}
+                                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                                    <h3 className="font-semibold text-gray-900 mb-4">Order Summary</h3>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-600">{selectedTierData.name} Plan</span>
+                                            <span className="font-medium text-gray-900">${selectedTierData.price}</span>
+                                        </div>
+                                        <div className="border-t border-gray-200 pt-3">
+                                            <div className="flex justify-between">
+                                                <span className="font-semibold text-gray-900">Total</span>
+                                                <span className="text-2xl font-bold text-blue-600">${selectedTierData.price}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                                        <div className="flex items-start gap-3">
+                                            <Shield className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                                            <div className="text-sm text-blue-900">
+                                                <p className="font-semibold mb-1">Secure Payment</p>
+                                                <p className="text-blue-700">Your payment information is encrypted and secure</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Side - Payment Form */}
+                            <div className="bg-white rounded-xl border border-gray-200 p-8">
+                                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                                    Payment Details
+                                </h2>
+
+                                <BillingForm
+                                    paymentMethod={paymentMethod}
+                                    onSubmit={handlePaymentSubmit}
+                                    isProcessing={isProcessing}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Step 3: Processing */}
+                {currentStep === 3 && (
+                    <div className="max-w-md mx-auto text-center">
+                        <div className="bg-white rounded-2xl p-12 border border-gray-200">
+                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mx-auto mb-6"></div>
+                            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                                Processing Payment...
+                            </h2>
+                            <p className="text-gray-600">
+                                Please wait while we process your payment
+                            </p>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

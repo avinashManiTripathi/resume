@@ -10,7 +10,6 @@ import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
-import { PricingModal } from "@repo/ui/pricing-modal";
 import { CloudCheck } from "lucide-react";
 
 const initialResume = {
@@ -178,9 +177,9 @@ export default function ResumeLayout() {
     }
 
     // Redirect to subscription page if no subscription exists
-    if (!subscription) {
-      router.push('/subscription?returnTo=editor');
-    }
+    // if (!subscription) {
+    //   router.push('/subscription?returnTo=editor');
+    // }
   }, [router, searchParams]);
 
   // Check for resume data from tailor page
@@ -283,8 +282,6 @@ export default function ResumeLayout() {
   });
   const [showTemplates, setShowTemplates] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showPricingModal, setShowPricingModal] = useState(false);
-  const [pendingDownload, setPendingDownload] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
 
   const debouncedResume = useDebounce(resume, 500);
@@ -435,8 +432,8 @@ export default function ResumeLayout() {
   const handleExport = (format: "pdf" | "doc") => {
     // Check subscription before allowing download
     if (!canDownload()) {
-      setShowPricingModal(true);
-      setPendingDownload(true);
+      // Redirect to subscription page instead of showing modal
+      router.push('/subscription?returnTo=editor');
       return;
     }
 
@@ -454,26 +451,6 @@ export default function ResumeLayout() {
     }
   };
 
-  const handleSubscribe = (tier: SubscriptionTier) => {
-    // Save subscription to localStorage
-    setSubscription(tier, tier === 'free' ? undefined : 1);
-
-    // Close modal
-    setShowPricingModal(false);
-
-    // If there was a pending download and user subscribed to pro/premium, trigger it
-    if (pendingDownload && (tier === 'pro' || tier === 'premium')) {
-      setPendingDownload(false);
-      const resumeData = {
-        templateId,
-        ...resume,
-        order: sectionOrder
-      };
-      downloadPdf(apiUrl, "resume", resumeData);
-    } else {
-      setPendingDownload(false);
-    }
-  };
 
   const fillDummyData = () => {
     const newData = JSON.parse(JSON.stringify(dummyData));
@@ -616,8 +593,8 @@ export default function ResumeLayout() {
         onDownload={() => {
           // Check subscription before allowing download
           if (!canDownload()) {
-            setShowPricingModal(true);
-            setPendingDownload(true);
+            // Redirect to subscription page instead of showing modal
+            router.push('/subscription?returnTo=editor');
             return;
           }
 
@@ -710,7 +687,12 @@ export default function ResumeLayout() {
 
           <div className="flex justify-center">
             <div className="bg-white shadow-lg">
-              <canvas ref={canvasRef} />
+              <canvas
+                ref={canvasRef}
+                width={794}
+                height={1123}
+                className="max-w-full h-auto"
+              />
             </div>
           </div>
         </main>
@@ -727,16 +709,6 @@ export default function ResumeLayout() {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         resumeUrl={typeof window !== 'undefined' ? window.location.href : ''}
-      />
-
-      {/* Pricing Modal */}
-      <PricingModal
-        isOpen={showPricingModal}
-        onClose={() => {
-          setShowPricingModal(false);
-          setPendingDownload(false);
-        }}
-        onSubscribe={handleSubscribe}
       />
     </div>
   );
