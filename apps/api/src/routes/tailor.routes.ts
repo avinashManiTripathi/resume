@@ -2,19 +2,12 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
-import { AIAnalysis } from '@repo/utils-server';
 const { PDFParse } = require("pdf-parse");
 const pdfParse = PDFParse;
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const tailorService = new TailorService();
 
-
-router.get("/ai", async (req: Request, res: Response) => {
-
-    const response = await AIAnalysis();
-    res.send(response)
-})
 
 /**
  * POST /api/tailor/analyze

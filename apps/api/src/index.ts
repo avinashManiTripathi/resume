@@ -1,4 +1,8 @@
 import { App } from './app';
+require('dotenv').config()
+import { initAI } from '@repo/utils-server';
+initAI(process.env.GOOGLE_API_KEY as string);
+
 
 // Create and start the application
 const app = new App();

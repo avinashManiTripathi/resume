@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, Search, HelpCircle, Book, Video, MessageCircle } from "lucide-react";
+import { Navigation } from "@/components/Navigation";
 
 const faqs = [
     {
@@ -101,138 +102,141 @@ export default function HelpPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-            {/* Hero Section */}
-            <section className="pt-32 pb-16 px-6">
-                <div className="max-w-4xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                        <HelpCircle size={16} />
-                        Help Center
-                    </div>
-                    <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
-                        How Can We
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Help You?</span>
-                    </h1>
-                    <p className="text-xl text-gray-600 mb-8">
-                        Find answers to common questions or get in touch with our support team.
-                    </p>
-
-                    {/* Search Bar */}
-                    <div className="max-w-2xl mx-auto relative">
-                        <input
-                            type="text"
-                            placeholder="Search for help..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full px-6 py-4 pl-14 rounded-full border-2 border-gray-200 focus:border-blue-500 focus:outline-none text-lg shadow-lg"
-                        />
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                    </div>
-                </div>
-            </section>
-
-            {/* Quick Links */}
-            <section className="pb-16 px-6">
-                <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-                    {[
-                        {
-                            icon: <Book size={32} />,
-                            title: "Documentation",
-                            description: "Detailed guides and tutorials",
-                            color: "blue"
-                        },
-                        {
-                            icon: <Video size={32} />,
-                            title: "Video Tutorials",
-                            description: "Step-by-step video guides",
-                            color: "purple"
-                        },
-                        {
-                            icon: <MessageCircle size={32} />,
-                            title: "Contact Support",
-                            description: "Get help from our team",
-                            color: "green"
-                        }
-                    ].map((item, idx) => (
-                        <div key={idx} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
-                            <div className={`text-${item.color}-600 mb-4 group-hover:scale-110 transition-transform`}>
-                                {item.icon}
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                            <p className="text-gray-600">{item.description}</p>
+        <>
+            <Navigation />
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                {/* Hero Section */}
+                <section className="pt-32 pb-16 px-6">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
+                            <HelpCircle size={16} />
+                            Help Center
                         </div>
-                    ))}
-                </div>
-            </section>
+                        <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
+                            How Can We
+                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Help You?</span>
+                        </h1>
+                        <p className="text-xl text-gray-600 mb-8">
+                            Find answers to common questions or get in touch with our support team.
+                        </p>
 
-            {/* FAQ Sections */}
-            <section className="pb-20 px-6">
-                <div className="max-w-4xl mx-auto">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">
-                        Frequently Asked Questions
-                    </h2>
+                        {/* Search Bar */}
+                        <div className="max-w-2xl mx-auto relative">
+                            <input
+                                type="text"
+                                placeholder="Search for help..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full px-6 py-4 pl-14 rounded-full border-2 border-gray-200 focus:border-blue-500 focus:outline-none text-lg shadow-lg"
+                            />
+                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                        </div>
+                    </div>
+                </section>
 
-                    <div className="space-y-8">
-                        {faqs.map((category, catIdx) => (
-                            <div key={catIdx}>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                                    {category.category}
-                                </h3>
-                                <div className="space-y-3">
-                                    {category.questions.map((faq, qIdx) => {
-                                        const key = `${catIdx}-${qIdx}`;
-                                        const isOpen = openIndex === key;
-
-                                        return (
-                                            <div
-                                                key={qIdx}
-                                                className="bg-white rounded-xl shadow-md overflow-hidden"
-                                            >
-                                                <button
-                                                    onClick={() => toggleFAQ(catIdx, qIdx)}
-                                                    className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
-                                                >
-                                                    <span className="font-semibold text-gray-900 pr-4">
-                                                        {faq.q}
-                                                    </span>
-                                                    <ChevronDown
-                                                        size={20}
-                                                        className={`text-gray-400 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
-                                                            }`}
-                                                    />
-                                                </button>
-                                                {isOpen && (
-                                                    <div className="px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
-                                                        {faq.a}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        );
-                                    })}
+                {/* Quick Links */}
+                <section className="pb-16 px-6">
+                    <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
+                        {[
+                            {
+                                icon: <Book size={32} />,
+                                title: "Documentation",
+                                description: "Detailed guides and tutorials",
+                                color: "blue"
+                            },
+                            {
+                                icon: <Video size={32} />,
+                                title: "Video Tutorials",
+                                description: "Step-by-step video guides",
+                                color: "purple"
+                            },
+                            {
+                                icon: <MessageCircle size={32} />,
+                                title: "Contact Support",
+                                description: "Get help from our team",
+                                color: "green"
+                            }
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group">
+                                <div className={`text-${item.color}-600 mb-4 group-hover:scale-110 transition-transform`}>
+                                    {item.icon}
                                 </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                                <p className="text-gray-600">{item.description}</p>
                             </div>
                         ))}
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* Still Need Help */}
-            <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
-                <div className="max-w-4xl mx-auto text-center text-white">
-                    <h2 className="text-4xl font-bold mb-4">Still Need Help?</h2>
-                    <p className="text-xl mb-8 opacity-90">
-                        Our support team is here to assist you with any questions.
-                    </p>
-                    <div className="flex gap-4 justify-center">
-                        <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg">
-                            Contact Support
-                        </button>
-                        <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition-all duration-300">
-                            Live Chat
-                        </button>
+                {/* FAQ Sections */}
+                <section className="pb-20 px-6">
+                    <div className="max-w-4xl mx-auto">
+                        <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">
+                            Frequently Asked Questions
+                        </h2>
+
+                        <div className="space-y-8">
+                            {faqs.map((category, catIdx) => (
+                                <div key={catIdx}>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                                        {category.category}
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {category.questions.map((faq, qIdx) => {
+                                            const key = `${catIdx}-${qIdx}`;
+                                            const isOpen = openIndex === key;
+
+                                            return (
+                                                <div
+                                                    key={qIdx}
+                                                    className="bg-white rounded-xl shadow-md overflow-hidden"
+                                                >
+                                                    <button
+                                                        onClick={() => toggleFAQ(catIdx, qIdx)}
+                                                        className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
+                                                    >
+                                                        <span className="font-semibold text-gray-900 pr-4">
+                                                            {faq.q}
+                                                        </span>
+                                                        <ChevronDown
+                                                            size={20}
+                                                            className={`text-gray-400 flex-shrink-0 transition-transform ${isOpen ? "rotate-180" : ""
+                                                                }`}
+                                                        />
+                                                    </button>
+                                                    {isOpen && (
+                                                        <div className="px-6 pb-4 text-gray-600 border-t border-gray-100 pt-4">
+                                                            {faq.a}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </section>
+
+                {/* Still Need Help */}
+                <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
+                    <div className="max-w-4xl mx-auto text-center text-white">
+                        <h2 className="text-4xl font-bold mb-4">Still Need Help?</h2>
+                        <p className="text-xl mb-8 opacity-90">
+                            Our support team is here to assist you with any questions.
+                        </p>
+                        <div className="flex gap-4 justify-center">
+                            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg">
+                                Contact Support
+                            </button>
+                            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/10 transition-all duration-300">
+                                Live Chat
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </>
     );
 }

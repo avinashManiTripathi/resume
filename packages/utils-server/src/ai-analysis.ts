@@ -1,19 +1,16 @@
 import { GoogleGenAI } from "@google/genai";
-const ai = new GoogleGenAI({ apiKey: 'AIzaSyDkDm9CcAvoxwZeym5VhL9zE92ZXBQPNF0' });
 
-export const AIAnalysis = async (
-  prompt: string = "Explain Node.js in simple terms"
-) => {
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-    return response.text
-  } catch (error) {
-    console.log({ error })
-  }
-};
+
+
+let ai = new GoogleGenAI({ apiKey: "AIzaSyDkDm9CcAvoxwZeym5VhL9zE92ZXBQPNF0" });
+
+/**
+ * Initialize the AI client
+ * @param apiKey - Google API key
+ */
+export const initAI = (apiKey: string) => {
+  // ai = new GoogleGenAI({ apiKey });
+}
 
 /**
  * Parse resume text and tailor it to job description using AI
@@ -156,3 +153,70 @@ Return ONLY the JSON object, nothing else.`;
   }
 };
 
+
+
+/**
+ * Analyze resume with AI
+ */
+export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
+  const prompt = `
+You are an expert ATS (Applicant Tracking System) analyzer and career coach. Analyze the following resume and provide a detailed assessment.
+
+Resume Content:
+${resumeText}
+
+Please provide your analysis in the following JSON format:
+{
+  "score": <number between 0-100>,
+  "feedback": {
+    "strengths": [<array of 3-5 strength points>],
+    "weaknesses": [<array of 3-5 weakness points>],
+    "suggestions": [<array of 4-6 specific improvement suggestions>]
+  },
+  "keywords": {
+    "found": [<array of important keywords found in the resume>],
+    "missing": [<array of commonly expected keywords that are missing>]
+  },
+  "formatting": {
+    "score": <number between 0-100>,
+    "issues": [<array of formatting issues if any>]
+  }
+}
+
+Scoring Criteria:
+- Content Quality (40%): Relevant experience, achievements, skills
+- Keywords (30%): Industry-specific keywords, action verbs
+- Formatting (20%): ATS-friendly structure, readability
+- Completeness (10%): All necessary sections present
+
+Be specific and actionable in your feedback. Focus on ATS compatibility and professional standards.
+
+Return ONLY the JSON object, nothing else.`;
+
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: prompt,
+  });
+
+  const responseText = response.text;
+
+  if (!responseText) {
+    throw new Error('AI returned empty response');
+  }
+
+  // Clean the response - remove markdown code blocks if present
+  let cleanedText = responseText.trim();
+  if (cleanedText.startsWith('```json')) {
+    cleanedText = cleanedText.replace(/^```json\n/, '').replace(/\n```$/, '');
+  } else if (cleanedText.startsWith('```')) {
+    cleanedText = cleanedText.replace(/^```\n/, '').replace(/\n```$/, '');
+  }
+
+  // Extract JSON from response
+  const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    return JSON.parse(jsonMatch[0]);
+  }
+
+  throw new Error('Failed to parse AI response');
+}
