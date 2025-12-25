@@ -59,21 +59,21 @@ const pricingTiers = [
 
 const testimonials = [
     {
-        name: "Sarah Johnson",
+        name: "Avinash Mani Tripathi",
         role: "Software Engineer",
         company: "Google",
         text: "This resume builder helped me land my dream job at Google! The templates are professional and ATS-friendly.",
         rating: 5
     },
     {
-        name: "Michael Chen",
+        name: "Saurabh Mani Tripathi",
         role: "Marketing Manager",
         company: "Amazon",
         text: "The Pro plan is worth every penny. I've created multiple versions of my resume for different positions.",
         rating: 5
     },
     {
-        name: "Emily Davis",
+        name: "Devender Mani Tripathi",
         role: "Product Designer",
         company: "Apple",
         text: "Beautiful templates and easy to use. The premium features are game-changing for job seekers.",

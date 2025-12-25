@@ -26,7 +26,7 @@ export default function ReviewsPage() {
                             { name: "Sarah Chen", role: "Software Engineer", text: "Got 3 interviews in the first week! The templates are clean and professional.", rating: 5 },
                             { name: "Michael Johnson", role: "Product Manager", text: "Finally landed my dream job! This tool made my resume stand out from hundreds of applicants.", rating: 5 },
                             { name: "Emily Rodriguez", role: "UX Designer", text: "As a designer, I'm picky. These templates are actually good. Clean, modern, and effective.", rating: 5 },
-                            { name: "David Kim", role: "Marketing Manager", text: "The ATS optimization really works. I started getting more callbacks immediately.", rating: 5 },
+                            { name: "Prateek Singh", role: "Marketing Manager", text: "The ATS optimization really works. I started getting more callbacks immediately.", rating: 5 },
                             { name: "Jessica Taylor", role: "Data Analyst", text: "Super easy to use. Created my resume in under 15 minutes and it looks amazing.", rating: 5 },
                             { name: "Alex Martinez", role: "Sales Director", text: "Best resume builder I've used. The pro features are worth every penny.", rating: 5 },
                         ].map((review, i) => (

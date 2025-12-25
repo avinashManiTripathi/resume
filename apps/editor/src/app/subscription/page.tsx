@@ -297,6 +297,27 @@ export default function SubscriptionPage() {
                                             )}
                                         </div>
                                     </button>
+
+                                    <button
+                                        onClick={() => setPaymentMethod('upi')}
+                                        className={`w-full p-4 rounded-xl border-2 flex items-center justify-between transition-all ${paymentMethod === 'upi'
+                                            ? 'border-blue-600 bg-blue-50'
+                                            : 'border-gray-200 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M19 7h-8v6h8V7zm-2 4h-4V9h4v2zm4-8H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z" />
+                                            </svg>
+                                            <span className="font-medium text-gray-900">UPI</span>
+                                        </div>
+                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'upi' ? 'border-blue-600' : 'border-gray-300'
+                                            }`}>
+                                            {paymentMethod === 'upi' && (
+                                                <div className="w-3 h-3 rounded-full bg-blue-600"></div>
+                                            )}
+                                        </div>
+                                    </button>
                                 </div>
 
                                 {/* Summary Box */}

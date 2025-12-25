@@ -1,6 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { Sparkles, Users, Target, Award, Heart, Zap } from "lucide-react";
-
+import Image from "next/image";
 
 export default function AboutPage() {
     return (
@@ -14,7 +14,7 @@ export default function AboutPage() {
                             <Sparkles size={16} />
                             About Us
                         </div>
-                        <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-6xl mx-auto font-extrabold text-gray-900 mb-6">
                             We're on a Mission to Help You
                             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Land Your Dream Job</span>
                         </h1>
@@ -35,7 +35,7 @@ export default function AboutPage() {
                                 { number: "50+", label: "Templates" },
                             ].map((stat, idx) => (
                                 <div key={idx} className="text-center">
-                                    <div className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                                    <div className="text-5xl text-gray-900 font-extrabold mb-2">
                                         {stat.number}
                                     </div>
                                     <div className="text-gray-600 font-medium">{stat.label}</div>
@@ -123,13 +123,13 @@ export default function AboutPage() {
                         </p>
                         <div className="grid md:grid-cols-4 gap-8">
                             {[
-                                { name: "Sarah Johnson", role: "CEO & Founder", image: "👩‍💼" },
-                                { name: "Michael Chen", role: "CTO", image: "👨‍💻" },
-                                { name: "Emily Davis", role: "Head of Design", image: "👩‍🎨" },
-                                { name: "David Kim", role: "Lead Developer", image: "👨‍🔧" },
+                                { name: "Avinash Mani Tripathi", role: "CEO & Founder", image: "https://storage.googleapis.com/definable-beta-public/photo_studio/5df49dfc-eee0-462b-b70e-3f5e93719597/1766398354_2798b31d_0.png" },
+                                { name: "Saurabh Mani Tripathi", role: "CTO", image: "https://media.licdn.com/dms/image/v2/D5603AQGij0Uxmve3NQ/profile-displayphoto-crop_800_800/B56Zhzf3iCG4AQ-/0/1754284397400?e=1768435200&v=beta&t=yB_zkS8I5x35N3GJqL2ZGm1nIad965ouK0qV6d2Po1o" },
+                                { name: "Devender Mani Tripathi", role: "Vice President", image: "https://media.licdn.com/dms/image/v2/C4D03AQEaP1KdUYW8SQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1633620066670?e=1768435200&v=beta&t=cEPRNM2zfMoi81cz653PCiRoc6sST7Q5CZADx20WBdE" },
+                                { name: "Prateek Singh", role: "Head of Design", image: "https://storage.googleapis.com/definable-beta-public/photo_studio/5df49dfc-eee0-462b-b70e-3f5e93719597/1766399854_3b6229c8_0.png" },
                             ].map((member, idx) => (
                                 <div key={idx} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
-                                    <div className="text-6xl mb-4">{member.image}</div>
+                                    <Image src={member.image} alt={member.name} width={100} height={100} className="w-24 h-24 mx-auto rounded-full mb-4 object-cover" ></Image>
                                     <h3 className="text-lg font-bold text-gray-900 mb-1">{member.name}</h3>
                                     <p className="text-gray-600 text-sm">{member.role}</p>
                                 </div>

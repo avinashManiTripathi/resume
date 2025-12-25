@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Lock, CreditCard, Smartphone } from "lucide-react";
+import { Button } from "./button";
 
 export type PaymentMethod = 'card' | 'upi' | 'paypal';
 
@@ -277,7 +278,8 @@ export const BillingForm = ({ paymentMethod, onSubmit, isProcessing = false }: B
             </div>
 
             {/* Submit Button */}
-            <button
+            <Button
+                variant="primary"
                 type="submit"
                 disabled={isProcessing}
                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -293,7 +295,7 @@ export const BillingForm = ({ paymentMethod, onSubmit, isProcessing = false }: B
                         {paymentMethod === 'paypal' ? 'Continue to PayPal' : 'Complete Payment'}
                     </>
                 )}
-            </button>
+            </Button>
 
             {/* Trust Badges */}
             <div className="flex items-center justify-center gap-4 text-xs text-gray-500 pt-4 border-t">

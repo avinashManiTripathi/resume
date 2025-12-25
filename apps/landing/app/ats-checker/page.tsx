@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Sparkles, TrendingUp, Award, Zap, ArrowRight, RefreshCw, Target, BarChart3 } from "lucide-react";
+import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Sparkles, TrendingUp, Award, Zap, ArrowRight, RefreshCw, Target, BarChart3, File } from "lucide-react";
 import { Navigation } from "@/components/Navigation";
-
+import { Button } from "@repo/ui/button";
 
 interface ATSResult {
     score: number;
@@ -194,8 +194,9 @@ export default function ATSCheckerPage() {
                                             />
                                             <label
                                                 htmlFor="resume-upload"
-                                                className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer hover:shadow-lg hover:shadow-indigo-300 transition-all"
+                                                className="flex items-center justify-center mx-auto w-fit border border-blue-500 items-center gap-2 inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer text-blue-600 transition-all"
                                             >
+                                                <File size={20} />
                                                 Choose File
                                             </label>
                                             <p className="text-sm text-gray-500 mt-4">Supports PDF and DOCX (Max 10MB)</p>
@@ -212,14 +213,13 @@ export default function ATSCheckerPage() {
                                                     Remove
                                                 </button>
                                             </div>
-                                            <button
-                                                onClick={analyzeResume}
-                                                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-300 transition-all flex items-center justify-center gap-2"
-                                            >
+
+
+                                            <Button onClick={analyzeResume}>
                                                 <Sparkles size={20} />
                                                 Analyze with AI
                                                 <ArrowRight size={20} />
-                                            </button>
+                                            </Button>
                                             {error && (
                                                 <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
                                                     <XCircle size={20} />

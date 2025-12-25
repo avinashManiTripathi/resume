@@ -7,12 +7,14 @@ type ButtonProps = {
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
+  type?: "button" | "submit" | "reset" | undefined
 };
 
 export const Button = ({
   children,
   variant = "outline",
   icon,
+  type = 'button',
   onClick,
   className = "",
   disabled = false,
@@ -28,6 +30,7 @@ export const Button = ({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variant === "primary" ? primaryStyles : outlineStyles

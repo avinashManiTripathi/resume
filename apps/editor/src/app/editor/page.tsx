@@ -619,7 +619,7 @@ export default function ResumeLayout() {
       />
 
       {/* Main Content - 3 Column Layout */}
-      <div className="flex flex-1 overflow-hidden gap-1">
+      <div className="flex flex-1 overflow-hidden gap-2 mx-[10px]">
         {/* Left Sidebar - Form or Template Selector (40%) */}
         <aside className="w-[40%] rounded-lg bg-white border-r border-gray-200 overflow-y-auto">
           {showTemplates ? (
@@ -667,7 +667,7 @@ export default function ResumeLayout() {
         </aside>
 
         {/* Center Canvas - Preview (60% minus right sidebar) */}
-        <main ref={mainRef} className="flex-1 relative rounded-lg overflow-y-auto bg-gray-100 py-8">
+        <main ref={mainRef} className="flex-1 relative rounded-lg overflow-y-auto bg-gray-100 ">
           {/* Save Progress Indicator */}
           <div className="absolute top-4 left-0 right-0 flex justify-center pointer-events-none z-10">
             <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200 pointer-events-auto">

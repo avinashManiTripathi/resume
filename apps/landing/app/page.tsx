@@ -3,15 +3,42 @@
 import { Navigation } from "@/components/Navigation";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, TrendingUp, FileText, Download, Edit3 } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+interface Template {
+  id: string;
+  name: string;
+  html: string;
+  image?: string;
+}
 
 export default function LandingPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/resumes');
+        const data = await response.json();
+        setTemplates(data);
+      } catch (error) {
+        console.error('Error fetching templates:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Mega Menu Navigation */}
       <Navigation />
 
       {/* Hero Section */}
-      <section className="pt-20 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="pt-5 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}
@@ -187,112 +214,120 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                id: "692bcfd239561eef09d89aa9",
-                name: "Professional Classic",
-                category: "Classic",
-                description: "Clean and traditional design perfect for any industry"
-              },
-              {
-                id: "692bcfd239561eef09d89aa1",
-                name: "Modern Sidebar",
-                category: "Modern",
-                description: "Contemporary two-column layout with dark sidebar"
-              },
-              {
-                id: "692bcfd239561eef09d89aa2",
-                name: "Modern Gradient",
-                category: "Modern",
-                description: "Eye-catching gradient header with modern styling"
-              },
-              {
-                id: "692bcfd239561eef09d89aa3",
-                name: "Split Layout",
-                category: "Professional",
-                description: "Balanced two-column design for maximum impact"
-              },
-              {
-                id: "692bcfd239561eef09d89aa4",
-                name: "Minimal Elegant",
-                category: "Minimal",
-                description: "Clean minimalist design that lets content shine"
-              },
-              {
-                id: "692bcfd239561eef09d89aa5",
-                name: "Bold Creative",
-                category: "Creative",
-                description: "Vibrant gradient sidebar for creative professionals"
-              },
-              {
-                id: "692bcfd239561eef09d89aa6",
-                name: "Compact Professional",
-                category: "Professional",
-                description: "Space-efficient design for comprehensive resumes"
-              },
-              {
-                id: "692bcfd239561eef09d89aa8",
-                name: "Modern Professional",
-                category: "Modern",
-                description: "Contemporary two-column with clean aesthetics"
-              },
-              {
-                id: "692bcfd239561eef09d89ats",
-                name: "ATS Professional",
-                category: "ATS-Friendly",
-                description: "Optimized for applicant tracking systems"
-              }
-            ].map((template, index) => (
-              <Link
-                key={template.id}
-                href={`/editor?template=${template.id}`}
-                className="group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-xl"
-              >
-                {/* Template Preview */}
-                <div className="aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-3/4 h-5/6 bg-white rounded-lg shadow-lg p-4 transform group-hover:scale-105 transition-transform">
-                      {/* Simulated resume preview */}
-                      <div className="space-y-2">
-                        <div className="h-3 bg-gray-800 rounded w-2/3"></div>
-                        <div className="h-2 bg-gray-400 rounded w-1/2"></div>
-                        <div className="mt-4 space-y-1">
-                          <div className="h-2 bg-gray-300 rounded"></div>
-                          <div className="h-2 bg-gray-300 rounded w-5/6"></div>
-                          <div className="h-2 bg-gray-300 rounded w-4/6"></div>
+          {/* Slider Container */}
+          <div className="relative">
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => {
+                const container = document.getElementById('templates-slider');
+                if (container) container.scrollBy({ left: -400, behavior: 'smooth' });
+              }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-all -ml-4 hidden md:block"
+              aria-label="Previous templates"
+            >
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <button
+              onClick={() => {
+                const container = document.getElementById('templates-slider');
+                if (container) container.scrollBy({ left: 400, behavior: 'smooth' });
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-all -mr-4 hidden md:block"
+              aria-label="Next templates"
+            >
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            {/* Slider */}
+            <div
+              id="templates-slider"
+              className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {isLoading ? (
+                // Loading skeleton
+                [...Array(6)].map((_, index) => (
+                  <div key={index} className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border-2 border-gray-200 animate-pulse">
+                    <div className="aspect-[8.5/11] bg-gray-200"></div>
+                    <div className="p-6">
+                      <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                templates.map((template) => (
+                  <Link
+                    key={template.id}
+                    href={`/editor?template=${template.id}`}
+                    className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-xl"
+                  >
+                    {/* Template Preview */}
+                    <div className="aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                      {template.image ? (
+                        <img
+                          src={template.image}
+                          alt={template.name}
+                          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-3/4 h-5/6 bg-white rounded-lg shadow-lg p-4 transform group-hover:scale-105 transition-transform">
+                            {/* Simulated resume preview */}
+                            <div className="space-y-2">
+                              <div className="h-3 bg-gray-800 rounded w-2/3"></div>
+                              <div className="h-2 bg-gray-400 rounded w-1/2"></div>
+                              <div className="mt-4 space-y-1">
+                                <div className="h-2 bg-gray-300 rounded"></div>
+                                <div className="h-2 bg-gray-300 rounded w-5/6"></div>
+                                <div className="h-2 bg-gray-300 rounded w-4/6"></div>
+                              </div>
+                              <div className="mt-4 space-y-1">
+                                <div className="h-2 bg-blue-200 rounded w-3/4"></div>
+                                <div className="h-2 bg-gray-200 rounded"></div>
+                                <div className="h-2 bg-gray-200 rounded w-5/6"></div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className="mt-4 space-y-1">
-                          <div className="h-2 bg-blue-200 rounded w-3/4"></div>
-                          <div className="h-2 bg-gray-200 rounded"></div>
-                          <div className="h-2 bg-gray-200 rounded w-5/6"></div>
+                      )}
+
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-blue-600/90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="text-white text-center">
+                          <div className="text-lg font-bold mb-2">Use This Template</div>
+                          <ArrowRight className="w-6 h-6 mx-auto" />
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-blue-600/90 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <div className="text-white text-center">
-                      <div className="text-lg font-bold mb-2">Use This Template</div>
-                      <ArrowRight className="w-6 h-6 mx-auto" />
+                    {/* Template Info */}
+                    <div className="p-6">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-lg font-bold text-gray-900">{template.name}</h3>
+                        <span className="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
+                          Template
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">Professional ATS-friendly design</p>
                     </div>
-                  </div>
-                </div>
-
-                {/* Template Info */}
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-gray-900">{template.name}</h3>
-                    <span className="text-xs font-semibold px-3 py-1 bg-blue-100 text-blue-700 rounded-full">
-                      {template.category}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600">{template.description}</p>
-                </div>
-              </Link>
-            ))}
+                  </Link>
+                ))
+              )}
+            </div>
           </div>
+
+          {/* Hide scrollbar CSS */}
+          <style jsx>{`
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
 
           <div className="text-center mt-12">
             <Link href="/editor" className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-lg">
@@ -335,8 +370,8 @@ export default function LandingPage() {
             ].map((item, index) => (
               <div key={index} className="relative">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
-                    {item.step}
+                  <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6 shadow-lg">
+                    <span className="relative z-10">{item.step}</span>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{item.description}</p>
