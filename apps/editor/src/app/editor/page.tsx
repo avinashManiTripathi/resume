@@ -463,6 +463,13 @@ export default function ResumeLayout() {
   const renderPDFPage = async (pdfData: ArrayBuffer, page: number) => {
     if (!mainRef.current || !canvasRef.current) return;
 
+    // Skip rendering if container is not visible (e.g., hidden on mobile)
+    const containerWidth = mainRef.current.clientWidth;
+    if (containerWidth === 0) {
+      console.log('Container not visible, skipping PDF render');
+      return;
+    }
+
     const requestId = ++requestIdRef.current;
     const pdfjsLib = (window as any).pdfjsLib;
 
@@ -475,7 +482,6 @@ export default function ResumeLayout() {
     const safePage = Math.min(Math.max(page, 1), pdf.numPages);
     const pdfPage = await pdf.getPage(safePage);
 
-    const containerWidth = mainRef.current.clientWidth;
     const dpr = window.devicePixelRatio || 1;
     const baseViewport = pdfPage.getViewport({ scale: 1 });
 
@@ -513,7 +519,13 @@ export default function ResumeLayout() {
     canvas.style.height = `${viewport.height}px`;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.drawImage(offscreen, 0, 0);
+
+    // Guard against 0-dimension canvas on mobile
+    if (offscreen.width > 0 && offscreen.height > 0) {
+      ctx.drawImage(offscreen, 0, 0);
+    } else {
+      console.warn('Skipping drawImage: offscreen canvas has invalid dimensions');
+    }
   };
 
   // Keyboard shortcuts
@@ -564,6 +576,16 @@ export default function ResumeLayout() {
     renderPdf();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel]);
+
+  // Re-render PDF when switching to mobile preview
+  useEffect(() => {
+    if (showMobilePreview) {
+      // Small delay to ensure container is visible and has dimensions
+      setTimeout(() => {
+        renderPdf(currentPage);
+      }, 100);
+    }
+  }, [showMobilePreview]);
 
   useLayoutEffect(() => {
     const onResize = () => renderPdf();
@@ -688,7 +710,7 @@ export default function ResumeLayout() {
         </aside>
 
         {/* Center Canvas - Preview (60% minus right sidebar) - Hidden on mobile unless preview is shown */}
-        <main ref={mainRef} className={`flex-1 relative md:rounded-lg overflow-y-auto bg-gray-100 ${showMobilePreview ? 'block' : 'hidden md:block'}`}>
+        <main ref={mainRef} className={`flex-1 relative md:rounded-lg overflow-y-auto bg-gray-100 ${showMobilePreview ? 'block' : 'md:block'} ${!showMobilePreview ? 'opacity-0 pointer-events-none absolute md:relative md:opacity-100 md:pointer-events-auto' : ''}`}>
 
 
           <div className="flex justify-center py-4 md:py-0">
