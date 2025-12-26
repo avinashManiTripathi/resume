@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body className={`${nunito.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased`}>
         {children}
       </body>
     </html>

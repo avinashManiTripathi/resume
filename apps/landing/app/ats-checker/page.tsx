@@ -20,6 +20,26 @@ interface ATSResult {
         score: number;
         issues: string[];
     };
+    detailedAnalysis?: {
+        contactInfo: {
+            score: number;
+            issues: string[];
+        };
+        sectionStructure: {
+            score: number;
+            issues: string[];
+        };
+        achievements: {
+            score: number;
+            quantifiableCount: number;
+            issues: string[];
+        };
+        atsCompatibility: {
+            score: number;
+            criticalIssues: string[];
+            warnings: string[];
+        };
+    };
 }
 
 type Step = 'upload' | 'analyzing' | 'results';
@@ -301,6 +321,114 @@ export default function ATSCheckerPage() {
                                         </div>
                                     </div>
 
+                                    {/* Detailed Analysis Cards - NEW */}
+                                    {result.detailedAnalysis && (
+                                        <div className="grid md:grid-cols-2 gap-4">
+                                            {/* Contact Info */}
+                                            <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                                            <FileText size={16} className="text-blue-600" />
+                                                        </div>
+                                                        <h4 className="font-bold text-gray-900 text-sm">Contact Info</h4>
+                                                    </div>
+                                                    <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.contactInfo.score)}`}>
+                                                        {result.detailedAnalysis.contactInfo.score}
+                                                    </span>
+                                                </div>
+                                                {result.detailedAnalysis.contactInfo.issues.length > 0 && (
+                                                    <ul className="space-y-1">
+                                                        {result.detailedAnalysis.contactInfo.issues.slice(0, 2).map((issue, idx) => (
+                                                            <li key={idx} className="text-xs text-gray-600 flex gap-1">
+                                                                <span className="text-orange-500">•</span>
+                                                                <span>{issue}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+
+                                            {/* Section Structure */}
+                                            <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                                            <BarChart3 size={16} className="text-purple-600" />
+                                                        </div>
+                                                        <h4 className="font-bold text-gray-900 text-sm">Section Structure</h4>
+                                                    </div>
+                                                    <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.sectionStructure.score)}`}>
+                                                        {result.detailedAnalysis.sectionStructure.score}
+                                                    </span>
+                                                </div>
+                                                {result.detailedAnalysis.sectionStructure.issues.length > 0 && (
+                                                    <ul className="space-y-1">
+                                                        {result.detailedAnalysis.sectionStructure.issues.slice(0, 2).map((issue, idx) => (
+                                                            <li key={idx} className="text-xs text-gray-600 flex gap-1">
+                                                                <span className="text-orange-500">•</span>
+                                                                <span>{issue}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+
+                                            {/* Achievements */}
+                                            <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                                            <Award size={16} className="text-green-600" />
+                                                        </div>
+                                                        <h4 className="font-bold text-gray-900 text-sm">Achievements</h4>
+                                                    </div>
+                                                    <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.achievements.score)}`}>
+                                                        {result.detailedAnalysis.achievements.score}
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs text-gray-600 mb-2">
+                                                    <span className="font-semibold">{result.detailedAnalysis.achievements.quantifiableCount}</span> quantifiable achievements found
+                                                </p>
+                                                {result.detailedAnalysis.achievements.issues.length > 0 && (
+                                                    <ul className="space-y-1">
+                                                        {result.detailedAnalysis.achievements.issues.slice(0, 1).map((issue, idx) => (
+                                                            <li key={idx} className="text-xs text-gray-600 flex gap-1">
+                                                                <span className="text-orange-500">•</span>
+                                                                <span>{issue}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
+
+                                            {/* ATS Compatibility */}
+                                            <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                                            <Target size={16} className="text-indigo-600" />
+                                                        </div>
+                                                        <h4 className="font-bold text-gray-900 text-sm">ATS Compatibility</h4>
+                                                    </div>
+                                                    <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.atsCompatibility.score)}`}>
+                                                        {result.detailedAnalysis.atsCompatibility.score}
+                                                    </span>
+                                                </div>
+                                                {result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
+                                                    <div className="space-y-1">
+                                                        {result.detailedAnalysis.atsCompatibility.criticalIssues.slice(0, 2).map((issue, idx) => (
+                                                            <div key={idx} className="flex gap-1 items-start">
+                                                                <XCircle size={12} className="text-red-600 flex-shrink-0 mt-0.5" />
+                                                                <span className="text-xs text-red-700">{issue}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     {/* Feedback Cards */}
                                     <div className="grid gap-6">
                                         {/* Strengths */}
@@ -400,6 +528,46 @@ export default function ATSCheckerPage() {
                             {/* Keywords & Formatting (Only show in results) */}
                             {currentStep === 'results' && result && (
                                 <>
+                                    {/* Critical ATS Issues Warning - NEW */}
+                                    {result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
+                                        <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-lg">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                                                    <AlertCircle size={20} className="text-red-600" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-red-900">Critical ATS Issues</h3>
+                                            </div>
+                                            <div className="space-y-2">
+                                                {result.detailedAnalysis.atsCompatibility.criticalIssues.map((issue, idx) => (
+                                                    <div key={idx} className="flex gap-2 p-3 bg-red-100 border border-red-200 rounded-lg">
+                                                        <XCircle size={16} className="text-red-700 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-red-900 text-xs font-medium">{issue}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* ATS Warnings - NEW */}
+                                    {result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.warnings.length > 0 && (
+                                        <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+                                                    <AlertCircle size={20} className="text-orange-600" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-orange-900">ATS Warnings</h3>
+                                            </div>
+                                            <div className="space-y-2">
+                                                {result.detailedAnalysis.atsCompatibility.warnings.map((warning, idx) => (
+                                                    <div key={idx} className="flex gap-2 p-2 bg-orange-100 border border-orange-200 rounded-lg">
+                                                        <AlertCircle size={14} className="text-orange-700 flex-shrink-0 mt-0.5" />
+                                                        <span className="text-orange-900 text-xs">{warning}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
                                         <div className="flex items-center gap-3 mb-4">
                                             <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
@@ -461,27 +629,48 @@ export default function ATSCheckerPage() {
                             {/* Info Card (Show when not in results) */}
                             {currentStep !== 'results' && (
                                 <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-100 rounded-2xl p-6 shadow-lg">
-                                    <h3 className="text-lg font-bold text-gray-900 mb-4">What We Check</h3>
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4">Comprehensive ATS Analysis</h3>
                                     <ul className="space-y-3">
                                         <li className="flex items-start gap-3">
                                             <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="font-semibold text-gray-900">Content Quality</p>
-                                                <p className="text-sm text-gray-600">Experience, achievements, skills</p>
+                                                <p className="font-semibold text-gray-900">Format Compatibility</p>
+                                                <p className="text-sm text-gray-600">Tables, columns, special formatting</p>
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="font-semibold text-gray-900">ATS Compatibility</p>
-                                                <p className="text-sm text-gray-600">Format and structure analysis</p>
+                                                <p className="font-semibold text-gray-900">Section Structure</p>
+                                                <p className="text-sm text-gray-600">Standard headers and organization</p>
                                             </div>
                                         </li>
                                         <li className="flex items-start gap-3">
                                             <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="font-semibold text-gray-900">Keyword Analysis</p>
+                                                <p className="font-semibold text-gray-900">Contact Information</p>
+                                                <p className="text-sm text-gray-600">Email, phone, LinkedIn profile</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-semibold text-gray-900">Keywords & Action Verbs</p>
                                                 <p className="text-sm text-gray-600">Industry-specific terms</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-semibold text-gray-900">Quantifiable Achievements</p>
+                                                <p className="text-sm text-gray-600">Numbers, metrics, impact</p>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-semibold text-gray-900">Content Quality</p>
+                                                <p className="text-sm text-gray-600">Clarity, grammar, professionalism</p>
                                             </div>
                                         </li>
                                     </ul>

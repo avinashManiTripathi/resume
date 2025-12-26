@@ -109,7 +109,7 @@ export default function LandingPage() {
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="w-16 h-16 bg-blue-100 from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-gray-900 text-2xl font-bold">
                     JD
                   </div>
                   <div>
@@ -426,7 +426,7 @@ export default function LandingPage() {
                 </div>
                 <p className="text-gray-700 mb-6 leading-relaxed">"{testimonial.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 mb-4">
                     {testimonial.avatar}
                   </div>
                   <div>

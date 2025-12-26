@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 
 
-let ai = new GoogleGenAI({ apiKey: "AIzaSyCdH29TsGljHyDmvP0LtHeMKXnGDU8RBaY" });
+let ai = new GoogleGenAI({ apiKey: "AIzaSyCZM3eZTT0_HD1BHzt9-TgvDy5G4MxZcLI" });
 
 /**
  * Initialize the AI client
@@ -156,40 +156,120 @@ Return ONLY the JSON object, nothing else.`;
 
 
 /**
- * Analyze resume with AI
+ * Analyze resume with AI - Strict ATS Checker
  */
 export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
   const prompt = `
-You are an expert ATS (Applicant Tracking System) analyzer and career coach. Analyze the following resume and provide a detailed assessment.
+You are an expert ATS (Applicant Tracking System) analyzer and career coach. Perform a STRICT and COMPREHENSIVE analysis of the following resume.
 
 Resume Content:
 ${resumeText}
 
-Please provide your analysis in the following JSON format:
+CRITICAL ANALYSIS REQUIREMENTS:
+
+Perform detailed checks across ALL of the following areas and be STRICT in your evaluation:
+
+1. **FORMAT COMPATIBILITY** (Critical for ATS):
+   - Check if content suggests use of tables, columns, or text boxes (ATS often can't parse these)
+   - Detect potential headers/footers that ATS may skip
+   - Identify if special formatting (graphs, charts, images) is mentioned
+   - Check for non-standard characters that may cause parsing errors
+
+2. **SECTION STRUCTURE**:
+   - Verify presence of standard sections: Contact Info, Summary/Objective, Experience, Education, Skills
+   - Check if section headers use standard names (not creative alternatives)
+   - Validate logical order and completeness
+
+3. **CONTACT INFORMATION QUALITY**:
+   - Ensure email, phone number are clearly present
+   - Check for LinkedIn profile or professional links
+   - Verify location/address information
+
+4. **DATE FORMATTING**:
+   - Check for consistent date formats across all sections
+   - Ensure dates are clearly present for experience and education
+   - Flag inconsistent or missing dates
+
+5. **KEYWORDS AND INDUSTRY TERMS**:
+   - Identify relevant industry-specific keywords and technical skills
+   - Check for action verbs (led, managed, developed, implemented, etc.)
+   - Assess keyword density and natural integration
+   - Identify commonly expected keywords that are MISSING for the industry
+
+6. **QUANTIFIABLE ACHIEVEMENTS**:
+   - Count presence of numbers, percentages, and metrics
+   - Assess if accomplishments are measurable
+   - Check for impact-driven language
+
+7. **CONTENT QUALITY**:
+   - Evaluate clarity and conciseness
+   - Check for appropriate length (not too short or too verbose)
+   - Assess professional language use
+   - Identify any spelling/grammar issues evident in the text
+
+8. **SKILLS SECTION**:
+   - Verify presence of both technical and soft skills
+   - Check if skills are relevant and current
+   - Assess organization and presentation
+
+9. **EXPERIENCE DESCRIPTIONS**:
+   - Check if roles have clear, descriptive bullet points
+   - Verify presence of responsibilities AND achievements
+   - Assess if descriptions are ATS-friendly (no excessive jargon or special characters)
+
+10. **OVERALL ATS READABILITY**:
+    - Assess overall parsability by standard ATS systems
+    - Check for red flags that would cause ATS rejection
+    - Evaluate professional presentation
+
+SCORING CRITERIA (Be strict - most resumes should score 60-80):
+- Format Compatibility (15%): Clean, parsable format without tables/columns
+- Section Structure (10%): Standard sections with clear headers
+- Contact Information (10%): Complete and professional
+- Keywords (25%): Industry-specific terms and action verbs
+- Quantifiable Achievements (15%): Numbers, metrics, impact
+- Content Quality (15%): Clear, professional, error-free
+- Skills Section (10%): Relevant, organized, comprehensive
+
+Provide your analysis in this JSON format:
 {
-  "score": <number between 0-100>,
+  "score": <number between 0-100, be STRICT>,
   "feedback": {
-    "strengths": [<array of 3-5 strength points>],
-    "weaknesses": [<array of 3-5 weakness points>],
-    "suggestions": [<array of 4-6 specific improvement suggestions>]
+    "strengths": [<array of 4-6 specific strength points with examples>],
+    "weaknesses": [<array of 4-6 specific weakness points with examples>],
+    "suggestions": [<array of 6-8 actionable improvement suggestions>]
   },
   "keywords": {
-    "found": [<array of important keywords found in the resume>],
-    "missing": [<array of commonly expected keywords that are missing>]
+    "found": [<array of 8-12 important keywords/skills found>],
+    "missing": [<array of 6-10 commonly expected keywords that are missing>]
   },
   "formatting": {
     "score": <number between 0-100>,
-    "issues": [<array of formatting issues if any>]
+    "issues": [<array of specific formatting issues, be detailed>]
+  },
+  "detailedAnalysis": {
+    "contactInfo": {
+      "score": <number 0-100>,
+      "issues": [<array of issues>]
+    },
+    "sectionStructure": {
+      "score": <number 0-100>,
+      "issues": [<array of issues>]
+    },
+    "achievements": {
+      "score": <number 0-100>,
+      "quantifiableCount": <number of quantifiable achievements found>,
+      "issues": [<array of issues>]
+    },
+    "atsCompatibility": {
+      "score": <number 0-100>,
+      "criticalIssues": [<array of ATS-breaking issues>],
+      "warnings": [<array of potential issues>]
+    }
   }
 }
 
-Scoring Criteria:
-- Content Quality (40%): Relevant experience, achievements, skills
-- Keywords (30%): Industry-specific keywords, action verbs
-- Formatting (20%): ATS-friendly structure, readability
-- Completeness (10%): All necessary sections present
-
-Be specific and actionable in your feedback. Focus on ATS compatibility and professional standards.
+BE STRICT AND THOROUGH. Most resumes have issues. Provide specific, actionable feedback with examples from the resume text when possible.
 
 Return ONLY the JSON object, nothing else.`;
 

@@ -193,15 +193,16 @@ export default function CareerTipsPage() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
+
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t-2 border-gray-200">
                 <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="text-4xl font-extrabold text-white mb-6">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
                         Ready to Take Your Career to the Next Level?
                     </h2>
-                    <p className="text-xl text-blue-100 mb-8">
+                    <p className="text-xl text-gray-600 mb-8">
                         Create a professional resume that gets you noticed by recruiters and hiring managers.
                     </p>
+
                     <Link
                         href="/editor"
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"

@@ -196,7 +196,21 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
@@ -289,7 +303,21 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
@@ -384,7 +412,21 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
@@ -472,7 +514,21 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
@@ -561,7 +617,21 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
   <style>
     @media print { body { margin: 0; padding: 0; } }
     .item-template { display: none; }
@@ -650,8 +720,24 @@ export const RESUMES = [
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
 
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
 
   <style>
     @media print {
@@ -805,6 +891,9 @@ export const RESUMES = [
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{firstName}} {{lastName}} - Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     @media print { 
       body { margin: 0; padding: 0; }
@@ -813,9 +902,9 @@ export const RESUMES = [
     .item-template { display: none; }
     
     body {
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Poppins', Arial, Helvetica, sans-serif;
       font-size: 11pt;
-      line-height: 1.4;
+      line-height: 1.5;
       color: #000000;
       background-color: #ffffff;
       max-width: 8.5in;
@@ -993,4 +1082,4 @@ export const RESUMES = [
 
 
 
-export const GEMINI_API = "AIzaSyCdH29TsGljHyDmvP0LtHeMKXnGDU8RBaY"
+export const GEMINI_API = "AIzaSyCLX6h1CxvoLj3_Nj19wxJqF_LZPxDyvSY"
