@@ -1,200 +1,112 @@
 "use client";
 
+import { useEffect, useState } from 'react';
+
+interface NavItem {
+  icon: string;
+  title: string;
+  description: string;
+  href: string;
+}
+
+interface NavColumn {
+  header?: string;
+  items: NavItem[];
+}
+
+interface MenuItem {
+  id: string;
+  label: string;
+  type: string;
+  columns: NavColumn[];
+}
+
+interface MobileSection {
+  title: string;
+  links: Array<{ text: string; href: string }>;
+}
+
+interface NavigationData {
+  logo: { text: string; accent: string };
+  menuItems: MenuItem[];
+  cta: { text: string; href: string };
+  mobileMenu: {
+    sections: MobileSection[];
+    cta: { text: string; href: string };
+  };
+}
+
 export function Navigation() {
+  const [navData, setNavData] = useState<NavigationData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/landing/navigation')
+      .then(res => res.json())
+      .then(data => {
+        setNavData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load navigation:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading || !navData) {
+    return (
+      <nav className="nav">
+        <div className="nav-container">
+          <a href="/" className="logo">Loading...</a>
+        </div>
+      </nav>
+    );
+  }
+
   return (
     <>
       <nav className="nav">
         <div className="nav-container">
-          <a href="/" className="logo">Resume<span className="logo-accent">Pro</span></a>
+          <a href="/" className="logo">
+            {navData.logo.text}<span className="logo-accent">{navData.logo.accent}</span>
+          </a>
 
           <div className="nav-links">
-            {/* Product Dropdown */}
-            <div className="nav-item">
-              <button className="nav-trigger">
-                Product
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <div className="mega-dropdown mega-dropdown-wide">
-                <div className="dropdown-grid">
-                  <div className="dropdown-column">
-                    <a href="/#features" className="dropdown-item">
-                      <div className="item-icon">🎯</div>
-                      <div className="item-text">
-                        <div className="item-title">Features</div>
-                        <div className="item-desc">Powerful resume building tools</div>
+            {/* Render Menu Items */}
+            {navData.menuItems.map((menuItem) => (
+              <div key={menuItem.id} className="nav-item">
+                <button className="nav-trigger">
+                  {menuItem.label}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                <div className="mega-dropdown mega-dropdown-wide">
+                  <div className="dropdown-grid">
+                    {menuItem.columns.map((column, colIdx) => (
+                      <div key={colIdx} className="dropdown-column">
+                        {column.header && (
+                          <div className="column-header">{column.header}</div>
+                        )}
+                        {column.items.map((item, itemIdx) => (
+                          <a key={itemIdx} href={item.href} className="dropdown-item">
+                            <div className="item-icon">{item.icon}</div>
+                            <div className="item-text">
+                              <div className="item-title">{item.title}</div>
+                              <div className="item-desc">{item.description}</div>
+                            </div>
+                          </a>
+                        ))}
                       </div>
-                    </a>
-                    <a href="/templates" className="dropdown-item">
-                      <div className="item-icon">📄</div>
-                      <div className="item-text">
-                        <div className="item-title">Templates</div>
-                        <div className="item-desc">ATS-friendly designs</div>
-                      </div>
-                    </a>
-                    <a href="/pricing" className="dropdown-item">
-                      <div className="item-icon">💎</div>
-                      <div className="item-text">
-                        <div className="item-title">Pricing</div>
-                        <div className="item-desc">Simple, transparent pricing</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="dropdown-column">
-                    <a href="/use-cases" className="dropdown-item">
-                      <div className="item-icon">👥</div>
-                      <div className="item-text">
-                        <div className="item-title">Use Cases</div>
-                        <div className="item-desc">For students, professionals & more</div>
-                      </div>
-                    </a>
-                    <a href="/examples" className="dropdown-item">
-                      <div className="item-icon">✨</div>
-                      <div className="item-text">
-                        <div className="item-title">Examples</div>
-                        <div className="item-desc">Real resume showcases</div>
-                      </div>
-                    </a>
-                    <a href="/integrations" className="dropdown-item">
-                      <div className="item-icon">🔗</div>
-                      <div className="item-text">
-                        <div className="item-title">Integrations</div>
-                        <div className="item-desc">Connect with LinkedIn & more</div>
-                      </div>
-                    </a>
+                    ))}
                   </div>
                 </div>
               </div>
-            </div>
+            ))}
 
-            {/* Resources Dropdown */}
-            <div className="nav-item">
-              <button className="nav-trigger">
-                Resources
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <div className="mega-dropdown mega-dropdown-wide">
-                <div className="dropdown-grid">
-                  <div className="dropdown-column">
-                    <div className="column-header">Guides</div>
-                    <a href="/resources/resume-guide" className="dropdown-item">
-                      <div className="item-icon">📖</div>
-                      <div className="item-text">
-                        <div className="item-title">Resume Writing Guide</div>
-                        <div className="item-desc">Complete guide to writing resumes</div>
-                      </div>
-                    </a>
-                    <a href="/resources/cover-letter-guide" className="dropdown-item">
-                      <div className="item-icon">✍️</div>
-                      <div className="item-text">
-                        <div className="item-title">Cover Letter Guide</div>
-                        <div className="item-desc">Write compelling cover letters</div>
-                      </div>
-                    </a>
-                    <a href="/resources/ats-guide" className="dropdown-item">
-                      <div className="item-icon">🤖</div>
-                      <div className="item-text">
-                        <div className="item-title">ATS Guide</div>
-                        <div className="item-desc">Beat applicant tracking systems</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="dropdown-column">
-                    <div className="column-header">Learn</div>
-                    <a href="/blog" className="dropdown-item">
-                      <div className="item-icon">📝</div>
-                      <div className="item-text">
-                        <div className="item-title">Blog</div>
-                        <div className="item-desc">Career tips and insights</div>
-                      </div>
-                    </a>
-                    <a href="/resources/career-tips" className="dropdown-item">
-                      <div className="item-icon">💼</div>
-                      <div className="item-text">
-                        <div className="item-title">Career Tips</div>
-                        <div className="item-desc">Job search strategies</div>
-                      </div>
-                    </a>
-                    <a href="/resources/industry-examples" className="dropdown-item">
-                      <div className="item-icon">🏭</div>
-                      <div className="item-text">
-                        <div className="item-title">Industry Examples</div>
-                        <div className="item-desc">Resumes by industry</div>
-                      </div>
-                    </a>
-                    <a href="/help" className="dropdown-item">
-                      <div className="item-icon">❓</div>
-                      <div className="item-text">
-                        <div className="item-title">Help & FAQ</div>
-                        <div className="item-desc">Get answers quickly</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Company Dropdown */}
-            <div className="nav-item">
-              <button className="nav-trigger">
-                Company
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-              <div className="mega-dropdown mega-dropdown-wide">
-                <div className="dropdown-grid">
-                  <div className="dropdown-column">
-                    <div className="column-header">About</div>
-                    <a href="/about" className="dropdown-item">
-                      <div className="item-icon">🏢</div>
-                      <div className="item-text">
-                        <div className="item-title">About Us</div>
-                        <div className="item-desc">Our mission and team</div>
-                      </div>
-                    </a>
-                    <a href="/contact" className="dropdown-item">
-                      <div className="item-icon">✉️</div>
-                      <div className="item-text">
-                        <div className="item-title">Contact</div>
-                        <div className="item-desc">Get in touch</div>
-                      </div>
-                    </a>
-                  </div>
-                  <div className="dropdown-column">
-                    <div className="column-header">Trust</div>
-                    <a href="/reviews" className="dropdown-item">
-                      <div className="item-icon">⭐</div>
-                      <div className="item-text">
-                        <div className="item-title">Reviews</div>
-                        <div className="item-desc">What our users say</div>
-                      </div>
-                    </a>
-                    <a href="/success-stories" className="dropdown-item">
-                      <div className="item-icon">🎉</div>
-                      <div className="item-text">
-                        <div className="item-title">Success Stories</div>
-                        <div className="item-desc">Real career transformations</div>
-                      </div>
-                    </a>
-                    <a href="/vs" className="dropdown-item">
-                      <div className="item-icon">⚖️</div>
-                      <div className="item-text">
-                        <div className="item-title">Comparison</div>
-                        <div className="item-desc">Why choose ResumePro</div>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <a href="http://localhost:3002" className="nav-cta" target="_blank" rel="noopener noreferrer">
-              Start Free →
+            <a href={navData.cta.href} className="nav-cta" target="_blank" rel="noopener noreferrer">
+              {navData.cta.text}
             </a>
-
           </div>
 
           {/* Mobile Menu Button */}
@@ -209,34 +121,17 @@ export function Navigation() {
       {/* Mobile Menu */}
       <div className="mobile-menu" id="mobile-menu">
         <div className="mobile-menu-content">
-          <div className="mobile-menu-section">
-            <div className="mobile-section-title">Product</div>
-            <a href="/#features">Features</a>
-            <a href="/templates">Templates</a>
-            <a href="/pricing">Pricing</a>
-            <a href="/use-cases">Use Cases</a>
-            <a href="/examples">Examples</a>
-            <a href="/integrations">Integrations</a>
-          </div>
-          <div className="mobile-menu-section">
-            <div className="mobile-section-title">Resources</div>
-            <a href="/resources/resume-guide">Resume Writing Guide</a>
-            <a href="/resources/cover-letter-guide">Cover Letter Guide</a>
-            <a href="/resources/ats-guide">ATS Guide</a>
-            <a href="/blog">Blog</a>
-            <a href="/resources/career-tips">Career Tips</a>
-            <a href="/resources/industry-examples">Industry Examples</a>
-            <a href="/help">Help & FAQ</a>
-          </div>
-          <div className="mobile-menu-section">
-            <div className="mobile-section-title">Company</div>
-            <a href="/about">About Us</a>
-            <a href="/contact">Contact</a>
-            <a href="/reviews">Reviews</a>
-            <a href="/success-stories">Success Stories</a>
-            <a href="/vs">Comparison</a>
-          </div>
-          <a href="/editor" className="mobile-cta">Start Free →</a>
+          {navData.mobileMenu.sections.map((section, idx) => (
+            <div key={idx} className="mobile-menu-section">
+              <div className="mobile-section-title">{section.title}</div>
+              {section.links.map((link, linkIdx) => (
+                <a key={linkIdx} href={link.href}>{link.text}</a>
+              ))}
+            </div>
+          ))}
+          <a href={navData.mobileMenu.cta.href} className="mobile-cta">
+            {navData.mobileMenu.cta.text}
+          </a>
         </div>
       </div>
 

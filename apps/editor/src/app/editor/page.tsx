@@ -285,7 +285,7 @@ export default function ResumeLayout() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [showSmartImport, setShowSmartImport] = useState(true);
+  const [showSmartImport, setShowSmartImport] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
 
   const debouncedResume = useDebounce(resume, 500);

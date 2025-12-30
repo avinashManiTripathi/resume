@@ -14,6 +14,7 @@ import paymentRoutes from './routes/payment.routes';
 import atsRoutes from './routes/ats.routes';
 import templateRoutes from './routes/template.routes';
 import resumeRoutes from './routes/resume.routes';
+import landingRoutes from './routes/landing.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -124,6 +125,9 @@ export class App {
 
         // Resume extraction routes
         this.app.use('/api/resume', resumeRoutes);
+
+        // Landing page routes
+        this.app.use('/api/landing', landingRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);
