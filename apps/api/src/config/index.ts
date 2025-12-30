@@ -15,4 +15,7 @@ export const config = {
         windowMs: 15 * 60 * 1000, // 15 minutes
         max: 100, // limit each IP to 100 requests per windowMs
     },
+
+    // AI configuration
+    geminiApiKey: process.env.GEMINI_API_KEY || 'AIzaSyDqboKKpjNL-NaN_zkxiqA425CCUNt633g',
 };

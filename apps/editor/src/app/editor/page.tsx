@@ -10,6 +10,7 @@ import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
+import SmartImportModal from "../SmartImportModal";
 import { CloudCheck } from "lucide-react";
 
 const initialResume = {
@@ -284,6 +285,7 @@ export default function ResumeLayout() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showSmartImport, setShowSmartImport] = useState(true);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
 
   const debouncedResume = useDebounce(resume, 500);
@@ -367,15 +369,34 @@ export default function ResumeLayout() {
   const progress = calculateProgress();
 
 
-  // Undo/Redo functions
-  const addToHistory = (newState: any) => {
+  // Add to history
+  const addToHistory = (newData: any) => {
     const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(JSON.parse(JSON.stringify(newState)));
-    if (newHistory.length > 50) newHistory.shift();
+    newHistory.push(newData);
+    if (newHistory.length > 50) newHistory.shift(); // Keep original history limit
     setHistory(newHistory);
     setHistoryIndex(newHistory.length - 1);
   };
 
+  // Handle section name changes
+  const handleSectionNameChange = (sectionKey: string, newLabel: string) => {
+    const updatedSchema = {
+      ...schema,
+      [sectionKey]: {
+        ...schema[sectionKey],
+        label: newLabel
+      }
+    };
+    setSchema(updatedSchema);
+  };
+
+  // Handle resume changes with history
+  const handleResumeChange = (newResume: any) => {
+    setResume(newResume);
+    addToHistory(newResume);
+  };
+
+  // Undo/Redo functions
   const undo = () => {
     if (historyIndex > 0) {
       const newIndex = historyIndex - 1;
@@ -420,12 +441,6 @@ export default function ResumeLayout() {
     }
   };
 
-  // Handle resume changes with history
-  const handleResumeChange = (newResume: any) => {
-    setResume(newResume);
-    addToHistory(newResume);
-  };
-
   // Handle profile image change
   const handleProfileImageChange = (imageUrl: string) => {
     setProfileImage(imageUrl);
@@ -440,8 +455,15 @@ export default function ResumeLayout() {
     }
 
     if (format === "pdf") {
+      // Extract section labels from schema
+      const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
+        acc[key] = config.label;
+        return acc;
+      }, {} as Record<string, string>);
+
       const resumeData = {
         templateId,
+        sectionLabels,
         ...resume,
         order: sectionOrder
       };
@@ -551,8 +573,17 @@ export default function ResumeLayout() {
 
     setIsGeneratingPDF(true);
     try {
+      const apiUrl = `${API_BASE}/convert-html-to-pdf`;
+
+      // Extract section labels from schema
+      const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
+        acc[key] = config.label;
+        return acc;
+      }, {} as Record<string, string>);
+
       const resumeData = {
         templateId,
+        sectionLabels, // Include custom section labels
         ...resume,
         order: debouncedSectionOrder
       };
@@ -575,7 +606,7 @@ export default function ResumeLayout() {
   useEffect(() => {
     renderPdf();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel]);
+  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel, schema]);
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
@@ -622,8 +653,15 @@ export default function ResumeLayout() {
             return;
           }
 
+          // Extract section labels from schema
+          const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
+            acc[key] = config.label;
+            return acc;
+          }, {} as Record<string, string>);
+
           const resumeData = {
             templateId,
+            sectionLabels,
             ...resume,
             order: sectionOrder
           };
@@ -649,6 +687,7 @@ export default function ResumeLayout() {
 
           {/* Save Progress Indicator */}
           <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
+
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
               {isGeneratingPDF ? (
                 <>
@@ -678,21 +717,6 @@ export default function ResumeLayout() {
             />
           ) : (
             <div className="h-full flex flex-col">
-              {/* Fill Dummy Data Button */}
-              {/* <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
-                <button
-                  onClick={fillDummyData}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group"
-                >
-                  <svg className="w-5 h-5 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  <span>Fill with Dummy Data</span>
-                </button>
-                <p className="text-xs text-gray-600 mt-2 text-center">
-                  Instantly populate all fields with sample data for testing
-                </p>
-              </div> */}
 
               {/* Form */}
               <div className="flex-1 overflow-y-auto">
@@ -703,6 +727,7 @@ export default function ResumeLayout() {
                   setSectionOrder={setSectionOrder}
                   onChange={handleResumeChange}
                   onSchemaChange={setSchema}
+                  onSectionNameChange={handleSectionNameChange}
                 />
               </div>
             </div>
@@ -730,6 +755,7 @@ export default function ResumeLayout() {
           <SettingsSidebar
             onExport={handleExport}
             onTemplateChange={() => setShowTemplates(true)}
+            onSmartImport={() => setShowSmartImport(true)}
           />
         </aside>
       </div>
@@ -817,6 +843,24 @@ export default function ResumeLayout() {
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
+                    setShowSmartImport(true);
+                  }}
+                  className="w-full flex items-center gap-3 p-4 bg-gray-50 border-2 border-gray-200 rounded-xl hover:border-gray-400 transition-all"
+                >
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="font-semibold text-gray-900">Smart Import</div>
+                    <div className="text-xs text-gray-600">AI-powered data extraction</div>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowMobileMenu(false);
                     setShowTemplates(true);
                   }}
                   className="w-full flex items-center gap-3 p-4 bg-gray-50 border-2 border-gray-200 rounded-xl hover:border-gray-400 transition-all"
@@ -842,6 +886,20 @@ export default function ResumeLayout() {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         resumeUrl={typeof window !== 'undefined' ? window.location.href : ''}
+      />
+
+      {/* Smart Import Modal */}
+      <SmartImportModal
+        isOpen={showSmartImport}
+        onClose={() => setShowSmartImport(false)}
+        onApply={(data) => {
+          // Apply extracted data to resume
+          setResume(data);
+          // Add to history
+          addToHistory(data);
+          // Close  modal
+          setShowSmartImport(false);
+        }}
       />
     </div>
   );

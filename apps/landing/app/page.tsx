@@ -38,7 +38,7 @@ export default function LandingPage() {
       <Navigation />
 
       {/* Hero Section */}
-      <section className="pt-5 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="pt-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}

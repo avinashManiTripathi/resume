@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp, CircleMinus, CirclePlus } from "lucide-react";
 
 interface CollapsibleSectionProps {
     title: string;
+    customTitleRender?: React.ReactNode;
     children: React.ReactNode;
     defaultOpen?: boolean;
     icon?: React.ReactNode;
@@ -14,6 +15,7 @@ interface CollapsibleSectionProps {
 
 export function CollapsibleSection({
     title,
+    customTitleRender,
     children,
     defaultOpen = true,
     icon,
@@ -32,7 +34,7 @@ export function CollapsibleSection({
             >
                 <div className="flex items-center gap-3">
                     {icon}
-                    <span className="font-medium text-gray-900">{title}</span>
+                    {customTitleRender || <span className="font-medium text-gray-900">{title}</span>}
                 </div>
                 <div className="flex items-center gap-2">
                     {actions}

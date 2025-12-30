@@ -13,6 +13,7 @@ import subscriptionRoutes from './routes/subscription.routes';
 import paymentRoutes from './routes/payment.routes';
 import atsRoutes from './routes/ats.routes';
 import templateRoutes from './routes/template.routes';
+import resumeRoutes from './routes/resume.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -120,6 +121,9 @@ export class App {
 
         // Template routes
         this.app.use('/api/templates', templateRoutes);
+
+        // Resume extraction routes
+        this.app.use('/api/resume', resumeRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

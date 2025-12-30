@@ -28,11 +28,12 @@ interface Props {
     data: ResumeData;
     onChange: (data: ResumeData) => void;
     onSchemaChange?: (schema: FormSchema) => void;
+    onSectionNameChange?: (sectionKey: string, newLabel: string) => void;
     sectionOrder: string[];
     setSectionOrder: (order: string[]) => void;
 }
 
-const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, setSectionOrder }: Props) => {
+const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChange, sectionOrder, setSectionOrder }: Props) => {
     // Track section order
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -236,6 +237,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, sectionOrder, set
                                     key={key}
                                     id={key}
                                     title={config.label}
+                                    onTitleChange={onSectionNameChange ? (newLabel) => onSectionNameChange(key, newLabel) : undefined}
                                     defaultOpen={key === "personalInfo"}
                                     isCollapsible={config.isCollapsible}
                                 >
