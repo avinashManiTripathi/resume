@@ -3,16 +3,16 @@ import { Template, TemplateType, TemplateCategory } from '../models';
 // Script to seed 10 professional resume templates into MongoDB
 
 const templates = [
-    {
-        name: "Professional Classic",
-        type: TemplateType.PROFESSIONAL,
-        category: TemplateCategory.GENERAL,
-        description: "Clean and professional layout with traditional formatting. Perfect for corporate and business roles.",
-        isPremium: false,
-        isActive: true,
-        sortOrder: 1,
-        tags: ["professional", "classic", "traditional", "ats-friendly", "corporate"],
-        htmlContent: `<!DOCTYPE html>
+  {
+    name: "Professional Classic",
+    type: TemplateType.PROFESSIONAL,
+    category: TemplateCategory.GENERAL,
+    description: "Clean and professional layout with traditional formatting. Perfect for corporate and business roles.",
+    isPremium: false,
+    isActive: true,
+    sortOrder: 1,
+    tags: ["professional", "classic", "traditional", "ats-friendly", "corporate"],
+    htmlContent: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -75,19 +75,19 @@ const templates = [
   </main>
 </body>
 </html>`,
-        thumbnail: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272"
-    },
+    thumbnail: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272"
+  },
 
-    {
-        name: "Modern Sidebar",
-        type: TemplateType.MODERN,
-        category: TemplateCategory.TECH,
-        description: "Modern two-column layout with dark sidebar. Ideal for tech and creative professionals.",
-        isPremium: false,
-        isActive: true,
-        sortOrder: 2,
-        tags: ["modern", "two-column", "sidebar", "tech", "creative"],
-        htmlContent: `<!DOCTYPE html>
+  {
+    name: "Modern Sidebar",
+    type: TemplateType.MODERN,
+    category: TemplateCategory.TECH,
+    description: "Modern two-column layout with dark sidebar. Ideal for tech and creative professionals.",
+    isPremium: false,
+    isActive: true,
+    sortOrder: 2,
+    tags: ["modern", "two-column", "sidebar", "tech", "creative"],
+    htmlContent: `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -158,45 +158,47 @@ const templates = [
   </div>
 </body>
 </html>`,
-        thumbnail: "https://resume.io/cdn-cgi/image/width=852,format=auto/assets/templates/entry_level-dfd898a364738f428ab7906c33df0be2ff4c669052645d197f6599cf76cc313b.jpg"
-    }
+    thumbnail: "https://resume.io/cdn-cgi/image/width=852,format=auto/assets/templates/entry_level-dfd898a364738f428ab7906c33df0be2ff4c669052645d197f6599cf76cc313b.jpg"
+  }
 ];
 
 // Add 8 more templates here following the same structure...
 
 export async function seedTemplates() {
-    try {
-        console.log('🌱 Seeding templates...');
+  try {
+    console.log('🌱 Seeding templates...');
 
-        // Clear existing templates (optional)
-        // await Template.deleteMany({});
+    // Clear existing templates (optional)
+    // await Template.deleteMany({});
 
-        for (const templateData of templates) {
-            const existing = await Template.findOne({ name: templateData.name });
-            if (!existing) {
-                await Template.create(templateData);
-                console.log(`✅ Created template: ${templateData.name}`);
-            } else {
-                console.log(`⏭️  Template already exists: ${templateData.name}`);
-            }
-        }
-
-        console.log('🎉 Template seeding completed!');
-    } catch (error) {
-        console.error('❌ Error seeding templates:', error);
-        throw error;
+    for (const templateData of templates) {
+      const existing = await Template.findOne({ name: templateData.name });
+      if (!existing) {
+        await Template.create(templateData);
+        console.log(`✅ Created template: ${templateData.name}`);
+      } else {
+        console.log(`⏭️  Template already exists: ${templateData.name}`);
+      }
     }
+
+    console.log('🎉 Template seeding completed!');
+  } catch (error) {
+    console.error('❌ Error seeding templates:', error);
+    throw error;
+  }
 }
 
 // Run if executed directly
 if (require.main === module) {
-    const { database } = require('../config/database');
+  const { database } = require('../config/database');
 
-    database.connect()
-        .then(() => seedTemplates())
-        .then(() => process.exit(0))
-        .catch((error) => {
-            console.error(error);
-            process.exit(1);
-        });
+  database.connect()
+    .then(() => seedTemplates())
+    .then(() => process.exit(0))
+    .catch((error: unknown) => {
+      console.error('Error seeding templates:', error);
+      process.exit(1);
+    });
 }
+
+seedTemplates();

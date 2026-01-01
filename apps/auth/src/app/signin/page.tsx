@@ -1,11 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import { FileText, Sparkles, Shield, Zap } from "lucide-react";
 import GoogleSignInButton from "../../components/GoogleSignInButton";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function SignInPage() {
+function SignInContent() {
     const searchParams = useSearchParams();
     const [error, setError] = useState<string | null>(null);
 
@@ -121,5 +122,13 @@ export default function SignInPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function SignInPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50"><div className="text-gray-600">Loading...</div></div>}>
+            <SignInContent />
+        </Suspense>
     );
 }

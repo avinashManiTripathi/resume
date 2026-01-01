@@ -25,11 +25,6 @@ export class PdfService {
         if (data.templateId && typeof data.templateId !== 'string') {
             throw new Error('Template ID must be a string');
         }
-
-        // Add more validation as needed
-        if (data.personalInfo && !data.personalInfo.firstName && !data.personalInfo.lastName) {
-            throw new Error('At least first name or last name is required');
-        }
     }
 
     /**
@@ -43,8 +38,11 @@ export class PdfService {
             // Validate input
             this.validateResumeData(resumeData);
 
+            // Extract section labels if provided
+            const sectionLabels = (resumeData as any).sectionLabels as Record<string, string> | undefined;
+
             // Generate HTML using template injector
-            const html = this.templateInjectorService.generateHTML(resumeData);
+            const html = this.templateInjectorService.generateHTML(resumeData, sectionLabels);
 
             // Generate filename
             const filename = options.filename || this.generateFilename(resumeData);

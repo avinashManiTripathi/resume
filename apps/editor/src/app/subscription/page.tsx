@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { PaymentMethodSelector, type PaymentMethod } from "@repo/ui/payment-method-selector";
 import { BillingForm } from "@repo/ui/billing-form";
 import { SubscriptionDashboard } from "@repo/ui/subscription-dashboard";
@@ -41,7 +41,7 @@ const pricingTiers = [
     },
 ];
 
-export default function SubscriptionPage() {
+function SubscriptionContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const returnTo = searchParams.get('returnTo');
@@ -380,5 +380,17 @@ export default function SubscriptionPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function SubscriptionPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-gray-600">Loading...</div>
+            </div>
+        }>
+            <SubscriptionContent />
+        </Suspense>
     );
 }

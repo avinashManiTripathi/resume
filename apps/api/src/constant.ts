@@ -18,30 +18,35 @@ export const RESUMES = [
   </style>
 </head>
 <body>
-  <main id="resume-root" class="max-w-4xl mx-auto bg-white p-8">
+  <main id="resume-root" class="max-w-4xl mx-auto bg-white p-8 flex flex-col gap-4">
 
     <!-- Header -->
     <header id="section-personalInfo" class="flex items-center gap-6 mb-6">
       <img id="profile-image" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60"
-           alt="Profile" class="w-24 h-24 object-cover border" />
+           alt="Profile" class="w-24 h-24 rounded-full object-cover border" />
 
       <div>
         <h1 id="full-name" class="text-3xl font-serif font-bold">{{firstName}} {{lastName}}</h1>
-        <p class="text-sm text-gray-700 mt-1">
+          <h3 id="job-title" class="text-xl font-bold  font-serif  text-gray-700">{{jobTitle}}</h3>
+          <p class="text-sm text-gray-700 mt-1">
           <span id="email">{{email}}</span> |
           <span id="phone">{{phone}}</span>
+        </p>
+        <p class="text-sm text-blue-600 mt-1">
+          <a id="linkedin-link" href="#" target="_blank" class="hover:underline mr-2" style="display: none;">LinkedIn</a>
+          <a id="github-link" href="#" target="_blank" class="hover:underline" style="display: none;">GitHub</a>
         </p>
       </div>
     </header>
 
     <!-- Summary -->
-    <section id="section-summary" class="mb-6 block w-full" style="display: none;">
+    <section id="section-summary" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Summary</h2>
       <p id="summary-text" class="text-sm text-gray-800 mt-3 leading-relaxed">{{summary}}</p>
     </section>
 
     <!-- Experience -->
-    <section id="section-experience" class="mb-6 block w-full" style="display: none;">
+    <section id="section-experience" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Experience</h2>
       <div id="experience-list"></div>
       <div class="experience-item item-template mt-4" data-template="experience">
@@ -56,7 +61,7 @@ export const RESUMES = [
     </section>
 
     <!-- Projects -->
-    <section id="section-projects" class="mb-6 block w-full" style="display: none;">
+    <section id="section-projects" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Projects</h2>
       <div id="projects-list"></div>
       <div class="project-item item-template mt-3" data-template="projects">
@@ -69,7 +74,7 @@ export const RESUMES = [
     </section>
 
     <!-- Education -->
-    <section id="section-education" class="mb-6 block w-full" style="display: none;">
+    <section id="section-education" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Education</h2>
       <div id="education-list"></div>
       <div class="education-item item-template mt-3" data-template="education">
@@ -85,9 +90,9 @@ export const RESUMES = [
     <!-- Skills -->
     <section id="section-skills" class="block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Skills</h2>
-      <div id="skills-list" class="mt-3 text-sm space-y-2"></div>
+      <div id="skills-list" class="mt-3 text-sm flex flex-wrap gap-2"></div>
       <div class="skill-item item-template" data-template="skills">
-        <p><span class="font-bold skill-name">{{skills.name}}</span><span class="skill-level">: {{skills.level}}</span></p>
+        <p><span class="font-semibold skill-name">{{skills.name}}</span>,</p>
       </div>
     </section>
 
@@ -746,8 +751,15 @@ export const RESUMES = [
         padding: 0;
       }
     }
+    
     .item-template {
       display: none;
+    }
+    
+    /* Add comma after each skill except the last one */
+    #skills-list .skill-item:not(:last-child)::after {
+      content: ",";
+      margin-left: 2px;
     }
   </style>
 </head>

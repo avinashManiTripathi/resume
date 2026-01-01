@@ -24,14 +24,7 @@ export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImp
 
     return (
         <div className="w-20 bg-white border-l border-blue-100 rounded-lg flex flex-col items-center py-6 gap-4 overflow-y-auto shadow-sm">
-            {/* Top Section - Home */}
-            <button
-                className={iconButtonActiveClass}
-                title="Home"
-                onClick={() => router.push('/')}
-            >
-                <Home size={20} />
-            </button>
+
 
             {/* AI Smart Import */}
             <button
@@ -63,125 +56,8 @@ export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImp
                 <Trophy size={20} />
             </button>
 
-            {/* Color Picker */}
-            <div className="relative">
-                <button
-                    className={showColorPicker ? iconButtonActiveClass : iconButtonClass}
-                    title="Color Settings"
-                    onClick={() => {
-                        setShowColorPicker(!showColorPicker);
-                        setShowThemeSelector(false);
-                        setShowExport(false);
-                    }}
-                >
-                    <Palette size={20} />
-                </button>
 
-                {showColorPicker && (
-                    <div className="absolute right-24 top-0 bg-white rounded-lg shadow-2xl p-4 z-50 border border-gray-200 min-w-[280px]">
-                        <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-gray-900">Color Settings</h3>
-                            <button
-                                onClick={() => setShowColorPicker(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <ColorPicker
-                            value={themeColor}
-                            onChange={setThemeColor}
-                            opacity={colorOpacity}
-                            onOpacityChange={setColorOpacity}
-                        />
-                    </div>
-                )}
-            </div>
 
-            {/* Theme Selector */}
-            <div className="relative">
-                <button
-                    className={showThemeSelector ? iconButtonActiveClass : iconButtonClass}
-                    title="Theme Change"
-                    onClick={() => {
-                        setShowThemeSelector(!showThemeSelector);
-                        setShowColorPicker(false);
-                        setShowExport(false);
-                    }}
-                >
-                    <Settings size={20} />
-                </button>
-
-                {showThemeSelector && (
-                    <div className="absolute right-24 top-0 bg-white rounded-lg shadow-2xl p-4 z-50 border border-gray-200 min-w-[280px]">
-                        <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-gray-900">Theme Change</h3>
-                            <button
-                                onClick={() => setShowThemeSelector(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <ThemeSelector selectedColor={themeColor} onColorSelect={setThemeColor} />
-                    </div>
-                )}
-            </div>
-
-            {/* Export */}
-            <div className="relative">
-                <button
-                    className={showExport ? iconButtonActiveClass : iconButtonClass}
-                    title="Export Resume"
-                    onClick={() => {
-                        setShowExport(!showExport);
-                        setShowColorPicker(false);
-                        setShowThemeSelector(false);
-                    }}
-                >
-                    <Download size={20} />
-                </button>
-
-                {showExport && (
-                    <div className="absolute right-24 top-0 bg-white rounded-lg shadow-2xl p-4 z-50 border border-gray-200 min-w-[280px]">
-                        <div className="flex items-center justify-between mb-3">
-                            <h3 className="font-semibold text-gray-900">Export Resume</h3>
-                            <button
-                                onClick={() => setShowExport(false)}
-                                className="text-gray-400 hover:text-gray-600"
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <ExportOptions onExport={(format) => {
-                            onExport(format);
-                            setShowExport(false);
-                        }} />
-                    </div>
-                )}
-            </div>
-
-            {/* Spacer to push bottom items down */}
-            <div className="flex-1"></div>
-
-            {/* Divider */}
-            <div className="w-10 h-px bg-blue-200 my-2"></div>
-
-            {/* Help/Docs */}
-            <button
-                className={iconButtonClass}
-                title="Help & Documentation"
-            >
-                <FileText size={20} />
-            </button>
-
-            {/* Lock/Security */}
-            <button
-                className={iconButtonClass}
-                title="Privacy & Security"
-            >
-                <Lock size={20} />
-            </button>
         </div>
     );
 }

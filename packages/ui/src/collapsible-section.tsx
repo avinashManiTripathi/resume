@@ -28,9 +28,18 @@ export function CollapsibleSection({
 
     return (
         <div className={overrideClass}>
-            <button
+            <div
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setIsOpen(!isOpen);
+                    }
+                }}
+                aria-expanded={isOpen}
             >
                 <div className="flex items-center gap-3">
                     {icon}
@@ -44,7 +53,7 @@ export function CollapsibleSection({
                         <CirclePlus className="w-5 h-5 text-[#223DC5]" />
                     ))}
                 </div>
-            </button>
+            </div>
             {(isOpen || !isCollapsible) && <div className="px-6 pb-6">{children}</div>}
         </div>
     );

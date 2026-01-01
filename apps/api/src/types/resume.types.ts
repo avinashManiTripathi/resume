@@ -1,14 +1,16 @@
 export interface PersonalInfo {
-    firstName?: string;
-    lastName?: string;
-    jobTitle?: string;
-    email?: string;
-    phone?: string;
-    address?: string;
+    firstName: string;
+    lastName: string;
+    jobTitle: string;
+    email: string;
+    phone: string;
     city?: string;
     state?: string;
     country?: string;
-    summary?: string;
+    summary: string;
+    profileImage?: string; // Base64 encoded image or URL
+    linkedin?: string;
+    github?: string;
 }
 
 export interface Experience {

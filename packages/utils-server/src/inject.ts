@@ -103,7 +103,15 @@ export const inject = (data: ResumeData): void => {
         experience: document.getElementById("section-experience"),
         education: document.getElementById("section-education"),
         skills: document.getElementById("section-skills"),
-        projects: document.getElementById("section-projects")
+        projects: document.getElementById("section-projects"),
+        languages: document.getElementById("section-languages"),
+        interests: document.getElementById("section-interests"),
+        achievements: document.getElementById("section-achievements"),
+        certifications: document.getElementById("section-certifications"),
+        awards: document.getElementById("section-awards"),
+        publications: document.getElementById("section-publications"),
+        volunteer: document.getElementById("section-volunteer"),
+        references: document.getElementById("section-references")
     };
 
     // Only reorder content sections, keep personalInfo (header) at the top

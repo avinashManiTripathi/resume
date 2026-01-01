@@ -53,6 +53,38 @@ export class TemplateInjectorService {
         const phone = document.getElementById('phone');
         if (phone) phone.textContent = personalInfo.phone || '';
 
+        // Handle LinkedIn link
+        const linkedinLink = document.getElementById('linkedin-link');
+        if (linkedinLink) {
+            if (personalInfo.linkedin) {
+                linkedinLink.setAttribute('href', personalInfo.linkedin);
+                linkedinLink.textContent = personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '');
+                linkedinLink.style.display = '';
+            } else {
+                linkedinLink.style.display = 'none';
+            }
+        }
+
+        // Handle GitHub link
+        const githubLink = document.getElementById('github-link');
+        if (githubLink) {
+            if (personalInfo.github) {
+                githubLink.setAttribute('href', personalInfo.github);
+                githubLink.textContent = personalInfo.github.replace(/^https?:\/\/(www\.)?/, '');
+                githubLink.style.display = '';
+            } else {
+                githubLink.style.display = 'none';
+            }
+        }
+
+        // Handle profile image
+        if (personalInfo.profileImage) {
+            const profileImg = document.getElementById('profile-image');
+            if (profileImg && profileImg.tagName === 'IMG') {
+                (profileImg as HTMLImageElement).src = personalInfo.profileImage;
+            }
+        }
+
         // Handle summary
         if (personalInfo.summary && personalInfo.summary.trim()) {
             const summaryText = document.getElementById('summary-text');
@@ -363,11 +395,57 @@ export class TemplateInjectorService {
         });
     }
 
+    /**
+     * Update section labels in the template based on custom user labels
+     */
+    private updateSectionLabels(dom: JSDOM, sectionLabels?: Record<string, string>): void {
+        if (!sectionLabels) return;
+
+        const document = dom.window.document;
+
+        // Map of section IDs to their corresponding section keys
+        // Only include sections that are actually implemented in templates
+        const labelMap: Record<string, string> = {
+            'summary': 'section-summary',
+            'experience': 'section-experience',
+            'education': 'section-education',
+            'skills': 'section-skills',
+            'projects': 'section-projects'
+            // Note: languages, interests, achievements, certifications, awards, 
+            // publications, volunteer, and references are not yet implemented in most templates
+        };
+
+        // Update each section's heading
+        Object.entries(sectionLabels).forEach(([key, label]) => {
+            const sectionId = labelMap[key];
+
+            if (sectionId) {
+                // Standard section
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const heading = section.querySelector('h2');
+                    if (heading && label) {
+                        heading.textContent = label;
+                    }
+                }
+            } else {
+                // Could be a custom section - try section-{key}
+                const customSection = document.getElementById(`section-${key}`);
+                if (customSection) {
+                    const heading = customSection.querySelector('h2');
+                    if (heading && label) {
+                        heading.textContent = label;
+                    }
+                }
+            }
+        });
+    }
+
 
     /**
      * Main method to generate HTML from template and data
      */
-    public generateHTML(data: ResumeData): string {
+    public generateHTML(data: ResumeData, sectionLabels?: Record<string, string>): string {
         // Get template ID, default to first template if not provided
         const templateId = data.templateId || RESUMES[0].id;
 
@@ -425,6 +503,9 @@ export class TemplateInjectorService {
                 lastSection = currentSection;
             }
         });
+
+        // Update section labels AFTER all sections are created (including custom ones)
+        this.updateSectionLabels(dom, sectionLabels);
 
         // Return the modified HTML
         return dom.serialize();

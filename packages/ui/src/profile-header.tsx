@@ -50,9 +50,13 @@ export function ProfileHeader({
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && onProfileImageChange) {
-            // Create a local URL for the image
-            const imageUrl = URL.createObjectURL(file);
-            onProfileImageChange(imageUrl);
+            // Convert to base64 for backend transmission and PDF embedding
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                onProfileImageChange(base64String);
+            };
+            reader.readAsDataURL(file);
         }
     };
 

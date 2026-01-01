@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, useMemo } from "react";
+
+import { useEffect, useLayoutEffect, useRef, useState, useMemo, Suspense } from "react";
 import { useDebounce, exportToDoc, canDownload, setSubscription, getSubscription, type SubscriptionTier } from "@repo/utils-client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
@@ -21,7 +22,9 @@ const initialResume = {
     "jobTitle": "Senior Product Designer",
     "summary": "Product designer with 3+ years of experience in tech industry",
     "email": "olivia@untitledui.com",
-    "phone": "+91-7823232322"
+    "phone": "+91-7823232322",
+    "linkedin": "",
+    "github": ""
   },
   "experience": [
     {
@@ -143,7 +146,8 @@ const dummyData = {
   ]
 };
 
-export default function ResumeLayout() {
+
+function ResumeEditor() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -227,6 +231,8 @@ export default function ResumeLayout() {
         lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
         email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
         phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
+        linkedin: { label: "LinkedIn URL", type: "text", className: "w-[calc(50%-4px)]", description: "Your LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)" },
+        github: { label: "GitHub URL", type: "text", className: "w-[calc(50%-4px)]", description: "Your GitHub profile URL (e.g., https://github.com/yourname)" },
         summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
       }
     },
@@ -444,6 +450,14 @@ export default function ResumeLayout() {
   // Handle profile image change
   const handleProfileImageChange = (imageUrl: string) => {
     setProfileImage(imageUrl);
+    // Save to resume data so it's sent to backend
+    setResume(prev => ({
+      ...prev,
+      personalInfo: {
+        ...prev.personalInfo,
+        profileImage: imageUrl
+      }
+    }));
   };
 
   const handleExport = (format: "pdf" | "doc") => {
@@ -902,5 +916,17 @@ export default function ResumeLayout() {
         }}
       />
     </div>
+  );
+}
+
+export default function ResumeLayout() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-gray-600">Loading editor...</div>
+      </div>
+    }>
+      <ResumeEditor />
+    </Suspense>
   );
 }
