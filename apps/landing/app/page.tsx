@@ -891,7 +891,7 @@ export default function LandingPage() {
                 step: "03",
                 title: "Download & apply",
                 description: "Get your polished resume as PDF and start applying to jobs",
-                image: "https://images.unsplash.com/photo-1586281380614-94b1e8f28804?w=600&auto=format&fit=crop&q=80"
+                image: "https://media.istockphoto.com/id/2246787039/photo/laptop-file-download-interface-with-digital-overlay.webp?a=1&b=1&s=612x612&w=0&k=20&c=AbvWL8P787RKg5Oa2z6X8wX9XvX2Lajx4G1nemLRkrY="
               }
             ].map((item, index) => (
               <div key={index} className="relative group">
