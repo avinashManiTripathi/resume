@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock } from "lucide-react";
+import { Button } from "@repo/ui/button";
+import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -771,10 +772,10 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="text-center">
+          <div className="text-center flex justify-center">
             <Link
               href="/success-stories"
-              className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors"
+              className="p-5 w-fit flex gap-6 border font-semibold justify-center rounded-xl border-blue-500 text-blue-600 hover:bg-blue-50 disabled:hover:bg-transparent"
             >
               Read more success stories
               <ArrowRight className="w-5 h-5" />
@@ -937,25 +938,147 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: "50,000+", label: "Resumes created" },
-              { number: "95%", label: "Interview success" },
-              { number: "5 mins", label: "Average completion" },
-              { number: "4.9★", label: "User rating" }
-            ].map((stat, index) => (
-              <div key={index} className="p-6">
-                <div className="text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                  {stat.number}
-                </div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+
+      {/* Voice Command Resume Creation Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left: Content */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full border border-blue-200 mb-6">
+                <Sparkles className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-semibold text-blue-600">AI-Powered Innovation</span>
               </div>
-            ))}
+
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
+                Create Your Resume
+                <br />
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Just by Speaking</span>
+              </h2>
+
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Say goodbye to typing! Our revolutionary voice command technology lets you build your entire resume hands-free. Just speak naturally about your career, and watch as AI transforms your words into a professional resume.
+              </p>
+
+              <div className="space-y-4 mb-8">
+                {[
+                  {
+                    icon: "🎙️",
+                    title: "Natural Speech Recognition",
+                    description: "Speak in any language, AI understands and formats perfectly"
+                  },
+                  {
+                    icon: "✨",
+                    title: "Real-time Transcription",
+                    description: "See your words appear instantly with smart corrections"
+                  },
+                  {
+                    icon: "✏️",
+                    title: "Edit Before Submission",
+                    description: "Review and refine the transcript before AI processes it"
+                  },
+                  {
+                    icon: "⚡",
+                    title: "Lightning Fast",
+                    description: "Create a complete resume in under 5 minutes"
+                  }
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-start gap-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100 hover:border-blue-300 transition-colors">
+                    <div className="text-3xl flex-shrink-0">{feature.icon}</div>
+                    <div>
+                      <h4 className="font-bold text-lg mb-1 text-gray-900">{feature.title}</h4>
+                      <p className="text-gray-600 text-sm">{feature.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Link
+                href="/editor"
+                className="p-5 flex gap-6 border font-semibold ju rounded-xl border-blue-500 text-blue-600 hover:bg-blue-50 disabled:hover:bg-transparent"
+              >
+                <Mic className="w-6 h-6" />
+                Try Voice Command Now
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Right: Visual Demo */}
+            <div className="relative">
+              {/* Main Card */}
+              <div className="bg-white rounded-3xl shadow-2xl p-8 relative z-10 border-2 border-gray-100">
+                {/* Voice Input Mockup */}
+                <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <Mic className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900">Voice Recording</div>
+                        <div className="text-xs text-gray-500">00:45 / 05:00</div>
+                      </div>
+                    </div>
+                    <div className="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-full flex items-center gap-1 animate-pulse">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                      Recording
+                    </div>
+                  </div>
+
+                  {/* Waveform Animation */}
+                  <div className="flex items-end justify-center gap-1 h-16 mb-4">
+                    {[...Array(20)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-1 bg-gradient-to-t from-blue-500 to-purple-500 rounded-full"
+                        style={{
+                          height: `${Math.random() * 60 + 20}%`,
+                          animation: `wave 1s ease-in-out infinite ${i * 0.1}s`
+                        }}
+                      ></div>
+                    ))}
+                  </div>
+
+                  {/* Sample Transcript */}
+                  <div className="bg-white rounded-xl p-4 border-2 border-blue-200">
+                    <div className="text-xs font-semibold text-blue-600 mb-2">Live Transcript:</div>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      "I'm a senior product designer with 5 years of experience. I specialize in UX/UI design and have led projects for major tech companies..."
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 justify-end">
+                  <Button variant="primary">
+                    <Send className="w-5 h-5" />
+                    Generate with AI
+                  </Button>
+                  <Button variant="outline">
+                    <MicOff className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Floating Elements */}
+              <div className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl rotate-12 animate-bounce opacity-20"></div>
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full opacity-20 blur-xl animate-pulse"></div>
+            </div>
           </div>
         </div>
+
+        <style jsx>{`
+          @keyframes wave {
+            0%, 100% { height: 20%; }
+            50% { height: 100%; }
+          }
+        `}</style>
       </section>
 
       {/* Testimonials */}
