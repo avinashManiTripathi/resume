@@ -1014,14 +1014,8 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-600 relative overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6">

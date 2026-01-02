@@ -911,8 +911,6 @@ function ResumeEditor() {
           setResume(data);
           // Add to history
           addToHistory(data);
-          // Close  modal
-          setShowSmartImport(false);
         }}
       />
     </div>

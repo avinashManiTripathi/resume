@@ -8,6 +8,8 @@ interface PersonalInfo {
     email: string;
     phone: string;
     summary: string;
+    linkedin?: string;
+    github?: string;
 }
 
 interface Experience {
@@ -43,18 +45,57 @@ interface Certification {
     name: string;
     issuer: string;
     date: string;
+    expiryDate?: string;
+    credentialId?: string;
+    url?: string;
 }
 
 interface Language {
-    name: string;
-    proficiency: 'Native' | 'Fluent' | 'Intermediate' | 'Basic';
+    language: string;
+    proficiency: 'Native' | 'Fluent' | 'Proficient' | 'Intermediate' | 'Basic';
 }
 
 interface Award {
     title: string;
-    organization: string;
+    issuer: string;
     date: string;
     description: string;
+}
+
+interface Achievement {
+    title: string;
+    description: string;
+    date: string;
+}
+
+interface Publication {
+    title: string;
+    publisher: string;
+    date: string;
+    url?: string;
+    description: string;
+}
+
+interface VolunteerExperience {
+    role: string;
+    organization: string;
+    startDate: string;
+    endDate: string;
+    currentlyVolunteering?: boolean;
+    description: string;
+}
+
+interface Interest {
+    name: string;
+    description?: string;
+}
+
+interface Reference {
+    name: string;
+    jobTitle: string;
+    company: string;
+    email: string;
+    phone: string;
 }
 
 export interface ResumeData {
@@ -66,6 +107,11 @@ export interface ResumeData {
     certifications: Certification[];
     languages: Language[];
     awards: Award[];
+    achievements: Achievement[];
+    publications: Publication[];
+    volunteer: VolunteerExperience[];
+    interests: Interest[];
+    references: Reference[];
 }
 
 export class ResumeExtractionService {
@@ -167,10 +213,12 @@ Return ONLY a valid JSON object matching this exact schema (no additional text, 
   "personalInfo": {
     "firstName": "string (required)",
     "lastName": "string (required)",
-   "jobTitle": "string (professional title, ATS-optimized)",
+    "jobTitle": "string (professional title, ATS-optimized)",
     "email": "string (valid email or null)",
     "phone": "string (formatted phone number or null)",
-    "summary": "string (2-3 sentences highlighting key strengths, years of experience, core expertise, and value proposition with quantifiable achievements - ATS-optimized with keywords)"
+    "summary": "string (2-3 sentences highlighting key strengths, years of experience, core expertise, and value proposition with quantifiable achievements - ATS-optimized with keywords)",
+    "linkedin": "string (full LinkedIn URL if mentioned, or null)",
+    "github": "string (full GitHub URL if mentioned, or null)"
   },
   "experience": [
     {
@@ -212,21 +260,65 @@ Return ONLY a valid JSON object matching this exact schema (no additional text, 
     {
       "name": "string (certification name)",
       "issuer": "string (issuing organization)",
-      "date": "string (YYYY-MM)"
+      "date": "string (YYYY-MM)",
+      "expiryDate": "string (YYYY-MM or null if doesn't expire)",
+      "credentialId": "string (credential ID or null)",
+      "url": "string (verification URL or null)"
     }
   ],
   "languages": [
     {
-      "name": "string (language name)",
-      "proficiency": "Native|Fluent|Intermediate|Basic"
+      "language": "string (language name)",
+      "proficiency": "Native|Fluent|Proficient|Intermediate|Basic"
     }
   ],
   "awards": [
     {
       "title": "string (award title)",
-      "organization": "string (awarding organization)",
+      "issuer": "string (awarding organization)",
       "date": "string (YYYY-MM)",
       "description": "string (brief description of achievement)"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "string (achievement title)",
+      "description": "string (description with quantifiable impact)",
+      "date": "string (YYYY-MM)"
+    }
+  ],
+  "publications": [
+    {
+      "title": "string (publication title)",
+      "publisher": "string (publisher/journal/platform)",
+      "date": "string (YYYY-MM)",
+      "url": "string (URL or null)",
+      "description": "string (brief description)"
+    }
+  ],
+  "volunteer": [
+    {
+      "role": "string (volunteer role/position)",
+      "organization": "string (organization name)",
+      "startDate": "string (YYYY-MM)",
+      "endDate": "string (YYYY-MM or empty if current)",
+      "currentlyVolunteering": boolean,
+      "description": "string (description of volunteer work and impact)"
+    }
+  ],
+  "interests": [
+    {
+      "name": "string (interest/hobby name)",
+      "description": "string (brief description or null)"
+    }
+  ],
+  "references": [
+    {
+      "name": "string (reference name)",
+      "jobTitle": "string (job title)",
+      "company": "string (company name)",
+      "email": "string (email)",
+      "phone": "string (phone)"
     }
   ]
 }
@@ -259,7 +351,9 @@ Now extract and structure the resume data:`;
                 jobTitle: data.personalInfo.jobTitle || '',
                 email: this.validateEmail(data.personalInfo.email),
                 phone: data.personalInfo.phone || '',
-                summary: data.personalInfo.summary || ''
+                summary: data.personalInfo.summary || '',
+                linkedin: this.validateUrl(data.personalInfo.linkedin),
+                github: this.validateUrl(data.personalInfo.github)
             },
             experience: this.cleanExperience(data.experience || []),
             education: this.cleanEducation(data.education || []),
@@ -267,7 +361,12 @@ Now extract and structure the resume data:`;
             skills: this.cleanSkills(data.skills || []),
             certifications: data.certifications || [],
             languages: data.languages || [],
-            awards: data.awards || []
+            awards: data.awards || [],
+            achievements: data.achievements || [],
+            publications: data.publications || [],
+            volunteer: data.volunteer || [],
+            interests: data.interests || [],
+            references: data.references || []
         };
 
         return cleanData;
@@ -355,6 +454,19 @@ Now extract and structure the resume data:`;
         if (!date) return '';
         const dateRegex = /^\d{4}-\d{2}$/;
         return dateRegex.test(date) ? date : '';
+    }
+
+    /**
+     * Validate URL format
+     */
+    private validateUrl(url: string): string {
+        if (!url) return '';
+        try {
+            new URL(url);
+            return url;
+        } catch {
+            return '';
+        }
     }
 }
 

@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 
 
-let ai = new GoogleGenAI({ apiKey: "AIzaSyDqboKKpjNL-NaN_zkxiqA425CCUNt633g" });
+let ai = new GoogleGenAI({ apiKey: "AIzaSyCMPVoO7ZAtATO0OWB7rG-dmpf0TWFc2Vg" });
 
 /**
  * Initialize the AI client
@@ -47,6 +47,7 @@ ${company ? `**COMPANY:** ${company}` : ''}
 
 1. **Extract Personal Information:**
    - firstName, lastName, email, phone
+   - LinkedIn and GitHub URLs if present
    - If job title in resume doesn't match the target job, suggest the target job title
    - Create a compelling summary (2-3 sentences) that highlights relevant experience for THIS specific job
 
@@ -71,6 +72,37 @@ ${company ? `**COMPANY:** ${company}` : ''}
    - name, startDate, endDate, description
    - Highlight projects relevant to the job description
 
+6. **Extract Languages:**
+   - language language, proficiency level (Native, Fluent, Proficient, Intermediate, Basic)
+
+7. **Extract Achievements:**
+   - title, description, date
+   - Include notable accomplishments, awards received, recognition
+
+8. **Extract Certifications:**
+   - name, issuer, date, expiryDate (if applicable), credentialId, url
+   - Professional certifications, licenses, courses completed
+
+9. **Extract Awards & Honors:**
+   - title, issuer, date, description
+   - Academic awards, professional honors, recognitions
+
+10. **Extract Publications:**
+    - title, publisher, date, url, description
+    - Research papers, articles, books, blog posts
+
+11. **Extract Volunteer Experience:**
+    - role, organization, startDate, endDate, currentlyVolunteering, description
+    - Community service, non-profit work, volunteering roles
+
+12. **Extract Interests & Hobbies:**
+    - name, description
+    - Personal interests that might be relevant professionally
+
+13. **Extract References:**
+    - name, jobTitle, company, email, phone
+    - Professional references (only if explicitly mentioned)
+
 **CRITICAL RULES:**
 - Return ONLY valid JSON, no markdown, no explanations
 - Use the exact field names specified
@@ -78,6 +110,7 @@ ${company ? `**COMPANY:** ${company}` : ''}
 - Ensure descriptions are ATS-friendly (clear, keyword-rich, no special characters)
 - Make the resume compelling for THIS specific job
 - Keep all factual information accurate, only enhance presentation
+- If a section is not present in the resume, return an empty array
 
 **REQUIRED JSON STRUCTURE:**
 {
@@ -87,7 +120,9 @@ ${company ? `**COMPANY:** ${company}` : ''}
     "email": "string",
     "phone": "string",
     "jobTitle": "string (use target job title if appropriate)",
-    "summary": "string (2-3 compelling sentences tailored to this job)"
+    "summary": "string (2-3 compelling sentences tailored to this job)",
+    "linkedin": "string (full URL if present)",
+    "github": "string (full URL if present)"
   },
   "experience": [
     {
@@ -110,6 +145,71 @@ ${company ? `**COMPANY:** ${company}` : ''}
     {
       "name": "string",
       "level": "Beginner|Intermediate|Advanced|Expert"
+    }
+  ],
+  "languages": [
+    {
+      "language": "string",
+      "proficiency": "Native|Fluent|Proficient|Intermediate|Basic"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "string",
+      "description": "string",
+      "date": "YYYY-MM"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "string",
+      "issuer": "string",
+      "date": "YYYY-MM",
+      "expiryDate": "YYYY-MM or empty",
+      "credentialId": "string or empty",
+      "url": "string or empty"
+    }
+  ],
+  "awards": [
+    {
+      "title": "string",
+      "issuer": "string",
+      "date": "YYYY-MM",
+      "description": "string"
+    }
+  ],
+  "publications": [
+    {
+      "title": "string",
+      "publisher": "string",
+      "date": "YYYY-MM",
+      "url": "string or empty",
+      "description": "string"
+    }
+  ],
+  "volunteer": [
+    {
+      "role": "string",
+      "organization": "string",
+      "startDate": "YYYY-MM",
+      "endDate": "YYYY-MM or empty",
+      "currentlyVolunteering": boolean,
+      "description": "string"
+    }
+  ],
+  "interests": [
+    {
+      "name": "string",
+      "description": "string (brief explanation)"
+    }
+  ],
+  "references": [
+    {
+      "name": "string",
+      "jobTitle": "string",
+      "company": "string",
+      "email": "string",
+      "phone": "string"
     }
   ],
   "projects": [

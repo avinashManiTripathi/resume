@@ -2,27 +2,54 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { X, Sparkles, Mic, MicOff, FileText, Loader2, Send } from 'lucide-react';
-import { Button } from '@repo/ui/button';
 
 interface SmartImportModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onApply: (data: any) => void;
+    onSubmit: (text: string) => Promise<void>;
+    section?: 'highlights' | 'experience' | 'skills' | 'general';
 }
 
-export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImportModalProps) {
-    const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
+export function SmartImportModal({ isOpen, onClose, onSubmit, section = 'general' }: SmartImportModalProps) {
+    const [inputMode, setInputMode] = useState<'voice' | 'text'>('text');
     const [isRecording, setIsRecording] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
     const [textInput, setTextInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [transcript, setTranscript] = useState('');
 
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const recognitionRef = useRef<any>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const maxTime = 300; // 5 minutes max
+    const sectionConfig = {
+        highlights: {
+            title: 'Professional highlights',
+            description: 'Achievements, awards, stand-out results — share your past successes!',
+            placeholder: 'Tell us about your achievements, awards, certifications, or notable accomplishments...',
+            maxTime: 300 // 5 minutes
+        },
+        experience: {
+            title: 'Work experience',
+            description: 'Your career journey, roles, responsibilities, and achievements',
+            placeholder: 'Describe your work history, job titles, companies, dates, and what you accomplished...',
+            maxTime: 600 // 10 minutes
+        },
+        skills: {
+            title: 'Skills & expertise',
+            description: 'Technical skills, soft skills, tools, and technologies you master',
+            placeholder: 'List your skills, technologies, tools, programming languages, certifications...',
+            maxTime: 180 // 3 minutes
+        },
+        general: {
+            title: 'Resume information',
+            description: 'Share any information about your career, education, or professional background',
+            placeholder: 'Tell us about yourself, your experience, education, skills, achievements...',
+            maxTime: 600 // 10 minutes
+        }
+    };
+
+    const config = sectionConfig[section];
 
     useEffect(() => {
         // Initialize Web Speech API
@@ -33,18 +60,19 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
             recognitionRef.current.interimResults = true;
 
             recognitionRef.current.onresult = (event: any) => {
+                let interimTranscript = '';
                 let finalTranscript = '';
 
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     const transcript = event.results[i][0].transcript;
                     if (event.results[i].isFinal) {
                         finalTranscript += transcript + ' ';
+                    } else {
+                        interimTranscript += transcript;
                     }
                 }
 
-                if (finalTranscript) {
-                    setTranscript(prev => prev + finalTranscript);
-                }
+                setTranscript(prev => prev + finalTranscript);
             };
 
             recognitionRef.current.onerror = (event: any) => {
@@ -55,11 +83,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
 
         return () => {
             if (recognitionRef.current) {
-                try {
-                    recognitionRef.current.stop();
-                } catch (e) {
-                    // Ignore errors during cleanup
-                }
+                recognitionRef.current.stop();
             }
             if (timerRef.current) {
                 clearInterval(timerRef.current);
@@ -81,7 +105,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
             // Start timer
             timerRef.current = setInterval(() => {
                 setRecordingTime(prev => {
-                    if (prev >= maxTime) {
+                    if (prev >= config.maxTime) {
                         stopRecording();
                         return prev;
                     }
@@ -96,14 +120,9 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
 
     const stopRecording = () => {
         setIsRecording(false);
-        setIsPaused(false);
 
         if (recognitionRef.current) {
-            try {
-                recognitionRef.current.stop();
-            } catch (e) {
-                // Ignore errors if recognition already stopped
-            }
+            recognitionRef.current.stop();
         }
 
         if (timerRef.current) {
@@ -112,66 +131,14 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
         }
     };
 
-    const pauseRecording = () => {
-        setIsPaused(true);
-
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.stop();
-            } catch (e) {
-                // Ignore errors
-            }
-        }
-
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-    };
-
-    const resumeRecording = () => {
-        setIsPaused(false);
-
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.start();
-            } catch (e) {
-                console.error('Error resuming recording:', e);
-            }
-        }
-
-        // Resume timer
-        timerRef.current = setInterval(() => {
-            setRecordingTime(prev => {
-                if (prev >= maxTime) {
-                    stopRecording();
-                    return prev;
-                }
-                return prev + 1;
-            });
-        }, 1000);
-    };
-
-    const handleExtract = async () => {
+    const handleSubmit = async () => {
         const content = inputMode === 'voice' ? transcript : textInput;
         if (!content.trim()) return;
 
         setIsProcessing(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/resume/extract`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: content })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                onApply(result.data);
-                handleClose();
-            } else {
-                console.error('Extraction failed:', result.message);
-            }
+            await onSubmit(content);
+            handleClose();
         } catch (error) {
             console.error('Error processing input:', error);
         } finally {
@@ -197,9 +164,9 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden animate-in fade-in zoom-in duration-200">
                 {/* Header */}
-                <div className="relative p-8 pb-6 flex-shrink-0">
+                <div className="relative p-8 pb-6">
                     <button
                         onClick={handleClose}
                         className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
@@ -217,15 +184,15 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
 
                     {/* Title */}
                     <h2 className="text-3xl font-bold text-gray-900 text-center mb-3">
-                        Professional highlights
+                        {config.title}
                     </h2>
                     <p className="text-gray-600 text-center max-w-md mx-auto">
-                        Achievements, awards, stand-out results — share your past successes!
+                        {config.description}
                     </p>
                 </div>
 
                 {/* Input Mode Toggle */}
-                <div className="px-8 pb-6 flex-shrink-0">
+                <div className="px-8 pb-6">
                     <div className="flex items-center justify-center gap-2 bg-gray-100 p-1 rounded-xl">
                         <button
                             onClick={() => {
@@ -256,20 +223,20 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                     </div>
                 </div>
 
-                {/* Scrollable Content Area */}
-                <div className="flex-1 overflow-y-auto px-8 pb-8">
+                {/* Content Area */}
+                <div className="px-8 pb-8">
                     {inputMode === 'voice' ? (
                         <div className="space-y-6">
                             {/* Audio Visualization */}
                             <div className="relative h-48 flex items-center justify-center">
                                 {/* Animated Background Blob */}
-                                <div className={`absolute inset-0 flex items-center justify-center ${isRecording && !isPaused ? 'animate-pulse' : ''}`}>
+                                <div className={`absolute inset-0 flex items-center justify-center ${isRecording ? 'animate-pulse' : ''}`}>
                                     <div className="w-64 h-64 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 rounded-full blur-3xl opacity-60"></div>
                                 </div>
 
                                 {/* Waveform */}
                                 <div className="relative z-10">
-                                    {isRecording && !isPaused ? (
+                                    {isRecording ? (
                                         <div className="flex items-end justify-center gap-1 h-24">
                                             {[...Array(20)].map((_, i) => (
                                                 <div
@@ -301,58 +268,35 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                             {/* Timer */}
                             <div className="text-center">
                                 <div className="text-2xl font-mono font-semibold text-gray-900">
-                                    {formatTime(recordingTime)}/{formatTime(maxTime)}
+                                    {formatTime(recordingTime)}/{formatTime(config.maxTime)}
                                 </div>
-                                {isPaused && (
-                                    <p className="text-sm text-orange-600 mt-2 font-medium">Paused</p>
-                                )}
                             </div>
 
-                            {/* Editable Transcript */}
+                            {/* Transcript Preview */}
                             {transcript && (
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Transcript (editable)
-                                    </label>
-                                    <textarea
-                                        value={transcript}
-                                        onChange={(e) => setTranscript(e.target.value)}
-                                        className="w-full h-32 px-4 py-3 border-2 border-gray-200 rounded-xl resize-none focus:border-blue-500 focus:outline-none transition-colors text-sm"
-                                        placeholder="Your transcript will appear here..."
-                                    />
-                                    <p className="text-xs text-gray-500">You can edit the transcript before submitting</p>
+                                <div className="bg-gray-50 rounded-xl p-4 max-h-32 overflow-y-auto">
+                                    <p className="text-sm text-gray-700">{transcript}</p>
                                 </div>
                             )}
 
-                            {/* Recording Controls */}
-                            <div className="flex justify-center gap-3">
+                            {/* Record Button */}
+                            <div className="flex justify-center">
                                 {!isRecording ? (
-
-                                    <Button onClick={startRecording} variant='primary'>
+                                    <button
+                                        onClick={startRecording}
+                                        className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+                                    >
                                         <Mic className="w-5 h-5" />
                                         Start Recording
-                                    </Button>
-
+                                    </button>
                                 ) : (
-                                    <>
-                                        {!isPaused ? (
-                                            <Button onClick={pauseRecording}>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" />
-                                                </svg>
-                                                Pause
-                                            </Button>
-                                        ) : (
-                                            <Button onClick={resumeRecording}>
-                                                <Mic className="w-5 h-5" />
-                                                Resume
-                                            </Button>
-                                        )}
-                                        <Button onClick={stopRecording}>
-                                            <MicOff className="w-5 h-5" />
-                                            Stop
-                                        </Button>
-                                    </>
+                                    <button
+                                        onClick={stopRecording}
+                                        className="flex items-center gap-3 px-8 py-4 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-all shadow-lg hover:shadow-xl animate-pulse"
+                                    >
+                                        <MicOff className="w-5 h-5" />
+                                        Stop Recording
+                                    </button>
                                 )}
                             </div>
                         </div>
@@ -362,7 +306,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                             <textarea
                                 value={textInput}
                                 onChange={(e) => setTextInput(e.target.value)}
-                                placeholder="Tell us about your achievements, awards, certifications, or notable accomplishments..."
+                                placeholder={config.placeholder}
                                 className="w-full h-48 px-4 py-3 border-2 border-gray-200 rounded-xl resize-none focus:border-blue-500 focus:outline-none transition-colors"
                             />
                             <div className="flex items-center justify-between text-sm text-gray-500">
@@ -374,17 +318,17 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                 </div>
 
                 {/* Footer */}
-                <div className="px-8  py-6 border-t border-gray-200 flex gap-3 justify-between bg-white">
-                    <Button
+                <div className="px-8 pb-8 flex gap-3">
+                    <button
                         onClick={handleClose}
-                        variant='outline'
+                        className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all"
                     >
                         Cancel
-                    </Button>
-                    <Button
-                        onClick={handleExtract}
+                    </button>
+                    <button
+                        onClick={handleSubmit}
                         disabled={isProcessing || (inputMode === 'voice' ? !transcript.trim() : !textInput.trim())}
-                        variant='primary'
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isProcessing ? (
                             <>
@@ -397,7 +341,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                                 Generate with AI
                             </>
                         )}
-                    </Button>
+                    </button>
                 </div>
 
                 <style jsx>{`

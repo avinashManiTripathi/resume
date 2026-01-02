@@ -42,6 +42,58 @@ export interface Language {
     proficiency?: string;
 }
 
+export interface Achievement {
+    title?: string;
+    description?: string;
+    date?: string;
+}
+
+export interface Certification {
+    name?: string;
+    issuer?: string;
+    date?: string;
+    expiryDate?: string;
+    credentialId?: string;
+    url?: string;
+}
+
+export interface Award {
+    title?: string;
+    issuer?: string;
+    date?: string;
+    description?: string;
+}
+
+export interface Publication {
+    title?: string;
+    publisher?: string;
+    date?: string;
+    url?: string;
+    description?: string;
+}
+
+export interface VolunteerExperience {
+    role?: string;
+    organization?: string;
+    startDate?: string;
+    endDate?: string;
+    currentlyVolunteering?: boolean;
+    description?: string;
+}
+
+export interface Interest {
+    name?: string;
+    description?: string;
+}
+
+export interface Reference {
+    name?: string;
+    jobTitle?: string;
+    company?: string;
+    email?: string;
+    phone?: string;
+}
+
 export interface CustomSectionField {
     label: string;
     value: string;
@@ -73,14 +125,14 @@ export interface ResumeData {
     education?: Education[];
     skills?: Skill[];
     languages?: Language[];
-    achievements?: string[];
+    achievements?: Achievement[];
     projects?: any[];
-    certifications?: any[];
-    awards?: any[];
-    publications?: any[];
-    volunteer?: any[];
-    interests?: any[];
-    references?: any[];
+    certifications?: Certification[];
+    awards?: Award[];
+    publications?: Publication[];
+    volunteer?: VolunteerExperience[];
+    interests?: Interest[];
+    references?: Reference[];
     customSections?: CustomSection[];
 }
 
