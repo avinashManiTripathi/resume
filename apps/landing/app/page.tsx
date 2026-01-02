@@ -49,30 +49,8 @@ export default function LandingPage() {
       {/* Navigation */}
       <Navigation />
 
-      {/* Animated Services Banner */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-3 overflow-hidden">
-        <div className="inline-flex animate-scroll">
-          {[...services, ...services, ...services].map((service, index) => (
-            <div key={index} className="flex items-center mx-8 whitespace-nowrap">
-              <span className="text-white font-semibold text-sm">{service}</span>
-              <span className="text-white/50 mx-4">•</span>
-            </div>
-          ))}
-        </div>
-        <style jsx>{`
-          @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .animate-scroll {
-            animation: scroll 30s linear infinite;
-            will-change: transform;
-          }
-        `}</style>
-      </div>
-
       {/* Hero Section */}
-      <section className="px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="pt-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}
