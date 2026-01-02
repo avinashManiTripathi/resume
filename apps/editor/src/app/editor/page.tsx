@@ -49,13 +49,30 @@ const initialResume = {
 };
 
 const dummyData = {
+  "templateId": "692bcfd239561eef09d89aa9",
+  "sectionLabels": {
+    "personalInfo": "Personal Info",
+    "experience": "Employment History",
+    "education": "Education",
+    "projects": "Projects",
+    "skills": "Skills",
+    "languages": "Languages",
+    "achievements": "Achievements",
+    "interests": "Interests & Hobbies",
+    "awards": "Awards & Honors",
+    "certifications": "Certifications",
+    "publications": "Publications",
+    "references": "References"
+  },
   "personalInfo": {
     "firstName": "John",
     "lastName": "Doe",
     "jobTitle": "Senior Software Engineer",
     "summary": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
     "email": "john.doe@email.com",
-    "phone": "+91 6393177038"
+    "phone": "+91 6393177038",
+    "linkedin": "https://www.linkedin.com/avinashdev",
+    "github": "https://www.github.com/avinashdev"
   },
   "experience": [
     {
@@ -102,50 +119,546 @@ const dummyData = {
     }
   ],
   "skills": [
-    { "name": "JavaScript", "level": "Expert" },
-    { "name": "TypeScript", "level": "Advanced" },
-    { "name": "React", "level": "Expert" },
-    { "name": "Node.js", "level": "Advanced" },
-    { "name": "Next.js", "level": "Advanced" },
-    { "name": "Tailwind CSS", "level": "Advanced" },
-    { "name": "MongoDB", "level": "Intermediate" },
-    { "name": "PostgreSQL", "level": "Intermediate" },
-    { "name": "Docker", "level": "Intermediate" },
-    { "name": "AWS", "level": "Intermediate" }
+    {
+      "name": "JavaScript",
+      "level": "Expert"
+    },
+    {
+      "name": "TypeScript",
+      "level": "Advanced"
+    },
+    {
+      "name": "React",
+      "level": "Expert"
+    },
+    {
+      "name": "Node.js",
+      "level": "Advanced"
+    },
+    {
+      "name": "Next.js",
+      "level": "Advanced"
+    },
+    {
+      "name": "Tailwind CSS",
+      "level": "Advanced"
+    },
+    {
+      "name": "MongoDB",
+      "level": "Intermediate"
+    },
+    {
+      "name": "PostgreSQL",
+      "level": "Intermediate"
+    },
+    {
+      "name": "Docker",
+      "level": "Intermediate"
+    },
+    {
+      "name": "AWS",
+      "level": "Intermediate"
+    }
   ],
   "certifications": [
     {
-      "name": "AWS Certified Solutions Architect",
-      "issuer": "Amazon Web Services",
-      "date": "2022-06"
-    },
-    {
-      "name": "Google Cloud Professional Developer",
-      "issuer": "Google Cloud",
-      "date": "2021-09"
+      "name": "Microsoft Excel",
+      "issuer": "Microsoft",
+      "date": "2026-11",
+      "expiryDate": "2026-12",
+      "credentialId": "63dcdc44nfejfsfdfdvk"
     }
   ],
   "languages": [
-    { "name": "English", "proficiency": "Native" },
-    { "name": "Spanish", "proficiency": "Intermediate" },
-    { "name": "French", "proficiency": "Basic" }
+    {
+      "language": "Hindi ",
+      "proficiency": "Native"
+    },
+    {
+      "language": "English",
+      "proficiency": "Advanced"
+    },
+    {
+      "language": "French",
+      "proficiency": "Basic"
+    }
   ],
   "awards": [
     {
-      "title": "Employee of the Year",
-      "organization": "Tech Solutions Inc.",
-      "date": "2023-12",
-      "description": "Recognized for outstanding contributions to product development and team leadership."
+      "title": "Employee Of the Year",
+      "issuer": "Satschel",
+      "date": "2026-11"
     },
     {
-      "title": "Innovation Award",
-      "organization": "Digital Labs",
-      "date": "2020-06",
-      "description": "Awarded for developing innovative solutions that improved system performance."
+      "title": "Performace of Excellence",
+      "issuer": "Compliance Innovation",
+      "date": "2026-12"
+    },
+    {
+      "title": "Unsung Hero",
+      "issuer": "Speckyfox Technologies Pvt. Ltd",
+      "date": "2026-12"
     }
+  ],
+  "customSections": [
+    {
+      "id": "languages",
+      "label": "Languages",
+      "icon": "🌍",
+      "items": [
+        {
+          "id": "languages-0",
+          "fields": {
+            "language": {
+              "label": "Language",
+              "value": "Hindi ",
+              "type": "text"
+            },
+            "proficiency": {
+              "label": "Proficiency",
+              "value": "Native",
+              "type": "select"
+            }
+          }
+        },
+        {
+          "id": "languages-1",
+          "fields": {
+            "language": {
+              "label": "Language",
+              "value": "English",
+              "type": "text"
+            },
+            "proficiency": {
+              "label": "Proficiency",
+              "value": "Advanced",
+              "type": "select"
+            }
+          }
+        },
+        {
+          "id": "languages-2",
+          "fields": {
+            "language": {
+              "label": "Language",
+              "value": "French",
+              "type": "text"
+            },
+            "proficiency": {
+              "label": "Proficiency",
+              "value": "Basic",
+              "type": "select"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "language": {
+          "label": "Language",
+          "type": "text"
+        },
+        "proficiency": {
+          "label": "Proficiency",
+          "type": "select",
+          "options": [
+            "Native",
+            "Fluent",
+            "Advanced",
+            "Intermediate",
+            "Basic"
+          ]
+        }
+      }
+    },
+    {
+      "id": "achievements",
+      "label": "Achievements",
+      "icon": "🏆",
+      "items": [
+        {
+          "id": "achievements-0",
+          "fields": {
+            "title": {
+              "label": "Achievement Title",
+              "value": "Hounred By St Joseph School",
+              "type": "text"
+            },
+            "date": {
+              "label": "Date",
+              "value": "2019-01",
+              "type": "month"
+            },
+            "organization": {
+              "label": "Organization",
+              "value": "Babu Banarasi Das University",
+              "type": "text"
+            },
+            "description": {
+              "label": "Description",
+              "value": "oftware engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
+              "type": "richtext"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "title": {
+          "label": "Achievement Title",
+          "type": "text"
+        },
+        "date": {
+          "label": "Date",
+          "type": "month"
+        },
+        "organization": {
+          "label": "Organization",
+          "type": "text"
+        },
+        "description": {
+          "label": "Description",
+          "type": "richtext"
+        }
+      }
+    },
+    {
+      "id": "interests",
+      "label": "Interests & Hobbies",
+      "icon": "🎯",
+      "items": [
+        {
+          "id": "interests-0",
+          "fields": {
+            "name": {
+              "label": "Interest/Hobby",
+              "value": "PLaying Chess",
+              "type": "text"
+            }
+          }
+        },
+        {
+          "id": "interests-1",
+          "fields": {
+            "name": {
+              "label": "Interest/Hobby",
+              "value": "Playing Cricket",
+              "type": "text"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "name": {
+          "label": "Interest/Hobby",
+          "type": "text"
+        }
+      }
+    },
+    {
+      "id": "awards",
+      "label": "Awards & Honors",
+      "icon": "🥇",
+      "items": [
+        {
+          "id": "awards-0",
+          "fields": {
+            "title": {
+              "label": "Award Title",
+              "value": "Employee Of the Year",
+              "type": "text"
+            },
+            "issuer": {
+              "label": "Awarded By",
+              "value": "Satschel",
+              "type": "text"
+            },
+            "date": {
+              "label": "Date",
+              "value": "2026-11",
+              "type": "month"
+            }
+          }
+        },
+        {
+          "id": "awards-1",
+          "fields": {
+            "title": {
+              "label": "Award Title",
+              "value": "Performace of Excellence",
+              "type": "text"
+            },
+            "issuer": {
+              "label": "Awarded By",
+              "value": "Compliance Innovation",
+              "type": "text"
+            },
+            "date": {
+              "label": "Date",
+              "value": "2026-12",
+              "type": "month"
+            }
+          }
+        },
+        {
+          "id": "awards-2",
+          "fields": {
+            "title": {
+              "label": "Award Title",
+              "value": "Unsung Hero",
+              "type": "text"
+            },
+            "issuer": {
+              "label": "Awarded By",
+              "value": "Speckyfox Technologies Pvt. Ltd",
+              "type": "text"
+            },
+            "date": {
+              "label": "Date",
+              "value": "2026-12",
+              "type": "month"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "title": {
+          "label": "Award Title",
+          "type": "text"
+        },
+        "issuer": {
+          "label": "Awarded By",
+          "type": "text"
+        },
+        "date": {
+          "label": "Date",
+          "type": "month"
+        },
+        "description": {
+          "label": "Description",
+          "type": "richtext"
+        }
+      }
+    },
+    {
+      "id": "certifications",
+      "label": "Certifications",
+      "icon": "📜",
+      "items": [
+        {
+          "id": "certifications-0",
+          "fields": {
+            "name": {
+              "label": "Certification Name",
+              "value": "Microsoft Excel",
+              "type": "text"
+            },
+            "issuer": {
+              "label": "Issuing Organization",
+              "value": "Microsoft",
+              "type": "text"
+            },
+            "date": {
+              "label": "Issue Date",
+              "value": "2026-11",
+              "type": "month"
+            },
+            "expiryDate": {
+              "label": "Expiry Date",
+              "value": "2026-12",
+              "type": "month"
+            },
+            "credentialId": {
+              "label": "Credential ID",
+              "value": "63dcdc44nfejfsfdfdvk",
+              "type": "text"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "name": {
+          "label": "Certification Name",
+          "type": "text"
+        },
+        "issuer": {
+          "label": "Issuing Organization",
+          "type": "text"
+        },
+        "date": {
+          "label": "Issue Date",
+          "type": "month"
+        },
+        "expiryDate": {
+          "label": "Expiry Date",
+          "type": "month"
+        },
+        "credentialId": {
+          "label": "Credential ID",
+          "type": "text"
+        }
+      }
+    },
+    {
+      "id": "publications",
+      "label": "Publications",
+      "icon": "📚",
+      "items": [
+        {
+          "id": "publications-0",
+          "fields": {
+            "title": {
+              "label": "Publication Title",
+              "value": "E Book Shop",
+              "type": "text"
+            },
+            "publisher": {
+              "label": "Publisher",
+              "value": "Avinash Mani",
+              "type": "text"
+            },
+            "date": {
+              "label": "Publication Date",
+              "value": "2026-06",
+              "type": "month"
+            },
+            "url": {
+              "label": "URL",
+              "value": "https://www.sheltershymphoney.com/2bhk-flat",
+              "type": "text"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "title": {
+          "label": "Publication Title",
+          "type": "text"
+        },
+        "publisher": {
+          "label": "Publisher",
+          "type": "text"
+        },
+        "date": {
+          "label": "Publication Date",
+          "type": "month"
+        },
+        "url": {
+          "label": "URL",
+          "type": "text"
+        },
+        "description": {
+          "label": "Description",
+          "type": "richtext"
+        }
+      }
+    },
+    {
+      "id": "references",
+      "label": "References",
+      "icon": "👤",
+      "items": [
+        {
+          "id": "references-0",
+          "fields": {
+            "name": {
+              "label": "Name",
+              "value": "Prateek Singh",
+              "type": "text"
+            },
+            "title": {
+              "label": "Title",
+              "value": "Senior Product Designer",
+              "type": "text"
+            },
+            "company": {
+              "label": "Company",
+              "value": "Compliance Innovation",
+              "type": "text"
+            },
+            "email": {
+              "label": "Email",
+              "value": "avinashtiwari0555999@gmail.com",
+              "type": "email"
+            },
+            "phone": {
+              "label": "Phone",
+              "value": "06393177038",
+              "type": "text"
+            }
+          }
+        }
+      ],
+      "fieldDefinitions": {
+        "name": {
+          "label": "Name",
+          "type": "text"
+        },
+        "title": {
+          "label": "Title",
+          "type": "text"
+        },
+        "company": {
+          "label": "Company",
+          "type": "text"
+        },
+        "email": {
+          "label": "Email",
+          "type": "email"
+        },
+        "phone": {
+          "label": "Phone",
+          "type": "text"
+        }
+      }
+    }
+  ],
+  "achievements": [
+    {
+      "title": "Hounred By St Joseph School",
+      "date": "2019-01",
+      "organization": "Babu Banarasi Das University",
+      "description": "oftware engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers."
+    }
+  ],
+  "interests": [
+    {
+      "name": "PLaying Chess"
+    },
+    {
+      "name": "Playing Cricket"
+    }
+  ],
+  "publications": [
+    {
+      "title": "E Book Shop",
+      "publisher": "Avinash Mani",
+      "date": "2026-06",
+      "url": "https://www.sheltershymphoney.com/2bhk-flat"
+    }
+  ],
+  "references": [
+    {
+      "name": "Prateek Singh",
+      "title": "Senior Product Designer",
+      "company": "Compliance Innovation",
+      "email": "avinashtiwari0555999@gmail.com",
+      "phone": "06393177038"
+    }
+  ],
+  "order": [
+    "personalInfo",
+    "experience",
+    "education",
+    "projects",
+    "skills",
+    "languages",
+    "achievements",
+    "interests",
+    "awards",
+    "certifications",
+    "publications",
+    "references"
   ]
-};
-
+}
 
 function ResumeEditor() {
   const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
@@ -492,9 +1005,94 @@ function ResumeEditor() {
 
   const fillDummyData = () => {
     const newData = JSON.parse(JSON.stringify(dummyData));
+
+    // Only build order if it doesn't already exist in dummyData
+    if (!newData.order || newData.order.length === 0) {
+      // Ensure order array includes ALL sections with data
+      const allSections: string[] = [];
+
+      // Add standard sections
+      if (newData.personalInfo) allSections.push('personalInfo');
+      if (newData.experience?.length) allSections.push('experience');
+      if (newData.education?.length) allSections.push('education');
+      if (newData.projects?.length) allSections.push('projects');
+      if (newData.skills?.length) allSections.push('skills');
+
+      // Add custom sections that have data
+      if (newData.customSections) {
+        newData.customSections.forEach((cs: any) => {
+          if (cs.items?.length) {
+            allSections.push(cs.id);
+          }
+        });
+      }
+
+      // Set the complete order
+      newData.order = allSections;
+    }
+
     setResume(newData);
     addToHistory(newData);
   };
+
+
+  useEffect(() => {
+    // Small delay to ensure container is visible and has dimensions
+    setTimeout(() => {
+      fillDummyData()
+    }, 10000);
+
+  }, [showMobilePreview]);
+
+
+  // Auto-populate form schema with custom sections when data exists
+  useEffect(() => {
+    if (!resume) return;
+
+    // Type guard for customSections
+    const resumeWithCustom = resume as any;
+    if (!resumeWithCustom.customSections) return;
+
+    const currentSections = Object.keys(schema);
+    const sectionsToAdd: any = {};
+
+    resumeWithCustom.customSections.forEach((section: any) => {
+      if (section.items && section.items.length > 0) {
+        // Check if section already exists in schema
+        if (!currentSections.includes(section.id)) {
+          // Convert fieldDefinitions to the schema format
+          const itemFields: any = {};
+
+          if (section.fieldDefinitions) {
+            Object.entries(section.fieldDefinitions).forEach(([key, def]: [string, any]) => {
+              itemFields[key] = {
+                label: def.label || key,
+                type: def.type || 'text',
+                options: def.options || undefined,
+                className: 'w-[calc(50%-4px)]'
+              };
+            });
+          }
+
+          // Add section to schema with correct structure
+          sectionsToAdd[section.id] = {
+            label: section.label || section.id,
+            type: 'array',
+            isCollapsible: true,
+            item: itemFields  // Use 'item' (singular) not 'items'
+          };
+        }
+      }
+    });
+
+    // Update schema if there are new sections
+    if (Object.keys(sectionsToAdd).length > 0) {
+      setSchema(prev => ({
+        ...prev,
+        ...sectionsToAdd
+      }));
+    }
+  }, [resume]);
 
   const renderPDFPage = async (pdfData: ArrayBuffer, page: number) => {
     if (!mainRef.current || !canvasRef.current) return;
@@ -644,6 +1242,15 @@ function ResumeEditor() {
     url.searchParams.set('templateId', templateId);
     window.history.replaceState({}, '', url.toString());
   }, [templateId]);
+
+
+  useEffect(() => {
+    // Small delay to ensure container is visible and has dimensions
+    setTimeout(() => {
+      fillDummyData()
+    }, 10000);
+
+  }, [showMobilePreview]);
 
 
 

@@ -459,14 +459,62 @@ export class TemplateInjectorService {
         // Inject personal information (always first)
         this.injectPersonalInfo(dom, data.personalInfo);
 
-        // Get section order, default to standard order if not provided
-        const order = data.order || ['experience', 'education', 'projects', 'skills'];
+        // Build complete list of sections to process
+        let processOrder = data.order || [];
+
+        // If no order specified, build it from sections with data
+        if (!processOrder.length) {
+            const sectionsWithData: string[] = [];
+
+            if (data.experience?.length) sectionsWithData.push('experience');
+            if (data.education?.length) sectionsWithData.push('education');
+            if (data.projects?.length) sectionsWithData.push('projects');
+            if (data.skills?.length) sectionsWithData.push('skills');
+
+            // Add custom sections that have data
+            if (data.customSections) {
+                data.customSections.forEach(cs => {
+                    if (cs.items?.length) {
+                        sectionsWithData.push(cs.id);
+                    }
+                });
+            }
+
+            processOrder = sectionsWithData;
+        } else {
+            // Order was specified - add any missing sections with data to the end
+            const missingWithData: string[] = [];
+
+            if (data.experience?.length && !processOrder.includes('experience')) {
+                missingWithData.push('experience');
+            }
+            if (data.education?.length && !processOrder.includes('education')) {
+                missingWithData.push('education');
+            }
+            if (data.projects?.length && !processOrder.includes('projects')) {
+                missingWithData.push('projects');
+            }
+            if (data.skills?.length && !processOrder.includes('skills')) {
+                missingWithData.push('skills');
+            }
+
+            // Add missing custom sections with data
+            if (data.customSections) {
+                data.customSections.forEach(cs => {
+                    if (cs.items?.length && !processOrder.includes(cs.id)) {
+                        missingWithData.push(cs.id);
+                    }
+                });
+            }
+
+            processOrder = [...processOrder, ...missingWithData];
+        }
 
         // Track last inserted section for proper ordering
         let lastSection: HTMLElement | null = document.getElementById('section-personalInfo');
 
         // Inject sections in the specified order
-        order.forEach(sectionKey => {
+        processOrder.forEach(sectionKey => {
             let currentSection: HTMLElement | null = null;
 
             switch (sectionKey) {
@@ -490,7 +538,7 @@ export class TemplateInjectorService {
                     // Check if this is a custom section
                     if (data.customSections) {
                         const customSection = data.customSections.find(cs => cs.id === sectionKey);
-                        if (customSection) {
+                        if (customSection && customSection.items?.length) {
                             this.injectCustomSections(dom, [customSection], lastSection);
                             currentSection = document.getElementById(`section-${sectionKey}`);
                         }
