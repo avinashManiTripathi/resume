@@ -55,7 +55,7 @@ const dummyData = {
     "jobTitle": "Senior Software Engineer",
     "summary": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
     "email": "john.doe@email.com",
-    "phone": "+1 (555) 123-4567"
+    "phone": "+91 6393177038"
   },
   "experience": [
     {
