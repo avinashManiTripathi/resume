@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 type ButtonProps = {
   children: ReactNode;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "danger";
   icon?: ReactNode;
   onClick?: () => void;
   className?: string;
@@ -25,6 +25,11 @@ export const Button = ({
   const primaryStyles =
     "bg-blue-600 text-white hover:bg-blue-700 disabled:hover:bg-blue-600";
 
+
+  const dangerStyles =
+    "bg-red-600 text-white hover:bg-red-700 disabled:hover:bg-red-600";
+
+
   const outlineStyles =
     "border border-blue-500 text-blue-600 hover:bg-blue-50 disabled:hover:bg-transparent";
 
@@ -33,7 +38,7 @@ export const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${variant === "primary" ? primaryStyles : outlineStyles
+      className={`${baseStyles} ${variant === "primary" ? primaryStyles : variant === 'danger' ? dangerStyles : outlineStyles
         } ${className}`}
     >
       {icon && <span className="text-lg">{icon}</span>}

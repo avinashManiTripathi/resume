@@ -348,7 +348,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                                                 Resume
                                             </Button>
                                         )}
-                                        <Button onClick={stopRecording}>
+                                        <Button onClick={stopRecording} variant='danger'>
                                             <MicOff className="w-5 h-5" />
                                             Stop
                                         </Button>
