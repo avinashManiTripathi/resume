@@ -7,7 +7,6 @@ import Link from "next/link";
 export default function ATSGuidePage() {
     return (
         <div className="min-h-screen bg-white">
-            <Navigation />
 
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50">
@@ -199,13 +198,6 @@ export default function ATSGuidePage() {
                     </div>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto text-center">
-                    <p>© 2025 ResumePro. All rights reserved.</p>
-                </div>
-            </footer>
         </div>
     );
 }

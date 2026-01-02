@@ -1,12 +1,11 @@
 "use client";
 
-import { Footer } from "@repo/ui/footer";
-import { Navigation } from "../../components/Navigation";
+
 
 export default function ExamplesPage() {
     return (
         <main className="page">
-            <Navigation />
+
 
             <section className="hero-simple">
                 <div className="container">
@@ -78,14 +77,6 @@ export default function ExamplesPage() {
                 </div>
             </section>
 
-            <Footer
-                sections={[
-                    { title: "Product", links: [{ text: "Features", href: "#features" }, { text: "Templates", href: "/templates" }, { text: "Pricing", href: "/pricing" }] },
-                    { title: "Company", links: [{ text: "About", href: "/about" }, { text: "Blog", href: "/blog" }, { text: "Contact", href: "/contact" }] },
-                ]}
-                socialLinks={{ twitter: "https://twitter.com", github: "https://github.com", linkedin: "https://linkedin.com" }}
-                companyName="ResumePro"
-            />
 
             <style jsx>{`
         .page { background: #FAFAFA; min-height: 100vh; }

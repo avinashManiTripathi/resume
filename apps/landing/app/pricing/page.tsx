@@ -1,5 +1,5 @@
 import { Check, Sparkles, Zap, Crown, Shield, Star } from "lucide-react";
-import { Navigation } from "@/components/Navigation";
+
 
 const pricingTiers = [
     {
@@ -84,7 +84,6 @@ const testimonials = [
 export default function PricingPage() {
     return (
         <>
-            <Navigation />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 px-6">

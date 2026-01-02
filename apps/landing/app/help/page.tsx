@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown, Search, HelpCircle, Book, Video, MessageCircle } from "lucide-react";
-import { Navigation } from "@/components/Navigation";
 
 const faqs = [
     {
@@ -103,7 +102,6 @@ export default function HelpPage() {
 
     return (
         <>
-            <Navigation />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 px-6">

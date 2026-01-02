@@ -1,6 +1,5 @@
 "use client";
 
-import { Navigation } from "@/components/Navigation";
 import { FileText, CheckCircle, AlertCircle, Lightbulb, Target, Award, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
 
@@ -62,8 +61,6 @@ export default function ResumeGuidePage() {
 
     return (
         <div className="min-h-screen bg-white">
-            <Navigation />
-
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
                 <div className="max-w-7xl mx-auto text-center">
@@ -149,12 +146,7 @@ export default function ResumeGuidePage() {
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto text-center">
-                    <p>© 2025 ResumePro. All rights reserved.</p>
-                </div>
-            </footer>
+
         </div>
     );
 }

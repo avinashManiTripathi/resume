@@ -1,12 +1,9 @@
 "use client";
 
-import { Footer } from "@repo/ui/footer";
-import { Navigation } from "../../components/Navigation";
 
 export default function SuccessStoriesPage() {
     return (
         <main className="page">
-            <Navigation />
 
             <section className="hero-simple">
                 <div className="container">
@@ -58,11 +55,6 @@ export default function SuccessStoriesPage() {
                 </div>
             </section>
 
-            <Footer
-                sections={[{ title: "Product", links: [{ text: "Features", href: "#features" }, { text: "Pricing", href: "/pricing" }] }]}
-                socialLinks={{ twitter: "https://twitter.com" }}
-                companyName="ResumePro"
-            />
 
             <style jsx>{`
         .page { background: #FAFAFA; min-height: 100vh; }

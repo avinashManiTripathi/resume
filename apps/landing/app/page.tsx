@@ -1,7 +1,5 @@
 "use client";
 
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -46,9 +44,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <Navigation />
-
       {/* Hero Section */}
       <section className="pt-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
@@ -1047,9 +1042,6 @@ export default function LandingPage() {
           <p className="text-white/80 mt-6 text-sm">No credit card required • Free forever</p>
         </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

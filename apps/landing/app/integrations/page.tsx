@@ -1,12 +1,12 @@
 "use client";
 
-import { Footer } from "@repo/ui/footer";
-import { Navigation } from "../../components/Navigation";
+
+
 
 export default function IntegrationsPage() {
     return (
         <main className="page">
-            <Navigation />
+
 
             <section className="hero-simple">
                 <div className="container">
@@ -40,11 +40,6 @@ export default function IntegrationsPage() {
                 </div>
             </section>
 
-            <Footer
-                sections={[{ title: "Product", links: [{ text: "Features", href: "#features" }] }]}
-                socialLinks={{ twitter: "https://twitter.com" }}
-                companyName="ResumePro"
-            />
 
             <style jsx>{`
         .page { background: #FAFAFA; min-height: 100vh; }

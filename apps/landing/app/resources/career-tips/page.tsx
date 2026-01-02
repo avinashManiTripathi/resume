@@ -1,6 +1,6 @@
 "use client";
 
-import { Navigation } from "@/components/Navigation";
+
 import { Briefcase, TrendingUp, Users, Target, Lightbulb, BookOpen, Award, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -116,7 +116,6 @@ export default function CareerTipsPage() {
 
     return (
         <div className="min-h-screen bg-white">
-            <Navigation />
 
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
@@ -212,51 +211,6 @@ export default function CareerTipsPage() {
                     </Link>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-4 gap-8 mb-8">
-                        <div>
-                            <h4 className="text-white font-semibold mb-4">Product</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="#features" className="hover:text-white transition-colors">Features</Link></li>
-                                <li><Link href="/templates" className="hover:text-white transition-colors">Templates</Link></li>
-                                <li><Link href="#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white font-semibold mb-4">Resources</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="/resources/resume-guide" className="hover:text-white transition-colors">Resume Guide</Link></li>
-                                <li><Link href="/resources/career-tips" className="hover:text-white transition-colors">Career Tips</Link></li>
-                                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white font-semibold mb-4">Company</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 className="text-white font-semibold mb-4">Legal</h4>
-                            <ul className="space-y-2 text-sm">
-                                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link></li>
-                                <li><Link href="/terms" className="hover:text-white transition-colors">Terms</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="border-t border-gray-800 pt-8 text-center text-sm">
-                        <p>© 2025 ResumePro. All rights reserved.</p>
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }

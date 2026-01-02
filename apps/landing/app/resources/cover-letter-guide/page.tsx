@@ -1,13 +1,12 @@
 "use client";
 
-import { Navigation } from "@/components/Navigation";
 import { Mail, CheckCircle, FileText, Lightbulb, Target, Award } from "lucide-react";
 import Link from "next/link";
 
 export default function CoverLetterGuidePage() {
     return (
         <div className="min-h-screen bg-white">
-            <Navigation />
+
 
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-blue-50">
@@ -163,13 +162,6 @@ export default function CoverLetterGuidePage() {
                     </Link>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-gray-900 text-gray-400 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto text-center">
-                    <p>© 2025 ResumePro. All rights reserved.</p>
-                </div>
-            </footer>
         </div>
     );
 }

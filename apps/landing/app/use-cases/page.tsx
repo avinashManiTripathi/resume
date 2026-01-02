@@ -1,12 +1,11 @@
 "use client";
 
-import { Footer } from "@repo/ui/footer";
-import { Navigation } from "../../components/Navigation";
+
 
 export default function UseCasesPage() {
   return (
     <main className="page">
-      <Navigation />
+
 
       {/* Hero Section */}
       <section className="hero-simple">
@@ -88,32 +87,7 @@ export default function UseCasesPage() {
         </div>
       </section>
 
-      <Footer
-        sections={[
-          {
-            title: "Product",
-            links: [
-              { text: "Features", href: "#features" },
-              { text: "Templates", href: "/templates" },
-              { text: "Pricing", href: "/pricing" },
-            ],
-          },
-          {
-            title: "Company",
-            links: [
-              { text: "About", href: "/about" },
-              { text: "Blog", href: "/blog" },
-              { text: "Contact", href: "/contact" },
-            ],
-          },
-        ]}
-        socialLinks={{
-          twitter: "https://twitter.com",
-          github: "https://github.com",
-          linkedin: "https://linkedin.com",
-        }}
-        companyName="ResumePro"
-      />
+
 
       <style jsx>{`
         .page {
