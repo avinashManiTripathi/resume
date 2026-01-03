@@ -255,6 +255,293 @@ export class TemplateInjectorService {
     }
 
     /**
+     * Inject languages items by cloning template
+     */
+    private injectLanguages(dom: JSDOM, languages?: any[]): void {
+        if (!languages || languages.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="languages"]') as HTMLElement;
+        const container = document.getElementById('languages-list');
+
+        if (!template || !container) return;
+
+        languages.forEach(lang => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const nameEl = clone.querySelector('.lang-name');
+            if (nameEl) nameEl.textContent = lang.language || lang.name || '';
+
+            const proficiencyEl = clone.querySelector('.lang-proficiency');
+            if (proficiencyEl) proficiencyEl.textContent = lang.proficiency || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-languages');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject certifications items by cloning template
+     */
+    private injectCertifications(dom: JSDOM, certifications?: any[]): void {
+        if (!certifications || certifications.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="certifications"]') as HTMLElement;
+        const container = document.getElementById('certifications-list');
+
+        if (!template || !container) return;
+
+        certifications.forEach(cert => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const nameEl = clone.querySelector('.cert-name');
+            if (nameEl) nameEl.textContent = cert.name || '';
+
+            const issuerEl = clone.querySelector('.cert-issuer');
+            if (issuerEl) issuerEl.textContent = cert.issuer || '';
+
+            const dateEl = clone.querySelector('.cert-date');
+            if (dateEl) dateEl.textContent = cert.date || '';
+
+            const credentialEl = clone.querySelector('.cert-credential-id');
+            if (credentialEl && cert.credentialId) {
+                credentialEl.textContent = `Credential ID: ${cert.credentialId}`;
+                (credentialEl as HTMLElement).style.display = 'block';
+            }
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-certifications');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject awards items by cloning template
+     */
+    private injectAwards(dom: JSDOM, awards?: any[]): void {
+        if (!awards || awards.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="awards"]') as HTMLElement;
+        const container = document.getElementById('awards-list');
+
+        if (!template || !container) return;
+
+        awards.forEach(award => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const titleEl = clone.querySelector('.award-title');
+            if (titleEl) titleEl.textContent = award.title || '';
+
+            const issuerEl = clone.querySelector('.award-issuer');
+            if (issuerEl) issuerEl.textContent = award.issuer || '';
+
+            const dateEl = clone.querySelector('.award-date');
+            if (dateEl) dateEl.textContent = award.date || '';
+
+            const descriptionEl = clone.querySelector('.award-description');
+            if (descriptionEl) descriptionEl.textContent = award.description || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-awards');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject achievements items by cloning template
+     */
+    private injectAchievements(dom: JSDOM, achievements?: any[]): void {
+        if (!achievements || achievements.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="achievements"]') as HTMLElement;
+        const container = document.getElementById('achievements-list');
+
+        if (!template || !container) return;
+
+        achievements.forEach(achievement => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const titleEl = clone.querySelector('.achievement-title');
+            if (titleEl) titleEl.textContent = achievement.title || '';
+
+            const dateEl = clone.querySelector('.achievement-date');
+            if (dateEl) dateEl.textContent = achievement.date || '';
+
+            const descriptionEl = clone.querySelector('.achievement-description');
+            if (descriptionEl) descriptionEl.textContent = achievement.description || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-achievements');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject publications items by cloning template
+     */
+    private injectPublications(dom: JSDOM, publications?: any[]): void {
+        if (!publications || publications.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="publications"]') as HTMLElement;
+        const container = document.getElementById('publications-list');
+
+        if (!template || !container) return;
+
+        publications.forEach(pub => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const titleEl = clone.querySelector('.pub-title');
+            if (titleEl) titleEl.textContent = pub.title || '';
+
+            const publisherEl = clone.querySelector('.pub-publisher');
+            if (publisherEl) publisherEl.textContent = pub.publisher || '';
+
+            const dateEl = clone.querySelector('.pub-date');
+            if (dateEl) dateEl.textContent = pub.date || '';
+
+            const descriptionEl = clone.querySelector('.pub-description');
+            if (descriptionEl) descriptionEl.textContent = pub.description || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-publications');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject volunteer experience items by cloning template
+     */
+    private injectVolunteer(dom: JSDOM, volunteer?: any[]): void {
+        if (!volunteer || volunteer.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="volunteer"]') as HTMLElement;
+        const container = document.getElementById('volunteer-list');
+
+        if (!template || !container) return;
+
+        volunteer.forEach(vol => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const roleEl = clone.querySelector('.vol-role');
+            if (roleEl) roleEl.textContent = vol.role || '';
+
+            const organizationEl = clone.querySelector('.vol-organization');
+            if (organizationEl) organizationEl.textContent = vol.organization || '';
+
+            const startDateEl = clone.querySelector('.vol-start-date');
+            if (startDateEl) startDateEl.textContent = vol.startDate || '';
+
+            const endDateEl = clone.querySelector('.vol-end-date');
+            if (endDateEl) endDateEl.textContent = vol.endDate || 'Present';
+
+            const descriptionEl = clone.querySelector('.vol-description');
+            if (descriptionEl) descriptionEl.textContent = vol.description || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-volunteer');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject interests items by cloning template
+     */
+    private injectInterests(dom: JSDOM, interests?: any[]): void {
+        if (!interests || interests.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="interests"]') as HTMLElement;
+        const container = document.getElementById('interests-list');
+
+        if (!template || !container) return;
+
+        interests.forEach(interest => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'inline-block';
+
+            const nameEl = clone.querySelector('.interest-name');
+            if (nameEl) nameEl.textContent = interest.name || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-interests');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
+     * Inject references items by cloning template
+     */
+    private injectReferences(dom: JSDOM, references?: any[]): void {
+        if (!references || references.length === 0) return;
+
+        const document = dom.window.document;
+        const template = document.querySelector('[data-template="references"]') as HTMLElement;
+        const container = document.getElementById('references-list');
+
+        if (!template || !container) return;
+
+        references.forEach(ref => {
+            const clone = template.cloneNode(true) as HTMLElement;
+            clone.classList.remove('item-template');
+            clone.removeAttribute('data-template');
+            clone.style.display = 'block';
+
+            const nameEl = clone.querySelector('.ref-name');
+            if (nameEl) nameEl.textContent = ref.name || '';
+
+            const jobTitleEl = clone.querySelector('.ref-job-title');
+            if (jobTitleEl) jobTitleEl.textContent = ref.jobTitle || '';
+
+            const companyEl = clone.querySelector('.ref-company');
+            if (companyEl) companyEl.textContent = ref.company || '';
+
+            const emailEl = clone.querySelector('.ref-email');
+            if (emailEl) emailEl.textContent = ref.email || '';
+
+            const phoneEl = clone.querySelector('.ref-phone');
+            if (phoneEl) phoneEl.textContent = ref.phone || '';
+
+            container.appendChild(clone);
+        });
+
+        const section = document.getElementById('section-references');
+        if (section) section.style.display = 'block';
+    }
+
+    /**
      * Create a custom section container dynamically
      */
     private createCustomSectionContainer(document: Document, section: any): HTMLElement {
@@ -533,6 +820,38 @@ export class TemplateInjectorService {
                 case 'skills':
                     this.injectSkills(dom, data.skills);
                     currentSection = document.getElementById('section-skills');
+                    break;
+                case 'languages':
+                    this.injectLanguages(dom, data.languages);
+                    currentSection = document.getElementById('section-languages');
+                    break;
+                case 'certifications':
+                    this.injectCertifications(dom, data.certifications);
+                    currentSection = document.getElementById('section-certifications');
+                    break;
+                case 'awards':
+                    this.injectAwards(dom, data.awards);
+                    currentSection = document.getElementById('section-awards');
+                    break;
+                case 'achievements':
+                    this.injectAchievements(dom, data.achievements);
+                    currentSection = document.getElementById('section-achievements');
+                    break;
+                case 'publications':
+                    this.injectPublications(dom, data.publications);
+                    currentSection = document.getElementById('section-publications');
+                    break;
+                case 'volunteer':
+                    this.injectVolunteer(dom, data.volunteer);
+                    currentSection = document.getElementById('section-volunteer');
+                    break;
+                case 'interests':
+                    this.injectInterests(dom, data.interests);
+                    currentSection = document.getElementById('section-interests');
+                    break;
+                case 'references':
+                    this.injectReferences(dom, data.references);
+                    currentSection = document.getElementById('section-references');
                     break;
                 default:
                     // Check if this is a custom section

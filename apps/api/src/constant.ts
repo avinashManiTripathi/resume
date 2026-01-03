@@ -40,7 +40,7 @@ export const RESUMES = [
     </header>
 
     <!-- Summary -->
-    <section id="section-summary" class="block w-full" style="display: none;">
+    <section id="section-summary" class=" bg-black-600 block w-full" style="display: none;">
       <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Summary</h2>
       <p id="summary-text" class="text-sm text-gray-800 mt-3 leading-relaxed">{{summary}}</p>
     </section>
@@ -93,6 +93,114 @@ export const RESUMES = [
       <div id="skills-list" class="mt-3 text-sm flex flex-wrap gap-2"></div>
       <div class="skill-item item-template" data-template="skills">
         <p><span class="font-semibold skill-name">{{skills.name}}</span>,</p>
+      </div>
+    </section>
+
+    <!-- Languages -->
+    <section id="section-languages" class="bg-blue-600 block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Languages</h2>
+      <div id="languages-list"></div>
+      <div class="language-item item-template mt-2" data-template="languages">
+        <p class="text-sm">
+          <span class="font-semibold lang-name">{{language.language}}</span>: 
+          <span class="lang-proficiency text-gray-700">{{language.proficiency}}</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- Certifications -->
+    <section id="section-certifications" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Certifications</h2>
+      <div id="certifications-list"></div>
+      <div class="certification-item item-template mt-3" data-template="certifications">
+        <h3 class="font-bold text-sm cert-name">{{certification.name}}</h3>
+        <p class="text-xs text-gray-600">
+          <span class="cert-issuer">{{certification.issuer}}</span> · 
+          <span class="cert-date">{{certification.date}}</span>
+        </p>
+        <p class="text-xs text-gray-600 cert-credential-id" style="display: none;">
+          Credential ID: {{certification.credentialId}}
+        </p>
+      </div>
+    </section>
+
+    <!-- Awards & Honors -->
+    <section id="section-awards" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Awards & Honors</h2>
+      <div id="awards-list"></div>
+      <div class="award-item item-template mt-3" data-template="awards">
+        <h3 class="font-bold text-sm award-title">{{award.title}}</h3>
+        <p class="text-xs text-gray-600">
+          <span class="award-issuer">{{award.issuer}}</span> · 
+          <span class="award-date">{{award.date}}</span>
+        </p>
+        <p class="text-sm text-gray-800 mt-1 award-description">{{award.description}}</p>
+      </div>
+    </section>
+
+    <!-- Achievements -->
+    <section id="section-achievements" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Key Achievements</h2>
+      <div id="achievements-list"></div>
+      <div class="achievement-item item-template mt-3" data-template="achievements">
+        <h3 class="font-bold text-sm achievement-title">{{achievement.title}}</h3>
+        <p class="text-xs text-gray-600 achievement-date">{{achievement.date}}</p>
+        <p class="text-sm text-gray-800 mt-1 achievement-description">{{achievement.description}}</p>
+      </div>
+    </section>
+
+    <!-- Publications -->
+    <section id="section-publications" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Publications</h2>
+      <div id="publications-list"></div>
+      <div class="publication-item item-template mt-3" data-template="publications">
+        <h3 class="font-bold text-sm pub-title">{{publication.title}}</h3>
+        <p class="text-xs text-gray-600">
+          <span class="pub-publisher">{{publication.publisher}}</span> · 
+          <span class="pub-date">{{publication.date}}</span>
+        </p>
+        <p class="text-sm text-gray-800 mt-1 pub-description">{{publication.description}}</p>
+      </div>
+    </section>
+
+    <!-- Volunteer Experience -->
+    <section id="section-volunteer" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Volunteer Experience</h2>
+      <div id="volunteer-list"></div>
+      <div class="volunteer-item item-template mt-4" data-template="volunteer">
+        <h3 class="font-bold text-sm">
+          <span class="vol-organization">{{volunteer.organization}}</span>, 
+          <span class="vol-role">{{volunteer.role}}</span>
+        </h3>
+        <p class="text-xs text-gray-600 mb-2">
+          <span class="vol-start-date">{{volunteer.startDate}}</span> – 
+          <span class="vol-end-date">{{volunteer.endDate}}</span>
+        </p>
+        <p class="text-sm text-gray-800 vol-description">{{volunteer.description}}</p>
+      </div>
+    </section>
+
+    <!-- Interests & Hobbies -->
+    <section id="section-interests" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Interests & Hobbies</h2>
+      <div id="interests-list" class="mt-3 text-sm flex flex-wrap gap-2"></div>
+      <div class="interest-item item-template" data-template="interests">
+        <p><span class="font-semibold interest-name">{{interest.name}}</span>,</p>
+      </div>
+    </section>
+
+    <!-- References -->
+    <section id="section-references" class="block w-full" style="display: none;">
+      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">References</h2>
+      <div id="references-list"></div>
+      <div class="reference-item item-template mt-3" data-template="references">
+        <h3 class="font-bold text-sm ref-name">{{reference.name}}</h3>
+        <p class="text-xs text-gray-600 ref-job-title">{{reference.jobTitle}}</p>
+        <p class="text-xs text-gray-600 ref-company">{{reference.company}}</p>
+        <p class="text-xs text-gray-700 mt-1">
+          <span class="ref-email">{{reference.email}}</span> · 
+          <span class="ref-phone">{{reference.phone}}</span>
+        </p>
       </div>
     </section>
 
@@ -184,6 +292,100 @@ export const RESUMES = [
             <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
           </p>
           <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
+        </div>
+        </div>
+      </section>
+
+      <!-- Languages -->
+      <section id="section-languages" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Languages</h2>
+        <div id="languages-list"></div>
+        <div class="language-item item-template mb-2" data-template="languages">
+          <p class="text-sm"><span class="font-semibold lang-name">{{language.language}}</span>: 
+          <span class="lang-proficiency text-gray-600">{{language.proficiency}}</span></p>
+        </div>
+      </section>
+
+      <!-- Certifications -->
+      <section id="section-certifications" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Certifications</h2>
+        <div id="certifications-list"></div>
+        <div class="certification-item item-template mb-4" data-template="certifications">
+          <h3 class="font-bold text-base cert-name">{{certification.name}}</h3>
+          <p class="text-sm text-slate-600 cert-issuer">{{certification.issuer}}</p>
+          <p class="text-xs text-gray-500 cert-date">{{certification.date}}</p>
+        </div>
+      </section>
+
+      <!-- Awards & Honors -->
+      <section id="section-awards" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Awards & Honors</h2>
+        <div id="awards-list"></div>
+        <div class="award-item item-template mb-4" data-template="awards">
+          <h3 class="font-bold text-base award-title">{{award.title}}</h3>
+          <p class="text-sm text-slate-600 mb-1"><span class="award-issuer">{{award.issuer}}</span> · 
+          <span class="award-date">{{award.date}}</span></p>
+          <p class="text-sm text-gray-700 award-description">{{award.description}}</p>
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section id="section-achievements" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Key Achievements</h2>
+        <div id="achievements-list"></div>
+        <div class="achievement-item item-template mb-4" data-template="achievements">
+          <h3 class="font-bold text-base achievement-title">{{achievement.title}}</h3>
+          <p class="text-xs text-gray-500 achievement-date">{{achievement.date}}</p>
+          <p class="text-sm text-gray-700 mt-1 achievement-description">{{achievement.description}}</p>
+        </div>
+      </section>
+
+      <!-- Publications -->
+      <section id="section-publications" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Publications</h2>
+        <div id="publications-list"></div>
+        <div class="publication-item item-template mb-4" data-template="publications">
+          <h3 class="font-bold text-base pub-title">{{publication.title}}</h3>
+          <p class="text-sm text-slate-600 mb-1"><span class="pub-publisher">{{publication.publisher}}</span> · 
+          <span class="pub-date">{{publication.date}}</span></p>
+          <p class="text-sm text-gray-700 pub-description">{{publication.description}}</p>
+        </div>
+      </section>
+
+      <!-- Volunteer Experience -->
+      <section id="section-volunteer" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Volunteer Experience</h2>
+        <div id="volunteer-list"></div>
+        <div class="volunteer-item item-template mb-5" data-template="volunteer">
+          <h3 class="font-bold text-base vol-role">{{volunteer.role}}</h3>
+          <p class="text-sm text-slate-600 vol-organization mb-1">{{volunteer.organization}}</p>
+          <p class="text-xs text-gray-500 mb-2"><span class="vol-start-date">{{volunteer.startDate}}</span> - 
+          <span class="vol-end-date">{{volunteer.endDate}}</span></p>
+          <p class="text-sm text-gray-700 vol-description">{{volunteer.description}}</p>
+        </div>
+      </section>
+
+      <!-- Interests & Hobbies -->
+      <section id="section-interests" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">Interests & Hobbies</h2>
+        <div id="interests-list" class="flex flex-wrap gap-2"></div>
+        <div class="interest-item item-template" data-template="interests">
+          <span class="text-sm font-semibold interest-name">{{interest.name}}</span>,
+        </div>
+      </section>
+
+      <!-- References -->
+      <section id="section-references" class="mb-6" style="display: none;">
+        <h2 class="text-xl font-bold text-slate-800 mb-4">References</h2>
+        <div id="references-list"></div>
+        <div class="reference-item item-template mb-4" data-template="references">
+          <h3 class="font-bold text-base ref-name">{{reference.name}}</h3>
+          <p class="text-sm text-slate-600 ref-job-title">{{reference.jobTitle}}</p>
+          <p class="text-sm text-slate-600 ref-company">{{reference.company}}</p>
+          <p class="text-sm text-gray-700 mt-1">
+            <span class="ref-email">{{reference.email}}</span> · 
+            <span class="ref-phone">{{reference.phone}}</span>
+          </p>
         </div>
       </section>
     </main>
@@ -291,6 +493,116 @@ export const RESUMES = [
         <div id="skills-list" class="flex flex-wrap gap-2"></div>
         <div class="skill-item item-template" data-template="skills">
           <span class="skill-name bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">{{skills.name}}</span>
+        </div>
+        </div>
+      </section>
+
+      <!-- Languages -->
+      <section id="section-languages" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Languages
+        </h2>
+        <div id="languages-list" class="space-y-2"></div>
+        <div class="language-item item-template" data-template="languages">
+          <p class="text-base"><span class="font-semibold lang-name">{{language.language}}</span>: 
+          <span class="lang-proficiency text-gray-700">{{language.proficiency}}</span></p>
+        </div>
+      </section>
+
+      <!-- Certifications -->
+      <section id="section-certifications" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Certifications
+        </h2>
+        <div id="certifications-list"></div>
+        <div class="certification-item item-template mb-4" data-template="certifications">
+          <h3 class="font-bold text-lg cert-name">{{certification.name}}</h3>
+          <p class="text-sm text-gray-600"><span class="cert-issuer">{{certification.issuer}}</span> · 
+          <span class="cert-date">{{certification.date}}</span></p>
+        </div>
+      </section>
+
+      <!-- Awards & Honors -->
+      <section id="section-awards" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Awards & Honors
+        </h2>
+        <div id="awards-list"></div>
+        <div class="award-item item-template mb-4" data-template="awards">
+          <h3 class="font-bold text-lg award-title">{{award.title}}</h3>
+          <p class="text-sm text-gray-600"><span class="award-issuer">{{award.issuer}}</span> · 
+          <span class="award-date">{{award.date}}</span></p>
+          <p class="text-base text-gray-700 mt-1 award-description">{{award.description}}</p>
+        </div>
+      </section>
+
+      <!-- Achievements -->
+      <section id="section-achievements" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Key Achievements
+        </h2>
+        <div id="achievements-list"></div>
+        <div class="achievement-item item-template mb-4" data-template="achievements">
+          <h3 class="font-bold text-lg achievement-title">{{achievement.title}}</h3>
+          <p class="text-sm text-gray-600 achievement-date">{{achievement.date}}</p>
+          <p class="text-base text-gray-700 mt-1 achievement-description">{{achievement.description}}</p>
+        </div>
+      </section>
+
+      <!-- Publications -->
+      <section id="section-publications" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Publications
+        </h2>
+        <div id="publications-list"></div>
+        <div class="publication-item item-template mb-4" data-template="publications">
+          <h3 class="font-bold text-lg pub-title">{{publication.title}}</h3>
+          <p class="text-sm text-gray-600"><span class="pub-publisher">{{publication.publisher}}</span> · 
+          <span class="pub-date">{{publication.date}}</span></p>
+          <p class="text-base text-gray-700 mt-1 pub-description">{{publication.description}}</p>
+        </div>
+      </section>
+
+      <!-- Volunteer Experience -->
+      <section id="section-volunteer" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Volunteer Experience
+        </h2>
+        <div id="volunteer-list"></div>
+        <div class="volunteer-item item-template mb-6" data-template="volunteer">
+          <h3 class="font-bold text-xl vol-role">{{volunteer.role}}</h3>
+          <p class="text-base text-gray-700 vol-organization mb-1">{{volunteer.organization}}</p>
+          <p class="text-sm text-gray-500 mb-2"><span class="vol-start-date">{{volunteer.startDate}}</span> - 
+          <span class="vol-end-date">{{volunteer.endDate}}</span></p>
+          <p class="text-base text-gray-700 vol-description">{{volunteer.description}}</p>
+        </div>
+      </section>
+
+      <!-- Interests & Hobbies -->
+      <section id="section-interests" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Interests & Hobbies
+        </h2>
+        <div id="interests-list" class="flex flex-wrap gap-2"></div>
+        <div class="interest-item item-template" data-template="interests">
+          <span class="interest-name bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">{{interest.name}}</span>,
+        </div>
+      </section>
+
+      <!-- References -->
+      <section id="section-references" class="mb-8" style="display: none;">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
+          <span class="w-1 h-8 bg-blue-600 mr-3"></span>References
+        </h2>
+        <div id="references-list"></div>
+        <div class="reference-item item-template mb-4" data-template="references">
+          <h3 class="font-bold text-lg ref-name">{{reference.name}}</h3>
+          <p class="text-base text-gray-700 ref-job-title">{{reference.jobTitle}}</p>
+          <p class="text-base text-gray-700 ref-company">{{reference.company}}</p>
+          <p class="text-base text-gray-700 mt-1">
+            <span class="ref-email">{{reference.email}}</span> · 
+            <span class="ref-phone">{{reference.phone}}</span>
+          </p>
         </div>
       </section>
     </div>
