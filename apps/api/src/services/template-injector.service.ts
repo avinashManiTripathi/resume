@@ -86,12 +86,15 @@ export class TemplateInjectorService {
         }
 
         // Handle summary
-        if (personalInfo.summary && personalInfo.summary.trim()) {
+        const summarySection = document.getElementById('section-summary');
+        if (personalInfo.summary && personalInfo.summary.trim() && personalInfo.summary.trim() !== '<br>') {
             const summaryText = document.getElementById('summary-text');
-            if (summaryText) summaryText.innerHTML = personalInfo.summary;
+            if (summaryText) summaryText.textContent = personalInfo.summary;
 
-            const summarySection = document.getElementById('section-summary');
             if (summarySection) summarySection.style.display = 'block';
+        } else {
+            // Explicitly hide summary section if empty
+            if (summarySection) summarySection.style.display = 'none';
         }
     }
 

@@ -4,185 +4,317 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>John Doe - Resume</title>
+    <title>{{firstName}} {{lastName}} - Resume</title>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind (optional – safe to keep) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            color: #1f2937;
+            background: #ffffff;
+        }
+
         @media print {
             body {
                 margin: 0;
-                padding: 0;
             }
         }
 
         .item-template {
             display: none;
         }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        header img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        h3 {
+            margin: 4px 0;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        section {
+            display: block !important;
+            width: 100%;
+        }
+
+        section h2 {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin: 6px 0 0 18px;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .text-muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body>
+    <main id="resume-root">
 
-    <main id="resume-root" class="max-w-5xl mx-auto bg-white p-10 grid grid-cols-3 gap-x-10">
+        <!-- Header -->
+        <header id="section-personalInfo" class="flex item-center text-center justify-center">
+            <div>
+                <h1 id="full-name" class="text-3xl  font-bold">{{firstName}} {{lastName}}</h1>
+                <h3 id="job-title">{{jobTitle}}</h3>
 
-        <!-- LEFT COLUMN -->
-        <section class="col-span-2">
+                <p class="text-muted">
 
-            <!-- HEADER -->
-            <header id="section-personalInfo" class="mb-8">
-                <h1 id="full-name" class="text-4xl font-serif font-bold text-red-700 mb-1">
-                    John Doe
-                </h1>
-                <p class="text-sm text-gray-700">
-                    <span id="email">john.doe@email.com</span> ·
-                    <span id="phone">+91 6393177038</span>
+                    <span id="address">Seoul, South Korea</span> ·
+                    <span id="email">{{email}}</span> ·
+                    <span id="phone">{{phone}}</span>
+                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
+                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
+
                 </p>
-            </header>
+            </div>
+        </header>
 
-            <!-- SUMMARY -->
-            <section id="section-summary" class="mb-8">
-                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-3">
-                    Professional Summary
-                </h2>
-                <p id="summary-text" class="text-sm text-gray-800 leading-relaxed">
-                    Experienced software engineer with 6+ years of expertise in building scalable web applications,
-                    leading cross-functional teams, and delivering high-quality products using modern technologies.
-                </p>
-            </section>
-
-            <!-- EXPERIENCE -->
-            <section id="section-experience" class="mb-8">
-                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
-                    Professional Experience
-                </h2>
-
-                <div id="experience-list"></div>
-
-                <div class="experience-item mt-5">
-                    <h3 class="font-bold text-sm">
-                        <span class="exp-company">Tech Solutions Inc.</span>,
-                        <span class="exp-job-title">Senior Software Engineer</span>
-                    </h3>
-                    <p class="text-xs text-gray-600 mb-2">
-                        <span class="exp-start-date">Jan 2021</span> –
-                        <span class="exp-end-date">Present</span>
-                    </p>
-                    <div class="exp-description text-sm text-gray-800 leading-relaxed">
-                        Led development of enterprise web applications, optimized system performance by 30%,
-                        mentored junior developers, and collaborated with product teams to deliver new features.
-                    </div>
-                </div>
-
-                <div class="experience-item mt-5">
-                    <h3 class="font-bold text-sm">
-                        <span class="exp-company">Digital Labs</span>,
-                        <span class="exp-job-title">Software Engineer</span>
-                    </h3>
-                    <p class="text-xs text-gray-600 mb-2">
-                        <span class="exp-start-date">Jun 2018</span> –
-                        <span class="exp-end-date">Dec 2020</span>
-                    </p>
-                    <div class="exp-description text-sm text-gray-800 leading-relaxed">
-                        Developed REST APIs, implemented responsive UI components, and improved code quality
-                        through testing and peer reviews.
-                    </div>
-                </div>
-            </section>
-
-            <!-- PROJECTS -->
-            <section id="section-projects" class="mb-8">
-                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
-                    Projects
-                </h2>
-
-                <div id="projects-list"></div>
-
-                <div class="project-item mt-4">
-                    <h3 class="font-bold text-sm proj-name">
-                        Resume Builder Platform
-                    </h3>
-                    <p class="text-xs text-gray-600 mb-2">
-                        <span class="proj-start-date">Mar 2023</span> –
-                        <span class="proj-end-date">Aug 2023</span>
-                    </p>
-                    <div class="proj-description text-sm text-gray-800 leading-relaxed">
-                        Built a dynamic resume builder with multiple templates, real-time preview,
-                        and PDF export using modern frontend technologies.
-                    </div>
-                </div>
-
-                <div class="project-item mt-4">
-                    <h3 class="font-bold text-sm proj-name">
-                        E-Commerce Dashboard
-                    </h3>
-                    <p class="text-xs text-gray-600 mb-2">
-                        <span class="proj-start-date">Jan 2022</span> –
-                        <span class="proj-end-date">May 2022</span>
-                    </p>
-                    <div class="proj-description text-sm text-gray-800 leading-relaxed">
-                        Designed and developed an admin dashboard with analytics, order management,
-                        and role-based access control.
-                    </div>
-                </div>
-            </section>
-
-            <!-- EDUCATION -->
-            <section id="section-education" class="mb-8">
-                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
-                    Education
-                </h2>
-
-                <div id="education-list"></div>
-
-                <div class="education-item mt-4">
-                    <p class="font-bold text-sm edu-degree">
-                        Bachelor of Technology in Computer Science
-                    </p>
-                    <p class="text-sm text-gray-700">
-                        <span class="edu-institution">University of California, Berkeley</span> —
-                        <span class="edu-end-date">2018</span>
-                    </p>
-                </div>
-            </section>
-
+        <!-- Summary -->
+        <section id="section-summary" style="display:none;">
+            <h2>Professional Summary</h2>
+            <p id="summary-text">{{summary}}</p>
         </section>
 
-        <!-- RIGHT COLUMN -->
-        <aside class="col-span-1">
+        <!-- Experience -->
+        <section id="section-experience" style="display:none;">
+            <h2>Professional Experience</h2>
+            <div id="experience-list" class="flex flex-col gap-4"></div>
 
-            <!-- PROFILE IMAGE -->
-            <div class="mb-8 flex justify-center">
-                <img id="profile-image"
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60"
-                    alt="Profile" class="w-32 h-32 object-cover border" />
+            <div class="experience-item item-template" data-template="experience">
+                <h3 class="font-bold">
+                    <span class="exp-company">{{experience.company}}</span>,
+                    <span class="exp-job-title">{{experience.jobTitle}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="exp-start-date">{{experience.startDate}}</span> –
+                    <span class="exp-end-date">{{experience.endDate}}</span>
+                </p>
+                <div class="exp-description"></div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="section-projects" style="display:none;">
+            <h2>Projects</h2>
+            <div id="projects-list" class="flex flex-col gap-4"></div>
+
+            <div class="project-item item-template" data-template="projects">
+                <h3 class="proj-name font-bold">{{projects.name}}</h3>
+                <p class="text-muted">
+                    <span class="proj-start-date">{{projects.startDate}}</span> –
+                    <span class="proj-end-date">{{projects.endDate}}</span>
+                </p>
+                <ul class="proj-description"></ul>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section id="section-education" style="display:none;">
+            <h2>Education</h2>
+            <div id="education-list" class="flex flex-col gap-4 "></div>
+
+            <div class="education-item item-template" data-template="education">
+                <p class="font-bold edu-degree">{{education.degree}}</p>
+                <p class="text-muted">
+                    <span class="edu-institution">{{education.institution}}</span> —
+                    <span class="edu-end-date">{{education.endDate}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="section-skills" style="display:none;">
+            <h2>Skills</h2>
+            <div id="skills-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']">
             </div>
 
-            <!-- SKILLS -->
-            <section id="section-skills">
-                <h2 class="text-lg font-serif font-bold border-b border-gray-300 pb-1 mb-4">
-                    Skills
-                </h2>
+            <div class="skill-item item-template" data-template="skills">
+                <span class="skill-name">{{skills.name}}</span>
+            </div>
+        </section>
 
-                <div id="skills-list" class="space-y-2 text-sm"></div>
+        <!-- Languages -->
+        <section id="section-languages" style="display:none;">
+            <h2>Languages</h2>
+            <div id="languages-list" class="flex flex-col gap-4 "></div>
 
-                <div class="skill-item">
-                    <p><span class="font-bold skill-name">JavaScript</span>: <span class="skill-level">Advanced</span>
-                    </p>
-                    <p><span class="font-bold skill-name">React</span>: <span class="skill-level">Advanced</span></p>
-                    <p><span class="font-bold skill-name">Node.js</span>: <span class="skill-level">Intermediate</span>
-                    </p>
-                    <p><span class="font-bold skill-name">Tailwind CSS</span>: <span class="skill-level">Advanced</span>
-                    </p>
-                    <p><span class="font-bold skill-name">SQL</span>: <span class="skill-level">Intermediate</span></p>
-                </div>
-            </section>
+            <div class="language-item item-template" data-template="languages">
+                <p>
+                    <strong class="lang-name font-bold">{{language.language}}</strong> —
+                    <span class="lang-proficiency">{{language.proficiency}}</span>
+                </p>
+            </div>
+        </section>
 
-        </aside>
+        <!-- Certifications -->
+        <section id="section-certifications" style="display:none;">
+            <h2>Certifications</h2>
+            <div id="certifications-list" class="flex flex-col gap-4 "></div>
+
+            <div class="certification-item item-template" data-template="certifications">
+                <h3 class="cert-name font-bold">{{certification.name}}</h3>
+                <p class="text-muted">
+                    <span class="cert-issuer">{{certification.issuer}}</span> ·
+                    <span class="cert-date">{{certification.date}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Awards -->
+        <section id="section-awards" style="display:none;">
+            <h2>Awards & Honors</h2>
+            <div id="awards-list"></div>
+
+            <div class="award-item item-template" data-template="awards">
+                <h3 class="award-title font-bold">{{award.title}}</h3>
+                <p class="text-muted">
+                    <span class="award-issuer">{{award.issuer}}</span> ·
+                    <span class="award-date">{{award.date}}</span>
+                </p>
+                <p class="award-description">{{award.description}}</p>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="section-achievements" style="display:none;">
+            <h2>Key Achievements</h2>
+            <div id="achievements-list" class="flex flex-col gap-4 "></div>
+
+            <div class="achievement-item item-template" data-template="achievements">
+                <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
+                <p class="text-muted achievement-date">{{achievement.date}}</p>
+                <p class="achievement-description">{{achievement.description}}</p>
+            </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="section-publications" style="display:none;">
+            <h2>Publications</h2>
+            <div id="publications-list" class="flex flex-col gap-4"></div>
+
+            <div class="publication-item item-template" data-template="publications">
+                <h3 class="pub-title font-bold">{{publication.title}}</h3>
+                <p class="text-muted">
+                    <span class="pub-publisher">{{publication.publisher}}</span> ·
+                    <span class="pub-date">{{publication.date}}</span>
+                </p>
+                <p class="pub-description">{{publication.description}}</p>
+            </div>
+        </section>
+
+        <!-- Volunteer -->
+        <section id="section-volunteer" style="display:none;">
+            <h2>Volunteer Experience</h2>
+            <div id="volunteer-list" class="flex flex-col gap-4"></div>
+
+            <div class="volunteer-item item-template" data-template="volunteer">
+                <h3 class="font-bold">
+                    <span class="vol-organization">{{volunteer.organization}}</span>,
+                    <span class="vol-role">{{volunteer.role}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                    <span class="vol-end-date">{{volunteer.endDate}}</span>
+                </p>
+                <p class="vol-description">{{volunteer.description}}</p>
+            </div>
+        </section>
+
+        <!-- Interests -->
+        <section id="section-interests" style="display:none;">
+            <h2>Interests & Hobbies</h2>
+            <div id="interests-list"
+                class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
+            <div class="interest-item item-template" data-template="interests">
+                <span class="interest-name">{{interest.name}}</span>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="section-references" style="display:none;">
+            <h2>References</h2>
+            <div id="references-list" class="flex flex-col gap-4"></div>
+
+            <div class="reference-item item-template" data-template="references">
+                <h3 class="ref-name font-bold">{{reference.name}}</h3>
+                <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
+                <p class="text-muted ref-company">{{reference.company}}</p>
+                <p class="text-muted">
+                    <span class="ref-email">{{reference.email}}</span> ·
+                    <span class="ref-phone">{{reference.phone}}</span>
+                </p>
+            </div>
+        </section>
 
     </main>
-
 </body>
 
 </html>

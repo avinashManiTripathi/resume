@@ -14,56 +14,8 @@ import ShareModal from "../ShareModal";
 import SmartImportModal from "../SmartImportModal";
 import { CloudCheck } from "lucide-react";
 
-const initialResume = {
-
-  "personalInfo": {
-    "firstName": "Avinash Mani",
-    "lastName": "Tripathi",
-    "jobTitle": "Senior Product Designer",
-    "summary": "Product designer with 3+ years of experience in tech industry",
-    "email": "olivia@untitledui.com",
-    "phone": "+91-7823232322",
-    "linkedin": "",
-    "github": ""
-  },
-  "experience": [
-    {
-      "jobTitle": "Product Designer",
-      "company": "Agworks",
-      "startDate": "2021-01",
-      "endDate": ""
-    }
-  ],
-  "education": [
-    {
-      "degree": "Bachelor of Technology",
-      "institution": "University of California",
-      "startDate": "2015-08",
-      "endDate": "2019-05"
-    }
-  ],
-  "skills": [
-    { "name": "JavaScript", "level": "Expert" },
-    { "name": "React", "level": "Advanced" }
-  ]
-};
 
 const dummyData = {
-  "templateId": "692bcfd239561eef09d89aa9",
-  "sectionLabels": {
-    "personalInfo": "Personal Info",
-    "experience": "Employment History",
-    "education": "Education",
-    "projects": "Projects",
-    "skills": "Skills",
-    "languages": "Languages",
-    "achievements": "Achievements",
-    "interests": "Interests & Hobbies",
-    "awards": "Awards & Honors",
-    "certifications": "Certifications",
-    "publications": "Publications",
-    "references": "References"
-  },
   "personalInfo": {
     "firstName": "John",
     "lastName": "Doe",
@@ -670,9 +622,9 @@ function ResumeEditor() {
   const defaultTemplateId = "692bcfd239561eef09d89aa9";
 
   // Undo/Redo history
-  const [history, setHistory] = useState<any[]>([initialResume]);
+  const [history, setHistory] = useState<any[]>([dummyData]);
   const [historyIndex, setHistoryIndex] = useState(0);
-  const [resume, setResume] = useState(initialResume);
+  const [resume, setResume] = useState(dummyData);
 
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
@@ -1002,49 +954,6 @@ function ResumeEditor() {
     }
   };
 
-
-  const fillDummyData = () => {
-    const newData = JSON.parse(JSON.stringify(dummyData));
-
-    // Only build order if it doesn't already exist in dummyData
-    if (!newData.order || newData.order.length === 0) {
-      // Ensure order array includes ALL sections with data
-      const allSections: string[] = [];
-
-      // Add standard sections
-      if (newData.personalInfo) allSections.push('personalInfo');
-      if (newData.experience?.length) allSections.push('experience');
-      if (newData.education?.length) allSections.push('education');
-      if (newData.projects?.length) allSections.push('projects');
-      if (newData.skills?.length) allSections.push('skills');
-
-      // Add custom sections that have data
-      if (newData.customSections) {
-        newData.customSections.forEach((cs: any) => {
-          if (cs.items?.length) {
-            allSections.push(cs.id);
-          }
-        });
-      }
-
-      // Set the complete order
-      newData.order = allSections;
-    }
-
-    setResume(newData);
-    addToHistory(newData);
-  };
-
-
-  useEffect(() => {
-    // Small delay to ensure container is visible and has dimensions
-    setTimeout(() => {
-      fillDummyData()
-    }, 10000);
-
-  }, [showMobilePreview]);
-
-
   // Auto-populate form schema with custom sections when data exists
   useEffect(() => {
     if (!resume) return;
@@ -1140,7 +1049,16 @@ function ResumeEditor() {
       viewport,
     });
 
-    await renderTaskRef.current.promise;
+    try {
+      await renderTaskRef.current.promise;
+    } catch (error: any) {
+      // Ignore cancellation errors - they're expected when we cancel old renders
+      if (error.name === 'RenderingCancelledException') {
+        return;
+      }
+      throw error; // Re-throw other errors
+    }
+
     if (requestId !== requestIdRef.current) return;
 
     const canvas = canvasRef.current!;
@@ -1241,16 +1159,11 @@ function ResumeEditor() {
     const url = new URL(window.location.href);
     url.searchParams.set('templateId', templateId);
     window.history.replaceState({}, '', url.toString());
+
+    // Re-render PDF with new template
+    renderPdf();
   }, [templateId]);
 
-
-  useEffect(() => {
-    // Small delay to ensure container is visible and has dimensions
-    setTimeout(() => {
-      fillDummyData()
-    }, 10000);
-
-  }, [showMobilePreview]);
 
 
 

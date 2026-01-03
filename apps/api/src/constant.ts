@@ -5,207 +5,320 @@ export const RESUMES = [
     image: "https://s3.resume.io/cdn-cgi/image/width=852,format=auto/uploads/local_template_image/image/428/persistent-resource/paris-resume-templates.jpg?v=1656071272",
     html: `<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{firstName}} {{lastName}} - Resume</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @media print { body { margin: 0; padding: 0; } }
-    .item-template { display: none; }
-    section { display: block !important; }
-    #resume-root > section { display: block !important; width: 100%; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{firstName}} {{lastName}} - Resume</title>
+
+    <!-- Tailwind (optional – safe to keep) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            color: #1f2937;
+            background: #ffffff;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+        }
+
+        .item-template {
+            display: none;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        header img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        h3 {
+            margin: 4px 0;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        section {
+            width: 100%;
+        }
+
+        section h2 {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin: 6px 0 0 18px;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .text-muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-  <main id="resume-root" class="max-w-4xl mx-auto bg-white p-8 flex flex-col gap-4">
+    <main id="resume-root">
+        <!-- Header -->
+        <header id="section-personalInfo">
+          <img id="profile-image" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60" alt="Profile" class="w-24 h-24 rounded-full object-cover border" />
+            <div>
+                <h1 id="full-name" class="text-3xl  font-bold">{{firstName}} {{lastName}}</h1>
+                <h3 id="job-title">{{jobTitle}}</h3>
 
-    <!-- Header -->
-    <header id="section-personalInfo" class="flex items-center gap-6 mb-6">
-      <img id="profile-image" src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60"
-           alt="Profile" class="w-24 h-24 rounded-full object-cover border" />
+                <p class="text-muted">
+                
+                    <span id="address">Seoul, South Korea</span> ·
+                    <span id="email">{{email}}</span> ·
+                    <span id="phone">{{phone}}</span>
+                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
+                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
 
-      <div>
-        <h1 id="full-name" class="text-3xl font-serif font-bold">{{firstName}} {{lastName}}</h1>
-          <h3 id="job-title" class="text-xl font-bold  font-serif  text-gray-700">{{jobTitle}}</h3>
-          <p class="text-sm text-gray-700 mt-1">
-          <span id="email">{{email}}</span> |
-          <span id="phone">{{phone}}</span>
-        </p>
-        <p class="text-sm text-blue-600 mt-1">
-          <a id="linkedin-link" href="#" target="_blank" class="hover:underline mr-2" style="display: none;">LinkedIn</a>
-          <a id="github-link" href="#" target="_blank" class="hover:underline" style="display: none;">GitHub</a>
-        </p>
-      </div>
-    </header>
+                </p>
+            </div>
+        </header>
 
-    <!-- Summary -->
-    <section id="section-summary" class=" bg-black-600 block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Summary</h2>
-      <p id="summary-text" class="text-sm text-gray-800 mt-3 leading-relaxed">{{summary}}</p>
-    </section>
+        <!-- Summary -->
+        <section id="section-summary" style="display:none;">
+            <h2>Professional Summary</h2>
+            <p id="summary-text">{{summary}}</p>
+        </section>
 
-    <!-- Experience -->
-    <section id="section-experience" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Professional Experience</h2>
-      <div id="experience-list"></div>
-      <div class="experience-item item-template mt-4" data-template="experience">
-        <h3 class="font-bold text-sm">
-          <span class="exp-company">{{experience.company}}</span>, <span class="exp-job-title">{{experience.jobTitle}}</span>
-        </h3>
-        <p class="text-xs text-gray-600 mb-2">
-          <span class="exp-start-date">{{experience.startDate}}</span> – <span class="exp-end-date">{{experience.endDate}}</span>
-        </p>
-        <ul class="exp-description text-sm text-gray-800 list-disc ml-5"></ul>
-      </div>
-    </section>
+        <!-- Experience -->
+        <section id="section-experience" style="display:none;">
+            <h2>Professional Experience</h2>
+           <div id="experience-list" class="flex flex-col gap-4"></div>
 
-    <!-- Projects -->
-    <section id="section-projects" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Projects</h2>
-      <div id="projects-list"></div>
-      <div class="project-item item-template mt-3" data-template="projects">
-        <h3 class="font-bold text-sm proj-name">{{projects.name}}</h3>
-        <p class="text-xs text-gray-600 mb-2">
-          <span class="proj-start-date">{{projects.startDate}}</span> – <span class="proj-end-date">{{projects.endDate}}</span>
-        </p>
-        <ul class="proj-description text-sm text-gray-800 list-disc ml-5"></ul>
-      </div>
-    </section>
+            <div class="experience-item item-template" data-template="experience">
+                <h3 class="font-bold">
+                    <span class="exp-company">{{experience.company}}</span>,
+                    <span class="exp-job-title">{{experience.jobTitle}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="exp-start-date">{{experience.startDate}}</span> –
+                    <span class="exp-end-date">{{experience.endDate}}</span>
+                </p>
+                <div class="exp-description"></div>
+            </div>
+        </section>
 
-    <!-- Education -->
-    <section id="section-education" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Education</h2>
-      <div id="education-list"></div>
-      <div class="education-item item-template mt-3" data-template="education">
-        <div class="text-sm">
-          <p class="font-bold edu-degree">{{education.degree}}</p>
-          <p class="text-gray-700">
-            <span class="edu-institution">{{education.institution}}</span> — <span class="edu-end-date">{{education.endDate}}</span>
-          </p>
-        </div>
-      </div>
-    </section>
+        <!-- Projects -->
+        <section id="section-projects" style="display:none;">
+            <h2>Projects</h2>
+            <div id="projects-list" class="flex flex-col gap-4"></div>
 
-    <!-- Skills -->
-    <section id="section-skills" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Skills</h2>
-      <div id="skills-list" class="mt-3 text-sm flex flex-wrap gap-2"></div>
-      <div class="skill-item item-template" data-template="skills">
-        <p><span class="font-semibold skill-name">{{skills.name}}</span>,</p>
-      </div>
-    </section>
+            <div class="project-item item-template" data-template="projects">
+                <h3 class="proj-name font-bold">{{projects.name}}</h3>
+                <p class="text-muted">
+                    <span class="proj-start-date">{{projects.startDate}}</span> –
+                    <span class="proj-end-date">{{projects.endDate}}</span>
+                </p>
+                <ul class="proj-description"></ul>
+            </div>
+        </section>
 
-    <!-- Languages -->
-    <section id="section-languages" class="bg-blue-600 block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Languages</h2>
-      <div id="languages-list"></div>
-      <div class="language-item item-template mt-2" data-template="languages">
-        <p class="text-sm">
-          <span class="font-semibold lang-name">{{language.language}}</span>: 
-          <span class="lang-proficiency text-gray-700">{{language.proficiency}}</span>
-        </p>
-      </div>
-    </section>
+        <!-- Education -->
+        <section id="section-education" style="display:none;">
+            <h2>Education</h2>
+            <div id="education-list" class="flex flex-col gap-4 "></div>
 
-    <!-- Certifications -->
-    <section id="section-certifications" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Certifications</h2>
-      <div id="certifications-list"></div>
-      <div class="certification-item item-template mt-3" data-template="certifications">
-        <h3 class="font-bold text-sm cert-name">{{certification.name}}</h3>
-        <p class="text-xs text-gray-600">
-          <span class="cert-issuer">{{certification.issuer}}</span> · 
-          <span class="cert-date">{{certification.date}}</span>
-        </p>
-        <p class="text-xs text-gray-600 cert-credential-id" style="display: none;">
-          Credential ID: {{certification.credentialId}}
-        </p>
-      </div>
-    </section>
+            <div class="education-item item-template" data-template="education">
+                <p class="font-bold edu-degree">{{education.degree}}</p>
+                <p class="text-muted">
+                    <span class="edu-institution">{{education.institution}}</span> —
+                    <span class="edu-end-date">{{education.endDate}}</span>
+                </p>
+            </div>
+        </section>
 
-    <!-- Awards & Honors -->
-    <section id="section-awards" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Awards & Honors</h2>
-      <div id="awards-list"></div>
-      <div class="award-item item-template mt-3" data-template="awards">
-        <h3 class="font-bold text-sm award-title">{{award.title}}</h3>
-        <p class="text-xs text-gray-600">
-          <span class="award-issuer">{{award.issuer}}</span> · 
-          <span class="award-date">{{award.date}}</span>
-        </p>
-        <p class="text-sm text-gray-800 mt-1 award-description">{{award.description}}</p>
-      </div>
-    </section>
+        <!-- Skills -->
+        <section id="section-skills" style="display:none;">
+            <h2>Skills</h2>
+            <div id="skills-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
 
-    <!-- Achievements -->
-    <section id="section-achievements" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Key Achievements</h2>
-      <div id="achievements-list"></div>
-      <div class="achievement-item item-template mt-3" data-template="achievements">
-        <h3 class="font-bold text-sm achievement-title">{{achievement.title}}</h3>
-        <p class="text-xs text-gray-600 achievement-date">{{achievement.date}}</p>
-        <p class="text-sm text-gray-800 mt-1 achievement-description">{{achievement.description}}</p>
-      </div>
-    </section>
+            <div class="skill-item item-template" data-template="skills">
+                <span class="skill-name">{{skills.name}}</span>
+            </div>
+        </section>
 
-    <!-- Publications -->
-    <section id="section-publications" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Publications</h2>
-      <div id="publications-list"></div>
-      <div class="publication-item item-template mt-3" data-template="publications">
-        <h3 class="font-bold text-sm pub-title">{{publication.title}}</h3>
-        <p class="text-xs text-gray-600">
-          <span class="pub-publisher">{{publication.publisher}}</span> · 
-          <span class="pub-date">{{publication.date}}</span>
-        </p>
-        <p class="text-sm text-gray-800 mt-1 pub-description">{{publication.description}}</p>
-      </div>
-    </section>
+        <!-- Languages -->
+        <section id="section-languages" style="display:none;">
+            <h2>Languages</h2>
+            <div id="languages-list" class="flex flex-col gap-4 "></div>
 
-    <!-- Volunteer Experience -->
-    <section id="section-volunteer" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Volunteer Experience</h2>
-      <div id="volunteer-list"></div>
-      <div class="volunteer-item item-template mt-4" data-template="volunteer">
-        <h3 class="font-bold text-sm">
-          <span class="vol-organization">{{volunteer.organization}}</span>, 
-          <span class="vol-role">{{volunteer.role}}</span>
-        </h3>
-        <p class="text-xs text-gray-600 mb-2">
-          <span class="vol-start-date">{{volunteer.startDate}}</span> – 
-          <span class="vol-end-date">{{volunteer.endDate}}</span>
-        </p>
-        <p class="text-sm text-gray-800 vol-description">{{volunteer.description}}</p>
-      </div>
-    </section>
+            <div class="language-item item-template" data-template="languages">
+                <p>
+                    <strong class="lang-name font-bold">{{language.language}}</strong> —
+                    <span class="lang-proficiency">{{language.proficiency}}</span>
+                </p>
+            </div>
+        </section>
 
-    <!-- Interests & Hobbies -->
-    <section id="section-interests" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">Interests & Hobbies</h2>
-      <div id="interests-list" class="mt-3 text-sm flex flex-wrap gap-2"></div>
-      <div class="interest-item item-template" data-template="interests">
-        <p><span class="font-semibold interest-name">{{interest.name}}</span>,</p>
-      </div>
-    </section>
+        <!-- Certifications -->
+        <section id="section-certifications" style="display:none;">
+            <h2>Certifications</h2>
+            <div id="certifications-list" class="flex flex-col gap-4 "></div>
 
-    <!-- References -->
-    <section id="section-references" class="block w-full" style="display: none;">
-      <h2 class="text-lg font-serif font-bold border-b border-gray-400 pb-1">References</h2>
-      <div id="references-list"></div>
-      <div class="reference-item item-template mt-3" data-template="references">
-        <h3 class="font-bold text-sm ref-name">{{reference.name}}</h3>
-        <p class="text-xs text-gray-600 ref-job-title">{{reference.jobTitle}}</p>
-        <p class="text-xs text-gray-600 ref-company">{{reference.company}}</p>
-        <p class="text-xs text-gray-700 mt-1">
-          <span class="ref-email">{{reference.email}}</span> · 
-          <span class="ref-phone">{{reference.phone}}</span>
-        </p>
-      </div>
-    </section>
+            <div class="certification-item item-template" data-template="certifications">
+                <h3 class="cert-name font-bold">{{certification.name}}</h3>
+                <p class="text-muted">
+                    <span class="cert-issuer">{{certification.issuer}}</span> ·
+                    <span class="cert-date">{{certification.date}}</span>
+                </p>
+            </div>
+        </section>
 
-  </main>
+        <!-- Awards -->
+        <section id="section-awards" style="display:none;">
+            <h2>Awards & Honors</h2>
+            <div id="awards-list"></div>
+
+            <div class="award-item item-template" data-template="awards">
+                <h3 class="award-title font-bold">{{award.title}}</h3>
+                <p class="text-muted">
+                    <span class="award-issuer">{{award.issuer}}</span> ·
+                    <span class="award-date">{{award.date}}</span>
+                </p>
+                <p class="award-description">{{award.description}}</p>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="section-achievements" style="display:none;">
+            <h2>Key Achievements</h2>
+            <div id="achievements-list" class="flex flex-col gap-4 "></div>
+
+            <div class="achievement-item item-template" data-template="achievements">
+                <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
+                <p class="text-muted achievement-date">{{achievement.date}}</p>
+                <p class="achievement-description">{{achievement.description}}</p>
+            </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="section-publications" style="display:none;">
+            <h2>Publications</h2>
+            <div id="publications-list" class="flex flex-col gap-4"></div>
+
+            <div class="publication-item item-template" data-template="publications">
+                <h3 class="pub-title font-bold">{{publication.title}}</h3>
+                <p class="text-muted">
+                    <span class="pub-publisher">{{publication.publisher}}</span> ·
+                    <span class="pub-date">{{publication.date}}</span>
+                </p>
+                <p class="pub-description">{{publication.description}}</p>
+            </div>
+        </section>
+
+        <!-- Volunteer -->
+        <section id="section-volunteer" style="display:none;">
+            <h2>Volunteer Experience</h2>
+            <div id="volunteer-list" class="flex flex-col gap-4"></div>
+
+            <div class="volunteer-item item-template" data-template="volunteer">
+                <h3 class="font-bold">
+                    <span class="vol-organization">{{volunteer.organization}}</span>,
+                    <span class="vol-role">{{volunteer.role}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                    <span class="vol-end-date">{{volunteer.endDate}}</span>
+                </p>
+                <p class="vol-description">{{volunteer.description}}</p>
+            </div>
+        </section>
+
+        <!-- Interests -->
+        <section id="section-interests" style="display:none;">
+            <h2>Interests & Hobbies</h2>
+            <div id="interests-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
+            <div class="interest-item item-template" data-template="interests">
+                <span class="interest-name">{{interest.name}}</span>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="section-references" style="display:none;">
+            <h2>References</h2>
+            <div id="references-list" class="flex flex-col gap-4"></div>
+
+            <div class="reference-item item-template" data-template="references">
+                <h3 class="ref-name font-bold">{{reference.name}}</h3>
+                <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
+                <p class="text-muted ref-company">{{reference.company}}</p>
+                <p class="text-muted">
+                    <span class="ref-email">{{reference.email}}</span> ·
+                    <span class="ref-phone">{{reference.phone}}</span>
+                </p>
+            </div>
+        </section>
+
+    </main>
 </body>
+
 </html>`
   },
   {
@@ -214,183 +327,320 @@ export const RESUMES = [
     image: "https://resume.io/cdn-cgi/image/width=852,format=auto/assets/templates/entry_level-dfd898a364738f428ab7906c33df0be2ff4c669052645d197f6599cf76cc313b.jpg",
     html: `<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{firstName}} {{lastName}} - Resume</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @media print { body { margin: 0; padding: 0; } }
-    .item-template { display: none; }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{firstName}} {{lastName}} - Resume</title>
+
+    <!-- Tailwind (optional – safe to keep) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            color: #1f2937;
+            background: #ffffff;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+        }
+
+        .item-template {
+            display: none;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        header img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        h3 {
+            margin: 4px 0;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        section {
+            width: 100%;
+        }
+
+        section h2 {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin: 6px 0 0 18px;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .text-muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-  <div id="resume-root" class="max-w-5xl mx-auto bg-white flex">
-    
-    <!-- LEFT SIDEBAR (30%) -->
-    <aside class="w-1/3 bg-slate-800 text-white p-8">
-      <header id="section-personalInfo" class="mb-8">
-        <img id="profile-image" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&auto=format&fit=crop&q=60"
-             alt="Profile" class="w-32 h-32 object-cover rounded-full border-4 border-white mb-4 mx-auto" />
-        <h1 id="full-name" class="text-2xl font-bold text-center mb-2">{{firstName}} {{lastName}}</h1>
-        <div class="text-sm text-slate-300 space-y-1">
-          <p id="email" class="break-all">{{email}}</p>
-          <p id="phone">{{phone}}</p>
-        </div>
-      </header>
+    <main id="resume-root">
 
-      <!-- Skills in Sidebar -->
-      <section id="section-skills" class="mb-6" style="display: none;">
-        <h2 class="text-lg font-bold mb-3 border-b border-slate-600 pb-2">Skills</h2>
-        <div id="skills-list" class="space-y-2"></div>
-        <div class="skill-item item-template" data-template="skills">
-          <div class="mb-2">
-            <div class="skill-name text-sm font-medium">{{skills.name}}</div>
-            <div class="skill-level text-xs text-slate-400">{{skills.level}}</div>
-          </div>
-        </div>
-      </section>
+        <!-- Header -->
+        <header id="section-personalInfo">
+            <div>
+                <h1 id="full-name" class="text-3xl  font-bold">{{firstName}} {{lastName}}</h1>
+                <h3 id="job-title">{{jobTitle}}</h3>
 
-      <!-- Education in Sidebar -->
-      <section id="section-education" class="mb-6" style="display: none;">
-        <h2 class="text-lg font-bold mb-3 border-b border-slate-600 pb-2">Education</h2>
-        <div id="education-list"></div>
-        <div class="education-item item-template mb-4" data-template="education">
-          <p class="font-bold text-sm edu-degree">{{education.degree}}</p>
-          <p class="text-xs text-slate-300 edu-institution">{{education.institution}}</p>
-          <p class="text-xs text-slate-400 edu-end-date">{{education.endDate}}</p>
-        </div>
-      </section>
-    </aside>
+                <p class="text-muted">
+                
+                    <span id="address">Seoul, South Korea</span> ·
+                    <span id="email">{{email}}</span> ·
+                    <span id="phone">{{phone}}</span>
+                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
+                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
 
-    <!-- RIGHT CONTENT (70%) -->
-    <main class="w-2/3 p-8">
-      <section id="section-summary" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-3">About Me</h2>
-        <p id="summary-text" class="text-sm text-gray-700 leading-relaxed">{{summary}}</p>
-      </section>
+                </p>
+            </div>
+        </header>
 
-      <section id="section-experience" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Experience</h2>
-        <div id="experience-list"></div>
-        <div class="experience-item item-template mb-5" data-template="experience">
-          <h3 class="font-bold text-base exp-job-title">{{experience.jobTitle}}</h3>
-          <p class="text-sm text-slate-600 exp-company mb-1">{{experience.company}}</p>
-          <p class="text-xs text-gray-500 mb-2">
-            <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
-          </p>
-          <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
-        </div>
-      </section>
+        <!-- Summary -->
+        <section id="section-summary" style="display:none;">
+            <h2>Professional Summary</h2>
+            <p id="summary-text">{{summary}}</p>
+        </section>
 
-      <section id="section-projects" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Projects</h2>
-        <div id="projects-list"></div>
-        <div class="project-item item-template mb-4" data-template="projects">
-          <h3 class="font-bold text-base proj-name">{{projects.name}}</h3>
-          <p class="text-xs text-gray-500 mb-2">
-            <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
-          </p>
-          <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
-        </div>
-        </div>
-      </section>
+        <!-- Experience -->
+        <section id="section-experience" style="display:none;">
+            <h2>Professional Experience</h2>
+           <div id="experience-list" class="flex flex-col gap-4"></div>
 
-      <!-- Languages -->
-      <section id="section-languages" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Languages</h2>
-        <div id="languages-list"></div>
-        <div class="language-item item-template mb-2" data-template="languages">
-          <p class="text-sm"><span class="font-semibold lang-name">{{language.language}}</span>: 
-          <span class="lang-proficiency text-gray-600">{{language.proficiency}}</span></p>
-        </div>
-      </section>
+            <div class="experience-item item-template" data-template="experience">
+                <h3 class="font-bold">
+                    <span class="exp-company">{{experience.company}}</span>,
+                    <span class="exp-job-title">{{experience.jobTitle}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="exp-start-date">{{experience.startDate}}</span> –
+                    <span class="exp-end-date">{{experience.endDate}}</span>
+                </p>
+                <div class="exp-description"></div>
+            </div>
+        </section>
 
-      <!-- Certifications -->
-      <section id="section-certifications" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Certifications</h2>
-        <div id="certifications-list"></div>
-        <div class="certification-item item-template mb-4" data-template="certifications">
-          <h3 class="font-bold text-base cert-name">{{certification.name}}</h3>
-          <p class="text-sm text-slate-600 cert-issuer">{{certification.issuer}}</p>
-          <p class="text-xs text-gray-500 cert-date">{{certification.date}}</p>
-        </div>
-      </section>
+        <!-- Projects -->
+        <section id="section-projects" style="display:none;">
+            <h2>Projects</h2>
+            <div id="projects-list" class="flex flex-col gap-4"></div>
 
-      <!-- Awards & Honors -->
-      <section id="section-awards" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Awards & Honors</h2>
-        <div id="awards-list"></div>
-        <div class="award-item item-template mb-4" data-template="awards">
-          <h3 class="font-bold text-base award-title">{{award.title}}</h3>
-          <p class="text-sm text-slate-600 mb-1"><span class="award-issuer">{{award.issuer}}</span> · 
-          <span class="award-date">{{award.date}}</span></p>
-          <p class="text-sm text-gray-700 award-description">{{award.description}}</p>
-        </div>
-      </section>
+            <div class="project-item item-template" data-template="projects">
+                <h3 class="proj-name font-bold">{{projects.name}}</h3>
+                <p class="text-muted">
+                    <span class="proj-start-date">{{projects.startDate}}</span> –
+                    <span class="proj-end-date">{{projects.endDate}}</span>
+                </p>
+                <ul class="proj-description"></ul>
+            </div>
+        </section>
 
-      <!-- Achievements -->
-      <section id="section-achievements" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Key Achievements</h2>
-        <div id="achievements-list"></div>
-        <div class="achievement-item item-template mb-4" data-template="achievements">
-          <h3 class="font-bold text-base achievement-title">{{achievement.title}}</h3>
-          <p class="text-xs text-gray-500 achievement-date">{{achievement.date}}</p>
-          <p class="text-sm text-gray-700 mt-1 achievement-description">{{achievement.description}}</p>
-        </div>
-      </section>
+        <!-- Education -->
+        <section id="section-education" style="display:none;">
+            <h2>Education</h2>
+            <div id="education-list" class="flex flex-col gap-4 "></div>
 
-      <!-- Publications -->
-      <section id="section-publications" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Publications</h2>
-        <div id="publications-list"></div>
-        <div class="publication-item item-template mb-4" data-template="publications">
-          <h3 class="font-bold text-base pub-title">{{publication.title}}</h3>
-          <p class="text-sm text-slate-600 mb-1"><span class="pub-publisher">{{publication.publisher}}</span> · 
-          <span class="pub-date">{{publication.date}}</span></p>
-          <p class="text-sm text-gray-700 pub-description">{{publication.description}}</p>
-        </div>
-      </section>
+            <div class="education-item item-template" data-template="education">
+                <p class="font-bold edu-degree">{{education.degree}}</p>
+                <p class="text-muted">
+                    <span class="edu-institution">{{education.institution}}</span> —
+                    <span class="edu-end-date">{{education.endDate}}</span>
+                </p>
+            </div>
+        </section>
 
-      <!-- Volunteer Experience -->
-      <section id="section-volunteer" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Volunteer Experience</h2>
-        <div id="volunteer-list"></div>
-        <div class="volunteer-item item-template mb-5" data-template="volunteer">
-          <h3 class="font-bold text-base vol-role">{{volunteer.role}}</h3>
-          <p class="text-sm text-slate-600 vol-organization mb-1">{{volunteer.organization}}</p>
-          <p class="text-xs text-gray-500 mb-2"><span class="vol-start-date">{{volunteer.startDate}}</span> - 
-          <span class="vol-end-date">{{volunteer.endDate}}</span></p>
-          <p class="text-sm text-gray-700 vol-description">{{volunteer.description}}</p>
-        </div>
-      </section>
+        <!-- Skills -->
+        <section id="section-skills" style="display:none;">
+            <h2>Skills</h2>
+            <div id="skills-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
 
-      <!-- Interests & Hobbies -->
-      <section id="section-interests" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">Interests & Hobbies</h2>
-        <div id="interests-list" class="flex flex-wrap gap-2"></div>
-        <div class="interest-item item-template" data-template="interests">
-          <span class="text-sm font-semibold interest-name">{{interest.name}}</span>,
-        </div>
-      </section>
+            <div class="skill-item item-template" data-template="skills">
+                <span class="skill-name">{{skills.name}}</span>
+            </div>
+        </section>
 
-      <!-- References -->
-      <section id="section-references" class="mb-6" style="display: none;">
-        <h2 class="text-xl font-bold text-slate-800 mb-4">References</h2>
-        <div id="references-list"></div>
-        <div class="reference-item item-template mb-4" data-template="references">
-          <h3 class="font-bold text-base ref-name">{{reference.name}}</h3>
-          <p class="text-sm text-slate-600 ref-job-title">{{reference.jobTitle}}</p>
-          <p class="text-sm text-slate-600 ref-company">{{reference.company}}</p>
-          <p class="text-sm text-gray-700 mt-1">
-            <span class="ref-email">{{reference.email}}</span> · 
-            <span class="ref-phone">{{reference.phone}}</span>
-          </p>
-        </div>
-      </section>
+        <!-- Languages -->
+        <section id="section-languages" style="display:none;">
+            <h2>Languages</h2>
+            <div id="languages-list" class="flex flex-col gap-4 "></div>
+
+            <div class="language-item item-template" data-template="languages">
+                <p>
+                    <strong class="lang-name font-bold">{{language.language}}</strong> —
+                    <span class="lang-proficiency">{{language.proficiency}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Certifications -->
+        <section id="section-certifications" style="display:none;">
+            <h2>Certifications</h2>
+            <div id="certifications-list" class="flex flex-col gap-4 "></div>
+
+            <div class="certification-item item-template" data-template="certifications">
+                <h3 class="cert-name font-bold">{{certification.name}}</h3>
+                <p class="text-muted">
+                    <span class="cert-issuer">{{certification.issuer}}</span> ·
+                    <span class="cert-date">{{certification.date}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Awards -->
+        <section id="section-awards" style="display:none;">
+            <h2>Awards & Honors</h2>
+            <div id="awards-list"></div>
+
+            <div class="award-item item-template" data-template="awards">
+                <h3 class="award-title font-bold">{{award.title}}</h3>
+                <p class="text-muted">
+                    <span class="award-issuer">{{award.issuer}}</span> ·
+                    <span class="award-date">{{award.date}}</span>
+                </p>
+                <p class="award-description">{{award.description}}</p>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="section-achievements" style="display:none;">
+            <h2>Key Achievements</h2>
+            <div id="achievements-list" class="flex flex-col gap-4 "></div>
+
+            <div class="achievement-item item-template" data-template="achievements">
+                <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
+                <p class="text-muted achievement-date">{{achievement.date}}</p>
+                <p class="achievement-description">{{achievement.description}}</p>
+            </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="section-publications" style="display:none;">
+            <h2>Publications</h2>
+            <div id="publications-list" class="flex flex-col gap-4"></div>
+
+            <div class="publication-item item-template" data-template="publications">
+                <h3 class="pub-title font-bold">{{publication.title}}</h3>
+                <p class="text-muted">
+                    <span class="pub-publisher">{{publication.publisher}}</span> ·
+                    <span class="pub-date">{{publication.date}}</span>
+                </p>
+                <p class="pub-description">{{publication.description}}</p>
+            </div>
+        </section>
+
+        <!-- Volunteer -->
+        <section id="section-volunteer" style="display:none;">
+            <h2>Volunteer Experience</h2>
+            <div id="volunteer-list" class="flex flex-col gap-4"></div>
+
+            <div class="volunteer-item item-template" data-template="volunteer">
+                <h3 class="font-bold">
+                    <span class="vol-organization">{{volunteer.organization}}</span>,
+                    <span class="vol-role">{{volunteer.role}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                    <span class="vol-end-date">{{volunteer.endDate}}</span>
+                </p>
+                <p class="vol-description">{{volunteer.description}}</p>
+            </div>
+        </section>
+
+        <!-- Interests -->
+        <section id="section-interests" style="display:none;">
+            <h2>Interests & Hobbies</h2>
+            <div id="interests-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
+            <div class="interest-item item-template" data-template="interests">
+                <span class="interest-name">{{interest.name}}</span>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="section-references" style="display:none;">
+            <h2>References</h2>
+            <div id="references-list" class="flex flex-col gap-4"></div>
+
+            <div class="reference-item item-template" data-template="references">
+                <h3 class="ref-name font-bold">{{reference.name}}</h3>
+                <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
+                <p class="text-muted ref-company">{{reference.company}}</p>
+                <p class="text-muted">
+                    <span class="ref-email">{{reference.email}}</span> ·
+                    <span class="ref-phone">{{reference.phone}}</span>
+                </p>
+            </div>
+        </section>
+
     </main>
-  </div>
 </body>
+
 </html>`
   },
   {
@@ -399,215 +649,319 @@ export const RESUMES = [
     image: "https://resume.io/cdn-cgi/image/width=852,format=auto/assets/templates/helsinki-4dd16bc5e017b8969055dc9dc02348c331d673da6140a0a8a69eaf2befd7b4ba.jpg",
     html: `<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{firstName}} {{lastName}} - Resume</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Poppins', 'sans-serif']
-          }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{firstName}} {{lastName}} - Resume</title>
+
+    <!-- Tailwind (optional – safe to keep) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
         }
-      }
-    }
-  </script>
-  <style>
-    @media print { body { margin: 0; padding: 0; } }
-    .item-template { display: none; }
-  </style>
+
+        body {
+            margin: 0;
+            font-family: "Nunito", sans-serif;
+            color: #1f2937;
+            background: #ffffff;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+        }
+
+        .item-template {
+            display: none;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        header {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        header img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        h3 {
+            margin: 4px 0;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        section {
+            width: 100%;
+        }
+
+        section h2 {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 6px;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            margin: 6px 0 0 18px;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .text-muted {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-  <main id="resume-root" class="max-w-4xl mx-auto bg-white">
-    
-    <!-- Gradient Header -->
-    <header id="section-personalInfo" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 mb-6">
-      <div class="flex items-center gap-6">
-        <img id="profile-image" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=900&auto=format&fit=crop&q=60"
-             alt="Profile" class="w-28 h-28 object-cover rounded-lg border-4 border-white shadow-lg" />
-        <div>
-          <h1 id="full-name" class="text-4xl font-bold mb-2">{{firstName}} {{lastName}}</h1>
-          <p class="text-blue-100">
-            <span id="email">{{email}}</span> | <span id="phone">{{phone}}</span>
-          </p>
-        </div>
-      </div>
-    </header>
+    <main id="resume-root">
+        <!-- Header -->
+        <header id="section-personalInfo" class="flex item-center text-center justify-center">
+            <div>
+                <h1 id="full-name" class="text-3xl  font-bold">{{firstName}} {{lastName}}</h1>
+                <h3 id="job-title">{{jobTitle}}</h3>
 
-    <div class="px-8 pb-8">
-      <section id="section-summary" class="mb-6" style="display: none;">
-        <div id="summary-text" class="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">{{summary}}</div>
-      </section>
+                <p class="text-muted">
+                
+                    <span id="address">Seoul, South Korea</span> ·
+                    <span id="email">{{email}}</span> ·
+                    <span id="phone">{{phone}}</span>
+                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
+                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
 
-      <section id="section-experience" class="mb-6" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Experience
-        </h2>
-        <div id="experience-list"></div>
-        <div class="experience-item item-template mb-5 pl-4 border-l-2 border-blue-200" data-template="experience">
-          <h3 class="font-bold text-lg exp-job-title">{{experience.jobTitle}}</h3>
-          <p class="text-blue-600 font-semibold exp-company">{{experience.company}}</p>
-          <p class="text-sm text-gray-500 mb-2">
-            <span class="exp-start-date">{{experience.startDate}}</span> - <span class="exp-end-date">{{experience.endDate}}</span>
-          </p>
-          <ul class="exp-description text-sm text-gray-700 list-disc ml-5"></ul>
-        </div>
-      </section>
+                </p>
+            </div>
+        </header>
 
-      <section id="section-education" class="mb-6" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Education
-        </h2>
-        <div id="education-list"></div>
-        <div class="education-item item-template mb-4 pl-4 border-l-2 border-blue-200" data-template="education">
-          <p class="font-bold text-base edu-degree">{{education.degree}}</p>
-          <p class="text-blue-600 edu-institution">{{education.institution}}</p>
-          <p class="text-sm text-gray-500 edu-end-date">{{education.endDate}}</p>
-        </div>
-      </section>
+        <!-- Summary -->
+        <section id="section-summary" style="display:none;">
+            <h2>Professional Summary</h2>
+            <p id="summary-text">{{summary}}</p>
+        </section>
 
-      <section id="section-projects" class="mb-6" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Projects
-        </h2>
-        <div id="projects-list"></div>
-        <div class="project-item item-template mb-4 pl-4 border-l-2 border-blue-200" data-template="projects">
-          <h3 class="font-bold text-base proj-name">{{projects.name}}</h3>
-          <p class="text-sm text-gray-500 mb-2">
-            <span class="proj-start-date">{{projects.startDate}}</span> - <span class="proj-end-date">{{projects.endDate}}</span>
-          </p>
-          <ul class="proj-description text-sm text-gray-700 list-disc ml-5"></ul>
-        </div>
-      </section>
+        <!-- Experience -->
+        <section id="section-experience" style="display:none;">
+            <h2>Professional Experience</h2>
+           <div id="experience-list" class="flex flex-col gap-4"></div>
 
-      <section id="section-skills" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Skills
-        </h2>
-        <div id="skills-list" class="flex flex-wrap gap-2"></div>
-        <div class="skill-item item-template" data-template="skills">
-          <span class="skill-name bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">{{skills.name}}</span>
-        </div>
-        </div>
-      </section>
+            <div class="experience-item item-template" data-template="experience">
+                <h3 class="font-bold">
+                    <span class="exp-company">{{experience.company}}</span>,
+                    <span class="exp-job-title">{{experience.jobTitle}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="exp-start-date">{{experience.startDate}}</span> –
+                    <span class="exp-end-date">{{experience.endDate}}</span>
+                </p>
+                <div class="exp-description"></div>
+            </div>
+        </section>
 
-      <!-- Languages -->
-      <section id="section-languages" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Languages
-        </h2>
-        <div id="languages-list" class="space-y-2"></div>
-        <div class="language-item item-template" data-template="languages">
-          <p class="text-base"><span class="font-semibold lang-name">{{language.language}}</span>: 
-          <span class="lang-proficiency text-gray-700">{{language.proficiency}}</span></p>
-        </div>
-      </section>
+        <!-- Projects -->
+        <section id="section-projects" style="display:none;">
+            <h2>Projects</h2>
+            <div id="projects-list" class="flex flex-col gap-4"></div>
 
-      <!-- Certifications -->
-      <section id="section-certifications" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Certifications
-        </h2>
-        <div id="certifications-list"></div>
-        <div class="certification-item item-template mb-4" data-template="certifications">
-          <h3 class="font-bold text-lg cert-name">{{certification.name}}</h3>
-          <p class="text-sm text-gray-600"><span class="cert-issuer">{{certification.issuer}}</span> · 
-          <span class="cert-date">{{certification.date}}</span></p>
-        </div>
-      </section>
+            <div class="project-item item-template" data-template="projects">
+                <h3 class="proj-name font-bold">{{projects.name}}</h3>
+                <p class="text-muted">
+                    <span class="proj-start-date">{{projects.startDate}}</span> –
+                    <span class="proj-end-date">{{projects.endDate}}</span>
+                </p>
+                <ul class="proj-description"></ul>
+            </div>
+        </section>
 
-      <!-- Awards & Honors -->
-      <section id="section-awards" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Awards & Honors
-        </h2>
-        <div id="awards-list"></div>
-        <div class="award-item item-template mb-4" data-template="awards">
-          <h3 class="font-bold text-lg award-title">{{award.title}}</h3>
-          <p class="text-sm text-gray-600"><span class="award-issuer">{{award.issuer}}</span> · 
-          <span class="award-date">{{award.date}}</span></p>
-          <p class="text-base text-gray-700 mt-1 award-description">{{award.description}}</p>
-        </div>
-      </section>
+        <!-- Education -->
+        <section id="section-education" style="display:none;">
+            <h2>Education</h2>
+            <div id="education-list" class="flex flex-col gap-4 "></div>
 
-      <!-- Achievements -->
-      <section id="section-achievements" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Key Achievements
-        </h2>
-        <div id="achievements-list"></div>
-        <div class="achievement-item item-template mb-4" data-template="achievements">
-          <h3 class="font-bold text-lg achievement-title">{{achievement.title}}</h3>
-          <p class="text-sm text-gray-600 achievement-date">{{achievement.date}}</p>
-          <p class="text-base text-gray-700 mt-1 achievement-description">{{achievement.description}}</p>
-        </div>
-      </section>
+            <div class="education-item item-template" data-template="education">
+                <p class="font-bold edu-degree">{{education.degree}}</p>
+                <p class="text-muted">
+                    <span class="edu-institution">{{education.institution}}</span> —
+                    <span class="edu-end-date">{{education.endDate}}</span>
+                </p>
+            </div>
+        </section>
 
-      <!-- Publications -->
-      <section id="section-publications" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Publications
-        </h2>
-        <div id="publications-list"></div>
-        <div class="publication-item item-template mb-4" data-template="publications">
-          <h3 class="font-bold text-lg pub-title">{{publication.title}}</h3>
-          <p class="text-sm text-gray-600"><span class="pub-publisher">{{publication.publisher}}</span> · 
-          <span class="pub-date">{{publication.date}}</span></p>
-          <p class="text-base text-gray-700 mt-1 pub-description">{{publication.description}}</p>
-        </div>
-      </section>
+        <!-- Skills -->
+        <section id="section-skills" style="display:none;">
+            <h2>Skills</h2>
+            <div id="skills-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
 
-      <!-- Volunteer Experience -->
-      <section id="section-volunteer" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Volunteer Experience
-        </h2>
-        <div id="volunteer-list"></div>
-        <div class="volunteer-item item-template mb-6" data-template="volunteer">
-          <h3 class="font-bold text-xl vol-role">{{volunteer.role}}</h3>
-          <p class="text-base text-gray-700 vol-organization mb-1">{{volunteer.organization}}</p>
-          <p class="text-sm text-gray-500 mb-2"><span class="vol-start-date">{{volunteer.startDate}}</span> - 
-          <span class="vol-end-date">{{volunteer.endDate}}</span></p>
-          <p class="text-base text-gray-700 vol-description">{{volunteer.description}}</p>
-        </div>
-      </section>
+            <div class="skill-item item-template" data-template="skills">
+                <span class="skill-name">{{skills.name}}</span>
+            </div>
+        </section>
 
-      <!-- Interests & Hobbies -->
-      <section id="section-interests" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>Interests & Hobbies
-        </h2>
-        <div id="interests-list" class="flex flex-wrap gap-2"></div>
-        <div class="interest-item item-template" data-template="interests">
-          <span class="interest-name bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">{{interest.name}}</span>,
-        </div>
-      </section>
+        <!-- Languages -->
+        <section id="section-languages" style="display:none;">
+            <h2>Languages</h2>
+            <div id="languages-list" class="flex flex-col gap-4 "></div>
 
-      <!-- References -->
-      <section id="section-references" class="mb-8" style="display: none;">
-        <h2 class="text-2xl font-bold text-blue-600 mb-4 flex items-center">
-          <span class="w-1 h-8 bg-blue-600 mr-3"></span>References
-        </h2>
-        <div id="references-list"></div>
-        <div class="reference-item item-template mb-4" data-template="references">
-          <h3 class="font-bold text-lg ref-name">{{reference.name}}</h3>
-          <p class="text-base text-gray-700 ref-job-title">{{reference.jobTitle}}</p>
-          <p class="text-base text-gray-700 ref-company">{{reference.company}}</p>
-          <p class="text-base text-gray-700 mt-1">
-            <span class="ref-email">{{reference.email}}</span> · 
-            <span class="ref-phone">{{reference.phone}}</span>
-          </p>
-        </div>
-      </section>
-    </div>
-  </main>
+            <div class="language-item item-template" data-template="languages">
+                <p>
+                    <strong class="lang-name font-bold">{{language.language}}</strong> —
+                    <span class="lang-proficiency">{{language.proficiency}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Certifications -->
+        <section id="section-certifications" style="display:none;">
+            <h2>Certifications</h2>
+            <div id="certifications-list" class="flex flex-col gap-4 "></div>
+
+            <div class="certification-item item-template" data-template="certifications">
+                <h3 class="cert-name font-bold">{{certification.name}}</h3>
+                <p class="text-muted">
+                    <span class="cert-issuer">{{certification.issuer}}</span> ·
+                    <span class="cert-date">{{certification.date}}</span>
+                </p>
+            </div>
+        </section>
+
+        <!-- Awards -->
+        <section id="section-awards" style="display:none;">
+            <h2>Awards & Honors</h2>
+            <div id="awards-list"></div>
+
+            <div class="award-item item-template" data-template="awards">
+                <h3 class="award-title font-bold">{{award.title}}</h3>
+                <p class="text-muted">
+                    <span class="award-issuer">{{award.issuer}}</span> ·
+                    <span class="award-date">{{award.date}}</span>
+                </p>
+                <p class="award-description">{{award.description}}</p>
+            </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="section-achievements" style="display:none;">
+            <h2>Key Achievements</h2>
+            <div id="achievements-list" class="flex flex-col gap-4 "></div>
+
+            <div class="achievement-item item-template" data-template="achievements">
+                <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
+                <p class="text-muted achievement-date">{{achievement.date}}</p>
+                <p class="achievement-description">{{achievement.description}}</p>
+            </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="section-publications" style="display:none;">
+            <h2>Publications</h2>
+            <div id="publications-list" class="flex flex-col gap-4"></div>
+
+            <div class="publication-item item-template" data-template="publications">
+                <h3 class="pub-title font-bold">{{publication.title}}</h3>
+                <p class="text-muted">
+                    <span class="pub-publisher">{{publication.publisher}}</span> ·
+                    <span class="pub-date">{{publication.date}}</span>
+                </p>
+                <p class="pub-description">{{publication.description}}</p>
+            </div>
+        </section>
+
+        <!-- Volunteer -->
+        <section id="section-volunteer" style="display:none;">
+            <h2>Volunteer Experience</h2>
+            <div id="volunteer-list" class="flex flex-col gap-4"></div>
+
+            <div class="volunteer-item item-template" data-template="volunteer">
+                <h3 class="font-bold">
+                    <span class="vol-organization">{{volunteer.organization}}</span>,
+                    <span class="vol-role">{{volunteer.role}}</span>
+                </h3>
+                <p class="text-muted">
+                    <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                    <span class="vol-end-date">{{volunteer.endDate}}</span>
+                </p>
+                <p class="vol-description">{{volunteer.description}}</p>
+            </div>
+        </section>
+
+        <!-- Interests -->
+        <section id="section-interests" style="display:none;">
+            <h2>Interests & Hobbies</h2>
+            <div id="interests-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
+            <div class="interest-item item-template" data-template="interests">
+                <span class="interest-name">{{interest.name}}</span>
+            </div>
+        </section>
+
+        <!-- References -->
+        <section id="section-references" style="display:none;">
+            <h2>References</h2>
+            <div id="references-list" class="flex flex-col gap-4"></div>
+
+            <div class="reference-item item-template" data-template="references">
+                <h3 class="ref-name font-bold">{{reference.name}}</h3>
+                <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
+                <p class="text-muted ref-company">{{reference.company}}</p>
+                <p class="text-muted">
+                    <span class="ref-email">{{reference.email}}</span> ·
+                    <span class="ref-phone">{{reference.phone}}</span>
+                </p>
+            </div>
+        </section>
+
+    </main>
 </body>
+
 </html>`
   },
   {
