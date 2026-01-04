@@ -4,6 +4,7 @@ import { Button } from "@repo/ui/button";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { ENV } from "./env";
 
 interface Template {
   id: string;
@@ -16,14 +17,16 @@ export default function LandingPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+
+
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const response = await fetch('http://localhost:4000/resumes');
+        const response = await fetch(ENV.API_URL + '/resumes');
         const data = await response.json();
         setTemplates(data);
       } catch (error) {
-        console.error('Error fetching templates:', error);
+        console.error('Error fetching `templates:', error);
       } finally {
         setIsLoading(false);
       }
@@ -68,7 +71,7 @@ export default function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link href="/editor" className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <Link target="_blank" href={ENV.EDITOR_URL} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Resume Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -955,6 +958,7 @@ export default function LandingPage() {
                 <Sparkles className="w-5 h-5 text-blue-600" />
                 <span className="text-sm font-semibold text-blue-600">AI-Powered Innovation</span>
               </div>
+
 
               <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
                 Create Your Resume

@@ -1,5 +1,6 @@
 "use client";
 
+import { ENV } from '@/app/env';
 import { useEffect, useState } from 'react';
 
 interface NavItem {
@@ -202,7 +203,7 @@ const navigation: NavigationData = {
   ],
   cta: {
     text: "Start Free →",
-    href: "http://localhost:3002"
+    href: ENV.EDITOR_URL
   },
   mobileMenu: {
     sections: [
