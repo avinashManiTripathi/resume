@@ -10,7 +10,8 @@
     "build:auth": "npm --workspace apps/auth run build",
     "build:editor": "npm --workspace apps/editor run build",
     "build:landing": "npm --workspace apps/landing run build",
-    "build:api": "npm --workspace apps/api run build"
+    "build:api": "npm --workspace apps/api run build",
+    "build:admin": "npm --workspace apps/admin run build"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

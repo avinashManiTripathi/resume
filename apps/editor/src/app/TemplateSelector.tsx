@@ -4,10 +4,17 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 
 interface Template {
-    id: string;
+    _id: string;
+    id?: string;
     name?: string;
-    image: string;
-    html: string;
+    thumbnail?: string;
+    image?: string;
+    htmlContent?: string;
+    html?: string;
+    type?: string;
+    category?: string;
+    isPremium?: boolean;
+    isActive?: boolean;
 }
 
 interface TemplateSelectorProps {
@@ -30,14 +37,14 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
     const fetchTemplates = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${apiBase}/resumes`);
+            const response = await fetch(`${apiBase}/api/templates`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch templates');
             }
 
             const data = await response.json();
-            setTemplates(data);
+            setTemplates(data.templates || []);
         } catch (err) {
             console.error('Error fetching templates:', err);
             setError(err instanceof Error ? err.message : 'Failed to load templates');
@@ -93,18 +100,20 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                 {!loading && !error && templates.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {templates.map((template) => {
-                            const isSelected = selectedTemplateId === template.id;
-                            const isHovered = hoveredId === template.id;
+                            const templateId = template._id || template.id || '';
+                            const isSelected = selectedTemplateId === templateId;
+                            const isHovered = hoveredId === templateId;
+                            const templateImage = template.thumbnail || template.image || '';
 
                             return (
                                 <div
-                                    key={template.id}
+                                    key={templateId}
                                     className={`group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected
                                         ? 'ring-4 ring-blue-500 shadow-2xl'
                                         : 'ring-2 ring-gray-200 hover:ring-blue-400 shadow-md hover:shadow-2xl'
                                         } ${isHovered ? 'scale-[1.02]' : 'scale-100'}`}
                                     onClick={() => onSelectTemplate(template)}
-                                    onMouseEnter={() => setHoveredId(template.id)}
+                                    onMouseEnter={() => setHoveredId(templateId)}
                                     onMouseLeave={() => setHoveredId(null)}
                                 >
                                     {/* Selected Badge */}
@@ -117,7 +126,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                                     {/* Template Preview Image */}
                                     <div className="relative aspect-[8.5/11] bg-gray-100">
                                         <img
-                                            src={template.image}
+                                            src={templateImage}
                                             alt={template.name || 'Resume Template'}
                                             className={`w-full h-full object-cover transition-transform duration-300 ${isHovered ? 'scale-105' : 'scale-100'
                                                 }`}

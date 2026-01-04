@@ -1245,7 +1245,7 @@ function ResumeEditor() {
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {
                 console.log('Selected template:', template);
-                setTemplateId(template.id);
+                setTemplateId(template._id);
                 // Don't close template selector - user must click back button
               }}
             />

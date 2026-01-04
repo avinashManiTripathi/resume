@@ -42,7 +42,7 @@ export class PdfService {
             const sectionLabels = (resumeData as any).sectionLabels as Record<string, string> | undefined;
 
             // Generate HTML using template injector
-            const html = this.templateInjectorService.generateHTML(resumeData, sectionLabels);
+            const html = await this.templateInjectorService.generateHTML(resumeData, sectionLabels);
 
             // Generate filename
             const filename = options.filename || this.generateFilename(resumeData);

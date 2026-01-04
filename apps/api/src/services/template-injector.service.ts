@@ -4,17 +4,38 @@ import { JSDOM } from 'jsdom';
 
 export class TemplateInjectorService {
     /**
-     * Get template HTML by ID
+     * Get template HTML by ID (fetch from database)
      */
-    private getTemplateById(templateId: string): string {
-        const template = RESUMES.find(r => r.id === templateId);
-        if (!template) {
-            throw new Error(`Template with ID "${templateId}" not found`);
+    private async getTemplateById(templateId: string): Promise<string> {
+        try {
+            // Import Template model
+            const { Template } = await import('../models');
+
+            // Try to find template in database by _id or id
+            const template = await Template.findById(templateId);
+
+            if (!template) {
+                throw new Error(`Template with ID "${templateId}" not found`);
+            }
+
+            const htmlContent = template.htmlContent || '';
+            if (!htmlContent || htmlContent.trim() === '') {
+                throw new Error(`Template with ID "${templateId}" has no HTML content`);
+            }
+
+            return htmlContent;
+        } catch (error) {
+            // Fallback to RESUMES constant if database lookup fails
+            console.warn(`Database template lookup failed, falling back to RESUMES constant:`, error);
+            const template = RESUMES.find(r => r.id === templateId);
+            if (!template) {
+                throw new Error(`Template with ID "${templateId}" not found`);
+            }
+            if (!template.html || template.html.trim() === '') {
+                throw new Error(`Template with ID "${templateId}" has no HTML content`);
+            }
+            return template.html;
         }
-        if (!template.html || template.html.trim() === '') {
-            throw new Error(`Template with ID "${templateId}" has no HTML content`);
-        }
-        return template.html;
     }
 
     /**
@@ -735,12 +756,12 @@ export class TemplateInjectorService {
     /**
      * Main method to generate HTML from template and data
      */
-    public generateHTML(data: ResumeData, sectionLabels?: Record<string, string>): string {
+    public async generateHTML(data: ResumeData, sectionLabels?: Record<string, string>): Promise<string> {
         // Get template ID, default to first template if not provided
         const templateId = data.templateId || RESUMES[0].id;
 
-        // Get base template
-        let html = this.getTemplateById(templateId);
+        // Get base template from database
+        let html = await this.getTemplateById(templateId);
 
         // Create JSDOM instance for DOM manipulation
         const dom = new JSDOM(html);
