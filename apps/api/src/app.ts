@@ -47,9 +47,13 @@ export class App {
      * Initialize middlewares
      */
     private initializeMiddlewares(): void {
-        // CORS
+        // CORS - support both production and development
+        const allowedOrigins = process.env.CORS_ORIGIN
+            ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+            : config.corsOrigin;
+
         this.app.use(cors({
-            origin: config.corsOrigin,
+            origin: allowedOrigins,
             credentials: true,
         }));
 

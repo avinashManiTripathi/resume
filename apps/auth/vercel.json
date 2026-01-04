@@ -1,0 +1,11 @@
+{
+    "buildCommand": "cd ../.. && npm run build:auth",
+    "outputDirectory": ".next",
+    "installCommand": "cd ../.. && npm install",
+    "framework": "nextjs",
+    "build": {
+        "env": {
+            "NODE_VERSION": "20.11.0"
+        }
+    }
+}
