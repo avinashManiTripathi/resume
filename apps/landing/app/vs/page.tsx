@@ -7,7 +7,7 @@ export default function ComparisonPage() {
 
             <section className="hero-simple">
                 <div className="container">
-                    <h1>Why Choose ResumePro?</h1>
+                    <h1>Why Choose ProfResume?</h1>
                     <p className="lead">See how we compare to other resume builders</p>
                 </div>
             </section>
@@ -17,28 +17,28 @@ export default function ComparisonPage() {
                     <div className="comparison-table">
                         <div className="table-header">
                             <div className="feature-col">Feature</div>
-                            <div className="resumepro-col">ResumePro</div>
+                            <div className="ProfResume-col">ProfResume</div>
                             <div className="competitor-col">Others</div>
                         </div>
                         {[
-                            { feature: "ATS Optimization", resumepro: true, competitor: "Limited" },
-                            { feature: "Free Plan", resumepro: true, competitor: false },
-                            { feature: "Unlimited Resumes (Pro)", resumepro: true, competitor: "Limited" },
-                            { feature: "PDF Export", resumepro: true, competitor: true },
-                            { feature: "DOCX Export", resumepro: true, competitor: "Paid only" },
-                            { feature: "Cover Letter Builder", resumepro: true, competitor: "Extra cost" },
-                            { feature: "Real-time Preview", resumepro: true, competitor: true },
-                            { feature: "Mobile Friendly", resumepro: true, competitor: "Limited" },
-                            { feature: "Customer Support", resumepro: "24/7", competitor: "Business hours" },
-                            { feature: "Price (Pro)", resumepro: "$9/mo", competitor: "$15-30/mo" },
+                            { feature: "ATS Optimization", ProfResume: true, competitor: "Limited" },
+                            { feature: "Free Plan", ProfResume: true, competitor: false },
+                            { feature: "Unlimited Resumes (Pro)", ProfResume: true, competitor: "Limited" },
+                            { feature: "PDF Export", ProfResume: true, competitor: true },
+                            { feature: "DOCX Export", ProfResume: true, competitor: "Paid only" },
+                            { feature: "Cover Letter Builder", ProfResume: true, competitor: "Extra cost" },
+                            { feature: "Real-time Preview", ProfResume: true, competitor: true },
+                            { feature: "Mobile Friendly", ProfResume: true, competitor: "Limited" },
+                            { feature: "Customer Support", ProfResume: "24/7", competitor: "Business hours" },
+                            { feature: "Price (Pro)", ProfResume: "$9/mo", competitor: "$15-30/mo" },
                         ].map((row, i) => (
                             <div key={i} className="table-row">
                                 <div className="feature-col">{row.feature}</div>
-                                <div className="resumepro-col">
-                                    {typeof row.resumepro === 'boolean' ? (
-                                        row.resumepro ? <span className="check">✓</span> : <span className="cross">✗</span>
+                                <div className="ProfResume-col">
+                                    {typeof row.ProfResume === 'boolean' ? (
+                                        row.ProfResume ? <span className="check">✓</span> : <span className="cross">✗</span>
                                     ) : (
-                                        <span className="text">{row.resumepro}</span>
+                                        <span className="text">{row.ProfResume}</span>
                                     )}
                                 </div>
                                 <div className="competitor-col">
@@ -54,7 +54,7 @@ export default function ComparisonPage() {
 
                     <div className="cta-box">
                         <h2>Ready to Experience the Difference?</h2>
-                        <a href="/editor" className="cta-button">Try ResumePro Free →</a>
+                        <a href="/editor" className="cta-button">Try ProfResume Free →</a>
                     </div>
                 </div>
             </section>
@@ -74,7 +74,7 @@ export default function ComparisonPage() {
         .table-header > div, .table-row > div { padding: 1.25rem 1.5rem; }
         .table-row { border-bottom: 1px solid #F3F4F6; }
         .table-row:last-child { border-bottom: none; }
-        .resumepro-col { background: #EEF2FF; font-weight: 600; }
+        .ProfResume-col { background: #EEF2FF; font-weight: 600; }
         .check { color: #10B981; font-size: 1.5rem; font-weight: 700; }
         .cross { color: #EF4444; font-size: 1.5rem; }
         .text { color: #111827; font-weight: 600; }
@@ -82,7 +82,7 @@ export default function ComparisonPage() {
         .cta-box h2 { font-size: 2rem; font-weight: 900; margin-bottom: 2rem; }
         .cta-button { display: inline-block; padding: 1.25rem 2.5rem; background: white; color: #3B82F6; border-radius: 0.75rem; font-weight: 600; text-decoration: none; font-size: 1.125rem; }
         .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); }
-        @media (max-width: 768px) { .hero-simple h1 { font-size: 2rem; } .table-header, .table-row { grid-template-columns: 1fr; } .resumepro-col, .competitor-col { background: white; } }
+        @media (max-width: 768px) { .hero-simple h1 { font-size: 2rem; } .table-header, .table-row { grid-template-columns: 1fr; } .ProfResume-col, .competitor-col { background: white; } }
       `}</style>
         </main>
     );

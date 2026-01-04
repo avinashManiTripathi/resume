@@ -11,7 +11,7 @@ export default function IntegrationsPage() {
             <section className="hero-simple">
                 <div className="container">
                     <h1>Integrations</h1>
-                    <p className="lead">Connect ResumePro with your favorite platforms (Coming Soon)</p>
+                    <p className="lead">Connect ProfResume with your favorite platforms (Coming Soon)</p>
                 </div>
             </section>
 

@@ -9,7 +9,7 @@ export default function ReviewsPage() {
             <section className="hero-simple">
                 <div className="container">
                     <h1>What Our Users Say</h1>
-                    <p className="lead">Join 50,000+ professionals who trust ResumePro</p>
+                    <p className="lead">Join 50,000+ professionals who trust ProfResume</p>
                     <div className="rating">
                         <div className="stars">★★★★★</div>
                         <div className="rating-text">4.9 out of 5 based on 12,453 reviews</div>

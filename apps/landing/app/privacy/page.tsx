@@ -36,7 +36,7 @@ export default function PrivacyPage() {
                         <p>We use cookies to improve your experience on our website. You can control cookie settings through your browser.</p>
 
                         <h2>7. Contact Us</h2>
-                        <p>If you have questions about this Privacy Policy, please contact us at privacy@resumepro.com</p>
+                        <p>If you have questions about this Privacy Policy, please contact us at privacy@ProfResume.com</p>
                     </div>
                 </div>
             </section>

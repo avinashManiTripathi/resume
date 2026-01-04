@@ -10,7 +10,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "ResumePro Admin - Manage Users & Templates",
+  title: "ProfResume Admin - Manage Users & Templates",
   description: "Admin panel for managing users and resume templates",
 };
 

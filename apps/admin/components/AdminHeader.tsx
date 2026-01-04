@@ -23,7 +23,7 @@ export function AdminHeader() {
               <FileText className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">
-              ResumePro Admin
+              ProfResume Admin
             </span>
           </Link>
 
@@ -35,11 +35,10 @@ export function AdminHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive
                       ? "bg-blue-50 text-blue-600"
                       : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <Icon className="w-4 h-4" />
                   {item.label}

@@ -155,7 +155,7 @@ export const LANDING_PAGE_DATA = {
                             {
                                 icon: "⚖️",
                                 title: "Comparison",
-                                description: "Why choose ResumePro",
+                                description: "Why choose ProfResume",
                                 href: "/vs"
                             }
                         ]
@@ -212,7 +212,7 @@ export const LANDING_PAGE_DATA = {
     footer: {
         brand: {
             icon: "FileText",
-            logo: "ResumePro",
+            logo: "ProfResume",
             description: "Create professional resumes that get you hired."
         },
         sections: [
@@ -240,6 +240,6 @@ export const LANDING_PAGE_DATA = {
                 ]
             }
         ],
-        copyright: "© 2025 ResumePro. All rights reserved."
+        copyright: "© 2025 ProfResume. All rights reserved."
     }
 };

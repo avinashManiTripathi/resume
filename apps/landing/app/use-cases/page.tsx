@@ -11,7 +11,7 @@ export default function UseCasesPage() {
       <section className="hero-simple">
         <div className="container">
           <h1>Resume Builder for Everyone</h1>
-          <p className="lead">Whether you're a student, professional, or executive, ResumePro has the perfect solution for your career goals.</p>
+          <p className="lead">Whether you're a student, professional, or executive, ProfResume has the perfect solution for your career goals.</p>
         </div>
       </section>
 
@@ -82,7 +82,7 @@ export default function UseCasesPage() {
       <section className="cta-section">
         <div className="container">
           <h2>Ready to Create Your Perfect Resume?</h2>
-          <p>Join thousands of job seekers who've landed their dream jobs with ResumePro</p>
+          <p>Join thousands of job seekers who've landed their dream jobs with ProfResume</p>
           <a href="/editor" className="cta-button large">Start Building Free →</a>
         </div>
       </section>

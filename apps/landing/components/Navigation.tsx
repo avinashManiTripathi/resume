@@ -39,8 +39,8 @@ interface NavigationData {
 
 const navigation: NavigationData = {
   logo: {
-    text: "Resume",
-    accent: "Pro"
+    text: "Prof",
+    accent: "Resume"
   },
   menuItems: [
     {
@@ -193,7 +193,7 @@ const navigation: NavigationData = {
             {
               icon: "⚖️",
               title: "Comparison",
-              description: "Why choose ResumePro",
+              description: "Why choose ProfResume",
               href: "/vs"
             }
           ]
@@ -252,16 +252,12 @@ export function Navigation() {
   const [navData, setNavData] = useState<NavigationData | null>(navigation);
 
 
-
-
-
-
   return (
     <>
       <nav className="nav">
         <div className="nav-container">
           <a href="/" className="logo">
-            {navData?.logo.text}<span className="logo-accent">{navData?.logo.accent}</span>
+            <span className="logo-accent"> {navData?.logo.text}</span>{navData?.logo.accent}
           </a>
 
           <div className="nav-links">

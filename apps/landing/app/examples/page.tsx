@@ -10,7 +10,7 @@ export default function ExamplesPage() {
             <section className="hero-simple">
                 <div className="container">
                     <h1>Resume Examples That Get Results</h1>
-                    <p className="lead">Real resumes created with ResumePro that helped professionals land their dream jobs.</p>
+                    <p className="lead">Real resumes created with ProfResume that helped professionals land their dream jobs.</p>
                 </div>
             </section>
 

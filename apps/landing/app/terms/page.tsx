@@ -18,28 +18,28 @@ export default function TermsPage() {
                 <div className="container">
                     <div className="content-box">
                         <h2>1. Acceptance of Terms</h2>
-                        <p>By accessing and using ResumePro, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                        <p>By accessing and using ProfResume, you accept and agree to be bound by the terms and provision of this agreement.</p>
 
                         <h2>2. Use License</h2>
-                        <p>Permission is granted to use ResumePro for personal, non-commercial purposes to create and download resumes.</p>
+                        <p>Permission is granted to use ProfResume for personal, non-commercial purposes to create and download resumes.</p>
 
                         <h2>3. User Account</h2>
                         <p>You are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.</p>
 
                         <h2>4. Content Ownership</h2>
-                        <p>You retain all rights to the content you create using ResumePro. We do not claim ownership of your resumes or personal information.</p>
+                        <p>You retain all rights to the content you create using ProfResume. We do not claim ownership of your resumes or personal information.</p>
 
                         <h2>5. Prohibited Uses</h2>
-                        <p>You may not use ResumePro for any illegal purposes or to violate any laws in your jurisdiction.</p>
+                        <p>You may not use ProfResume for any illegal purposes or to violate any laws in your jurisdiction.</p>
 
                         <h2>6. Limitation of Liability</h2>
-                        <p>ResumePro shall not be liable for any indirect, incidental, special, consequential or punitive damages resulting from your use of the service.</p>
+                        <p>ProfResume shall not be liable for any indirect, incidental, special, consequential or punitive damages resulting from your use of the service.</p>
 
                         <h2>7. Changes to Terms</h2>
                         <p>We reserve the right to modify these terms at any time. We will notify users of any material changes.</p>
 
                         <h2>8. Contact</h2>
-                        <p>For questions about these Terms, contact us at legal@resumepro.com</p>
+                        <p>For questions about these Terms, contact us at legal@ProfResume.com</p>
                     </div>
                 </div>
             </section>

@@ -8,16 +8,16 @@ export default function SuccessStoriesPage() {
             <section className="hero-simple">
                 <div className="container">
                     <h1>Success Stories</h1>
-                    <p className="lead">Real people, real results. See how ResumePro helped transform careers.</p>
+                    <p className="lead">Real people, real results. See how ProfResume helped transform careers.</p>
                 </div>
             </section>
 
             <section className="stories">
                 <div className="container">
                     {[
-                        { name: "Sarah Chen", from: "Junior Developer", to: "Senior Engineer at Google", salary: "+$60k", time: "2 weeks", story: "After struggling to get interviews for months, I rebuilt my resume with ResumePro. The ATS optimization made all the difference - I went from 0 responses to 12 interviews in just 2 weeks. Now I'm at my dream company!" },
-                        { name: "Michael Rodriguez", from: "Sales Associate", to: "Account Executive", salary: "+$45k", time: "3 weeks", story: "I was stuck in retail for 5 years. ResumePro helped me highlight my transferable skills and pivot into B2B sales. The career change templates were perfect for my situation." },
-                        { name: "Emily Watson", from: "Recent Graduate", to: "Marketing Manager", salary: "$75k", time: "1 month", story: "As a new grad with limited experience, I didn't know how to make my resume stand out. ResumePro's student templates helped me showcase my projects and internships effectively. Landed my first job at a Fortune 500 company!" },
+                        { name: "Sarah Chen", from: "Junior Developer", to: "Senior Engineer at Google", salary: "+$60k", time: "2 weeks", story: "After struggling to get interviews for months, I rebuilt my resume with ProfResume. The ATS optimization made all the difference - I went from 0 responses to 12 interviews in just 2 weeks. Now I'm at my dream company!" },
+                        { name: "Michael Rodriguez", from: "Sales Associate", to: "Account Executive", salary: "+$45k", time: "3 weeks", story: "I was stuck in retail for 5 years. ProfResume helped me highlight my transferable skills and pivot into B2B sales. The career change templates were perfect for my situation." },
+                        { name: "Emily Watson", from: "Recent Graduate", to: "Marketing Manager", salary: "$75k", time: "1 month", story: "As a new grad with limited experience, I didn't know how to make my resume stand out. ProfResume's student templates helped me showcase my projects and internships effectively. Landed my first job at a Fortune 500 company!" },
                     ].map((story, i) => (
                         <div key={i} className="story-card">
                             <div className="story-header">
@@ -50,7 +50,7 @@ export default function SuccessStoriesPage() {
             <section className="cta-section">
                 <div className="container">
                     <h2>Ready to Write Your Success Story?</h2>
-                    <p>Join thousands who've transformed their careers with ResumePro</p>
+                    <p>Join thousands who've transformed their careers with ProfResume</p>
                     <a href="/editor" className="cta-button">Start Your Journey →</a>
                 </div>
             </section>

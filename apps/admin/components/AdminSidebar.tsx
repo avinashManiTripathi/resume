@@ -23,7 +23,7 @@ export function AdminSidebar() {
             <FileText className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold">ResumePro</h1>
+            <h1 className="text-lg font-bold">ProfResume</h1>
             <p className="text-xs text-gray-400">Admin Panel</p>
           </div>
         </Link>
@@ -38,11 +38,10 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-                isActive
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${isActive
                   ? "bg-blue-600 text-white shadow-lg"
                   : "text-gray-300 hover:bg-gray-800 hover:text-white"
-              }`}
+                }`}
             >
               <Icon className="w-5 h-5" />
               {item.label}
