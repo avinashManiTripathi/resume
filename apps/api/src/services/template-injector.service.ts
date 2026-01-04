@@ -79,7 +79,7 @@ export class TemplateInjectorService {
         if (linkedinLink) {
             if (personalInfo.linkedin) {
                 linkedinLink.setAttribute('href', personalInfo.linkedin);
-                linkedinLink.textContent = personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '');
+                linkedinLink.textContent = "Linkedin"
                 linkedinLink.style.display = '';
             } else {
                 linkedinLink.style.display = 'none';
@@ -91,7 +91,7 @@ export class TemplateInjectorService {
         if (githubLink) {
             if (personalInfo.github) {
                 githubLink.setAttribute('href', personalInfo.github);
-                githubLink.textContent = personalInfo.github.replace(/^https?:\/\/(www\.)?/, '');
+                githubLink.textContent = "Github"
                 githubLink.style.display = '';
             } else {
                 githubLink.style.display = 'none';
@@ -104,6 +104,9 @@ export class TemplateInjectorService {
             if (profileImg && profileImg.tagName === 'IMG') {
                 (profileImg as HTMLImageElement).src = personalInfo.profileImage;
             }
+        } else {
+            const profileImg = document.getElementById('profile-image');
+            if (profileImg) profileImg.style.display = 'none';
         }
 
         // Handle summary

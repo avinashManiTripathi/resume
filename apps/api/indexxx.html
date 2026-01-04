@@ -24,6 +24,9 @@
             font-family: "Nunito", sans-serif;
             color: #1f2937;
             background: #ffffff;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 400;
         }
 
         @media print {
@@ -42,8 +45,10 @@
             padding: 32px;
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 28px;
         }
+
+        /* ================= HEADER ================= */
 
         header {
             display: flex;
@@ -63,32 +68,42 @@
             font-size: 32px;
             font-weight: 800;
             margin: 0;
+            line-height: 1.2;
         }
 
         h3 {
             margin: 4px 0;
+            font-size: 16px;
             font-weight: 700;
+            line-height: 1.4;
         }
 
         p {
             margin: 4px 0;
             font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
+        /* ================= SECTIONS ================= */
+
         section {
-            display: block !important;
             width: 100%;
+            display: block !important;
         }
 
         section h2 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.12em;
             border-bottom: 1px solid #e5e7eb;
             padding-bottom: 6px;
             margin-bottom: 12px;
+            color: #111827;
         }
+
+        /* ================= LISTS ================= */
 
         ul {
             margin: 6px 0 0 18px;
@@ -98,20 +113,125 @@
         li {
             margin-bottom: 6px;
             font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
         }
+
+        /* ================= MUTED / META ================= */
 
         .text-muted {
             color: #6b7280;
             font-size: 13px;
+            font-weight: 400;
         }
+
+        /* ================= LINKS ================= */
 
         a {
             color: #2563eb;
             text-decoration: none;
+            font-weight: 600;
         }
 
         a:hover {
             text-decoration: underline;
+        }
+
+        /* ================= ITEM TITLES ================= */
+
+        .font-bold {
+            font-weight: 700 !important;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        /* Experience / Projects / Education titles */
+        .exp-company,
+        .exp-job-title,
+        .proj-name,
+        .edu-degree,
+        .cert-name,
+        .award-title,
+        .achievement-title,
+        .pub-title,
+        .vol-organization,
+        .vol-role,
+        .ref-name {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        /* Dates & secondary info */
+        .exp-start-date,
+        .exp-end-date,
+        .proj-start-date,
+        .proj-end-date,
+        .edu-end-date,
+        .cert-date,
+        .award-date,
+        .achievement-date,
+        .pub-date,
+        .vol-start-date,
+        .vol-end-date {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        /* Descriptions */
+        .exp-description,
+        .proj-description,
+        .award-description,
+        .achievement-description,
+        .pub-description,
+        .vol-description {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
+            margin-top: 4px;
+        }
+
+        /* Skills / Interests / Inline lists */
+        .skill-name,
+        .interest-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Languages */
+        .lang-name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .lang-proficiency {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        /* References */
+        .ref-job-title,
+        .ref-company,
+        .ref-email,
+        .ref-phone {
+            font-size: 13px;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #f3f3f3;
+            padding: 40px 28px;
+
+        }
+
+        .main-content {
+            flex: 1;
         }
     </style>
 </head>
@@ -120,199 +240,216 @@
     <main id="resume-root">
 
         <!-- Header -->
-        <header id="section-personalInfo" class="flex item-center text-center justify-center">
-            <div>
+        <header id="section-personalInfo" class="flex items-center justify-center">
+            <div class="p-[30px] w-[400px] border border-black text-center">
                 <h1 id="full-name" class="text-3xl  font-bold">{{firstName}} {{lastName}}</h1>
                 <h3 id="job-title">{{jobTitle}}</h3>
-
-                <p class="text-muted">
-
-                    <span id="address">Seoul, South Korea</span> ·
-                    <span id="email">{{email}}</span> ·
-                    <span id="phone">{{phone}}</span>
-                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
-                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
-
-                </p>
             </div>
         </header>
 
-        <!-- Summary -->
-        <section id="section-summary" style="display:none;">
-            <h2>Professional Summary</h2>
-            <p id="summary-text">{{summary}}</p>
-        </section>
 
-        <!-- Experience -->
-        <section id="section-experience" style="display:none;">
-            <h2>Professional Experience</h2>
-            <div id="experience-list" class="flex flex-col gap-4"></div>
+        <div class="flex gap-4">
+            <div class="flex flex-col gap-4 sidebar">
 
-            <div class="experience-item item-template" data-template="experience">
-                <h3 class="font-bold">
-                    <span class="exp-company">{{experience.company}}</span>,
-                    <span class="exp-job-title">{{experience.jobTitle}}</span>
-                </h3>
-                <p class="text-muted">
-                    <span class="exp-start-date">{{experience.startDate}}</span> –
-                    <span class="exp-end-date">{{experience.endDate}}</span>
-                </p>
-                <div class="exp-description"></div>
+                <!-- Contact -->
+                <section id="section-contact" style="display:none;">
+                    <h2>Contact</h2>
+                    <div id="contact-list" class="flex flex-col gap-4"></div>
+
+                    <div class="contact-item item-template" data-template="contact">
+                        <h3 class="contact-title font-bold">{{contact.title}}</h3>
+                        <p class="text-muted">
+                            <span class="contact-value">{{contact.value}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Skills -->
+                <section id="section-skills" style="display:none;">
+                    <h2>Skills</h2>
+                    <div id="skills-list"
+                        class="flex flex-wrap items-center gap-x-2 [&>div:not(:last-child)]:after:content-[',']"></div>
+
+                    <div class="skill-item item-template" data-template="skills">
+                        <span class="skill-name">{{skills.name}}</span>
+                    </div>
+                </section>
+
+                <!-- Languages -->
+                <section id="section-languages" style="display:none;">
+                    <h2>Languages</h2>
+                    <div id="languages-list" class="flex flex-col gap-4 "></div>
+
+                    <div class="language-item item-template" data-template="languages">
+                        <p>
+                            <strong class="lang-name font-bold">{{language.language}}</strong> —
+                            <span class="lang-proficiency">{{language.proficiency}}</span>
+                        </p>
+                    </div>
+                </section>
             </div>
-        </section>
+            <div class="flex flex-col gap-4 main-content">
+                <!-- Summary -->
+                <section id="section-summary" style="display:none;">
+                    <h2>Professional Summary</h2>
+                    <p id="summary-text">{{summary}}</p>
+                </section>
 
-        <!-- Projects -->
-        <section id="section-projects" style="display:none;">
-            <h2>Projects</h2>
-            <div id="projects-list" class="flex flex-col gap-4"></div>
+                <!-- Experience -->
+                <section id="section-experience" style="display:none;">
+                    <h2>Professional Experience</h2>
+                    <div id="experience-list" class="flex flex-col gap-4"></div>
 
-            <div class="project-item item-template" data-template="projects">
-                <h3 class="proj-name font-bold">{{projects.name}}</h3>
-                <p class="text-muted">
-                    <span class="proj-start-date">{{projects.startDate}}</span> –
-                    <span class="proj-end-date">{{projects.endDate}}</span>
-                </p>
-                <ul class="proj-description"></ul>
+                    <div class="experience-item item-template" data-template="experience">
+                        <h3 class="font-bold">
+                            <span class="exp-company">{{experience.company}}</span>,
+                            <span class="exp-job-title">{{experience.jobTitle}}</span>
+                        </h3>
+                        <p class="text-muted">
+                            <span class="exp-start-date">{{experience.startDate}}</span> –
+                            <span class="exp-end-date">{{experience.endDate}}</span>
+                        </p>
+                        <div class="exp-description"></div>
+                    </div>
+                </section>
+
+                <!-- Projects -->
+                <section id="section-projects" style="display:none;">
+                    <h2>Projects</h2>
+                    <div id="projects-list" class="flex flex-col gap-4"></div>
+
+                    <div class="project-item item-template" data-template="projects">
+                        <h3 class="proj-name font-bold">{{projects.name}}</h3>
+                        <p class="text-muted">
+                            <span class="proj-start-date">{{projects.startDate}}</span> –
+                            <span class="proj-end-date">{{projects.endDate}}</span>
+                        </p>
+                        <ul class="proj-description"></ul>
+                    </div>
+                </section>
+
+                <!-- Education -->
+                <section id="section-education" style="display:none;">
+                    <h2>Education</h2>
+                    <div id="education-list" class="flex flex-col gap-4 "></div>
+
+                    <div class="education-item item-template" data-template="education">
+                        <p class="font-bold edu-degree">{{education.degree}}</p>
+                        <p class="text-muted">
+                            <span class="edu-institution">{{education.institution}}</span> —
+                            <span class="edu-end-date">{{education.endDate}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Certifications -->
+                <section id="section-certifications" style="display:none;">
+                    <h2>Certifications</h2>
+                    <div id="certifications-list" class="flex flex-col gap-4 "></div>
+
+                    <div class="certification-item item-template" data-template="certifications">
+                        <h3 class="cert-name font-bold">{{certification.name}}</h3>
+                        <p class="text-muted">
+                            <span class="cert-issuer">{{certification.issuer}}</span> ·
+                            <span class="cert-date">{{certification.date}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Awards -->
+                <section id="section-awards" style="display:none;">
+                    <h2>Awards & Honors</h2>
+                    <div id="awards-list"></div>
+
+                    <div class="award-item item-template" data-template="awards">
+                        <h3 class="award-title font-bold">{{award.title}}</h3>
+                        <p class="text-muted">
+                            <span class="award-issuer">{{award.issuer}}</span> ·
+                            <span class="award-date">{{award.date}}</span>
+                        </p>
+                        <p class="award-description">{{award.description}}</p>
+                    </div>
+                </section>
+
+                <!-- Achievements -->
+                <section id="section-achievements" style="display:none;">
+                    <h2>Key Achievements</h2>
+                    <div id="achievements-list" class="flex flex-col gap-4 "></div>
+
+                    <div class="achievement-item item-template" data-template="achievements">
+                        <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
+                        <p class="text-muted achievement-date">{{achievement.date}}</p>
+                        <p class="achievement-description">{{achievement.description}}</p>
+                    </div>
+                </section>
+
+                <!-- Publications -->
+                <section id="section-publications" style="display:none;">
+                    <h2>Publications</h2>
+                    <div id="publications-list" class="flex flex-col gap-4"></div>
+
+                    <div class="publication-item item-template" data-template="publications">
+                        <h3 class="pub-title font-bold">{{publication.title}}</h3>
+                        <p class="text-muted">
+                            <span class="pub-publisher">{{publication.publisher}}</span> ·
+                            <span class="pub-date">{{publication.date}}</span>
+                        </p>
+                        <p class="pub-description">{{publication.description}}</p>
+                    </div>
+                </section>
+
+                <!-- Volunteer -->
+                <section id="section-volunteer" style="display:none;">
+                    <h2>Volunteer Experience</h2>
+                    <div id="volunteer-list" class="flex flex-col gap-4"></div>
+
+                    <div class="volunteer-item item-template" data-template="volunteer">
+                        <h3 class="font-bold">
+                            <span class="vol-organization">{{volunteer.organization}}</span>,
+                            <span class="vol-role">{{volunteer.role}}</span>
+                        </h3>
+                        <p class="text-muted">
+                            <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                            <span class="vol-end-date">{{volunteer.endDate}}</span>
+                        </p>
+                        <p class="vol-description">{{volunteer.description}}</p>
+                    </div>
+                </section>
+
+                <!-- Interests -->
+                <section id="section-interests" style="display:none;">
+                    <h2>Interests & Hobbies</h2>
+                    <div id="interests-list"
+                        class="flex flex-wrap items-center gap-x-2 [&>div:not(:last-child)]:after:content-[',']""></div>
+            <div class=" interest-item item-template" data-template="interests">
+                        <span class="interest-name">{{interest.name}}</span>
+                    </div>
+                </section>
+
+                <!-- References -->
+                <section id="section-references" style="display:none;">
+                    <h2>References</h2>
+                    <div id="references-list" class="flex flex-col gap-4"></div>
+
+                    <div class="reference-item item-template" data-template="references">
+                        <h3 class="ref-name font-bold">{{reference.name}}</h3>
+                        <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
+                        <p class="text-muted ref-company">{{reference.company}}</p>
+                        <p class="text-muted">
+                            <span class="ref-email">{{reference.email}}</span> ·
+                            <span class="ref-phone">{{reference.phone}}</span>
+                        </p>
+                    </div>
+                </section>
             </div>
-        </section>
+        </div>
 
-        <!-- Education -->
-        <section id="section-education" style="display:none;">
-            <h2>Education</h2>
-            <div id="education-list" class="flex flex-col gap-4 "></div>
 
-            <div class="education-item item-template" data-template="education">
-                <p class="font-bold edu-degree">{{education.degree}}</p>
-                <p class="text-muted">
-                    <span class="edu-institution">{{education.institution}}</span> —
-                    <span class="edu-end-date">{{education.endDate}}</span>
-                </p>
-            </div>
-        </section>
 
-        <!-- Skills -->
-        <section id="section-skills" style="display:none;">
-            <h2>Skills</h2>
-            <div id="skills-list" class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']">
-            </div>
 
-            <div class="skill-item item-template" data-template="skills">
-                <span class="skill-name">{{skills.name}}</span>
-            </div>
-        </section>
 
-        <!-- Languages -->
-        <section id="section-languages" style="display:none;">
-            <h2>Languages</h2>
-            <div id="languages-list" class="flex flex-col gap-4 "></div>
 
-            <div class="language-item item-template" data-template="languages">
-                <p>
-                    <strong class="lang-name font-bold">{{language.language}}</strong> —
-                    <span class="lang-proficiency">{{language.proficiency}}</span>
-                </p>
-            </div>
-        </section>
 
-        <!-- Certifications -->
-        <section id="section-certifications" style="display:none;">
-            <h2>Certifications</h2>
-            <div id="certifications-list" class="flex flex-col gap-4 "></div>
-
-            <div class="certification-item item-template" data-template="certifications">
-                <h3 class="cert-name font-bold">{{certification.name}}</h3>
-                <p class="text-muted">
-                    <span class="cert-issuer">{{certification.issuer}}</span> ·
-                    <span class="cert-date">{{certification.date}}</span>
-                </p>
-            </div>
-        </section>
-
-        <!-- Awards -->
-        <section id="section-awards" style="display:none;">
-            <h2>Awards & Honors</h2>
-            <div id="awards-list"></div>
-
-            <div class="award-item item-template" data-template="awards">
-                <h3 class="award-title font-bold">{{award.title}}</h3>
-                <p class="text-muted">
-                    <span class="award-issuer">{{award.issuer}}</span> ·
-                    <span class="award-date">{{award.date}}</span>
-                </p>
-                <p class="award-description">{{award.description}}</p>
-            </div>
-        </section>
-
-        <!-- Achievements -->
-        <section id="section-achievements" style="display:none;">
-            <h2>Key Achievements</h2>
-            <div id="achievements-list" class="flex flex-col gap-4 "></div>
-
-            <div class="achievement-item item-template" data-template="achievements">
-                <h3 class="achievement-title font-bold">{{achievement.title}}</h3>
-                <p class="text-muted achievement-date">{{achievement.date}}</p>
-                <p class="achievement-description">{{achievement.description}}</p>
-            </div>
-        </section>
-
-        <!-- Publications -->
-        <section id="section-publications" style="display:none;">
-            <h2>Publications</h2>
-            <div id="publications-list" class="flex flex-col gap-4"></div>
-
-            <div class="publication-item item-template" data-template="publications">
-                <h3 class="pub-title font-bold">{{publication.title}}</h3>
-                <p class="text-muted">
-                    <span class="pub-publisher">{{publication.publisher}}</span> ·
-                    <span class="pub-date">{{publication.date}}</span>
-                </p>
-                <p class="pub-description">{{publication.description}}</p>
-            </div>
-        </section>
-
-        <!-- Volunteer -->
-        <section id="section-volunteer" style="display:none;">
-            <h2>Volunteer Experience</h2>
-            <div id="volunteer-list" class="flex flex-col gap-4"></div>
-
-            <div class="volunteer-item item-template" data-template="volunteer">
-                <h3 class="font-bold">
-                    <span class="vol-organization">{{volunteer.organization}}</span>,
-                    <span class="vol-role">{{volunteer.role}}</span>
-                </h3>
-                <p class="text-muted">
-                    <span class="vol-start-date">{{volunteer.startDate}}</span> –
-                    <span class="vol-end-date">{{volunteer.endDate}}</span>
-                </p>
-                <p class="vol-description">{{volunteer.description}}</p>
-            </div>
-        </section>
-
-        <!-- Interests -->
-        <section id="section-interests" style="display:none;">
-            <h2>Interests & Hobbies</h2>
-            <div id="interests-list"
-                class="flex flex-wrap items-center [&>div:not(:last-child)]:after:content-[',\xA0']"></div>
-            <div class="interest-item item-template" data-template="interests">
-                <span class="interest-name">{{interest.name}}</span>
-            </div>
-        </section>
-
-        <!-- References -->
-        <section id="section-references" style="display:none;">
-            <h2>References</h2>
-            <div id="references-list" class="flex flex-col gap-4"></div>
-
-            <div class="reference-item item-template" data-template="references">
-                <h3 class="ref-name font-bold">{{reference.name}}</h3>
-                <p class="text-muted ref-job-title">{{reference.jobTitle}}</p>
-                <p class="text-muted ref-company">{{reference.company}}</p>
-                <p class="text-muted">
-                    <span class="ref-email">{{reference.email}}</span> ·
-                    <span class="ref-phone">{{reference.phone}}</span>
-                </p>
-            </div>
-        </section>
 
     </main>
 </body>
