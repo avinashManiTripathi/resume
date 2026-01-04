@@ -33,6 +33,7 @@ export default function TemplatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   const [formData, setFormData] = useState<Template>({
     name: "", type: "modern", category: "general", description: "", htmlContent: "",
@@ -57,19 +58,19 @@ export default function TemplatesPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setImagePreview(base64String);
-        setFormData({ ...formData, thumbnail: base64String });
-      };
-      reader.readAsDataURL(file);
+      // Store the file for later upload
+      setUploadedFile(file);
+
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
     }
   };
 
   const handleAdd = () => {
     setIsEditing(false);
     setImagePreview("");
+    setUploadedFile(null);
     setFormData({
       name: "", type: "modern", category: "general", description: "", htmlContent: "",
       cssContent: "", thumbnail: "", isPremium: false, isActive: true, sortOrder: templates.length, tags: []
@@ -79,24 +80,79 @@ export default function TemplatesPage() {
 
   const handleEdit = (template: Template) => {
     setIsEditing(true);
-    setImagePreview(template.thumbnail || "");
+    setUploadedFile(null);
+    // Set preview from existing thumbnail (could be path or base64)
+    const thumbnailUrl = template.thumbnail?.startsWith('data:')
+      ? template.thumbnail
+      : template.thumbnail
+        ? `http://localhost:4000${template.thumbnail}`
+        : "";
+    setImagePreview(thumbnailUrl);
     setFormData({ ...template, htmlContent: template.htmlContent || template.html || "" });
     setShowModal(true);
   };
 
   const handleSave = async () => {
     try {
+      // Validate required fields
+      if (!formData.name || !formData.name.trim()) {
+        alert("Template name is required");
+        return;
+      }
+
+      if (!formData.htmlContent || !formData.htmlContent.trim()) {
+        alert("HTML Content is required");
+        return;
+      }
+
       const url = isEditing ? `http://localhost:4000/api/templates/${formData._id || formData.id}` : "http://localhost:4000/api/templates";
+
+      // Clean up the data - remove thumbnail from main save (will be uploaded separately)
+      const cleanData = {
+        ...formData,
+        thumbnail: undefined, // Don't send thumbnail in main request
+        description: formData.description?.trim() || undefined,
+        cssContent: formData.cssContent?.trim() || undefined,
+        tags: formData.tags.filter(tag => tag.trim()),
+      };
+
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(cleanData),
       });
-      if (response.ok) {
-        await fetchTemplates();
-        setShowModal(false);
-        alert(`Template ${isEditing ? "updated" : "added"} successfully!`);
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error("Server error:", error);
+        alert(`Failed to save template: ${error.details || error.error || "Unknown error"}`);
+        return;
       }
+
+      const result = await response.json();
+      const templateId = result.template._id || result.template.id;
+
+      // Upload image if file was selected
+      if (uploadedFile) {
+        const imageFormData = new FormData();
+        imageFormData.append('image', uploadedFile);
+
+        const uploadResponse = await fetch(`http://localhost:4000/api/templates/upload/${templateId}`, {
+          method: 'POST',
+          body: imageFormData,
+        });
+
+        if (!uploadResponse.ok) {
+          console.error("Image upload failed");
+          alert("Template saved but image upload failed");
+        }
+      }
+
+      await fetchTemplates();
+      setShowModal(false);
+      setUploadedFile(null);
+      setImagePreview("");
+      alert(`Template ${isEditing ? "updated" : "added"} successfully!`);
     } catch (error) {
       console.error("Error saving template:", error);
       alert("Error saving template");
@@ -200,7 +256,11 @@ export default function TemplatesPage() {
               {/* Thumbnail */}
               <div className="aspect-[8.5/11] bg-gray-100 relative overflow-hidden rounded-t-lg">
                 {template.thumbnail ? (
-                  <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
+                  <img
+                    src={template.thumbnail.startsWith('data:') ? template.thumbnail : `http://localhost:4000${template.thumbnail}`}
+                    alt={template.name}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <FileText className="w-12 h-12 text-gray-300" />

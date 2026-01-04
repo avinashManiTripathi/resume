@@ -126,7 +126,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                                     {/* Template Preview Image */}
                                     <div className="relative aspect-[8.5/11] bg-gray-100">
                                         <img
-                                            src={templateImage}
+                                            src={apiBase + templateImage}
                                             alt={template.name || 'Resume Template'}
                                             className={`w-full h-full object-cover transition-transform duration-300 ${isHovered ? 'scale-105' : 'scale-100'
                                                 }`}

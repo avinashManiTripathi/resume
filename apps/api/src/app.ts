@@ -71,6 +71,10 @@ export class App {
             },
         }));
 
+        // Static file serving for uploads
+        const path = require('path');
+        this.app.use('/uploads', require('express').static(path.join(__dirname, '../public/uploads')));
+
         // Request logging
         this.app.use(requestLogger);
     }
