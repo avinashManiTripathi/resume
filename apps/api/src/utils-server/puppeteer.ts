@@ -1,20 +1,30 @@
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium';
 import { inject } from './inject';
 
 export const htmlToPdf = async (
     htmlContent: string,
     jsonData: any
 ) => {
-    const browser = await puppeteer.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true, // ✅ explicitly set
-        defaultViewport: {
-            width: 1280,
-            height: 800,
-        },
-    });
+    let browser;
+
+    // Detect environment: use chromium for Vercel, regular puppeteer for local
+    if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+        // Production: Use serverless-optimized chromium
+        const puppeteer = (await import('puppeteer-core')).default;
+        const chromium = (await import('@sparticuz/chromium')).default;
+
+        browser = await puppeteer.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
+        });
+    } else {
+        // Local development: Use regular puppeteer with system Chrome
+        const puppeteer = (await import('puppeteer')).default;
+
+        browser = await puppeteer.launch({
+            headless: true,
+        });
+    }
 
     const page = await browser.newPage();
 
