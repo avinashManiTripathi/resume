@@ -157,7 +157,7 @@ export class App {
     }
 
     /**
-     * Start the server
+     * Start the server (only for local development)
      */
     public listen(): void {
         this.app.listen(config.port, () => {
@@ -167,3 +167,9 @@ export class App {
         });
     }
 }
+
+// Export the Express app instance for Vercel serverless
+export const createApp = (): Application => {
+    const appInstance = new App();
+    return appInstance.app;
+};
