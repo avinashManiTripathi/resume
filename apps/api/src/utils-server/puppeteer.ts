@@ -1,9 +1,16 @@
-
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import { inject } from './inject';
 
 export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonData: any) => {
-    const browser = await puppeteer.launch();
+    // Configure chromium for Vercel serverless
+    const browser = await puppeteer.launch({
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+    });
+
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 

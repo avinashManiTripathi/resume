@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "@sparticuz/chromium": "^143.0.4",
     "@types/multer": "^2.0.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.7",
@@ -29,7 +30,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pdf-parse": "^1.1.1",
-    "puppeteer": "^23.11.1",
+    "puppeteer-core": "^24.34.0",
     "stripe": "^20.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
