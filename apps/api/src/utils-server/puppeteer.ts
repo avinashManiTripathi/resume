@@ -15,7 +15,7 @@ export const htmlToPdf = async (
         browser = await puppeteer.launch({
             args: chromium.args,
             executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
+            headless: true, // Chromium doesn't have a headless property
         });
     } else {
         // Local development: Use regular puppeteer with system Chrome

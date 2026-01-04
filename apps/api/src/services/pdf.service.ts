@@ -47,8 +47,8 @@ export class PdfService {
             // Generate filename
             const filename = options.filename || this.generateFilename(resumeData);
 
-            // Convert to PDF
-            const pdfBuffer = await htmlToPdf(html, filename, resumeData);
+            // Convert to PDF (filename removed - serverless doesn't write to disk)
+            const pdfBuffer = await htmlToPdf(html, resumeData);
 
             return pdfBuffer;
         } catch (error) {
