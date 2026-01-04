@@ -2,21 +2,26 @@ import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
 import { inject } from './inject';
 
-export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonData: any) => {
-    // Configure chromium for Vercel serverless
+export const htmlToPdf = async (
+    htmlContent: string,
+    jsonData: any
+) => {
     const browser = await puppeteer.launch({
         args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
+        headless: true, // ✅ explicitly set
+        defaultViewport: {
+            width: 1280,
+            height: 800,
+        },
     });
 
     const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
     await page.evaluate(inject, jsonData);
+
     const pdfBuffer = await page.pdf({
-        path: outputPath,
         format: 'A4',
         printBackground: true,
         margin: {
@@ -26,6 +31,7 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
             right: '5mm',
         },
     });
+
     await browser.close();
     return pdfBuffer;
 };
