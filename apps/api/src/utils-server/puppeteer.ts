@@ -28,7 +28,13 @@ export const htmlToPdf = async (
 
     const page = await browser.newPage();
 
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+    // Use domcontentloaded instead of networkidle0 to avoid timeout issues
+    // with external resources (fonts, images, etc.)
+    await page.setContent(htmlContent, {
+        waitUntil: 'domcontentloaded',
+        timeout: 60000 // 60 seconds timeout
+    });
+
     await page.evaluate(inject, jsonData);
 
     const pdfBuffer = await page.pdf({
