@@ -36,44 +36,236 @@ interface NavigationData {
   };
 }
 
-export function Navigation() {
-  const [navData, setNavData] = useState<NavigationData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:4000/api/landing/navigation')
-      .then(res => res.json())
-      .then(data => {
-        setNavData(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to load navigation:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading || !navData) {
-    return (
-      <nav className="nav">
-        <div className="nav-container">
-          <a href="/" className="logo">Loading...</a>
-        </div>
-      </nav>
-    );
+const navigation: NavigationData = {
+  logo: {
+    text: "Resume",
+    accent: "Pro"
+  },
+  menuItems: [
+    {
+      id: "product",
+      label: "Product",
+      type: "mega-dropdown",
+      columns: [
+        {
+          items: [
+            {
+              icon: "🎯",
+              title: "Features",
+              description: "Powerful resume building tools",
+              href: "/#features"
+            },
+            {
+              icon: "📄",
+              title: "Templates",
+              description: "ATS-friendly designs",
+              href: "/templates"
+            },
+            {
+              icon: "💎",
+              title: "Pricing",
+              description: "Simple, transparent pricing",
+              href: "/pricing"
+            }
+          ]
+        },
+        {
+          items: [
+            {
+              icon: "👥",
+              title: "Use Cases",
+              description: "For students, professionals & more",
+              href: "/use-cases"
+            },
+            {
+              icon: "✨",
+              title: "Examples",
+              description: "Real resume showcases",
+              href: "/examples"
+            },
+            {
+              icon: "🔗",
+              title: "Integrations",
+              description: "Connect with LinkedIn & more",
+              href: "/integrations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "resources",
+      label: "Resources",
+      type: "mega-dropdown",
+      columns: [
+        {
+          header: "Guides",
+          items: [
+            {
+              icon: "📖",
+              title: "Resume Writing Guide",
+              description: "Complete guide to writing resumes",
+              href: "/resources/resume-guide"
+            },
+            {
+              icon: "✍️",
+              title: "Cover Letter Guide",
+              description: "Write compelling cover letters",
+              href: "/resources/cover-letter-guide"
+            },
+            {
+              icon: "🤖",
+              title: "ATS Guide",
+              description: "Beat applicant tracking systems",
+              href: "/resources/ats-guide"
+            }
+          ]
+        },
+        {
+          header: "Learn",
+          items: [
+            {
+              icon: "📝",
+              title: "Blog",
+              description: "Career tips and insights",
+              href: "/blog"
+            },
+            {
+              icon: "💼",
+              title: "Career Tips",
+              description: "Job search strategies",
+              href: "/resources/career-tips"
+            },
+            {
+              icon: "🏭",
+              title: "Industry Examples",
+              description: "Resumes by industry",
+              href: "/resources/industry-examples"
+            },
+            {
+              icon: "❓",
+              title: "Help & FAQ",
+              description: "Get answers quickly",
+              href: "/help"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "company",
+      label: "Company",
+      type: "mega-dropdown",
+      columns: [
+        {
+          header: "About",
+          items: [
+            {
+              icon: "🏢",
+              title: "About Us",
+              description: "Our mission and team",
+              href: "/about"
+            },
+            {
+              icon: "✉️",
+              title: "Contact",
+              description: "Get in touch",
+              href: "/contact"
+            }
+          ]
+        },
+        {
+          header: "Trust",
+          items: [
+            {
+              icon: "⭐",
+              title: "Reviews",
+              description: "What our users say",
+              href: "/reviews"
+            },
+            {
+              icon: "🎉",
+              title: "Success Stories",
+              description: "Real career transformations",
+              href: "/success-stories"
+            },
+            {
+              icon: "⚖️",
+              title: "Comparison",
+              description: "Why choose ResumePro",
+              href: "/vs"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  cta: {
+    text: "Start Free →",
+    href: "http://localhost:3002"
+  },
+  mobileMenu: {
+    sections: [
+      {
+        title: "Product",
+        links: [
+          { text: "Features", href: "/#features" },
+          { text: "Templates", href: "/templates" },
+          { text: "Pricing", href: "/pricing" },
+          { text: "Use Cases", href: "/use-cases" },
+          { text: "Examples", href: "/examples" },
+          { text: "Integrations", href: "/integrations" }
+        ]
+      },
+      {
+        title: "Resources",
+        links: [
+          { text: "Resume Writing Guide", href: "/resources/resume-guide" },
+          { text: "Cover Letter Guide", href: "/resources/cover-letter-guide" },
+          { text: "ATS Guide", href: "/resources/ats-guide" },
+          { text: "Blog", href: "/blog" },
+          { text: "Career Tips", href: "/resources/career-tips" },
+          { text: "Industry Examples", href: "/resources/industry-examples" },
+          { text: "Help & FAQ", href: "/help" }
+        ]
+      },
+      {
+        title: "Company",
+        links: [
+          { text: "About Us", href: "/about" },
+          { text: "Contact", href: "/contact" },
+          { text: "Reviews", href: "/reviews" },
+          { text: "Success Stories", href: "/success-stories" },
+          { text: "Comparison", href: "/vs" }
+        ]
+      }
+    ],
+    cta: {
+      text: "Start Free →",
+      href: "/editor"
+    }
   }
+}
+
+export function Navigation() {
+  const [navData, setNavData] = useState<NavigationData | null>(navigation);
+
+
+
+
+
 
   return (
     <>
       <nav className="nav">
         <div className="nav-container">
           <a href="/" className="logo">
-            {navData.logo.text}<span className="logo-accent">{navData.logo.accent}</span>
+            {navData?.logo.text}<span className="logo-accent">{navData?.logo.accent}</span>
           </a>
 
           <div className="nav-links">
             {/* Render Menu Items */}
-            {navData.menuItems.map((menuItem) => (
+            {navData?.menuItems.map((menuItem) => (
               <div key={menuItem.id} className="nav-item">
                 <button className="nav-trigger">
                   {menuItem.label}
@@ -104,8 +296,8 @@ export function Navigation() {
               </div>
             ))}
 
-            <a href={navData.cta.href} className="nav-cta" target="_blank" rel="noopener noreferrer">
-              {navData.cta.text}
+            <a href={navData?.cta.href} className="nav-cta" target="_blank" rel="noopener noreferrer">
+              {navData?.cta.text}
             </a>
           </div>
 
@@ -121,7 +313,7 @@ export function Navigation() {
       {/* Mobile Menu */}
       <div className="mobile-menu" id="mobile-menu">
         <div className="mobile-menu-content">
-          {navData.mobileMenu.sections.map((section, idx) => (
+          {navData?.mobileMenu.sections.map((section, idx) => (
             <div key={idx} className="mobile-menu-section">
               <div className="mobile-section-title">{section.title}</div>
               {section.links.map((link, linkIdx) => (
@@ -129,8 +321,8 @@ export function Navigation() {
               ))}
             </div>
           ))}
-          <a href={navData.mobileMenu.cta.href} className="mobile-cta">
-            {navData.mobileMenu.cta.text}
+          <a href={navData?.mobileMenu.cta.href} className="mobile-cta">
+            {navData?.mobileMenu.cta.text}
           </a>
         </div>
       </div>
