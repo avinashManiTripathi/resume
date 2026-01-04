@@ -1,7 +1,7 @@
 import { App } from './app';
 import { database } from './config/database';
 require('dotenv').config()
-import { initAI } from '@repo/utils-server';
+import { initAI } from './utils-server/ai-analysis';
 initAI(process.env.GOOGLE_API_KEY as string);
 
 

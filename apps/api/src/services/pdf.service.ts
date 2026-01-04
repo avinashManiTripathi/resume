@@ -1,4 +1,4 @@
-import { htmlToPdf } from '@repo/utils-server';
+import { htmlToPdf } from '../utils-server/puppeteer';
 import { ResumeData, PdfGenerationOptions } from '../types/resume.types';
 import { TemplateInjectorService } from './template-injector.service';
 

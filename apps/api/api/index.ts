@@ -1,6 +1,6 @@
 import { createApp } from '../src/app';
 import { database } from '../src/config/database';
-import { initAI } from '@repo/utils-server';
+import { initAI } from '../src/utils-server/ai-analysis';
 require('dotenv').config();
 
 // Initialize AI

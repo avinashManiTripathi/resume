@@ -1,163 +1,161 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { config } from '../config';
 
 interface PersonalInfo {
-    firstName: string;
-    lastName: string;
-    jobTitle: string;
-    email: string;
-    phone: string;
-    summary: string;
-    linkedin?: string;
-    github?: string;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  email: string;
+  phone: string;
+  summary: string;
+  linkedin?: string;
+  github?: string;
 }
 
 interface Experience {
-    jobTitle: string;
-    company: string;
-    startDate: string;
-    endDate: string;
-    description: string;
+  jobTitle: string;
+  company: string;
+  startDate: string;
+  endDate: string;
+  description: string;
 }
 
 interface Education {
-    degree: string;
-    institution: string;
-    startDate: string;
-    endDate: string;
-    description?: string;
+  degree: string;
+  institution: string;
+  startDate: string;
+  endDate: string;
+  description?: string;
 }
 
 interface Project {
-    name: string;
-    companyName?: string;
-    startDate: string;
-    endDate: string;
-    description: string;
+  name: string;
+  companyName?: string;
+  startDate: string;
+  endDate: string;
+  description: string;
 }
 
 interface Skill {
-    name: string;
-    level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  name: string;
+  level: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
 }
 
 interface Certification {
-    name: string;
-    issuer: string;
-    date: string;
-    expiryDate?: string;
-    credentialId?: string;
-    url?: string;
+  name: string;
+  issuer: string;
+  date: string;
+  expiryDate?: string;
+  credentialId?: string;
+  url?: string;
 }
 
 interface Language {
-    language: string;
-    proficiency: 'Native' | 'Fluent' | 'Proficient' | 'Intermediate' | 'Basic';
+  language: string;
+  proficiency: 'Native' | 'Fluent' | 'Proficient' | 'Intermediate' | 'Basic';
 }
 
 interface Award {
-    title: string;
-    issuer: string;
-    date: string;
-    description: string;
+  title: string;
+  issuer: string;
+  date: string;
+  description: string;
 }
 
 interface Achievement {
-    title: string;
-    description: string;
-    date: string;
+  title: string;
+  description: string;
+  date: string;
 }
 
 interface Publication {
-    title: string;
-    publisher: string;
-    date: string;
-    url?: string;
-    description: string;
+  title: string;
+  publisher: string;
+  date: string;
+  url?: string;
+  description: string;
 }
 
 interface VolunteerExperience {
-    role: string;
-    organization: string;
-    startDate: string;
-    endDate: string;
-    currentlyVolunteering?: boolean;
-    description: string;
+  role: string;
+  organization: string;
+  startDate: string;
+  endDate: string;
+  currentlyVolunteering?: boolean;
+  description: string;
 }
 
 interface Interest {
-    name: string;
-    description?: string;
+  name: string;
+  description?: string;
 }
 
 interface Reference {
-    name: string;
-    jobTitle: string;
-    company: string;
-    email: string;
-    phone: string;
+  name: string;
+  jobTitle: string;
+  company: string;
+  email: string;
+  phone: string;
 }
 
 export interface ResumeData {
-    personalInfo: PersonalInfo;
-    experience: Experience[];
-    education: Education[];
-    projects: Project[];
-    skills: Skill[];
-    certifications: Certification[];
-    languages: Language[];
-    awards: Award[];
-    achievements: Achievement[];
-    publications: Publication[];
-    volunteer: VolunteerExperience[];
-    interests: Interest[];
-    references: Reference[];
+  personalInfo: PersonalInfo;
+  experience: Experience[];
+  education: Education[];
+  projects: Project[];
+  skills: Skill[];
+  certifications: Certification[];
+  languages: Language[];
+  awards: Award[];
+  achievements: Achievement[];
+  publications: Publication[];
+  volunteer: VolunteerExperience[];
+  interests: Interest[];
+  references: Reference[];
 }
 
 export class ResumeExtractionService {
-    private ai: any;
+  private ai: any;
 
-    constructor() {
-        this.ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
+  constructor() {
+    this.ai = new GoogleGenerativeAI(config.geminiApiKey);
+  }
+
+  /**
+   * Extract structured resume data from free-text input
+   */
+  async extractFromText(text: string): Promise<ResumeData> {
+    if (!text || text.trim().length < 50) {
+      throw new Error('Please provide more detailed information (minimum 50 characters)');
     }
 
-    /**
-     * Extract structured resume data from free-text input
-     */
-    async extractFromText(text: string): Promise<ResumeData> {
-        if (!text || text.trim().length < 50) {
-            throw new Error('Please provide more detailed information (minimum 50 characters)');
-        }
+    const prompt = this.buildExtractionPrompt(text);
 
-        const prompt = this.buildExtractionPrompt(text);
+    try {
+      const model = this.ai.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+      const response = await model.generateContent(prompt);
+      const responseText = response.response.text() || '';
+      // Extract JSON from response (handle markdown code blocks)
+      const jsonMatch = responseText.match(/```json\n?([\s\S]*?)\n?```/) ||
+        responseText.match(/```\n?([\s\S]*?)\n?```/) ||
+        [null, responseText];
 
-        try {
-            const response = await this.ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: prompt,
-            });
-            const responseText = response.text || '';
-            // Extract JSON from response (handle markdown code blocks)
-            const jsonMatch = responseText.match(/```json\n?([\s\S]*?)\n?```/) ||
-                responseText.match(/```\n?([\s\S]*?)\n?```/) ||
-                [null, responseText];
+      const jsonText = jsonMatch[1] || responseText;
+      const extractedData = JSON.parse(jsonText.trim());
 
-            const jsonText = jsonMatch[1] || responseText;
-            const extractedData = JSON.parse(jsonText.trim());
-
-            // Validate and clean the data
-            return this.validateAndCleanData(extractedData);
-        } catch (error: any) {
-            console.error('AI extraction error:', error);
-            throw new Error(error.toString());
-        }
+      // Validate and clean the data
+      return this.validateAndCleanData(extractedData);
+    } catch (error: any) {
+      console.error('AI extraction error:', error);
+      throw new Error(error.toString());
     }
+  }
 
-    /**
-     * Combine text and PDF content for extraction
-     */
-    async combineAndExtract(textContent: string, pdfContent: string): Promise<ResumeData> {
-        const combinedContent = `
+  /**
+   * Combine text and PDF content for extraction
+   */
+  async combineAndExtract(textContent: string, pdfContent: string): Promise<ResumeData> {
+    const combinedContent = `
 === User-Provided Information ===
 ${textContent}
 
@@ -165,14 +163,14 @@ ${textContent}
 ${pdfContent}
         `.trim();
 
-        return this.extractFromText(combinedContent);
-    }
+    return this.extractFromText(combinedContent);
+  }
 
-    /**
-     * Build AI prompt for resume extraction
-     */
-    private buildExtractionPrompt(content: string): string {
-        return `You are an expert resume parser and career advisor. Your task is to extract career information from the provided text and return it in a structured JSON format.
+  /**
+   * Build AI prompt for resume extraction
+   */
+  private buildExtractionPrompt(content: string): string {
+    return `You are an expert resume parser and career advisor. Your task is to extract career information from the provided text and return it in a structured JSON format.
 
 **CRITICAL RULES:**
 1. **Translation**: If the content is in any language other than English, translate ALL fields to professional, native-level English
@@ -332,142 +330,142 @@ Return ONLY a valid JSON object matching this exact schema (no additional text, 
 - Make all content ATS-optimized and professional
 
 Now extract and structure the resume data:`;
+  }
+
+  /**
+   * Validate and clean extracted data
+   */
+  private validateAndCleanData(data: any): ResumeData {
+    // Ensure required fields exist
+    if (!data.personalInfo?.firstName || !data.personalInfo?.lastName) {
+      throw new Error('Name information is required. Please provide at least first and last name.');
     }
 
-    /**
-     * Validate and clean extracted data
-     */
-    private validateAndCleanData(data: any): ResumeData {
-        // Ensure required fields exist
-        if (!data.personalInfo?.firstName || !data.personalInfo?.lastName) {
-            throw new Error('Name information is required. Please provide at least first and last name.');
-        }
+    // Initialize default structure
+    const cleanData: ResumeData = {
+      personalInfo: {
+        firstName: data.personalInfo.firstName || '',
+        lastName: data.personalInfo.lastName || '',
+        jobTitle: data.personalInfo.jobTitle || '',
+        email: this.validateEmail(data.personalInfo.email),
+        phone: data.personalInfo.phone || '',
+        summary: data.personalInfo.summary || '',
+        linkedin: this.validateUrl(data.personalInfo.linkedin),
+        github: this.validateUrl(data.personalInfo.github)
+      },
+      experience: this.cleanExperience(data.experience || []),
+      education: this.cleanEducation(data.education || []),
+      projects: this.cleanProjects(data.projects || []),
+      skills: this.cleanSkills(data.skills || []),
+      certifications: data.certifications || [],
+      languages: data.languages || [],
+      awards: data.awards || [],
+      achievements: data.achievements || [],
+      publications: data.publications || [],
+      volunteer: data.volunteer || [],
+      interests: data.interests || [],
+      references: data.references || []
+    };
 
-        // Initialize default structure
-        const cleanData: ResumeData = {
-            personalInfo: {
-                firstName: data.personalInfo.firstName || '',
-                lastName: data.personalInfo.lastName || '',
-                jobTitle: data.personalInfo.jobTitle || '',
-                email: this.validateEmail(data.personalInfo.email),
-                phone: data.personalInfo.phone || '',
-                summary: data.personalInfo.summary || '',
-                linkedin: this.validateUrl(data.personalInfo.linkedin),
-                github: this.validateUrl(data.personalInfo.github)
-            },
-            experience: this.cleanExperience(data.experience || []),
-            education: this.cleanEducation(data.education || []),
-            projects: this.cleanProjects(data.projects || []),
-            skills: this.cleanSkills(data.skills || []),
-            certifications: data.certifications || [],
-            languages: data.languages || [],
-            awards: data.awards || [],
-            achievements: data.achievements || [],
-            publications: data.publications || [],
-            volunteer: data.volunteer || [],
-            interests: data.interests || [],
-            references: data.references || []
-        };
+    return cleanData;
+  }
 
-        return cleanData;
+  /**
+   * Validate email format
+   */
+  private validateEmail(email: string): string {
+    if (!email) return '';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) ? email : '';
+  }
+
+  /**
+   * Clean and validate experience data
+   */
+  private cleanExperience(experience: any[]): Experience[] {
+    return experience
+      .filter(exp => exp.jobTitle && exp.company)
+      .map(exp => ({
+        jobTitle: exp.jobTitle,
+        company: exp.company,
+        startDate: this.validateDate(exp.startDate),
+        endDate: exp.endDate || '',
+        description: exp.description || ''
+      }))
+      .sort((a, b) => {
+        // Sort by startDate descending (most recent first)
+        // Handle empty dates (current positions) - they should be first
+        if (!a.startDate && !b.startDate) return 0;
+        if (!a.startDate) return -1;
+        if (!b.startDate) return 1;
+        return b.startDate.localeCompare(a.startDate);
+      });
+  }
+
+  /**
+   * Clean and validate education data
+   */
+  private cleanEducation(education: any[]): Education[] {
+    return education
+      .filter(edu => edu.degree && edu.institution)
+      .map(edu => ({
+        degree: edu.degree,
+        institution: edu.institution,
+        startDate: this.validateDate(edu.startDate),
+        endDate: this.validateDate(edu.endDate),
+        description: edu.description || ''
+      }));
+  }
+
+  /**
+   * Clean and validate projects data
+   */
+  private cleanProjects(projects: any[]): Project[] {
+    return projects
+      .filter(proj => proj.name)
+      .map(proj => ({
+        name: proj.name,
+        companyName: proj.companyName || '',
+        startDate: this.validateDate(proj.startDate),
+        endDate: this.validateDate(proj.endDate),
+        description: proj.description || ''
+      }));
+  }
+
+  /**
+   * Clean and validate skills data
+   */
+  private cleanSkills(skills: any[]): Skill[] {
+    const validLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+    return skills
+      .filter(skill => skill.name)
+      .map(skill => ({
+        name: skill.name,
+        level: validLevels.includes(skill.level) ? skill.level : 'Intermediate'
+      }));
+  }
+
+  /**
+   * Validate date format (YYYY-MM)
+   */
+  private validateDate(date: string): string {
+    if (!date) return '';
+    const dateRegex = /^\d{4}-\d{2}$/;
+    return dateRegex.test(date) ? date : '';
+  }
+
+  /**
+   * Validate URL format
+   */
+  private validateUrl(url: string): string {
+    if (!url) return '';
+    try {
+      new URL(url);
+      return url;
+    } catch {
+      return '';
     }
-
-    /**
-     * Validate email format
-     */
-    private validateEmail(email: string): string {
-        if (!email) return '';
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email) ? email : '';
-    }
-
-    /**
-     * Clean and validate experience data
-     */
-    private cleanExperience(experience: any[]): Experience[] {
-        return experience
-            .filter(exp => exp.jobTitle && exp.company)
-            .map(exp => ({
-                jobTitle: exp.jobTitle,
-                company: exp.company,
-                startDate: this.validateDate(exp.startDate),
-                endDate: exp.endDate || '',
-                description: exp.description || ''
-            }))
-            .sort((a, b) => {
-                // Sort by startDate descending (most recent first)
-                // Handle empty dates (current positions) - they should be first
-                if (!a.startDate && !b.startDate) return 0;
-                if (!a.startDate) return -1;
-                if (!b.startDate) return 1;
-                return b.startDate.localeCompare(a.startDate);
-            });
-    }
-
-    /**
-     * Clean and validate education data
-     */
-    private cleanEducation(education: any[]): Education[] {
-        return education
-            .filter(edu => edu.degree && edu.institution)
-            .map(edu => ({
-                degree: edu.degree,
-                institution: edu.institution,
-                startDate: this.validateDate(edu.startDate),
-                endDate: this.validateDate(edu.endDate),
-                description: edu.description || ''
-            }));
-    }
-
-    /**
-     * Clean and validate projects data
-     */
-    private cleanProjects(projects: any[]): Project[] {
-        return projects
-            .filter(proj => proj.name)
-            .map(proj => ({
-                name: proj.name,
-                companyName: proj.companyName || '',
-                startDate: this.validateDate(proj.startDate),
-                endDate: this.validateDate(proj.endDate),
-                description: proj.description || ''
-            }));
-    }
-
-    /**
-     * Clean and validate skills data
-     */
-    private cleanSkills(skills: any[]): Skill[] {
-        const validLevels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
-        return skills
-            .filter(skill => skill.name)
-            .map(skill => ({
-                name: skill.name,
-                level: validLevels.includes(skill.level) ? skill.level : 'Intermediate'
-            }));
-    }
-
-    /**
-     * Validate date format (YYYY-MM)
-     */
-    private validateDate(date: string): string {
-        if (!date) return '';
-        const dateRegex = /^\d{4}-\d{2}$/;
-        return dateRegex.test(date) ? date : '';
-    }
-
-    /**
-     * Validate URL format
-     */
-    private validateUrl(url: string): string {
-        if (!url) return '';
-        try {
-            new URL(url);
-            return url;
-        } catch {
-            return '';
-        }
-    }
+  }
 }
 
 export const resumeExtractionService = new ResumeExtractionService();

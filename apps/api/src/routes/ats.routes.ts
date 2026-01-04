@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import mammoth from 'mammoth';
-import { analyzeResumeWithAI } from '@repo/utils-server';
+import { analyzeResumeWithAI } from '../utils-server/ai-analysis';
 const { PDFParse } = require("pdf-parse");
 const pdfParse = PDFParse;
 
