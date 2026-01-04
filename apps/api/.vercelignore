@@ -7,11 +7,8 @@ dist
 
 # Development files
 src/index.ts
-
-# Generated files
 *.pdf
-*.html
-output/
+indexxx.html
 
 # Environment files
 .env
@@ -21,9 +18,3 @@ output/
 # Misc
 .DS_Store
 *.log
-*.md
-README.md
-REFACTORING_GUIDE.md
-
-# Config files
-railway.json

@@ -5,9 +5,10 @@ import { inject } from './inject';
 export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonData: any) => {
     // Configure chromium for Vercel serverless
     const browser = await puppeteer.launch({
-        args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],
+        args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
         executablePath: await chromium.executablePath(),
-        headless: true,
+        headless: chromium.headless,
     });
 
     const page = await browser.newPage();
