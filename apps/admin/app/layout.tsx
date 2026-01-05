@@ -21,11 +21,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased bg-gray-50`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+        <meta name="theme-color" content="#ffffff" />
+      </head>
+      <body className={`${poppins.variable} font-sans antialiased bg-gray-50 min-h-screen`}>
         <div className="flex min-h-screen">
           <AdminSidebar />
-          <main className="flex-1 ml-64">
-            {children}
+          <main className="flex-1 w-full md:ml-64 overflow-x-hidden">
+            <div className="container mx-auto p-4 md:p-6 lg:p-8">
+              {children}
+            </div>
           </main>
         </div>
       </body>

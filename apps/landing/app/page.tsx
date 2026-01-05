@@ -951,26 +951,26 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left: Content */}
-            <div>
+            <div className="order-2 lg:order-1">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full border border-blue-200 mb-6">
                 <Sparkles className="w-5 h-5 text-blue-600" />
                 <span className="text-sm font-semibold text-blue-600">AI-Powered Innovation</span>
               </div>
 
 
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-gray-900">
                 Create Your Resume
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Just by Speaking</span>
               </h2>
 
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 mb-8 leading-relaxed">
                 Say goodbye to typing! Our revolutionary voice command technology lets you build your entire resume hands-free. Just speak naturally about your career, and watch as AI transforms your words into a professional resume.
               </p>
 
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 sm:space-y-4 mb-8">
                 {[
                   {
                     icon: "🎙️",
@@ -993,10 +993,10 @@ export default function LandingPage() {
                     description: "Create a complete resume in under 5 minutes"
                   }
                 ].map((feature, index) => (
-                  <div key={index} className="flex items-start gap-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-100 hover:border-blue-300 transition-colors">
-                    <div className="text-3xl flex-shrink-0">{feature.icon}</div>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 text-gray-900">{feature.title}</h4>
+                  <div key={index} className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3 sm:p-4 border border-blue-100 hover:border-blue-300 transition-colors">
+                    <div className="text-2xl sm:text-3xl flex-shrink-0">{feature.icon}</div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-base sm:text-lg mb-1 text-gray-900">{feature.title}</h4>
                       <p className="text-gray-600 text-sm">{feature.description}</p>
                     </div>
                   </div>
@@ -1005,24 +1005,39 @@ export default function LandingPage() {
 
               <Link
                 href="/editor"
-                className="p-5 flex gap-6 border font-semibold ju rounded-xl border-blue-500 text-blue-600 hover:bg-blue-50 disabled:hover:bg-transparent"
+                className="inline-flex items-center justify-center gap-3 sm:gap-6 w-full sm:w-auto px-6 py-4 sm:p-5 border-2 font-semibold rounded-xl border-blue-600 text-blue-700 hover:bg-blue-50 transition-all group"
               >
-                <Mic className="w-6 h-6" />
-                Try Voice Command Now
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                <Mic className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 text-blue-700 stroke-2" strokeWidth={2.5} />
+                <span className="font-bold">Try Voice Command Now</span>
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-blue-700 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
               </Link>
             </div>
 
             {/* Right: Visual Demo */}
-            <div className="relative">
+            <div className="relative order-1 lg:order-2">
               {/* Main Card */}
               <div className="bg-white rounded-3xl shadow-2xl p-8 relative z-10 border-2 border-gray-100">
                 {/* Voice Input Mockup */}
                 <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 mb-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                        <Mic className="w-6 h-6 text-white" />
+                      <div
+                        className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg relative"
+                        style={{
+                          background: 'linear-gradient(to bottom right, rgb(37, 99, 235), rgb(147, 51, 234))'
+                        }}
+                      >
+                        {/* Filled Mic Icon SVG */}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="white"
+                          className="w-7 h-7"
+                        >
+                          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                          <path d="M19 10v2a7 7 0 0 1-14 0v-2a1 1 0 0 1 2 0v2a5 5 0 0 0 10 0v-2a1 1 0 0 1 2 0z" />
+                          <path d="M12 19a1 1 0 0 1 1 1v3a1 1 0 1 1-2 0v-3a1 1 0 0 1 1-1z" />
+                        </svg>
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-gray-900">Voice Recording</div>
@@ -1035,18 +1050,24 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Waveform Animation */}
-                  <div className="flex items-end justify-center gap-1 h-16 mb-4">
-                    {[...Array(20)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="w-1 bg-gradient-to-t from-blue-500 to-purple-500 rounded-full"
-                        style={{
-                          height: `${Math.random() * 60 + 20}%`,
-                          animation: `wave 1s ease-in-out infinite ${i * 0.1}s`
-                        }}
-                      ></div>
-                    ))}
+                  {/* Waveform Animation - Using inline styles for visibility */}
+                  <div className="flex items-end justify-center gap-1.5 mb-4 rounded-lg p-3" style={{ height: '96px', backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+                    <div className="w-2 rounded-full" style={{ height: '48px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '64px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.1s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '80px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.2s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '56px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.3s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '72px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.4s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '60px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.5s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '76px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.6s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '52px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.7s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '68px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.8s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '80px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 0.9s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '64px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.0s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '56px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.1s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '72px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.2s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '80px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.3s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '64px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.4s' }}></div>
+                    <div className="w-2 rounded-full" style={{ height: '60px', background: 'linear-gradient(to top, rgb(37, 99, 235), rgb(168, 85, 247))', animation: 'wave 1.2s ease-in-out infinite 1.5s' }}></div>
                   </div>
 
                   {/* Sample Transcript */}
@@ -1061,11 +1082,11 @@ export default function LandingPage() {
                 {/* Action Buttons */}
                 <div className="flex gap-3 justify-end">
                   <Button variant="primary">
-                    <Send className="w-5 h-5" />
+                    <Send className="w-5 h-5" strokeWidth={2} />
                     Generate with AI
                   </Button>
                   <Button variant="outline">
-                    <MicOff className="w-5 h-5" />
+                    <MicOff className="w-5 h-5" strokeWidth={2} />
                   </Button>
                 </div>
               </div>
