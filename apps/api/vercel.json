@@ -1,15 +1,9 @@
 {
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/src/index.ts"
-        }
-    ],
     "env": {
         "NODE_ENV": "production"
     },
     "functions": {
-        "src/index.ts": {
+        "api/index.ts": {
             "maxDuration": 60,
             "memory": 2048
         }
