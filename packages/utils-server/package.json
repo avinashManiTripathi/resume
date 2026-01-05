@@ -12,6 +12,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "lucide-react": "^0.562.0"
+    "@sparticuz/chromium": "^123.0.1",
+    "lucide-react": "^0.562.0",
+    "puppeteer": "^24.32.0",
+    "puppeteer-core": "^23.11.1"
   }
 }
