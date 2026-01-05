@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import mammoth from 'mammoth';
 import { analyzeResumeWithAI } from '@repo/utils-server';
-// Removed pdf-parse import - will be lazy loaded when needed
+const { PDFParse } = require("pdf-parse");
+const pdfParse = PDFParse;
 
 
 const router = Router();
@@ -30,10 +31,6 @@ const upload = multer({
  */
 async function extractTextFromFile(file: Buffer): Promise<string> {
     try {
-        // Lazy load pdf-parse only when needed to avoid canvas dependency errors in serverless
-        const { PDFParse } = await import('pdf-parse');
-        const pdfParse = PDFParse;
-
         // pdf-parse v2 API: create parser instance with buffer
         const parser = new pdfParse({ data: file });
 

@@ -1,19 +1,17 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "cd ../../packages/utils-server && npm run build && cd ../../apps/api && tsc",
-    "start": "node dist/index.js",
-    "vercel-build": "cd ../../packages/utils-server && npm run build && cd ../../apps/api && tsc"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@sparticuz/chromium": "^123.0.1",
     "@types/multer": "^2.0.0",
     "cookie-parser": "^1.4.7",
     "express-session": "^1.18.2",
@@ -23,7 +21,6 @@
     "multer": "^2.0.2",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "puppeteer-core": "^23.11.1",
     "stripe": "^20.1.0"
   },
   "devDependencies": {
