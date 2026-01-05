@@ -1156,10 +1156,11 @@ function ResumeEditor() {
 
   // Update URL when template changes
   useEffect(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('templateId', templateId);
-    window.history.replaceState({}, '', url.toString());
-
+    if (!templateId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('templateId', templateId);
+      window.history.replaceState({}, '', url.toString());
+    }
     // Re-render PDF with new template
     renderPdf();
   }, [templateId]);

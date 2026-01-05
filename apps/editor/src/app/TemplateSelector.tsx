@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { useTemplates, type Template } from "@repo/hooks/useTemplate";
 
@@ -12,8 +11,6 @@ interface TemplateSelectorProps {
 }
 
 export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, selectedTemplateId }: TemplateSelectorProps) {
-    const [hoveredId, setHoveredId] = useState<string | null>(null);
-
     // Use the templates hook with caching
     const { templates, loading, error, refetch } = useTemplates({
         apiUrl: apiBase,
@@ -66,53 +63,35 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                 {!loading && !error && templates && templates.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {templates.map((template) => {
-                            const templateId = template.id || '';
+                            const templateId = template._id || '';
                             const isSelected = selectedTemplateId === templateId;
-                            const isHovered = hoveredId === templateId;
                             const templateImage = template.thumbnail || template.image || '';
 
                             return (
                                 <div
                                     key={templateId}
-                                    className={`bg-white p-[16px] group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected
-                                        ? 'ring-4 ring-blue-500 shadow-2xl'
-                                        : 'ring-2 ring-gray-200 hover:ring-blue-400 shadow-md hover:shadow-2xl'
-                                        } ${isHovered ? 'scale-[1.02]' : 'scale-100'}`}
+                                    className="bg-white p-4 relative rounded-xl transition-all duration-300 cursor-pointer ring-2 ring-gray-200 hover:ring-blue-400 shadow-md"
                                     onClick={() => onSelectTemplate(template)}
-                                    onMouseEnter={() => setHoveredId(templateId)}
-                                    onMouseLeave={() => setHoveredId(null)}
                                 >
-                                    {/* Selected Badge */}
+                                    {/* Selected Badge - Blue Tick at 16px from top-right */}
                                     {isSelected && (
-                                        <div className="absolute top-3 right-3 z-10 bg-blue-600 text-white rounded-full p-2 shadow-lg">
+                                        <div className="absolute top-4 right-4 z-20 bg-blue-600 text-white rounded-full p-2 shadow-lg">
                                             <Check className="w-5 h-5" />
                                         </div>
                                     )}
 
-                                    {/* Template Preview Image */}
-                                    <div className="relative aspect-[8.5/11] bg-gray-100">
+                                    {/* Template Preview Image - No hover effects */}
+                                    <div className="relative aspect-[8.5/11] bg-gray-100 rounded-lg overflow-hidden">
                                         <img
                                             src={apiBase + templateImage}
                                             alt={template.name || 'Resume Template'}
-                                            className={`w-full h-full object-cover transition-transform duration-300 ${isHovered ? 'scale-105' : 'scale-100'
-                                                }`}
+                                            className="w-full h-full object-cover"
                                         />
-
-                                        {/* Gradient Overlay on Hover */}
-                                        <div className={`absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'
-                                            }`}>
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <button className={`px-8 py-3 bg-white text-gray-900 rounded-lg font-semibold shadow-xl transform transition-all duration-300 ${isHovered ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                                                    }`}>
-                                                    {isSelected ? 'Selected' : 'Use This Template'}
-                                                </button>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     {/* Template Name (if available) */}
                                     {template.name && (
-                                        <div className="p-4 bg-white border-t border-gray-200">
+                                        <div className="pt-4">
                                             <p className="font-semibold text-gray-900 text-center">{template.name}</p>
                                         </div>
                                     )}

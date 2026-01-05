@@ -5,7 +5,7 @@ import { useGet } from './network';
  * Template interface matching the API response
  */
 export interface Template {
-    id: string;
+    _id: string;
     name: string;
     html: string;
     image?: string;

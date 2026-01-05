@@ -13,6 +13,7 @@ export default function LandingPage() {
   });
 
 
+
   // Services for animated banner
   const services = [
     "Resume Builder",
@@ -551,8 +552,8 @@ export default function LandingPage() {
               ) : (
                 templates?.map((template) => (
                   <Link
-                    key={template.id}
-                    href={`/editor?template=${template.id}`}
+                    key={template._id}
+                    href={`http://localhost:4000/editor?template=${template._id}`}
                     className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-2xl"
                   >
                     <div className="bg-white p-[16px] aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
