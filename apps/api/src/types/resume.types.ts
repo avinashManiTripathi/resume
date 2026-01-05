@@ -120,6 +120,7 @@ export interface CustomSection {
 
 export interface ResumeData {
     templateId?: string;
+    fontFamily?: string;
     order?: string[];
     personalInfo?: PersonalInfo;
     experience?: Experience[];

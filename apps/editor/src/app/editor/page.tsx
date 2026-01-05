@@ -96,6 +96,7 @@ function ResumeEditor() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
   const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
+  const [fontFamily, setFontFamily] = useState('Inter');
 
   const debouncedResume = useDebounce(resume, 500);
 
@@ -452,7 +453,8 @@ function ResumeEditor() {
       const resumeData = {
         templateId,
         sectionLabels, // Include custom section labels
-        ...resume,
+        fontFamily, // Include font family
+        ...debouncedResume,
         order: debouncedSectionOrder
       };
 
@@ -474,7 +476,7 @@ function ResumeEditor() {
   useEffect(() => {
     renderPdf();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel, schema]);
+  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel, schema, fontFamily]);
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
@@ -622,6 +624,8 @@ function ResumeEditor() {
             onExport={handleExport}
             onTemplateChange={() => setShowTemplates(true)}
             onSmartImport={() => setShowSmartImport(true)}
+            fontFamily={fontFamily}
+            onFontChange={setFontFamily}
           />
         </aside>
       </div>

@@ -760,6 +760,37 @@ export class TemplateInjectorService {
 
 
     /**
+     * Apply font family to the entire document
+     */
+    private applyFontFamily(dom: JSDOM, fontFamily?: string): void {
+        if (!fontFamily) return;
+
+        const document = dom.window.document;
+
+        // Check if a style element already exists, if not create one
+        let styleElement = document.querySelector('#custom-font-style') as HTMLStyleElement;
+
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = 'custom-font-style';
+            document.head.appendChild(styleElement);
+        }
+
+        // Add Google Fonts import and apply font to body
+        const fontImport = fontFamily.includes(' ')
+            ? `@import url('https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}:wght@300;400;500;600;700&display=swap');`
+            : `@import url('https://fonts.googleapis.com/css2?family=${fontFamily}:wght@300;400;500;600;700&display=swap');`;
+
+        styleElement.textContent = `
+            ${fontImport}
+            body, * {
+                font-family: '${fontFamily}', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            }
+        `;
+    }
+
+
+    /**
      * Main method to generate HTML from template and data
      */
     public async generateHTML(data: ResumeData, sectionLabels?: Record<string, string>): Promise<string> {
@@ -903,6 +934,11 @@ export class TemplateInjectorService {
 
         // Update section labels AFTER all sections are created (including custom ones)
         this.updateSectionLabels(dom, sectionLabels);
+
+        // Apply font family if provided
+        if (data.fontFamily) {
+            this.applyFontFamily(dom, data.fontFamily);
+        }
 
         // Return the modified HTML
         return dom.serialize();
