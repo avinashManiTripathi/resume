@@ -1,21 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
-
-interface Template {
-    _id: string;
-    id?: string;
-    name?: string;
-    thumbnail?: string;
-    image?: string;
-    htmlContent?: string;
-    html?: string;
-    type?: string;
-    category?: string;
-    isPremium?: boolean;
-    isActive?: boolean;
-}
+import { useTemplates, type Template } from "@repo/hooks/useTemplate";
 
 interface TemplateSelectorProps {
     onBack: () => void;
@@ -25,33 +12,12 @@ interface TemplateSelectorProps {
 }
 
 export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, selectedTemplateId }: TemplateSelectorProps) {
-    const [templates, setTemplates] = useState<Template[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
 
-    useEffect(() => {
-        fetchTemplates();
-    }, []);
-
-    const fetchTemplates = async () => {
-        try {
-            setLoading(true);
-            const response = await fetch(`${apiBase}/api/templates`);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch templates');
-            }
-
-            const data = await response.json();
-            setTemplates(data.templates || []);
-        } catch (err) {
-            console.error('Error fetching templates:', err);
-            setError(err instanceof Error ? err.message : 'Failed to load templates');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // Use the templates hook with caching
+    const { templates, loading, error, refetch } = useTemplates({
+        apiUrl: apiBase,
+    });
 
     return (
         <div className="h-full flex flex-col bg-gradient-to-br from-gray-50 to-white">
@@ -81,9 +47,9 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                 {error && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
                         <p className="text-red-800 font-medium">Error loading templates</p>
-                        <p className="text-red-600 text-sm mt-1">{error}</p>
+                        <p className="text-red-600 text-sm mt-1">{error.message}</p>
                         <button
-                            onClick={fetchTemplates}
+                            onClick={() => refetch()}
                             className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
                         >
                             Try Again
@@ -91,16 +57,16 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                     </div>
                 )}
 
-                {!loading && !error && templates.length === 0 && (
+                {!loading && !error && (!templates || templates.length === 0) && (
                     <div className="text-center py-12">
                         <p className="text-gray-600">No templates available</p>
                     </div>
                 )}
 
-                {!loading && !error && templates.length > 0 && (
+                {!loading && !error && templates && templates.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {templates.map((template) => {
-                            const templateId = template._id || template.id || '';
+                            const templateId = template.id || '';
                             const isSelected = selectedTemplateId === templateId;
                             const isHovered = hoveredId === templateId;
                             const templateImage = template.thumbnail || template.image || '';
@@ -108,7 +74,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                             return (
                                 <div
                                     key={templateId}
-                                    className={`group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected
+                                    className={`bg-white p-[16px] group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected
                                         ? 'ring-4 ring-blue-500 shadow-2xl'
                                         : 'ring-2 ring-gray-200 hover:ring-blue-400 shadow-md hover:shadow-2xl'
                                         } ${isHovered ? 'scale-[1.02]' : 'scale-100'}`}

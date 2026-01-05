@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/hooks": "*",
+    "@repo/ui": "*",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "react": "^19.0.0",

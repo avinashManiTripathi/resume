@@ -3,37 +3,15 @@
 import { Button } from "@repo/ui/button";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useTemplates } from "@repo/hooks/useTemplate";
 import { ENV } from "./env";
 
-interface Template {
-  id: string;
-  name: string;
-  html: string;
-  image?: string;
-}
-
 export default function LandingPage() {
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Use the new template hook with caching
+  const { templates, loading: isLoading, error } = useTemplates({
+    apiUrl: ENV.API_URL,
+  });
 
-
-
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      try {
-        const response = await fetch(ENV.API_URL + '/resumes');
-        const data = await response.json();
-        setTemplates(data);
-      } catch (error) {
-        console.error('Error fetching `templates:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTemplates();
-  }, []);
 
   // Services for animated banner
   const services = [
@@ -571,16 +549,16 @@ export default function LandingPage() {
                   </div>
                 ))
               ) : (
-                templates.map((template) => (
+                templates?.map((template) => (
                   <Link
                     key={template.id}
                     href={`/editor?template=${template.id}`}
                     className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-2xl"
                   >
-                    <div className="aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                      {template.image ? (
+                    <div className="bg-white p-[16px] aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
+                      {template.thumbnail ? (
                         <img
-                          src={template.image}
+                          src={"http://localhost:4000" + template.thumbnail}
                           alt={template.name}
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
                         />
