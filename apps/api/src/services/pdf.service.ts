@@ -1,4 +1,4 @@
-import { htmlToPdf } from '../utils-server/puppeteer';
+import { htmlToPdf } from '@repo/utils-server';
 import { ResumeData, PdfGenerationOptions } from '../types/resume.types';
 import { TemplateInjectorService } from './template-injector.service';
 
@@ -47,8 +47,8 @@ export class PdfService {
             // Generate filename
             const filename = options.filename || this.generateFilename(resumeData);
 
-            // Convert to PDF (filename removed - serverless doesn't write to disk)
-            const pdfBuffer = await htmlToPdf(html, resumeData);
+            // Convert to PDF
+            const pdfBuffer = await htmlToPdf(html, filename, resumeData);
 
             return pdfBuffer;
         } catch (error) {

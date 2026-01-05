@@ -47,13 +47,9 @@ export class App {
      * Initialize middlewares
      */
     private initializeMiddlewares(): void {
-        // CORS - support both production and development
-        const allowedOrigins = process.env.CORS_ORIGIN
-            ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
-            : config.corsOrigin;
-
+        // CORS
         this.app.use(cors({
-            origin: allowedOrigins,
+            origin: config.corsOrigin,
             credentials: true,
         }));
 
@@ -157,7 +153,7 @@ export class App {
     }
 
     /**
-     * Start the server (only for local development)
+     * Start the server
      */
     public listen(): void {
         this.app.listen(config.port, () => {
@@ -167,9 +163,3 @@ export class App {
         });
     }
 }
-
-// Export the Express app instance for Vercel serverless
-export const createApp = (): Application => {
-    const appInstance = new App();
-    return appInstance.app;
-};
