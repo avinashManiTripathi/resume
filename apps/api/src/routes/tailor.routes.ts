@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
-const { PDFParse } = require("pdf-parse");
-const pdfParse = PDFParse;
+// Removed pdf-parse import - will be lazy loaded when needed
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const tailorService = new TailorService();
@@ -15,8 +14,6 @@ const tailorService = new TailorService();
  */
 router.post('/analyze', upload.single('resume'), async (req: Request, res: Response) => {
     try {
-
-        console.log("typeof ", typeof pdfParse);
 
         const { jobDescription, jobTitle, company } = req.body;
 
@@ -115,6 +112,10 @@ router.post('/parse', upload.single('resume'), async (req: Request, res: Respons
  */
 async function extractTextFromFile(file: Buffer): Promise<string> {
     try {
+        // Lazy load pdf-parse only when needed to avoid canvas dependency errors in serverless
+        const { PDFParse } = await import('pdf-parse');
+        const pdfParse = PDFParse;
+
         // pdf-parse v2 API: create parser instance with buffer
         const parser = new pdfParse({ data: file });
 

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
-import * as pdfParse from 'pdf-parse';
+// Removed pdf-parse import - will be lazy loaded when needed
 import mammoth from 'mammoth';
 import { resumeExtractionService } from '../services/resume-extraction.service';
 
@@ -29,7 +29,8 @@ const upload = multer({
 async function extractTextFromFile(file: Express.Multer.File): Promise<string> {
     try {
         if (file.mimetype === 'application/pdf') {
-            // Parse PDF - use default export
+            // Lazy load pdf-parse only when needed to avoid canvas dependency errors in serverless
+            const pdfParse = await import('pdf-parse');
             const parse = (pdfParse as any).default || pdfParse;
             const pdfData = await parse(file.buffer);
             return pdfData.text;
