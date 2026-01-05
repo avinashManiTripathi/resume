@@ -1,79 +1,187 @@
 "use client";
 
 import Link from "next/link";
-import { Users, LayoutTemplate, ArrowRight, TrendingUp, FileText } from "lucide-react";
+import {
+  Users,
+  LayoutTemplate,
+  ArrowRight,
+  TrendingUp,
+  FileText,
+  Clock,
+  CheckCircle2,
+} from "lucide-react";
+import { StatCard } from "@/components/StatCard";
 
 export default function AdminDashboard() {
+  // Mock data for recent activity
+  const recentActivities = [
+    { user: "John Doe", action: "Created new resume", time: "2 minutes ago" },
+    { user: "Jane Smith", action: "Updated template", time: "15 minutes ago" },
+    { user: "Mike Johnson", action: "Upgraded to Pro", time: "1 hour ago" },
+    { user: "Sarah Wilson", action: "Downloaded PDF", time: "2 hours ago" },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+      {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">
-          Admin Dashboard
+          Welcome back, Admin 👋
         </h1>
         <p className="text-lg text-gray-600">
-          Manage users, templates, and system settings
+          Here's what's happening with your resume builder today
         </p>
       </div>
 
-      <div className="grid md:grid-cols-4 gap-6 mb-12">
-        {[
-          { label: "Total Users", value: "1,234", change: "+12%", icon: Users, color: "blue" },
-          { label: "Active Templates", value: "18", change: "+2", icon: LayoutTemplate, color: "purple" },
-          { label: "Resumes Created", value: "50,234", change: "+320", icon: FileText, color: "green" },
-          { label: "Growth", value: "95%", change: "+5%", icon: TrendingUp, color: "orange" },
-        ].map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <div key={index} className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-lg">
-              <div className="flex items-center justify-between mb-4">
-                <div className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}>
-                  <Icon className={`w-6 h-6 text-${stat.color}-600`} />
-                </div>
-                <span className="text-sm text-green-600 font-semibold">{stat.change}</span>
-              </div>
-              <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-              <div className="text-sm text-gray-600">{stat.label}</div>
-            </div>
-          );
-        })}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <StatCard
+          label="Total Users"
+          value={1234}
+          change="+12%"
+          icon={Users}
+          color="blue"
+          trend="up"
+        />
+        <StatCard
+          label="Active Templates"
+          value={18}
+          change="+2"
+          icon={LayoutTemplate}
+          color="purple"
+          trend="up"
+        />
+        <StatCard
+          label="Resumes Created"
+          value={50234}
+          change="+320"
+          icon={FileText}
+          color="green"
+          trend="up"
+        />
+        <StatCard
+          label="Growth Rate"
+          value="95%"
+          change="+5%"
+          icon={TrendingUp}
+          color="orange"
+          trend="up"
+        />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <Link href="/users" className="group bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200 hover:border-blue-500 hover:shadow-2xl transition-all">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center">
-              <Users className="w-8 h-8 text-white" />
+      {/* Quick Actions */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link
+            href="/users"
+            className="card-premium hover-lift p-8 group cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 gradient-primary rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  Manage Users
+                </h3>
+                <p className="text-gray-600">
+                  View and manage all registered users
+                </p>
+              </div>
+              <ArrowRight className="w-6 h-6 text-blue-600 group-hover:translate-x-2 transition-transform duration-300" />
             </div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900">Manage Users</h3>
-              <p className="text-gray-600">View and manage all users</p>
-            </div>
-            <ArrowRight className="w-6 h-6 text-blue-600 group-hover:translate-x-2 transition-transform" />
-          </div>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>•  View user details and activity</li>
-            <li>• Suspend or delete user accounts</li>
-            <li>• Export user data</li>
-          </ul>
-        </Link>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                View user details and activity
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Suspend or delete accounts
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Export user data
+              </li>
+            </ul>
+          </Link>
 
-        <Link href="/templates" className="group bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border-2 border-purple-200 hover:border-purple-500 hover:shadow-2xl transition-all">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-purple-600 rounded-xl flex items-center justify-center">
-              <LayoutTemplate className="w-8 h-8 text-white" />
+          <Link
+            href="/templates"
+            className="card-premium hover-lift p-8 group cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <LayoutTemplate className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  Manage Templates
+                </h3>
+                <p className="text-gray-600">
+                  View and manage resume templates
+                </p>
+              </div>
+              <ArrowRight className="w-6 h-6 text-purple-600 group-hover:translate-x-2 transition-transform duration-300" />
             </div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900">Manage Templates</h3>
-              <p className="text-gray-600">View and manage resume templates</p>
-            </div>
-            <ArrowRight className="w-6 h-6 text-purple-600 group-hover:translate-x-2 transition-transform" />
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Add, edit, or delete templates
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Toggle template visibility
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Preview and test templates
+              </li>
+            </ul>
+          </Link>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Recent Activity
+        </h2>
+        <div className="card p-6">
+          <div className="space-y-4">
+            {recentActivities.map((activity, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-white text-sm">
+                  {activity.user
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900">{activity.user}</p>
+                  <p className="text-sm text-gray-600">{activity.action}</p>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Clock className="w-4 h-4" />
+                  {activity.time}
+                </div>
+              </div>
+            ))}
           </div>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li>• Add, edit, or delete templates</li>
-            <li>• Toggle template visibility</li>
-            <li>• Preview and test templates</li>
-          </ul>
-        </Link>
+          <div className="mt-6 text-center">
+            <Link
+              href="/users"
+              className="text-blue-600 hover:text-blue-700 font-medium text-sm inline-flex items-center gap-2"
+            >
+              View all activity
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

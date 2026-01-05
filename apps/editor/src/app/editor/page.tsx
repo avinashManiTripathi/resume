@@ -454,7 +454,7 @@ function ResumeEditor() {
         templateId,
         sectionLabels, // Include custom section labels
         fontFamily, // Include font family
-        ...debouncedResume,
+        ...debouncedResume as any,
         order: debouncedSectionOrder
       };
 
@@ -530,6 +530,7 @@ function ResumeEditor() {
           const resumeData = {
             templateId,
             sectionLabels,
+            fontFamily,
             ...resume,
             order: sectionOrder
           };

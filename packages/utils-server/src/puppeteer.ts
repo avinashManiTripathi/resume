@@ -9,7 +9,6 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
 
     await page.evaluate(inject, jsonData);
     const pdfBuffer = await page.pdf({
-        path: outputPath,
         format: 'A4',
         printBackground: true,
         margin: {
