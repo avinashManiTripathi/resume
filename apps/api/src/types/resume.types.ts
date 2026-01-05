@@ -6,6 +6,7 @@ export interface PersonalInfo {
     phone: string;
     city?: string;
     state?: string;
+    pincode?: string
     country?: string;
     summary: string;
     profileImage?: string; // Base64 encoded image or URL

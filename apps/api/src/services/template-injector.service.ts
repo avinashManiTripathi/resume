@@ -74,6 +74,9 @@ export class TemplateInjectorService {
         const phone = document.getElementById('phone');
         if (phone) phone.textContent = personalInfo.phone || '';
 
+        const address = document.getElementById("address");
+        if (address) address.textContent = `${personalInfo.city || ''}, ${personalInfo.state || ''}, ${personalInfo.pincode || ''}, ${personalInfo.country || ''}`;
+
         // Handle LinkedIn link
         const linkedinLink = document.getElementById('linkedin-link');
         if (linkedinLink) {
