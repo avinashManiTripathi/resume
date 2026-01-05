@@ -24,10 +24,8 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className={`${poppins.variable} antialiased min-h-screen flex items-center justify-center bg-gray-50`}>
-        <div className="w-full max-w-md px-4">
-          {children}
-        </div>
+      <body className={`${poppins.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );
