@@ -116,7 +116,7 @@ export default function ATSCheckerPage() {
                 }
             }, 800);
 
-            const response = await fetch("http://localhost:4000/api/ats/check", {
+            const response = await fetch("https://api.profresume.com/api/ats/check", {
                 method: "POST",
                 body: formData,
             });

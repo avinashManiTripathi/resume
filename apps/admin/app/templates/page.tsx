@@ -45,7 +45,7 @@ export default function TemplatesPage() {
   const fetchTemplates = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:4000/api/templates");
+      const response = await fetch("https://api.profresume.com/api/templates");
       const data = await response.json();
       setTemplates(data.templates || []);
     } catch (error) {
@@ -85,7 +85,7 @@ export default function TemplatesPage() {
     const thumbnailUrl = template.thumbnail?.startsWith('data:')
       ? template.thumbnail
       : template.thumbnail
-        ? `http://localhost:4000${template.thumbnail}`
+        ? `https://api.profresume.com${template.thumbnail}`
         : "";
     setImagePreview(thumbnailUrl);
     setFormData({ ...template, htmlContent: template.htmlContent || template.html || "" });
@@ -105,7 +105,7 @@ export default function TemplatesPage() {
         return;
       }
 
-      const url = isEditing ? `http://localhost:4000/api/templates/${formData._id || formData.id}` : "http://localhost:4000/api/templates";
+      const url = isEditing ? `https://api.profresume.com/api/templates/${formData._id || formData.id}` : "https://api.profresume.com/api/templates";
 
       // Clean up the data - remove thumbnail from main save (will be uploaded separately)
       const cleanData = {
@@ -137,7 +137,7 @@ export default function TemplatesPage() {
         const imageFormData = new FormData();
         imageFormData.append('image', uploadedFile);
 
-        const uploadResponse = await fetch(`http://localhost:4000/api/templates/upload/${templateId}`, {
+        const uploadResponse = await fetch(`https://api.profresume.com/api/templates/upload/${templateId}`, {
           method: 'POST',
           body: imageFormData,
         });
@@ -162,7 +162,7 @@ export default function TemplatesPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this template?")) return;
     try {
-      const response = await fetch(`http://localhost:4000/api/templates/${id}`, { method: "DELETE" });
+      const response = await fetch(`https://api.profresume.com/api/templates/${id}`, { method: "DELETE" });
       if (response.ok) {
         await fetchTemplates();
         alert("Template deleted successfully!");
@@ -257,7 +257,7 @@ export default function TemplatesPage() {
               <div className="aspect-[8.5/11] bg-gray-100 relative overflow-hidden rounded-t-lg">
                 {template.thumbnail ? (
                   <img
-                    src={template.thumbnail.startsWith('data:') ? template.thumbnail : `http://localhost:4000${template.thumbnail}`}
+                    src={template.thumbnail.startsWith('data:') ? template.thumbnail : `https://api.profresume.com${template.thumbnail}`}
                     alt={template.name}
                     className="w-full h-full object-cover"
                   />

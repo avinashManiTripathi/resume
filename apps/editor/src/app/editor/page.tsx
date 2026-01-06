@@ -17,7 +17,7 @@ import { dummyData, ResumeFormSchema } from "../constants";
 
 
 function ResumeEditor() {
-  const API_BASE = "http://localhost:4000"
+  const API_BASE = "https://api.profresume.com"
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -575,7 +575,7 @@ function ResumeEditor() {
 
           {showTemplates ? (
             <TemplateSelector
-              apiBase={API_BASE || 'http://localhost:4000'}
+              apiBase={API_BASE || 'https://api.profresume.com'}
               selectedTemplateId={templateId}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {

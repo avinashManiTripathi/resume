@@ -96,7 +96,7 @@ export function useTemplates(options?: {
     skipCache?: boolean;
 }) {
     const { apiUrl, cacheTTL, skipCache } = options || {};
-    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
     const endpoint = `${baseUrl}/api/templates`;
     const cacheKey = 'templates:all';
 
@@ -158,7 +158,7 @@ export function useTemplate(
     }
 ) {
     const { apiUrl, cacheTTL, skipCache } = options || {};
-    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
     const endpoint = `${baseUrl}/templates/${templateId}`;
     const cacheKey = `template:${templateId}`;
 
@@ -215,7 +215,7 @@ export function useTemplatesByCategory(
     }
 ) {
     const { apiUrl, cacheTTL, skipCache } = options || {};
-    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+    const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
     const endpoint = `${baseUrl}/templates?category=${encodeURIComponent(category)}`;
     const cacheKey = `templates:category:${category}`;
 
