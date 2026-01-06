@@ -14,16 +14,7 @@ export default function LandingPage() {
 
 
 
-  // Services for animated banner
-  const services = [
-    "Resume Builder",
-    "AI Writer",
-    "Cover Letters",
-    "ATS Checker",
-    "Interview Prep",
-    "Job Board",
-    "Career Coaching"
-  ];
+
 
   return (
     <div className="min-h-screen bg-white">

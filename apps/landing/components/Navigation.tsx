@@ -327,7 +327,9 @@ export function Navigation() {
       <style jsx>{`
         /* Navigation */
         .nav {
-          position: sticky;
+          position: fixed;
+          left: 0;
+          right: 0;
           top: 0;
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(20px);

@@ -31,7 +31,7 @@ export default function RootLayout({
       </head>
       <body className={`${poppins.variable} antialiased min-h-screen flex flex-col`}>
         <Navigation />
-        <main className="flex-1">
+        <main className="flex-1 mt-[70px]">
           {children}
         </main>
         <Footer />
