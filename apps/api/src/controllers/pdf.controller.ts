@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { PdfService } from '../services/pdf.service';
 import { ResumeData } from '../types/resume.types';
-import { RESUMES } from '../constant';
 
 export class PdfController {
     private pdfService: PdfService;
@@ -51,12 +50,6 @@ export class PdfController {
         }
     };
 
-    /**
-     * Get all resumes
-     */
-    public getResumes = (_req: Request, res: Response): void => {
-        res.json(RESUMES);
-    };
 
     /**
      * Health check endpoint

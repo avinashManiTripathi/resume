@@ -118,6 +118,7 @@ function ResumeEditor() {
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<any>(null);
   const requestIdRef = useRef(0);
+  const abortControllerRef = useRef<AbortController | null>(null); // For cancelling PDF requests
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
 
@@ -440,6 +441,15 @@ function ResumeEditor() {
   const renderPdf = async (page = currentPage) => {
     if (!canvasRef.current || !mainRef.current) return;
 
+    // Abort previous pending request if exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
     setIsGeneratingPDF(true);
     try {
       const apiUrl = `${API_BASE}/convert-html-to-pdf`;
@@ -462,14 +472,24 @@ function ResumeEditor() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(resumeData),
+        signal: abortController.signal // Attach abort signal
       });
 
       const pdfData = await response.arrayBuffer();
       await renderPDFPage(pdfData, page);
-    } catch (error) {
+    } catch (error: any) {
+      // Ignore abort errors - they're expected when we cancel requests
+      if (error.name === 'AbortError') {
+        console.log('PDF request cancelled');
+        return;
+      }
       console.error("Error rendering PDF:", error);
     } finally {
-      setIsGeneratingPDF(false);
+      // Only clear loading if this is still the current request
+      if (abortControllerRef.current === abortController) {
+        setIsGeneratingPDF(false);
+        abortControllerRef.current = null;
+      }
     }
   };
 
