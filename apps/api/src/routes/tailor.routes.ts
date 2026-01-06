@@ -16,7 +16,6 @@ const tailorService = new TailorService();
 router.post('/analyze', upload.single('resume'), async (req: Request, res: Response) => {
     try {
 
-        console.log("typeof ", typeof pdfParse);
 
         const { jobDescription, jobTitle, company } = req.body;
 

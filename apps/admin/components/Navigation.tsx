@@ -41,7 +41,7 @@ export function Navigation() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://api.profresume.com/api/landing/navigation')
+    fetch('http://localhost:4000/api/landing/navigation')
       .then(res => res.json())
       .then(data => {
         setNavData(data);

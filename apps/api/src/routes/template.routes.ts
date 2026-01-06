@@ -61,8 +61,6 @@ router.post('/', async (req: Request, res: Response) => {
 // Update template
 router.put('/:id', async (req: Request, res: Response) => {
     try {
-        console.log('Updating template:', req.params.id);
-        console.log('Update data:', JSON.stringify(req.body, null, 2));
 
         const template = await Template.findByIdAndUpdate(
             req.params.id,

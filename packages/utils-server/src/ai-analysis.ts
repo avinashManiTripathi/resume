@@ -1,15 +1,34 @@
-import { GoogleGenAI } from "@google/genai";
+/**
+ * Call local AI API for text generation
+ * @param prompt - The prompt to send to the AI
+ * @returns The AI's response text
+ */
+async function callLocalAI(prompt: string): Promise<string> {
+  try {
+    const response = await fetch('https://ai.profresume.com/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: prompt })
+    });
 
+    if (!response.ok) {
+      throw new Error(`Local AI API error: ${response.status} ${response.statusText}`);
+    }
 
-
-let ai = new GoogleGenAI({ apiKey: "AIzaSyAd9_y0iU0Tob_6i_df6ACwpwKi3NKhq9s" });
+    const data = await response.json();
+    return data.reply;
+  } catch (error) {
+    console.error('Local AI API call failed:', error);
+    throw new Error(`Failed to call local AI: ${(error as Error).message}`);
+  }
+}
 
 /**
- * Initialize the AI client
- * @param apiKey - Google API key
+ * Initialize the AI client (deprecated - now using local AI)
+ * @param apiKey - API key (no longer used)
  */
 export const initAI = (apiKey: string) => {
-  // ai = new GoogleGenAI({ apiKey });
+  // No longer needed - using local AI
 }
 
 /**
@@ -130,7 +149,7 @@ ${company ? `**COMPANY:** ${company}` : ''}
       "company": "string",
       "startDate": "YYYY-MM",
       "endDate": "YYYY-MM or empty string for current",
-      "description": "string (HTML formatted with <ul><li> for bullet points, tailored to job description)"
+      "description": "string (MUST be a SINGLE string containing complete HTML. Format: '<ul><li>Achievement 1...</li><li>Achievement 2...</li></ul>'. Each bullet must include quantifiable metrics. Do NOT return an array.)"
     }
   ],
   "education": [
@@ -224,12 +243,7 @@ ${company ? `**COMPANY:** ${company}` : ''}
 
 Return ONLY the JSON object, nothing else.`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
-
-    const responseText = response.text;
+    const responseText = await callLocalAI(prompt);
 
     if (!responseText) {
       throw new Error('AI returned empty response');
@@ -373,12 +387,7 @@ BE STRICT AND THOROUGH. Most resumes have issues. Provide specific, actionable f
 
 Return ONLY the JSON object, nothing else.`;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
-
-  const responseText = response.text;
+  const responseText = await callLocalAI(prompt);
 
   if (!responseText) {
     throw new Error('AI returned empty response');

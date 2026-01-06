@@ -175,7 +175,6 @@ export async function seedTemplates() {
       const existing = await Template.findOne({ name: templateData.name });
       if (!existing) {
         await Template.create(templateData);
-        console.log(`✅ Created template: ${templateData.name}`);
       } else {
         console.log(`⏭️  Template already exists: ${templateData.name}`);
       }

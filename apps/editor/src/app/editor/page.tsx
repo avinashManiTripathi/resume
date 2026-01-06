@@ -17,13 +17,13 @@ import { dummyData, ResumeFormSchema } from "../constants";
 
 
 function ResumeEditor() {
-  const API_BASE = "https://api.profresume.com"
+  const API_BASE = "http://localhost:4000"
   const searchParams = useSearchParams();
   const router = useRouter();
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
-  const defaultTemplateId = "692bcfd239561eef09d89aa9";
+  const defaultTemplateId = "6959f1c2de127e0f17295492";
 
   // Undo/Redo history
   const [history, setHistory] = useState<any[]>([dummyData]);
@@ -575,7 +575,7 @@ function ResumeEditor() {
 
           {showTemplates ? (
             <TemplateSelector
-              apiBase={API_BASE || 'https://api.profresume.com'}
+              apiBase={API_BASE || 'http://localhost:4000'}
               selectedTemplateId={templateId}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {

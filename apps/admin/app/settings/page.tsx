@@ -97,14 +97,12 @@ export default function SettingsPage() {
   ]);
 
   const toggleMenu = (id: string) => {
-    setExpandedMenus(prev => 
+    setExpandedMenus(prev =>
       prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
     );
   };
 
   const handleSave = () => {
-    const data = { menuItems, footerSections };
-    console.log("Saving:", JSON.stringify(data, null, 2));
     alert("Settings saved! Check console for data.");
   };
 
@@ -146,7 +144,7 @@ export default function SettingsPage() {
             {menuItems.map((menu) => (
               <div key={menu.id} className="border-2 border-gray-200 rounded-lg overflow-hidden">
                 {/* Menu Header */}
-                <div 
+                <div
                   className="bg-gray-50 p-4 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
                   onClick={() => toggleMenu(menu.id)}
                 >
@@ -187,8 +185,8 @@ export default function SettingsPage() {
                           )}
                           <div className="space-y-2">
                             {column.items.map((item, itemIndex) => (
-                              <div 
-                                key={itemIndex} 
+                              <div
+                                key={itemIndex}
                                 className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                               >
                                 <div className="flex items-start gap-3">

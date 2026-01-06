@@ -51,6 +51,9 @@ async function extractTextFromFile(file: Express.Multer.File): Promise<string> {
  * Extract structured resume data from text and/or file
  */
 router.post('/extract', upload.single('file'), async (req: Request, res: Response) => {
+
+    console.log("Extract API CAllaeddd")
+
     try {
         const { text } = req.body;
         const file = req.file;

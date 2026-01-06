@@ -83,7 +83,7 @@ router.post('/check', upload.single('resume'), async (req: Request, res: Respons
             });
         }
 
-        // Analyze with Gemini AI
+        // Analyze with Local AI
         const analysis = await analyzeResumeWithAI(resumeText);
 
         res.json(analysis);

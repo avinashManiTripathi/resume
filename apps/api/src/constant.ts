@@ -1759,5 +1759,3 @@ export const RESUMES = [
 ]
 
 
-
-export const GEMINI_API = "AIzaSyCLX6h1CxvoLj3_Nj19wxJqF_LZPxDyvSY"
