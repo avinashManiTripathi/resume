@@ -1,9 +1,16 @@
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { Metadata } from "next";
 import { ENV } from "./env";
 import { TemplatesSlider } from "@/components/TemplatesSlider";
 import { VoiceDemo } from "@/components/VoiceDemo";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://profresume.com",
+  },
+};
 
 async function getTemplates() {
   try {

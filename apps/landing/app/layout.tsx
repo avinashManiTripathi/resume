@@ -18,6 +18,11 @@ const baseUrl = 'https://profresume.com';
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
 
+  // Canonical URL (Critical for SEO)
+  alternates: {
+    canonical: baseUrl,
+  },
+
   // Basic Metadata
   title: {
     default: "Professional Resume Builder | Create ATS-Friendly Resumes in Minutes",
@@ -85,6 +90,11 @@ export const metadata: Metadata = {
   // Additional
   category: "technology",
   classification: "Resume Builder Software",
+
+  // Verification (for Google Search Console)
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
+  },
 };
 
 export default function RootLayout({

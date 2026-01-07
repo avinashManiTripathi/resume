@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     title: 'Targeted Resume Guide 2026 - Tailor Your Resume for Every Job | 300% More Interviews',
     description: 'Master the art of creating targeted resumes that beat ATS systems and impress recruiters. Proven strategies to increase interview callbacks by 300%. Free tools & examples included.',
     keywords: 'targeted resume, tailored resume, customize resume, resume customization, matching job description, resume targeting, personalized resume, job-specific resume, ATS optimization',
+    alternates: {
+        canonical: 'https://profresume.com/resources/targeted-resume',
+    },
 };
 
 export default function TargetedResumePage() {
