@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Merriweather } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 
-
-const poppins = Poppins({
-  variable: "--font-poppins",
+const merriweather = Merriweather({
+  variable: "--font-merriweather",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -29,7 +28,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body className={`${poppins.variable} antialiased min-h-screen flex flex-col`}>
+      <body className={`${merriweather.variable} antialiased min-h-screen flex flex-col`}>
         <Navigation />
         <main className="flex-1 mt-[70px]">
           {children}

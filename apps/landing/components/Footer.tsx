@@ -97,8 +97,18 @@ export function Footer() {
                             <li><Link href="/resources/cover-letter-guide" className="hover:text-white transition-colors">Cover Letter Guide</Link></li>
                             <li><Link href="/resources/ats-guide" className="hover:text-white transition-colors">ATS Guide</Link></li>
                             <li><Link href="/resources/career-tips" className="hover:text-white transition-colors">Career Tips</Link></li>
+                            <li><Link href="/resources/industry-examples" className="hover:text-white transition-colors">Industry Examples</Link></li>
+                            <li><Link href="/resources/ai-resume-review" className="hover:text-white transition-colors">AI Resume Review</Link></li>
+                            <li><Link href="/resources/resume-checker" className="hover:text-white transition-colors">Resume Checker</Link></li>
+                            <li><Link href="/resources/resume-keyword-generator" className="hover:text-white transition-colors">Keyword Generator</Link></li>
+                            <li><Link href="/resources/resume-booster" className="hover:text-white transition-colors">Resume Booster</Link></li>
+                            <li><Link href="/resources/resume-fixer" className="hover:text-white transition-colors">Resume Fixer</Link></li>
+                            <li><Link href="/resources/resume-scanner" className="hover:text-white transition-colors">Resume Scanner</Link></li>
+                            <li><Link href="/resources/resume-critique" className="hover:text-white transition-colors">Resume Critique</Link></li>
+                            <li><Link href="/resources/targeted-resume" className="hover:text-white transition-colors">Targeted Resume</Link></li>
+                            <li><Link href="/resources/for-organizations" className="hover:text-white transition-colors">For Organizations</Link></li>
+                            <li><Link href="/resources/update-your-resume-io-resume" className="hover:text-white transition-colors">Update Resume.io</Link></li>
                             <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                            <li><Link href="/success-stories" className="hover:text-white transition-colors">Success Stories</Link></li>
                         </ul>
                     </div>
 

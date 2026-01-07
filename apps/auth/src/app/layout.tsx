@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Merriweather } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
+const merriweather = Merriweather({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["300", "400", "700", "900"],
+  variable: "--font-merriweather",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${merriweather.variable} antialiased`}>
         {children}
       </body>
     </html>

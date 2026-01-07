@@ -40,7 +40,7 @@ export default function LandingPage() {
 
               <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
                 Create Your Perfect Resume in{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-blue-600">
                   Minutes
                 </span>
               </h1>
@@ -553,7 +553,7 @@ export default function LandingPage() {
                 templates?.map((template) => (
                   <Link
                     key={template._id}
-                    href={`https://api.profresume.com/editor?template=${template._id}`}
+                    href={`https://edit.profresume.com/editor?template=${template._id}`}
                     className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-2xl"
                   >
                     <div className="bg-white p-[16px] aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">

@@ -250,39 +250,56 @@ const navigation: NavigationData = {
 
 export function Navigation() {
   const [navData, setNavData] = useState<NavigationData | null>(navigation);
-
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <>
-      <nav className="nav">
-        <div className="nav-container">
-          <a href="/" className="logo">
-            <span className="logo-accent"> {navData?.logo.text}</span>{navData?.logo.accent}
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200 z-[1000] py-4">
+        <div className="max-w-7xl mx-auto px-8 flex justify-between items-center">
+          {/* Logo */}
+          <a href="/" className="text-2xl font-extrabold text-gray-900 no-underline">
+            <span className="text-blue-500">{navData?.logo.text}</span>{navData?.logo.accent}
           </a>
 
-          <div className="nav-links">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex gap-8 items-center">
             {/* Render Menu Items */}
-            {navData?.menuItems.map((menuItem) => (
-              <div key={menuItem.id} className="nav-item">
-                <button className="nav-trigger">
+            {navData?.menuItems.map((menuItem, menuIdx) => (
+              <div key={menuItem.id} className="relative group">
+                <button className="bg-transparent border-none text-gray-500 font-medium text-base cursor-pointer flex items-center gap-1 py-2 transition-colors duration-200 hover:text-gray-900">
                   {menuItem.label}
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    className="transition-transform duration-200 group-hover:rotate-180"
+                  >
                     <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
-                <div className="mega-dropdown mega-dropdown-wide">
-                  <div className="dropdown-grid">
+
+                {/* Mega Dropdown - Right aligned for last item to prevent overflow */}
+                <div className={`absolute top-full ${menuIdx === navData.menuItems.length - 1 ? 'right-0' : 'left-0'} transform bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 w-[520px] opacity-0 invisible transition-all duration-200 mt-2 z-50 group-hover:opacity-100 group-hover:visible`}>
+                  <div className="grid grid-cols-2 gap-4">
                     {menuItem.columns.map((column, colIdx) => (
-                      <div key={colIdx} className="dropdown-column">
+                      <div key={colIdx} className="flex flex-col gap-2">
                         {column.header && (
-                          <div className="column-header">{column.header}</div>
+                          <div className="text-xs font-bold text-gray-400 uppercase tracking-wide px-4 py-2">
+                            {column.header}
+                          </div>
                         )}
                         {column.items.map((item, itemIdx) => (
-                          <a key={itemIdx} href={item.href} className="dropdown-item">
-                            <div className="item-icon">{item.icon}</div>
-                            <div className="item-text">
-                              <div className="item-title">{item.title}</div>
-                              <div className="item-desc">{item.description}</div>
+                          <a
+                            key={itemIdx}
+                            href={item.href}
+                            className="flex items-start gap-3 px-4 py-3 rounded-lg transition-colors duration-200 no-underline hover:bg-gray-50"
+                          >
+                            <div className="text-2xl leading-none">{item.icon}</div>
+                            <div className="flex-1">
+                              <div className="font-semibold text-gray-900 mb-1">{item.title}</div>
+                              <div className="text-sm text-gray-500">{item.description}</div>
                             </div>
                           </a>
                         ))}
@@ -293,13 +310,21 @@ export function Navigation() {
               </div>
             ))}
 
-            <a href={navData?.cta.href} className="nav-cta" target="_blank" rel="noopener noreferrer">
+            <a
+              href={navData?.cta.href}
+              className="bg-gray-900 text-white px-6 py-2 rounded-lg font-semibold no-underline transition-all duration-200 hover:bg-gray-800 hover:-translate-y-0.5"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {navData?.cta.text}
             </a>
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="mobile-menu-btn" id="mobile-menu-btn">
+          <button
+            className="md:hidden bg-transparent border-none text-gray-900 cursor-pointer p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
@@ -308,286 +333,37 @@ export function Navigation() {
       </nav>
 
       {/* Mobile Menu */}
-      <div className="mobile-menu" id="mobile-menu">
-        <div className="mobile-menu-content">
+      <div
+        className={`fixed top-0 left-0 right-0 bottom-0 bg-white z-[999] overflow-y-auto transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+      >
+        <div className="pt-20 px-8 pb-8">
           {navData?.mobileMenu.sections.map((section, idx) => (
-            <div key={idx} className="mobile-menu-section">
-              <div className="mobile-section-title">{section.title}</div>
+            <div key={idx} className="mb-8">
+              <div className="font-bold text-gray-900 mb-4 text-lg">
+                {section.title}
+              </div>
               {section.links.map((link, linkIdx) => (
-                <a key={linkIdx} href={link.href}>{link.text}</a>
+                <a
+                  key={linkIdx}
+                  href={link.href}
+                  className="block py-3 text-gray-500 no-underline transition-colors duration-200 hover:text-gray-900"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.text}
+                </a>
               ))}
             </div>
           ))}
-          <a href={navData?.mobileMenu.cta.href} className="mobile-cta">
+          <a
+            href={navData?.mobileMenu.cta.href}
+            className="block bg-gray-900 text-white px-4 py-4 rounded-lg font-semibold text-center no-underline mt-8"
+            onClick={() => setMobileMenuOpen(false)}
+          >
             {navData?.mobileMenu.cta.text}
           </a>
         </div>
       </div>
-
-      <style jsx>{`
-        /* Navigation */
-        .nav {
-          position: fixed;
-          right:0;
-          left:0;
-          top: 0;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          border-bottom: 1px solid #E5E7EB;
-          z-index: 1000;
-          padding: 1rem 0;
-        }
-
-        .nav-container {
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 2rem;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .logo {
-          font-size: 1.5rem;
-          font-weight: 800;
-          color: #111827;
-          text-decoration: none;
-        }
-
-        .logo-accent {
-          color: #3B82F6;
-        }
-
-        .nav-links {
-          display: flex;
-          gap: 2rem;
-          align-items: center;
-        }
-
-        .nav-item {
-          position: relative;
-        }
-
-        .nav-trigger {
-          background: none;
-          border: none;
-          color: #6B7280;
-          font-weight: 500;
-          font-size: 1rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 0.25rem;
-          padding: 0.5rem 0;
-          transition: color 0.2s;
-        }
-
-        .nav-trigger:hover {
-          color: #111827;
-        }
-
-        .nav-trigger svg {
-          transition: transform 0.2s;
-        }
-
-        .nav-item:hover .nav-trigger svg {
-          transform: rotate(180deg);
-        }
-
-        .mega-dropdown {
-          position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          background: white;
-          border-radius: 1rem;
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          padding: 1.5rem;
-          min-width: 320px;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.2s;
-          margin-top: 0.5rem;
-        }
-
-        .mega-dropdown-wide {
-          min-width: 520px;
-        }
-
-        .nav-item:hover .mega-dropdown {
-          opacity: 1;
-          visibility: visible;
-        }
-
-        .dropdown-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-
-        .dropdown-column {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .column-header {
-          font-size: 0.75rem;
-          font-weight: 700;
-          color: #9CA3AF;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          padding: 0.5rem 1rem;
-        }
-
-        .dropdown-item {
-          display: flex;
-          align-items: flex-start;
-          gap: 0.75rem;
-          padding: 0.75rem 1rem;
-          border-radius: 0.5rem;
-          transition: background 0.2s;
-          text-decoration: none;
-          color: inherit;
-        }
-
-        .dropdown-item:hover {
-          background: #F9FAFB;
-        }
-
-        .item-icon {
-          font-size: 1.5rem;
-          line-height: 1;
-        }
-
-        .item-text {
-          flex: 1;
-        }
-
-        .item-title {
-          font-weight: 600;
-          color: #111827;
-          margin-bottom: 0.25rem;
-        }
-
-        .item-desc {
-          font-size: 0.875rem;
-          color: #6B7280;
-        }
-
-        .nav-cta {
-          background: #111827;
-          color: white;
-          padding: 0.5rem 1.5rem;
-          border-radius: 0.5rem;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all 0.2s;
-        }
-
-        .nav-cta:hover {
-          background: #1F2937;
-          transform: translateY(-1px);
-        }
-
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-          display: none;
-          background: none;
-          border: none;
-          color: #111827;
-          cursor: pointer;
-          padding: 0.5rem;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: white;
-          z-index: 999;
-          transform: translateX(100%);
-          transition: transform 0.3s;
-          overflow-y: auto;
-        }
-
-        .mobile-menu.active {
-          transform: translateX(0);
-        }
-
-        .mobile-menu-content {
-          padding: 5rem 2rem 2rem;
-        }
-
-        .mobile-menu-section {
-          margin-bottom: 2rem;
-        }
-
-        .mobile-section-title {
-          font-weight: 700;
-          color: #111827;
-          margin-bottom: 1rem;
-          font-size: 1.125rem;
-        }
-
-        .mobile-menu-section a {
-          display: block;
-          padding: 0.75rem 0;
-          color: #6B7280;
-          text-decoration: none;
-          transition: color 0.2s;
-        }
-
-        .mobile-menu-section a:hover {
-          color: #111827;
-        }
-
-        .mobile-cta {
-          display: block;
-          background: #111827;
-          color: white;
-          padding: 1rem;
-          border-radius: 0.5rem;
-          font-weight: 600;
-          text-align: center;
-          text-decoration: none;
-          margin-top: 2rem;
-        }
-
-        @media (max-width: 768px) {
-          .nav-links {
-            display: none;
-          }
-
-          .mobile-menu-btn {
-            display: block;
-          }
-        }
-      `}</style>
-
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          if (typeof window !== 'undefined') {
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            
-            if (mobileMenuBtn && mobileMenu) {
-              mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('active');
-              });
-              
-              mobileMenu.addEventListener('click', (e) => {
-                if (e.target.tagName === 'A') {
-                  mobileMenu.classList.remove('active');
-                }
-              });
-            }
-          }
-        `
-      }} />
     </>
   );
 }

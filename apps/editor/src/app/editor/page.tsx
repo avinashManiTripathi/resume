@@ -23,7 +23,7 @@ function ResumeEditor() {
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
-  const defaultTemplateId = "692bcfd239561eef09d89aa9";
+  const defaultTemplateId = "6959f1c2de127e0f17295492";
 
   // Undo/Redo history
   const [history, setHistory] = useState<any[]>([dummyData]);
@@ -95,7 +95,7 @@ function ResumeEditor() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
-  const [templateId, setTemplateId] = useState(urlTemplateId || defaultTemplateId);
+  const [templateId, setTemplateId] = useState(urlTemplateId);
   const [fontFamily, setFontFamily] = useState('Inter');
 
   const debouncedResume = useDebounce(resume, 500);
@@ -496,12 +496,14 @@ function ResumeEditor() {
 
   // Update URL when template changes
   useEffect(() => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('templateId', templateId);
-    window.history.replaceState({}, '', url.toString());
+    if (!urlTemplateId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('templateId', defaultTemplateId);
+      window.history.replaceState({}, '', url.toString());
+    }
     // Re-render PDF with new template
     renderPdf();
-  }, [templateId]);
+  }, [urlTemplateId]);
 
   return (
     <div className="flex flex-col h-screen w-full bg-gray-100">
