@@ -327,10 +327,12 @@ export default function ResumeBoosterPage() {
                                 {strategy.examples && (
                                     <div className="ml-14 mt-4 space-y-3">
                                         {strategy.examples.map((ex, eidx) => (
-                                            <div key={eidx} className="bg-gray-50 border-l-4 border-orange-500 p-3 rounded-r">
-                                                <p className="text-sm text-gray-700"><strong>{ex.scenario}:</strong></p>
-                                                <p className="text-sm text-gray-600 mt-1">→ {ex.solution}</p>
-                                            </div>
+                                            typeof ex === 'object' && ex !== null && 'scenario' in ex && 'solution' in ex ? (
+                                                <div key={eidx} className="bg-gray-50 border-l-4 border-orange-500 p-3 rounded-r">
+                                                    <p className="text-sm text-gray-700"><strong>{ex.scenario}:</strong></p>
+                                                    <p className="text-sm text-gray-600 mt-1">→ {ex.solution}</p>
+                                                </div>
+                                            ) : null
                                         ))}
                                     </div>
                                 )}
