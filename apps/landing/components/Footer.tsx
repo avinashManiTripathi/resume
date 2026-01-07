@@ -165,7 +165,7 @@ export function Footer() {
                             © {new Date().getFullYear()} ProfResume. All rights reserved.
                         </p>
                         <div className="flex flex-wrap gap-6 text-sm">
-                            <Link href="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>
+                            <Link href="/sitemap.xml" className="hover:text-white transition-colors">Sitemap</Link>
                             <Link href="/accessibility" className="hover:text-white transition-colors">Accessibility</Link>
                             <Link href="/security" className="hover:text-white transition-colors">Security</Link>
                             <Link href="/cookies" className="hover:text-white transition-colors">Cookie Policy</Link>
