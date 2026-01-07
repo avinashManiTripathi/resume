@@ -132,6 +132,7 @@ export function ProfileHeader({
                 <div className="flex bg-white rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex-grow items-center gap-1 justify-between">
                     {/* Toolbar controls - Hidden on mobile */}
                     <div className="hidden md:flex items-center gap-3">
+
                         {/* Undo/Redo */}
                         <button
                             onClick={onUndo}
@@ -205,11 +206,11 @@ export function ProfileHeader({
                     <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
                         <Button onClick={onShare} variant="outline" className="flex-1 md:flex-initial">
                             <Share2 className="w-4 h-4 md:mr-2" />
-                            <span className="hidden md:inline">Share</span>
+                            <span >Share</span>
                         </Button>
                         <Button onClick={onDownload} variant="primary" className="flex-1 md:flex-initial">
                             <Download className="w-4 h-4 md:mr-2" />
-                            <span className="hidden md:inline">Download</span>
+                            <span >Download</span>
                         </Button>
                     </div>
                 </div>

@@ -205,7 +205,7 @@ const navigation: NavigationData = {
   ],
   cta: {
     text: "Start Free →",
-    href: ENV.EDITOR_URL
+    href: "https://edit.profresume.com"
   },
   mobileMenu: {
     sections: [
@@ -245,7 +245,7 @@ const navigation: NavigationData = {
     ],
     cta: {
       text: "Start Free →",
-      href: "/editor"
+      href: "https://edit.profresume.com"
     }
   }
 }

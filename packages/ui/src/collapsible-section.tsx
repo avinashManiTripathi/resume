@@ -24,7 +24,9 @@ export function CollapsibleSection({
 }: CollapsibleSectionProps) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
-    const overrideClass = "bg-white m-3 " + (isCollapsible ? "border rounded-lg border-gray-200" : "");
+    const className = 'bg-white m-0 md:m-3'
+
+    const overrideClass = className + " " + (isCollapsible ? "border rounded-lg border-gray-200" : "");
 
     return (
         <div className={overrideClass}>
@@ -43,7 +45,7 @@ export function CollapsibleSection({
             >
                 <div className="flex items-center gap-3">
                     {icon}
-                    {customTitleRender || <span className="font-medium text-gray-900">{title}</span>}
+                    {customTitleRender || <span className="font-medium text-gray-900 ">{title}</span>}
                 </div>
                 <div className="flex items-center gap-2">
                     {actions}

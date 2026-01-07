@@ -601,6 +601,8 @@ export const dummyData = {
   ]
 }
 
+const className = "w-full md:w-[calc(50%-4px)]"
+
 export const ResumeFormSchema: FormSchema = {
   personalInfo: {
     label: "Personal Info",
@@ -608,16 +610,16 @@ export const ResumeFormSchema: FormSchema = {
     isCollapsible: false,
     fields: {
       jobTitle: { label: "Job Title", type: "text", className: "w-full" },
-      firstName: { label: "First Name", type: "text", className: "w-[calc(50%-4px)]" },
-      lastName: { label: "Last Name", type: "text", className: "w-[calc(50%-4px)]" },
-      email: { label: "Email", type: "email", className: "w-[calc(50%-4px)]" },
-      phone: { label: "Phone", type: "text", className: "w-[calc(50%-4px)]" },
-      city: { label: "City", type: "text", className: "w-[calc(50%-4px)]" },
-      state: { label: "State", type: 'text', className: "w-[calc(50%-4px)]" },
-      pincode: { label: "Pincode", type: "text", className: "w-[calc(50%-4px)]" },
-      country: { label: "Country", type: "text", className: "w-[calc(50%-4px)]" },
-      linkedin: { label: "LinkedIn URL", type: "text", className: "w-[calc(50%-4px)]", description: "Your LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)" },
-      github: { label: "GitHub URL", type: "text", className: "w-[calc(50%-4px)]", description: "Your GitHub profile URL (e.g., https://github.com/yourname)" },
+      firstName: { label: "First Name", type: "text", className: className },
+      lastName: { label: "Last Name", type: "text", className: className },
+      email: { label: "Email", type: "email", className: className },
+      phone: { label: "Phone", type: "text", className: className },
+      city: { label: "City", type: "text", className: className },
+      state: { label: "State", type: 'text', className: className },
+      pincode: { label: "Pincode", type: "text", className: className },
+      country: { label: "Country", type: "text", className: className },
+      linkedin: { label: "LinkedIn URL", type: "text", className: className, description: "Your LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)" },
+      github: { label: "GitHub URL", type: "text", className: className, description: "Your GitHub profile URL (e.g., https://github.com/yourname)" },
       summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
     }
   },
@@ -626,10 +628,10 @@ export const ResumeFormSchema: FormSchema = {
     type: "array",
     isCollapsible: true,
     item: {
-      jobTitle: { label: "Job Title", type: "text", className: "w-[calc(50%-4px)]" },
-      company: { label: "Employer", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      jobTitle: { label: "Job Title", type: "text", className: className },
+      company: { label: "Employer", type: "text", className: className },
+      startDate: { label: "Start Date", type: "month", className: className },
+      endDate: { label: "End Date", type: "month", className: className },
       description: { label: "Description", type: "richtext", className: "w-full" }
     }
   },
@@ -638,10 +640,10 @@ export const ResumeFormSchema: FormSchema = {
     type: "array",
     isCollapsible: true,
     item: {
-      degree: { label: "Degree", type: "text", className: "w-[calc(50%-4px)]" },
-      institution: { label: "Institution", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      degree: { label: "Degree", type: "text", className: className },
+      institution: { label: "Institution", type: "text", className: className },
+      startDate: { label: "Start Date", type: "month", className: className },
+      endDate: { label: "End Date", type: "month", className: className },
       description: { label: "Description", type: "richtext", className: "w-full" }
     }
   },
@@ -650,10 +652,10 @@ export const ResumeFormSchema: FormSchema = {
     type: "array",
     isCollapsible: true,
     item: {
-      name: { label: "Project Name", type: "text", className: "w-[calc(50%-4px)]" },
-      companyName: { label: "Company Name", type: "text", className: "w-[calc(50%-4px)]" },
-      startDate: { label: "Start Date", type: "month", className: "w-[calc(50%-4px)]" },
-      endDate: { label: "End Date", type: "month", className: "w-[calc(50%-4px)]" },
+      name: { label: "Project Name", type: "text", className: className },
+      companyName: { label: "Company Name", type: "text", className: className },
+      startDate: { label: "Start Date", type: "month", className: className },
+      endDate: { label: "End Date", type: "month", className: className },
       description: { label: "Description", type: "richtext", className: "w-full" }
     }
   },
@@ -662,12 +664,12 @@ export const ResumeFormSchema: FormSchema = {
     type: "array",
     isCollapsible: true,
     item: {
-      name: { label: "Skill Name", type: "text", className: "w-[calc(50%-4px)]" },
+      name: { label: "Skill Name", type: "text", className: className },
       level: {
         label: "Level",
         type: "select",
         options: ["Beginner", "Intermediate", "Advanced", "Expert"],
-        className: "w-[calc(50%-4px)]"
+        className: className
       }
     }
   }

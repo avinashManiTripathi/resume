@@ -1,5 +1,3 @@
-
-import { Button } from "@repo/ui/button";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -63,7 +61,7 @@ export default async function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link target="_blank" href={ENV.EDITOR_URL} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <Link target="_blank" href={"https://edit.profresume.com"} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Resume Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -956,7 +954,7 @@ export default async function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/editor"
+              href={"https://edit.profresume.com"}
               className="bg-white text-blue-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl flex items-center justify-center gap-3 group"
             >
               Create Your Resume Now

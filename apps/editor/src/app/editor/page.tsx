@@ -578,7 +578,7 @@ function ResumeEditor() {
           {showTemplates ? (
             <TemplateSelector
               apiBase={API_BASE || 'https://api.profresume.com'}
-              selectedTemplateId={templateId}
+              selectedTemplateId={templateId || ''}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {
                 console.log('Selected template:', template);
