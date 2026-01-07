@@ -53,25 +53,25 @@ export function Footer() {
 
                         {/* Social Links */}
                         <div className="flex items-center gap-3">
-                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"
+                            <a aria-label="Twitter" href="https://twitter.com" target="_blank" rel="noopener noreferrer"
                                 className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Twitter className="w-5 h-5 text-white" />
+                                <Twitter name='twitter' className="w-5 h-5 text-white" />
                             </a>
-                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                            <a aria-label="Linkedin" href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
                                 className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Linkedin className="w-5 h-5 text-white" />
+                                <Linkedin name="Linkedin" className="w-5 h-5 text-white" />
                             </a>
-                            <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+                            <a aria-label="Github" href="https://github.com" target="_blank" rel="noopener noreferrer"
                                 className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors">
-                                <Github className="w-5 h-5 text-white" />
+                                <Github name="Github" className="w-5 h-5 text-white" />
                             </a>
-                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                            <a aria-label="Facebook" href="https://facebook.com" target="_blank" rel="noopener noreferrer"
                                 className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Facebook className="w-5 h-5 text-white" />
+                                <Facebook name="facebook" className="w-5 h-5 text-white" />
                             </a>
-                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"
+                            <a aria-label="Instagram" href="https://instagram.com" target="_blank" rel="noopener noreferrer"
                                 className="w-10 h-10 bg-gray-800 hover:bg-pink-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Instagram className="w-5 h-5 text-white" />
+                                <Instagram name="Instagram" className="w-5 h-5 text-white" />
                             </a>
                         </div>
                     </div>
