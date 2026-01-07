@@ -241,20 +241,21 @@ export default function TailorResume() {
             )}
 
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-8 py-4">
+            <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                            <Sparkles className="w-6 h-6 text-white" />
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                        <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Sparkles className="w-4 h-4 md:w-6 md:h-6 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-gray-900">Tailor My Resume</h1>
-                            <p className="text-sm text-gray-500">AI-powered resume optimization</p>
+                        <div className="min-w-0">
+                            <h1 className="text-lg md:text-2xl font-bold text-gray-900 truncate">Tailor My Resume</h1>
+                            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">AI-powered resume optimization</p>
                         </div>
                     </div>
                     <button
                         onClick={() => router.push('/editor')}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 min-w-[40px] min-h-[40px]"
+                        aria-label="Close"
                     >
                         <X className="w-5 h-5 text-gray-500" />
                     </button>
@@ -262,10 +263,10 @@ export default function TailorResume() {
             </div>
 
             {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-8 py-12">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
                     {/* Left Column - Resume Upload */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                    <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <FileText className="w-6 h-6 text-blue-600" />
                             <h2 className="text-xl font-semibold text-gray-900">Your Resume</h2>
@@ -311,15 +312,22 @@ export default function TailorResume() {
                                 onDragLeave={handleDrag}
                                 onDragOver={handleDrag}
                                 onDrop={handleDrop}
-                                className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                                className={`border-2 border-dashed rounded-xl p-6 md:p-8 text-center transition-colors ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
                                     }`}
                             >
-                                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                                <p className="text-gray-700 font-medium mb-2">
-                                    {uploadedFile ? uploadedFile.name : 'Drag & drop your resume here'}
+                                <Upload className="w-10 h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-3 md:mb-4" />
+                                <p className="text-sm md:text-base text-gray-700 font-medium mb-2">
+                                    {uploadedFile ? (
+                                        <span className="text-green-600">{uploadedFile.name}</span>
+                                    ) : (
+                                        <>
+                                            <span className="hidden md:inline">Drag & drop your resume here</span>
+                                            <span className="md:hidden">Upload your resume</span>
+                                        </>
+                                    )}
                                 </p>
-                                <p className="text-sm text-gray-500 mb-4">or</p>
-                                <label className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors">
+                                {!uploadedFile && <p className="text-xs md:text-sm text-gray-500 mb-3 md:mb-4">or</p>}
+                                <label className="inline-block w-full md:w-auto px-6 py-2.5 md:py-2 bg-blue-600 text-white text-sm md:text-base rounded-lg hover:bg-blue-700 cursor-pointer transition-colors">
                                     Browse Files
                                     <input
                                         type="file"
@@ -328,7 +336,7 @@ export default function TailorResume() {
                                         className="hidden"
                                     />
                                 </label>
-                                <p className="text-xs text-gray-400 mt-4">Supports PDF and DOCX (Max 10MB)</p>
+                                <p className="text-xs text-gray-400 mt-3 md:mt-4">Supports PDF and DOCX (Max 10MB)</p>
                             </div>
                         )}
 
@@ -351,7 +359,7 @@ export default function TailorResume() {
                     </div>
 
                     {/* Right Column - Job Description */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                    <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-200 p-4 md:p-8">
                         <div className="flex items-center gap-3 mb-6">
                             <Sparkles className="w-6 h-6 text-purple-600" />
                             <h2 className="text-xl font-semibold text-gray-900">Job Description</h2>
@@ -408,11 +416,12 @@ export default function TailorResume() {
                 </div>
 
                 {/* Analyze Button */}
-                <div className="mt-8 flex justify-center">
+                <div className="mt-6 md:mt-8 flex justify-center px-4 md:px-0">
                     <Button
                         variant='primary'
                         onClick={handleAnalyze}
                         disabled={isAnalyzing || !jobDescription.trim()}
+                        className="w-full md:w-auto"
                     >
                         {isAnalyzing ? (
                             <>
@@ -430,7 +439,7 @@ export default function TailorResume() {
                 </div>
 
                 {/* Info Cards */}
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mt-8 md:mt-12 px-4 md:px-0">
                     <div className="bg-white rounded-xl p-6 border border-gray-200">
                         <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                             <Sparkles className="w-6 h-6 text-blue-600" />

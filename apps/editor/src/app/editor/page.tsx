@@ -554,7 +554,7 @@ function ResumeEditor() {
       {/* Main Content - 3 Column Layout */}
       <div className="flex flex-1 overflow-hidden gap-2 md:mx-[10px] mx-0">
         {/* Left Sidebar - Form or Template Selector (40%) - Hidden on mobile when preview is shown */}
-        <aside className={`w-full md:w-[40%] relative md:rounded-lg bg-white md:border-r border-gray-200 overflow-y-auto ${showMobilePreview ? 'hidden md:block' : 'block'}`}>
+        <aside className={`w-full md:w-[40%] relative md:rounded-lg bg-white md:border-r border-gray-200 overflow-y-auto pb-20 md:pb-0 ${showMobilePreview ? 'hidden md:block' : 'block'}`}>
 
           {/* Save Progress Indicator */}
           <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
@@ -636,7 +636,7 @@ function ResumeEditor() {
       {/* Floating Preview Button - Only visible on mobile */}
       <button
         onClick={() => setShowMobilePreview(!showMobilePreview)}
-        className="md:hidden fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2"
+        className="md:hidden fixed bottom-4 right-4 z-50 bg-blue-600 text-white p-3 md:p-4 rounded-full shadow-lg hover:bg-blue-700 transition-all flex items-center gap-2 min-w-[56px] min-h-[56px]"
         aria-label={showMobilePreview ? "Show Form" : "Show Preview"}
       >
         {showMobilePreview ? (
@@ -660,7 +660,7 @@ function ResumeEditor() {
       {/* Mobile Menu Button - Only visible on mobile */}
       <button
         onClick={() => setShowMobileMenu(!showMobileMenu)}
-        className="md:hidden fixed bottom-6 left-6 z-50 bg-white text-gray-700 p-4 rounded-full shadow-lg hover:bg-gray-50 transition-all border-2 border-gray-200"
+        className="md:hidden fixed bottom-4 left-4 z-50 bg-white text-gray-700 p-3 md:p-4 rounded-full shadow-lg hover:bg-gray-50 transition-all border-2 border-gray-200 min-w-[56px] min-h-[56px]"
         aria-label="Menu"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -701,9 +701,10 @@ function ResumeEditor() {
                   }}
                   className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl hover:border-purple-400 transition-all"
                 >
-                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -712,7 +713,7 @@ function ResumeEditor() {
                   </div>
                 </button>
 
-                {/* Change Template */}
+                {/* Smart Import */}
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
@@ -720,9 +721,9 @@ function ResumeEditor() {
                   }}
                   className="w-full flex items-center gap-3 p-4 bg-gray-50 border-2 border-gray-200 rounded-xl hover:border-gray-400 transition-all"
                 >
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                  <div className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
                   </div>
                   <div className="flex-1 text-left">
@@ -731,6 +732,7 @@ function ResumeEditor() {
                   </div>
                 </button>
 
+                {/* Change Template */}
                 <button
                   onClick={() => {
                     setShowMobileMenu(false);
@@ -738,7 +740,7 @@ function ResumeEditor() {
                   }}
                   className="w-full flex items-center gap-3 p-4 bg-gray-50 border-2 border-gray-200 rounded-xl hover:border-gray-400 transition-all"
                 >
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
                     </svg>
@@ -748,6 +750,33 @@ function ResumeEditor() {
                     <div className="text-xs text-gray-600">Choose a new design</div>
                   </div>
                 </button>
+
+                {/* Font Selection */}
+                <div className="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-xl">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M9 3v18m-6-6h18" />
+                      </svg>
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="font-semibold text-gray-900">Font Family</div>
+                      <div className="text-xs text-gray-600">Choose your font</div>
+                    </div>
+                  </div>
+                  <select
+                    value={fontFamily}
+                    onChange={(e) => setFontFamily(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Inter">Inter</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Verdana">Verdana</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
