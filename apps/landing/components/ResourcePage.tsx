@@ -56,7 +56,7 @@ export const ResourceFeatureGrid = ({ title, features }: { title: string; featur
     </section>
 );
 
-export const ResourceCTA = ({ title, subtitle }: { title: string; subtitle: string }) => (
+export const ResourceCTA = ({ title, subtitle }: { title: string; subtitle: string | React.ReactNode }) => (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
         <div className="max-w-4xl mx-auto text-center text-white">
             <h2 className="text-3xl md:text-4xl font-extrabold mb-6">

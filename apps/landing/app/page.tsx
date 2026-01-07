@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
+import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
@@ -636,6 +636,79 @@ export default async function LandingPage() {
               className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
             >
               Explore All Resume Builders <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Pillar Pages Section - SEO Focus */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+              Everything You Need to Know About Resume Building
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Comprehensive guides to help you create the perfect resume
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Free Resume Builder */}
+            <Link
+              href="/free-resume-builder"
+              className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-8 border-2 border-green-200 hover:border-green-400 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-green-600 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+                Free Resume Builder
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Create professional resumes 100% free. No credit card required, no watermarks. 20+ templates, AI-powered suggestions, unlimited downloads.
+              </p>
+              <div className="flex items-center gap-2 text-green-600 font-semibold">
+                Start Building Free <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Best Resume Builder */}
+            <Link
+              href="/best-resume-builder"
+              className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border-2 border-blue-200 hover:border-blue-400 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-blue-600 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Award className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                Best Resume Builder
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Discover what makes a great resume builder. Learn about AI-powered features, ATS optimization, and tools that get you hired faster.
+              </p>
+              <div className="flex items-center gap-2 text-blue-600 font-semibold">
+                Learn More <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Professional Resume Service */}
+            <Link
+              href="/professional-resume-service"
+              className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border-2 border-purple-200 hover:border-purple-400 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-purple-600 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Users className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                Service vs Builder
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Compare professional resume writing services with resume builders. Learn which option is right for your situation and budget.
+              </p>
+              <div className="flex items-center gap-2 text-purple-600 font-semibold">
+                Compare Options <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
             </Link>
           </div>
         </div>

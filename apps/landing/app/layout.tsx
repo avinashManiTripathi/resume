@@ -25,23 +25,25 @@ export const metadata: Metadata = {
 
   // Basic Metadata
   title: {
-    default: "Professional Resume Builder | Create ATS-Friendly Resumes in Minutes",
+    default: "Free Resume Builder | Create Professional, ATS-Friendly Resumes Online",
     template: "%s | ProfResume"
   },
-  description: "Build beautiful, ATS-optimized resumes with AI-powered tools. Choose from 20+ professional templates, get instant feedback, and download as PDF. Trusted by 50,000+ job seekers.",
+  description: "Build beautiful, ATS-optimized resumes with our 100% free resume builder. 20+ professional templates, AI-powered tools, unlimited downloads. No credit card required, no watermarks.",
   keywords: [
+    "free resume builder",
     "resume builder",
     "professional resume",
     "ATS-friendly resume",
     "resume templates",
     "CV builder",
     "resume maker",
-    "free resume builder",
     "online resume builder",
     "resume AI",
     "resume optimizer",
     "ATS resume checker",
-    "resume creator"
+    "resume creator",
+    "best resume builder",
+    "professional resume service"
   ],
   authors: [{ name: "ProfResume Team" }],
   creator: "ProfResume",

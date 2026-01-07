@@ -25,6 +25,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
     }))
 
+    // Pillar pages (critical SEO content - highest priority)
+    const pillarPages = [
+        'free-resume-builder',
+        'best-resume-builder',
+        'professional-resume-service',
+    ].map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+        priority: 0.95,
+    }))
+
     // Resume builder category pages (high priority SEO content)
     const resumeBuilderPages = [
         'software-engineer',
@@ -97,6 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
         ...homepage,
+        ...pillarPages,
         ...productPages,
         ...resumeBuilderPages,
         ...resourcePages,
