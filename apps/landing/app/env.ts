@@ -3,7 +3,7 @@ export const getEnv = (key: string) => {
 }
 
 export const ENV = {
-    API_URL: getEnv('API_URL') || 'http://localhost:4000/api',
+    API_URL: getEnv('API_URL') || 'https://api.profresume.com',
     AUTH_URL: getEnv('AUTH_URL') || 'http://localhost:3001',
     EDITOR_URL: getEnv('EDITOR_URL') || 'http://localhost:3002',
 }

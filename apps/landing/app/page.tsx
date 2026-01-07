@@ -1,3 +1,4 @@
+
 import { Button } from "@repo/ui/button";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import { VoiceDemo } from "@/components/VoiceDemo";
 async function getTemplates() {
   try {
     const apiUrl = ENV.API_URL.endsWith('/') ? ENV.API_URL.slice(0, -1) : ENV.API_URL;
-    const res = await fetch(`${apiUrl}/templates`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${apiUrl}/api/templates`, { next: { revalidate: 3600 } });
     if (!res.ok) return [];
     const data = await res.json();
     return data.templates || [];
@@ -22,18 +23,20 @@ async function getTemplates() {
 export default async function LandingPage() {
   const templates = await getTemplates();
 
+  // const [templates, setTemplates] = useState()
+
+  // const getAllTemplates = async () => {
+  //   const templates = await getTemplates();
+  //   setTemplates(templates)
+
+  // }
+
+  // useEffect(() => {
+  //   getAllTemplates()
+  // }, [])
 
 
-  // Services for animated banner
-  const services = [
-    "Resume Builder",
-    "AI Writer",
-    "Cover Letters",
-    "ATS Checker",
-    "Interview Prep",
-    "Job Board",
-    "Career Coaching"
-  ];
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -542,7 +545,7 @@ export default async function LandingPage() {
             </p>
           </div>
 
-          <TemplatesSlider templates={templates} />
+          <TemplatesSlider templates={templates || []} />
         </div>
       </section>
 
