@@ -39,6 +39,7 @@ export const Button = ({
     <button
       type={type}
       name={name}
+      aria-labelledby={name}
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variant === "primary" ? primaryStyles : variant === 'danger' ? dangerStyles : outlineStyles
