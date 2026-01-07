@@ -94,8 +94,15 @@ export function ProfileHeader({
                             <p className="text-xs md:text-sm text-gray-500 truncate">{title}</p>
                         </div>
                     </div>
-                    <div className="ml-2 md:ml-4 flex items-center gap-2">
-                        <svg className="w-8 h-8 md:w-12 md:h-12" viewBox="0 0 36 36">
+
+                    <Button variant="outline" onClick={onShare} className="md:hidden">
+                        <Share2 size={18} />
+                    </Button>
+                    <Button variant="outline" onClick={onDownload} className="md:hidden">
+                        <Download size={18} />
+                    </Button>
+                    <div className="hidden md:flex  ml-2 md:ml-4  items-center gap-2">
+                        <svg className="w-12 h-12 md:w-12 md:h-12" viewBox="0 0 36 36">
                             <circle
                                 cx="18"
                                 cy="18"
@@ -129,9 +136,9 @@ export function ProfileHeader({
                 </div>
 
                 {/* Right: Toolbar - Hidden on mobile except Share/Download */}
-                <div className="flex bg-white rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex-grow items-center gap-1 justify-between">
+                <div className="hidden md:flex  flex bg-white rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex-grow items-center gap-1 justify-between">
                     {/* Toolbar controls - Hidden on mobile */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="flex items-center gap-3">
 
                         {/* Undo/Redo */}
                         <button
