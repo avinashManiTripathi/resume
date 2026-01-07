@@ -9,6 +9,7 @@ type ButtonProps = {
   disabled?: boolean;
   type?: "button" | "submit" | "reset" | undefined
   name?: string
+  ariaLabel?: string;
 };
 
 export const Button = ({
@@ -19,7 +20,8 @@ export const Button = ({
   onClick,
   className = "",
   disabled = false,
-  name = ""
+  name = "",
+  ariaLabel
 }: ButtonProps) => {
   const baseStyles =
     "flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -39,7 +41,7 @@ export const Button = ({
     <button
       type={type}
       name={name}
-      aria-labelledby={name}
+      aria-label={ariaLabel}
       onClick={onClick}
       disabled={disabled}
       className={`${baseStyles} ${variant === "primary" ? primaryStyles : variant === 'danger' ? dangerStyles : outlineStyles
