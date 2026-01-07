@@ -6,6 +6,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "exports": {
+    "./base.json": "./base.json",
+    "./react-library.json": "./react-library.json",
+    "./nextjs.json": "./nextjs.json"
+  },
   "dependencies": {
     "lucide-react": "^0.562.0"
   }
