@@ -534,6 +534,113 @@ export default async function LandingPage() {
         </div>
       </section>
 
+      {/* Resume Builder Section - NEW */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold mb-6">
+              <Sparkles className="w-4 h-4" />
+              Specialized Resume Builders
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+              Build Your Resume for <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Any Career</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Choose a specialized resume builder tailored to your role, industry, and experience level. Get targeted content, examples, and templates that actually work.
+            </p>
+            <Link
+              href="/resume-builder"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold text-lg"
+            >
+              View All Resume Builders <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Link
+              href="/resume-builder/software-engineer"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-blue-500 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <FileText className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                Software Engineer
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Tech-focused templates with project portfolios, GitHub integration, and FAANG-optimized content.
+              </p>
+              <div className="flex items-center gap-2 text-blue-600 font-semibold">
+                Build Tech Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              href="/resume-builder/fresher"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-green-500 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Users className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+                Fresher / Entry-Level
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Perfect for recent graduates. Emphasize education, projects, and potential even without experience.
+              </p>
+              <div className="flex items-center gap-2 text-green-600 font-semibold">
+                Build Fresher Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              href="/resume-builder/it-professional"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-cyan-500 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-cyan-600 transition-colors">
+                IT Professional
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Network admin, DevOps, cloud engineer, and cybersecurity resumes with certification sections.
+              </p>
+              <div className="flex items-center gap-2 text-cyan-600 font-semibold">
+                Build IT Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            <Link
+              href="/resume-builder/manager"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-purple-500 hover:shadow-2xl transition-all group"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Target className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                Manager / Executive
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Leadership-focused resumes showcasing team management, strategy, and business impact.
+              </p>
+              <div className="flex items-center gap-2 text-purple-600 font-semibold">
+                Build Leadership Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/resume-builder"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+            >
+              Explore All Resume Builders <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Tested Templates Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <div className="max-w-7xl mx-auto">

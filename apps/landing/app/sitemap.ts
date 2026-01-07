@@ -17,11 +17,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'templates',
         'pricing',
         'examples',
+        'resume-builder',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
         changeFrequency: 'weekly' as const,
         priority: 0.9,
+    }))
+
+    // Resume builder category pages (high priority SEO content)
+    const resumeBuilderPages = [
+        'software-engineer',
+        'fresher',
+        'it-professional',
+        'manager',
+    ].map((slug) => ({
+        url: `${baseUrl}/resume-builder/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
     }))
 
     // High-value resource pages (SEO content)
@@ -84,6 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [
         ...homepage,
         ...productPages,
+        ...resumeBuilderPages,
         ...resourcePages,
         ...supportPages,
         ...legalPages,
