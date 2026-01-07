@@ -68,9 +68,9 @@ export default function TemplatesPage() {
                                 onChange={(e) => setSelectedCategory(e.target.value)}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                             >
-                                {categories.map(cat => (
+                                {categories.map((cat: string = '') => (
                                     <option key={cat} value={cat}>
-                                        {cat === 'all' ? 'All Categories' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                        {cat === 'all' ? 'All Categories' : cat?.charAt(0).toUpperCase() + cat?.slice(1)}
                                     </option>
                                 ))}
                             </select>
