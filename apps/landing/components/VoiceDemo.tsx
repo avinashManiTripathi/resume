@@ -3,6 +3,7 @@
 import { Mic, MicOff, Send, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
+import router from "next/router";
 
 export function VoiceDemo() {
     return (
@@ -58,7 +59,7 @@ export function VoiceDemo() {
                 </div>
 
                 <Link
-                    href="/editor"
+                    href={"https://edit.profresume.com/editor"}
                     className="inline-flex items-center justify-center gap-3 sm:gap-6 w-full sm:w-auto px-6 py-4 sm:p-5 border-2 font-semibold rounded-xl border-blue-600 text-blue-700 hover:bg-blue-50 transition-all group"
                 >
                     <Mic className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 text-blue-700 stroke-2" strokeWidth={2.5} />
@@ -129,7 +130,7 @@ export function VoiceDemo() {
                     </div>
 
                     <div className="flex gap-3 justify-end">
-                        <Button variant="primary">
+                        <Button variant="primary" onClick={() => router.push("https://edit.profresume.com/editor")}>
                             <Send className="w-5 h-5" strokeWidth={2} />
                             Generate with AI
                         </Button>
