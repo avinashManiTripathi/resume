@@ -50,7 +50,7 @@ export function VoiceDemo() {
                         <div key={index} className="flex items-start gap-3 sm:gap-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3 sm:p-4 border border-blue-100 hover:border-blue-300 transition-colors">
                             <div className="text-2xl sm:text-3xl flex-shrink-0">{feature.icon}</div>
                             <div className="flex-1 min-w-0">
-                                <h4 className="font-bold text-base sm:text-lg mb-1 text-gray-900">{feature.title}</h4>
+                                <h3 className="font-bold text-base sm:text-lg mb-1 text-gray-900">{feature.title}</h3>
                                 <p className="text-gray-600 text-sm">{feature.description}</p>
                             </div>
                         </div>
