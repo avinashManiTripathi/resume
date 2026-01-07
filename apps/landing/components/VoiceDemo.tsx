@@ -133,7 +133,7 @@ export function VoiceDemo() {
                             <Send className="w-5 h-5" strokeWidth={2} />
                             Generate with AI
                         </Button>
-                        <Button variant="outline" name="micoff">
+                        <Button variant="outline" name="Turn microphone off">
                             <MicOff name="micoff" className="w-5 h-5" strokeWidth={2} />
                         </Button>
                     </div>
