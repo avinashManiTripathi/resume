@@ -20,7 +20,7 @@ async function getTemplates() {
     const data = await res.json();
     return data.templates || [];
   } catch (error) {
-    console.error("Failed to fetch templates:", error);
+    // Silently fail in production
     return [];
   }
 }

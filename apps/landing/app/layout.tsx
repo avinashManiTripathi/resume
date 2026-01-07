@@ -112,6 +112,21 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+
+        {/* Suppress console logs in production */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+                window.console.log = function() {};
+                window.console.error = function() {};
+                window.console.warn = function() {};
+                window.console.info = function() {};
+                window.console.debug = function() {};
+              }
+            `,
+          }}
+        />
       </head>
       <body className={`${merriweather.variable} antialiased min-h-screen flex flex-col`}>
         <GlobalSchema />
