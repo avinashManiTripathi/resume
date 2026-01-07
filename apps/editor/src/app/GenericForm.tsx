@@ -46,6 +46,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
             schemaKeys.some((key, index) => !sectionOrder.includes(key));
 
         if (hasChanged) {
+            console.log('Schema changed, updating section order:', schemaKeys);
             setSectionOrder(schemaKeys);
         }
     }, [schema, sectionOrder, setSectionOrder]);

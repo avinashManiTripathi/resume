@@ -16,19 +16,11 @@ This Turborepo includes the following packages/apps:
 
 ### Apps and Packages
 
-#### Applications
-- `landing`: Landing page [Next.js](https://nextjs.org/) app
-- `auth`: Authentication app [Next.js](https://nextjs.org/)  
-- `editor`: Resume editor [Next.js](https://nextjs.org/) app
-- `admin`: Admin dashboard [Next.js](https://nextjs.org/)
-- `api`: Backend API (Node.js/Express) for resume processing and PDF generation
-- `local-ai-chat`: **Local AI Chat API** (Python/FastAPI) - ChatGPT-like AI running 100% locally with Ollama
-
-#### Packages
-- `@repo/ui`: a stub React component library shared by applications
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-- `utils-server`: Server-side utilities including AI integration
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -83,83 +75,6 @@ npx turbo dev
 yarn exec turbo dev
 pnpm exec turbo dev
 ```
-
-## 🤖 Local AI Chat Setup
-
-This project includes a **local AI chat API** that powers resume parsing, ATS analysis, and tailoring features without any external API dependencies.
-
-### Quick Start
-
-```bash
-cd apps/local-ai-chat
-./start.sh
-```
-
-This will:
-1. Install Ollama (if not already installed)
-2. Download LLaMA 3.1 model
-3. Set up Python environment
-4. Start the AI server at `http://localhost:8000`
-
-### Manual Setup
-
-If you prefer manual setup or the script doesn't work:
-
-1. **Install Ollama:**
-   ```bash
-   # macOS
-   brew install ollama
-   # OR download from: https://ollama.com/download
-   ```
-
-2. **Download Model:**
-   ```bash
-   ollama pull llama3.1
-   ```
-
-3. **Setup Python Environment:**
-   ```bash
-   cd apps/local-ai-chat
-   python3 -mvenv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-4. **Start Server:**
-   ```bash
-   python -m app.main
-   ```
-
-### Verification
-
-Visit `http://localhost:8000/docs` to see the interactive API documentation.
-
-Test the API:
-```bash
-curl -X POST http://localhost:8000/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello!"}'
-```
-
-For detailed setup instructions, see:
-- [Quick Start Guide](apps/local-ai-chat/QUICK_START.md)
-- [Full README](apps/local-ai-chat/README.md)
-
----
-
-## 🚀 Development
-
-### Running All Apps
-
-```bash
-npm run dev
-```
-
-This starts all Next.js apps and the Node.js API.
-
-**Note:** The local AI chat server must be started separately (see above).
-
-### Running Specific App
 
 You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
 

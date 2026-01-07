@@ -16,6 +16,6 @@ export const config = {
         max: 100, // limit each IP to 100 requests per windowMs
     },
 
-    // Local AI configuration
-    localAIUrl: process.env.LOCAL_AI_URL || 'http://localhost:8000',
+    // AI configuration
+    geminiApiKey: process.env.GEMINI_API_KEY || 'AIzaSyAd9_y0iU0Tob_6i_df6ACwpwKi3NKhq9s',
 };

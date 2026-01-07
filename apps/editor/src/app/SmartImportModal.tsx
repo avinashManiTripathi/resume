@@ -158,7 +158,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
 
         setIsProcessing(true);
         try {
-            const response = await fetch(`http://localhost:4000/api/resume/extract`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/resume/extract`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: content })

@@ -14,7 +14,16 @@ export default function LandingPage() {
 
 
 
-
+  // Services for animated banner
+  const services = [
+    "Resume Builder",
+    "AI Writer",
+    "Cover Letters",
+    "ATS Checker",
+    "Interview Prep",
+    "Job Board",
+    "Career Coaching"
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -544,13 +553,13 @@ export default function LandingPage() {
                 templates?.map((template) => (
                   <Link
                     key={template._id}
-                    href={`http://localhost:4000/editor?template=${template._id}`}
+                    href={`https://api.profresume.com/editor?template=${template._id}`}
                     className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-2xl"
                   >
                     <div className="bg-white p-[16px] aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                       {template.thumbnail ? (
                         <img
-                          src={"http://localhost:4000" + template.thumbnail}
+                          src={"https://api.profresume.com" + template.thumbnail}
                           alt={template.name}
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
                         />

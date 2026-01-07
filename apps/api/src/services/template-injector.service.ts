@@ -1,11 +1,12 @@
 import { ResumeData, PersonalInfo, Experience, Education, Skill } from '../types/resume.types';
+import { RESUMES } from '../constant';
 import { JSDOM } from 'jsdom';
 
 export class TemplateInjectorService {
     /**
      * Get template HTML by ID (fetch from database)
      */
-    private async getTemplateById(templateId: string): Promise<string | undefined> {
+    private async getTemplateById(templateId: string): Promise<string> {
         try {
             // Import Template model
             const { Template } = await import('../models');
@@ -26,6 +27,14 @@ export class TemplateInjectorService {
         } catch (error) {
             // Fallback to RESUMES constant if database lookup fails
             console.warn(`Database template lookup failed, falling back to RESUMES constant:`, error);
+            const template = RESUMES.find(r => r.id === templateId);
+            if (!template) {
+                throw new Error(`Template with ID "${templateId}" not found`);
+            }
+            if (!template.html || template.html.trim() === '') {
+                throw new Error(`Template with ID "${templateId}" has no HTML content`);
+            }
+            return template.html;
         }
     }
 
@@ -786,11 +795,7 @@ export class TemplateInjectorService {
      */
     public async generateHTML(data: ResumeData, sectionLabels?: Record<string, string>): Promise<string> {
         // Get template ID, default to first template if not provided
-        const templateId = data.templateId
-
-        if (!templateId) {
-            throw new Error("Template ID is required");
-        }
+        const templateId = data.templateId || RESUMES[0].id;
 
         // Get base template from database
         let html = await this.getTemplateById(templateId);

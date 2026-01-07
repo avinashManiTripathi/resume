@@ -17,13 +17,13 @@ import { dummyData, ResumeFormSchema } from "../constants";
 
 
 function ResumeEditor() {
-  const API_BASE = "http://localhost:4000"
+  const API_BASE = "https://api.profresume.com"
   const searchParams = useSearchParams();
   const router = useRouter();
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
-  const defaultTemplateId = "6959f1c2de127e0f17295492";
+  const defaultTemplateId = "692bcfd239561eef09d89aa9";
 
   // Undo/Redo history
   const [history, setHistory] = useState<any[]>([dummyData]);
@@ -118,7 +118,6 @@ function ResumeEditor() {
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<any>(null);
   const requestIdRef = useRef(0);
-  const abortControllerRef = useRef<AbortController | null>(null); // For cancelling PDF requests
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
 
@@ -441,15 +440,6 @@ function ResumeEditor() {
   const renderPdf = async (page = currentPage) => {
     if (!canvasRef.current || !mainRef.current) return;
 
-    // Abort previous pending request if exists
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    // Create new AbortController for this request
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-
     setIsGeneratingPDF(true);
     try {
       const apiUrl = `${API_BASE}/convert-html-to-pdf`;
@@ -472,24 +462,14 @@ function ResumeEditor() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(resumeData),
-        signal: abortController.signal // Attach abort signal
       });
 
       const pdfData = await response.arrayBuffer();
       await renderPDFPage(pdfData, page);
-    } catch (error: any) {
-      // Ignore abort errors - they're expected when we cancel requests
-      if (error.name === 'AbortError') {
-        console.log('PDF request cancelled');
-        return;
-      }
+    } catch (error) {
       console.error("Error rendering PDF:", error);
     } finally {
-      // Only clear loading if this is still the current request
-      if (abortControllerRef.current === abortController) {
-        setIsGeneratingPDF(false);
-        abortControllerRef.current = null;
-      }
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -595,7 +575,7 @@ function ResumeEditor() {
 
           {showTemplates ? (
             <TemplateSelector
-              apiBase={API_BASE || 'http://localhost:4000'}
+              apiBase={API_BASE || 'https://api.profresume.com'}
               selectedTemplateId={templateId}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {
