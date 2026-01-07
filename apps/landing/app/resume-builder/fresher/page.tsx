@@ -191,9 +191,7 @@ export default function FresherResumePage() {
 
             <ResourceCTA
                 title="Build Your First Professional Resume"
-                description="Join 25,000+ fresh graduates who landed their first job using our resume builder"
-                ctaText="Create Fresher Resume"
-                ctaLink="/editor"
+                subtitle="Join 25,000+ fresh graduates who landed their first job using our resume builder"
             />
         </div>
     );

@@ -186,9 +186,7 @@ export default function SoftwareEngineerResumePage() {
 
             <ResourceCTA
                 title="Build Your Software Engineer Resume Now"
-                description="Join 10,000+ developers who've landed jobs at FAANG and top tech companies"
-                ctaText="Create Tech Resume"
-                ctaLink="/editor"
+                subtitle="Join 10,000+ developers who've landed jobs at FAANG and top tech companies"
             />
         </div>
     );

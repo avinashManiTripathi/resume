@@ -236,9 +236,7 @@ export default function ResumeBuilderPage() {
 
             <ResourceCTA
                 title="Ready to Build Your Resume?"
-                description="Join 50,000+ professionals who've landed their dream jobs with our free resume builder"
-                ctaText="Create My Resume Now"
-                ctaLink="/editor"
+                subtitle="Join 50,000+ professionals who've landed their dream jobs with our free resume builder"
             />
         </div>
     );

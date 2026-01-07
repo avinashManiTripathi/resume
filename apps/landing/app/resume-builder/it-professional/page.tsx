@@ -211,9 +211,7 @@ export default function ITProfessionalResumePage() {
 
             <ResourceCTA
                 title="Build Your IT Professional Resume"
-                description="Join 15,000+ IT professionals who landed jobs at top tech companies and enterprises"
-                ctaText="Create IT Resume"
-                ctaLink="/editor"
+                subtitle="Join 15,000+ IT professionals who landed jobs at top tech companies and enterprises"
             />
         </div>
     );

@@ -219,9 +219,7 @@ export default function ManagerResumePage() {
 
             <ResourceCTA
                 title="Build Your Executive Resume"
-                description="Join 8,000+ managers and executives who advanced their leadership careers"
-                ctaText="Create Manager Resume"
-                ctaLink="/editor"
+                subtitle="Join 8,000+ managers and executives who advanced their leadership careers"
             />
         </div>
     );
