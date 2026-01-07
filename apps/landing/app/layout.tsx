@@ -26,7 +26,6 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="icon" href="/favicon.ico" />
-        <script src="https://cdn.tailwindcss.com"></script>
       </head>
       <body className={`${merriweather.variable} antialiased min-h-screen flex flex-col`}>
         <Navigation />
