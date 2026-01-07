@@ -1,68 +1,91 @@
 import { MetadataRoute } from 'next'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://profresume.com'
+    const currentDate = new Date()
 
-    const coreRoutes = [
-        '',
-        '/about',
-        '/ats-checker',
-        '/blog',
-        '/contact',
-        '/examples',
-        '/help',
-        '/integrations',
-        '/pricing',
-        '/privacy',
-        '/reviews',
-        '/success-stories',
-        '/templates',
-        '/terms',
-        '/use-cases',
-    ]
+    // Homepage (highest priority)
+    const homepage = [{
+        url: baseUrl,
+        lastModified: currentDate,
+        changeFrequency: 'daily' as const,
+        priority: 1.0,
+    }]
 
-    const existingResources = [
-        '/resources/ats-guide',
-        '/resources/career-tips',
-        '/resources/cover-letter-guide',
-        '/resources/industry-examples',
-        '/resources/resume-guide',
-    ]
-
-    const newResources = [
-        '/resources/resume-checker',
-        '/resources/ai-resume-review',
-        '/resources/for-organizations',
-        '/resources/resume-booster',
-        '/resources/resume-critique',
-        '/resources/targeted-resume',
-        '/resources/resume-fixer',
-        '/resources/resume-grammar-checker',
-        '/resources/resume-keyword-generator',
-        '/resources/update-your-resume-io-resume',
-        '/resources/resume-scanner',
-    ]
-
-    const coreSitemap = coreRoutes.map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: (route === '' ? 'daily' : 'weekly') as any,
-        priority: route === '' ? 1 : 0.8,
+    // Core product pages (high priority)
+    const productPages = [
+        'templates',
+        'pricing',
+        'examples',
+    ].map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+        priority: 0.9,
     }))
 
-    const existingResourceSitemap = existingResources.map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as any,
+    // High-value resource pages (SEO content)
+    const resourcePages = [
+        'targeted-resume',
+        'resume-critique',
+        'ai-resume-review',
+        'resume-booster',
+        'resume-keyword-generator',
+        'resume-checker',
+        'resume-fixer',
+        'resume-scanner',
+        'for-organizations',
+        'resume-guide',
+        'ats-guide',
+        'cover-letter-guide',
+        'career-tips',
+        'industry-examples',
+        'update-your-resume-io-resume',
+    ].map((slug) => ({
+        url: `${baseUrl}/resources/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
         priority: 0.8,
     }))
 
-    const newResourceSitemap = newResources.map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly' as any,
-        priority: 0.4,
+    // Supporting pages (medium priority)
+    const supportPages = [
+        'about',
+        'contact',
+        'help',
+        'success-stories',
+        'reviews',
+        'blog',
+        'integrations',
+        'use-cases',
+        'vs',
+        'ats-checker',
+    ].map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
     }))
 
-    return [...coreSitemap, ...existingResourceSitemap, ...newResourceSitemap]
+    // Legal pages (low priority but required)
+    const legalPages = [
+        'privacy',
+        'terms',
+        'cookies',
+        'accessibility',
+        'security',
+    ].map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'yearly' as const,
+        priority: 0.3,
+    }))
+
+    return [
+        ...homepage,
+        ...productPages,
+        ...resourcePages,
+        ...supportPages,
+        ...legalPages,
+    ]
 }

@@ -1,5 +1,8 @@
 import { Metadata } from 'next';
 import { RefreshCw, FileText, ArrowRightLeft, Zap, ShieldCheck, Target } from 'lucide-react';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 
 export const metadata: Metadata = {
@@ -9,8 +12,29 @@ export const metadata: Metadata = {
 };
 
 export default function UpdateResumeIoPage() {
+    const faqs = [
+        { question: "Can I import my Resume.io resume?", answer: "Yes, you can export your Resume.io content and import it into our platform for further customization and ATS optimization." },
+        { question: "What's better than Resume.io?", answer: "Our platform offers advanced ATS optimization, more customization options, real-time feedback, and no watermarks on free tier." },
+        { question: "How do I export from Resume.io?", answer: "Download your resume as PDF or DOCX from Resume.io, then use our import feature to bring it into our editor." },
+        { question: "Will my formatting be preserved?", answer: "We'll preserve your content and improve the formatting with our ATS-friendly templates for better results." },
+        { question: "Is migration free?", answer: "Yes, importing and updating your resume is completely free. Premium features are optional upgrades." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema
+                items={[
+                    { name: "Home", url: "https://profresume.com" },
+                    { name: "Resources", url: "https://profresume.com/resources" },
+                    { name: "Update Resume.io Resume", url: "https://profresume.com/resources/update-your-resume-io-resume" }
+                ]}
+            />
+            <ArticleSchema
+                title="Update Your Resume.io Resume - Migration Guide"
+                description="Comprehensive guide to updating and migrating your Resume.io resume. Tips, best practices, and professional alternatives."
+                url="https://profresume.com/resources/update-your-resume-io-resume"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Platform Transition"
                 badgeIcon={RefreshCw}

@@ -3,16 +3,88 @@ import { Merriweather } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
+import { GlobalSchema } from "@/components/SchemaMarkup";
 
 const merriweather = Merriweather({
   variable: "--font-merriweather",
   subsets: ["latin"],
   weight: ["300", "400", "700", "900"],
+  display: 'swap',
 });
 
+// Base URL configuration
+const baseUrl = 'https://profresume.com';
+
 export const metadata: Metadata = {
-  title: "Resume Builder - Create Professional Resumes in Minutes",
-  description: "Build beautiful, ATS-friendly resumes with our easy-to-use resume builder. Choose from professional templates and download as PDF instantly.",
+  metadataBase: new URL(baseUrl),
+
+  // Basic Metadata
+  title: {
+    default: "Professional Resume Builder | Create ATS-Friendly Resumes in Minutes",
+    template: "%s | ProfResume"
+  },
+  description: "Build beautiful, ATS-optimized resumes with AI-powered tools. Choose from 20+ professional templates, get instant feedback, and download as PDF. Trusted by 50,000+ job seekers.",
+  keywords: [
+    "resume builder",
+    "professional resume",
+    "ATS-friendly resume",
+    "resume templates",
+    "CV builder",
+    "resume maker",
+    "free resume builder",
+    "online resume builder",
+    "resume AI",
+    "resume optimizer",
+    "ATS resume checker",
+    "resume creator"
+  ],
+  authors: [{ name: "ProfResume Team" }],
+  creator: "ProfResume",
+  publisher: "ProfResume",
+
+  // Open Graph
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: baseUrl,
+    title: "Professional Resume Builder | Create ATS-Friendly Resumes",
+    description: "Build beautiful, ATS-optimized resumes with AI-powered tools. Choose from 20+ templates and download as PDF instantly.",
+    siteName: "ProfResume",
+    images: [
+      {
+        url: `${baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "ProfResume - Professional Resume Builder",
+      },
+    ],
+  },
+
+  // Twitter Card
+  twitter: {
+    card: "summary_large_image",
+    title: "Professional Resume Builder | ProfResume",
+    description: "Build ATS-friendly resumes in minutes. 20+ templates, AI feedback, instant PDF download.",
+    images: [`${baseUrl}/og-image.png`],
+    creator: "@profresume",
+  },
+
+  // Robots
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+
+  // Additional
+  category: "technology",
+  classification: "Resume Builder Software",
 };
 
 export default function RootLayout({
@@ -24,10 +96,17 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#3b82f6" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/manifest.json" />
+
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={`${merriweather.variable} antialiased min-h-screen flex flex-col`}>
+        <GlobalSchema />
         <Navigation />
         <main className="flex-1 mt-[70px]">
           {children}

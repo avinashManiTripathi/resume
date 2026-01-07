@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Rocket, FastForward, TrendingUp, Zap, Target, Star, Trophy, Sparkles, CheckCircle, ArrowRight, Lightbulb, Award, Search, Users, Clock } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function ResumeBoosterPage() {
+    const faqs = [
+        { question: "How does resume boosting work?", answer: "We analyze your resume and suggest strategic improvements to achievements, keywords, and formatting that increase interview callbacks." },
+        { question: "What kind of improvements can I expect?", answer: "Stronger action verbs, quantified achievements, better keyword optimization, and more impactful formatting that catches recruiter attention." },
+        { question: "Is this different from regular resume writing?", answer: "Yes, boosting focuses specifically on amplifying existing content rather than rewriting from scratch, maximizing your current resume's impact." },
+        { question: "How long does boosting take?", answer: "Instant AI-powered suggestions. You can apply improvements in 10-15 minutes for immediate resume enhancement." },
+        { question: "Will it work for my industry?", answer: "Yes, our boosting strategies are customized for different industries and career levels, from entry-level to executive positions." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['resume-booster']} />
+            <ArticleSchema
+                title="Resume Booster - Amplify Your Resume Impact"
+                description="Boost your resume effectiveness with proven strategies. Enhance achievements, optimize keywords, and stand out to recruiters."
+                url="https://profresume.com/resources/resume-booster"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Impact Tool"
                 badgeIcon={Rocket}

@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Search, Eye, MessageSquare, AlertTriangle, CheckCircle, Lightbulb, Star, TrendingUp, FileText, Award, XCircle, Users } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function ResumeCritiquePage() {
+    const faqs = [
+        { question: "What's included in a resume critique?", answer: "Complete analysis of formatting, content, ATS compatibility, keyword optimization, and specific improvement recommendations." },
+        { question: "How long does a critique take?", answer: "Instant automated analysis. Professional human review (premium) takes 24-48 hours." },
+        { question: "Who reviews my resume?", answer: "Automated analysis uses AI trained on recruiter criteria. Premium reviews are done by certified resume professionals." },
+        { question: "Do you provide revision services?", answer: "We provide detailed feedback and suggestions. You can implement changes yourself or upgrade to our full rewriting service." },
+        { question: "Is my resume kept confidential?", answer: "Absolutely. All resumes are processed securely and never shared with third parties." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['resume-critique']} />
+            <ArticleSchema
+                title="Professional Resume Critique Service - Expert Review"
+                description="Get detailed resume critique from industry experts. Comprehensive analysis of formatting, content, keywords, and ATS optimization."
+                url="https://profresume.com/resources/resume-critique"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Expert Analysis"
                 badgeIcon={Search}

@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Target, Crosshair, Search, Zap, CheckCircle, ArrowRight, TrendingUp, Award, Clock, FileText, AlertCircle, CheckSquare } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function TargetedResumePage() {
+    const faqs = [
+        { question: "How long should it take to tailor my resume?", answer: "Plan 20-30 minutes per application for quality targeting. Use our AI tools to reduce this to 5-10 minutes." },
+        { question: "Should I have multiple versions of my resume?", answer: "Yes! Create 2-3 base templates for different roles/industries, then customize each further for specific applications." },
+        { question: "What percentage of my resume should match the job description?", answer: "Aim for 60-80% keyword alignment while maintaining authenticity. Our Resume Scanner helps you find the optimal balance." },
+        { question: "Can I get caught using keywords I don't have experience with?", answer: "Never add false skills. Instead, reframe your existing experience using the job's language and emphasize transferable skills." },
+        { question: "How do I target my resume without lying?", answer: "Focus on relevant achievements, use industry keywords you actually possess, and emphasize applicable experience. It's about presentation, not fabrication." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['targeted-resume']} />
+            <ArticleSchema
+                title="Targeted Resume Guide 2026 - Tailor Your Resume for Every Job"
+                description="Master the art of creating targeted resumes that beat ATS systems and impress recruiters. Proven strategies to increase interview callbacks by 300%."
+                url="https://profresume.com/resources/targeted-resume"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Strategy Guide"
                 badgeIcon={Target}

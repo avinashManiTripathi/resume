@@ -1,11 +1,27 @@
 "use client";
 
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import { Mail, CheckCircle, FileText, Lightbulb, Target, Award } from "lucide-react";
 import Link from "next/link";
 
 export default function CoverLetterGuidePage() {
+    const faqs = [
+        { question: "Do I always need a cover letter?", answer: "While not always required, including a tailored cover letter increases your chances by 40%. Always include one unless explicitly stated not to." },
+        { question: "How long should a cover letter be?", answer: "One page maximum, typically 3-4 paragraphs (250-400 words). Be concise and impactful." },
+        { question: "Should I repeat my resume?", answer: "No, complement your resume by explaining context, motivations, and personality. Tell the story behind your achievements." },
+        { question: "How do I address unknown hiring managers?", answer: "Try to find the name via LinkedIn or company website. If impossible, use 'Dear Hiring Manager' or 'Dear [Department] Team'." },
+        { question: "Can I use the same cover letter for multiple jobs?", answer: "Never. Each letter should be customized for the specific role and company. Generic letters are immediately obvious to recruiters." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <ArticleSchema
+                title="Cover Letter Writing Guide - Templates & Examples"
+                description="Learn how to write compelling cover letters that get noticed. Templates, examples, and proven strategies for success."
+                url="https://profresume.com/resources/cover-letter-guide"
+            />
+            <FAQSchema faqs={faqs} />
 
 
             {/* Hero Section */}

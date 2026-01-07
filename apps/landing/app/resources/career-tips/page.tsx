@@ -1,6 +1,7 @@
 "use client";
 
-
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import { Briefcase, TrendingUp, Users, Target, Lightbulb, BookOpen, Award, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -114,8 +115,22 @@ export default function CareerTipsPage() {
         orange: "bg-orange-100 text-orange-600"
     };
 
+    const faqs = [
+        { question: "How do I negotiate salary effectively?", answer: "Research market rates, know your worth, wait for the offer first, then negotiate based on data. Always be professional and grateful while advocating for yourself." },
+        { question: "What's the best way to network?", answer: "Attend industry events, engage on LinkedIn, informational interviews, join professional associations. Focus on building genuine relationships, not just collecting contacts." },
+        { question: "How should I prepare for interviews?", answer: "Research the company, practice STAR method responses, prepare questions to ask, rehearse with a friend, and dress appropriately for the company culture." },
+        { question: "When should I follow up after applying?", answer: "Wait 1-2 weeks after applying, then send a polite follow-up email. After interviews, send thank-you notes within 24 hours." },
+        { question: "How do I change careers successfully?", answer: "Identify transferable skills, get relevant certifications, network in the new industry, consider transitional roles, and update your resume to emphasize relevant experience." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <ArticleSchema
+                title="Career Tips & Job Search Strategies"
+                description="Expert career tips and job search strategies. Interview prep, networking, salary negotiation, and career development advice."
+                url="https://profresume.com/resources/career-tips"
+            />
+            <FAQSchema faqs={faqs} />
 
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">

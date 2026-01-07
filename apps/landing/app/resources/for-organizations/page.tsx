@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import { Building2, Users, Rocket, BarChart3, Globe, ShieldCheck, Award, TrendingUp, CheckCircle, Target, Briefcase, GraduationCap } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +13,29 @@ export const metadata: Metadata = {
 };
 
 export default function ForOrganizationsPage() {
+    const faqs = [
+        { question: "What types of organizations do you serve?", answer: "We serve universities, career centers, HR departments, outplacement firms, corporate training programs, and workforce development agencies." },
+        { question: "Do you offer volume discounts?", answer: "Yes, we provide tiered pricing based on user count with significant discounts for educational institutions and non-profits." },
+        { question: "Can we white-label the platform?", answer: "Yes, enterprise plans include white-labeling options with custom branding, logos, and domain configuration." },
+        { question: "What kind of support is included?", answer: "Dedicated account manager, priority technical support, onboarding training sessions, and ongoing implementation assistance." },
+        { question: "Is there a trial period for organizations?", answer: "Yes, we offer 30-day trials for qualified organizations to test all features and evaluate integration capabilities." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema
+                items={[
+                    { name: "Home", url: "https://profresume.com" },
+                    { name: "Resources", url: "https://profresume.com/resources" },
+                    { name: "For Organizations", url: "https://profresume.com/resources/for-organizations" }
+                ]}
+            />
+            <ArticleSchema
+                title="Resume Tools for Organizations - Enterprise Solutions"
+                description="Professional resume tools for universities, career centers, and HR departments. Bulk licensing, white-label options, and dedicated support."
+                url="https://profresume.com/resources/for-organizations"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Enterprise Solutions"
                 badgeIcon={Building2}

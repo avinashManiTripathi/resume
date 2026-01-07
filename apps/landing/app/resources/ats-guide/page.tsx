@@ -1,12 +1,28 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import { Bot, CheckCircle, XCircle, Lightbulb, Target, Award, TrendingUp } from "lucide-react";
 import Link from "next/link";
 
 export default function ATSGuidePage() {
+    const faqs = [
+        { question: "What is an ATS?", answer: "ATS (Applicant Tracking System) is software that screens and ranks resumes before human recruiters see them. Over 90% of large companies use ATS." },
+        { question: "How do I know if my resume is ATS-friendly?", answer: "Use our ATS scanner to check compatibility. Key factors: simple formatting, standard fonts, clear section headers, and relevant keywords." },
+        { question: "What formatting should I avoid?", answer: "Avoid tables, text boxes, headers/footers, images, graphics, and unusual fonts. Stick to standard one-column layouts with clear headings." },
+        { question: "Do all companies use ATS?", answer: "About 99% of Fortune 500 and 70% of all companies use ATS. Even small companies increasingly adopt ATS for efficiency." },
+        { question: "Can I beat the ATS?", answer: "Yes, by using proper formatting, relevant keywords, standard section names, and ensuring your PDF/DOCX is text-readable, not image-based." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <ArticleSchema
+                title="Complete ATS Guide - Beat Applicant Tracking Systems"
+                description="Master ATS optimization with our complete guide. Learn how ATS works, formatting best practices, and keyword strategies."
+                url="https://profresume.com/resources/ats-guide"
+            />
+            <FAQSchema faqs={faqs} />
 
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50">

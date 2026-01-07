@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Bot, Zap, Target, ShieldCheck, Search, Lightbulb, Clock, TrendingUp, Award, CheckCircle, AlertCircle, FileText, Brain } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function AIResumeReviewPage() {
+    const faqs = [
+        { question: "How accurate is AI resume review?", answer: "Our AI is trained on millions of successful resumes and recruiter preferences, providing 95%+ accuracy comparable to human experts." },
+        { question: "Can AI replace human resume reviewers?", answer: "AI provides instant, data-driven feedback. For executive or specialized roles, consider combining AI with human expert review." },
+        { question: "What makes your AI different?", answer: "Trained on current ATS systems, recruiter feedback, and industry-specific best practices. Continuously updated with latest trends." },
+        { question: "Will AI reviews improve over time?", answer: "Yes, our AI learns from feedback and stays updated with evolving recruitment standards." },
+        { question: "Is my data safe with AI review?", answer: "Absolutely. Your resume is processed securely and never stored or used for training without explicit consent." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['ai-resume-review']} />
+            <ArticleSchema
+                title="AI Resume Review - Instant Professional Feedback"
+                description="Get AI-powered resume review with actionable suggestions. Instant analysis of content, keywords, formatting, and ATS optimization."
+                url="https://profresume.com/resources/ai-resume-review"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="AI Powered"
                 badgeIcon={Bot}

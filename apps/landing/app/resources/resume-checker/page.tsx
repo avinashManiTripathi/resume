@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { CheckCircle2, Layout, Smartphone, FileCheck, ShieldCheck, Zap, AlertCircle, Clock, TrendingUp, Target, Search, Award, XCircle } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function ResumeCheckerPage() {
+    const faqs = [
+        { question: "Is the resume checker really free?", answer: "Yes, completely free with no hidden fees or credit card required." },
+        { question: "How does the resume checker work?", answer: "Our tool analyzes your resume using the same criteria as ATS systems and professional recruiters." },
+        { question: "Will my resume be stored or shared?", answer: "No, your privacy is paramount. Resumes are analyzed in real-time and not stored." },
+        { question: "What file formats are supported?", answer: "We support PDF, DOCX, and TXT formats." },
+        { question: "How accurate is the feedback?", answer: "Our checker uses industry-standard ATS parsing algorithms and recruiter best practices for highly accurate results." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['resume-checker']} />
+            <ArticleSchema
+                title="Free Resume Checker - Instant ATS & Quality Analysis"
+                description="Get instant feedback on your resume with our professional resume checker. ATS compatibility, formatting, content quality, and improvement suggestions."
+                url="https://profresume.com/resources/resume-checker"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Professional Tool"
                 badgeIcon={CheckCircle2}
@@ -322,8 +341,8 @@ export default function ResumeCheckerPage() {
                                         {item.issue}
                                     </h4>
                                     <span className={`px-2 py-1 rounded text-xs font-bold ${item.severity === 'Critical' ? 'bg-red-100 text-red-800' :
-                                            item.severity === 'High' ? 'bg-orange-100 text-orange-800' :
-                                                'bg-yellow-100 text-yellow-800'
+                                        item.severity === 'High' ? 'bg-orange-100 text-orange-800' :
+                                            'bg-yellow-100 text-yellow-800'
                                         }`}>
                                         {item.severity}
                                     </span>

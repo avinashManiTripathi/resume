@@ -1,6 +1,8 @@
 "use client";
 
 import { Navigation } from "@/components/Navigation";
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
 import { Briefcase, Code, Palette, TrendingUp, Heart, Wrench, GraduationCap, Users } from "lucide-react";
 import Link from "next/link";
 
@@ -75,8 +77,22 @@ export default function IndustryExamplesPage() {
         teal: "bg-teal-100 text-teal-600 border-teal-200"
     };
 
+    const faqs = [
+        { question: "Should my resume format differ by industry?", answer: "Yes, creative fields allow more design freedom while traditional industries (finance, law) prefer conservative, text-focused formats." },
+        { question: "How do I switch industries with my resume?", answer: "Emphasize transferable skills, reframe your experience to match the new industry's language, and highlight relevant projects or certifications." },
+        { question: "Do I need different resumes for different industries?", answer: "If targeting multiple industries, yes. Create industry-specific versions that emphasize relevant  experience and use appropriate terminology." },
+        { question: "What makes a tech resume different?", answer: "Tech resumes emphasize technical skills, projects, GitHub/portfolio links, and specific programming languages/frameworks prominently." },
+        { question: "Can I use templates for industry-specific resumes?", answer: "Yes, but choose templates designed for your industry. Creative fields need portfolios, while corporate roles need traditional formats." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <ArticleSchema
+                title="Resume Examples by Industry - Professional Templates"
+                description="Browse industry-specific resume examples and templates. Tailored formats for tech, healthcare, finance, and more."
+                url="https://profresume.com/resources/industry-examples"
+            />
+            <FAQSchema faqs={faqs} />
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
                 <div className="max-w-7xl mx-auto text-center">

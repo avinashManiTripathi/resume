@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Scan, ShieldCheck, Search, Zap, Cpu, SearchCode, TrendingUp, AlertCircle, CheckCircle2, FileText, Target, Award } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function ResumeScannerPage() {
+    const faqs = [
+        { question: "What does the resume scanner check?", answer: "ATS compatibility, keyword density, formatting structure, readability score, and content optimization." },
+        { question: "Why is my score lower than expected?", answer: "Common issues include formatting problems, keyword gaps, or ATS-incompatible elements like tables or graphics." },
+        { question: "How do I improve my scan score?", answer: "Follow the specific recommendations provided: add relevant keywords, fix formatting, simplify design, and use standard sections." },
+        { question: "Is a 100% score necessary?", answer: "Not always. Aim for 75%+ for strong ATS compatibility while maintaining readability for humans." },
+        { question: "How often should I scan my resume?", answer: "Scan after major edits and before each application to ensure ATS compatibility." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['resume-scanner']} />
+            <ArticleSchema
+                title="Free ATS Resume Scanner - Test Your Resume Score"
+                description="Scan your resume like an ATS would. Get instant compatibility score, keyword analysis, and detailed optimization recommendations."
+                url="https://profresume.com/resources/resume-scanner"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="System Simulation"
                 badgeIcon={Scan}

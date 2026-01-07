@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import { Wrench, ShieldAlert, CheckCircle2, Zap, FileWarning, Lightbulb, TrendingUp, Target, AlertCircle, XCircle, Award, Clock } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -10,8 +14,23 @@ export const metadata: Metadata = {
 };
 
 export default function ResumeFixerPage() {
+    const faqs = [
+        { question: "What problems can the resume fixer detect?", answer: "Formatting issues, typos, grammar errors, ATS incompatibility, keyword gaps, and structure problems." },
+        { question: "Will it fix everything automatically?", answer: "It identifies issues and provides specific fixes. Some require your input for accuracy." },
+        { question: "How is this different from spell check?", answer: "Goes beyond spelling to analyze ATS compatibility, formatting, keywords, and resume-specific best practices." },
+        { question: "Can it help with content improvements?", answer: "Yes, it suggests stronger action verbs, quantifiable metrics, and more impactful phrasing." },
+        { question: "Is it suitable for all experience levels?", answer: "Absolutely. Works for entry-level to executive resumes across all industries." }
+    ];
+
     return (
         <div className="min-h-screen bg-white">
+            <BreadcrumbSchema items={BREADCRUMBS['resume-fixer']} />
+            <ArticleSchema
+                title="Resume Fixer - Fix Common Resume Mistakes Instantly"
+                description="Identify and fix common resume mistakes automatically. Improve formatting, fix typos, optimize keywords, and boost ATS compatibility."
+                url="https://profresume.com/resources/resume-fixer"
+            />
+            <FAQSchema faqs={faqs} />
             <ResourceHero
                 badge="Repair Tool"
                 badgeIcon={Wrench}
@@ -187,8 +206,8 @@ export default function ResumeFixerPage() {
                                         <div className="flex items-start justify-between mb-2">
                                             <h3 className="font-bold text-gray-900 text-lg">{item.problem}</h3>
                                             <span className={`px-3 py-1 rounded-full text-xs font-bold flex-shrink-0 ml-2 ${item.severity === 'Critical' ? 'bg-red-100 text-red-800' :
-                                                    item.severity === 'High' ? 'bg-orange-100 text-orange-800' :
-                                                        'bg-yellow-100 text-yellow-800'
+                                                item.severity === 'High' ? 'bg-orange-100 text-orange-800' :
+                                                    'bg-yellow-100 text-yellow-800'
                                                 }`}>
                                                 {item.severity}
                                             </span>
