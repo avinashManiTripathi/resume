@@ -74,6 +74,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
     }))
 
+    // Blog category pages (good for SEO)
+    const blogCategoryPages = [
+        'tips-tricks',
+        'career-advice',
+        'ats',
+        'career-change',
+        'remote-work',
+        'linkedin',
+        'interview-prep',
+        'salary-negotiation',
+    ].map((slug) => ({
+        url: `${baseUrl}/blog/category/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+        priority: 0.75,
+    }))
+
     // Supporting pages (medium priority)
     const supportPages = [
         'about',
@@ -113,6 +130,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...productPages,
         ...resumeBuilderPages,
         ...resourcePages,
+        ...blogCategoryPages,
         ...supportPages,
         ...legalPages,
     ]
