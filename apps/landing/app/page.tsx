@@ -341,7 +341,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="/editor"
+                href="https://edit.profresume.com/editor"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Start Writing with AI
@@ -509,7 +509,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="/editor"
+                href="https://edit.profresume.com/cover-letter"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Create Cover Letter
@@ -1019,7 +1019,7 @@ export default async function LandingPage() {
 
           <div className="text-center mt-12">
             <Link
-              href="/editor"
+              href="https://edit.profresume.com/editor"
               className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
             >
               Get Started Now - It's Free
