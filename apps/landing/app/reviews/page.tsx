@@ -48,7 +48,7 @@ export default function ReviewsPage() {
                 <div className="container">
                     <h2>Ready to Join Them?</h2>
                     <p>Start creating your professional resume today</p>
-                    <a href="/editor" className="cta-button">Create Your Resume Free →</a>
+                    <a href="https://edit.profresume.com/editor" className="cta-button">Create Your Resume Free →</a>
                 </div>
             </section>
 

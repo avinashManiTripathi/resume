@@ -54,7 +54,7 @@ export default function ComparisonPage() {
 
                     <div className="cta-box">
                         <h2>Ready to Experience the Difference?</h2>
-                        <a href="/editor" className="cta-button">Try ProfResume Free →</a>
+                        <a href="https://edit.profresume.com/editor" className="cta-button">Try ProfResume Free →</a>
                     </div>
                 </div>
             </section>

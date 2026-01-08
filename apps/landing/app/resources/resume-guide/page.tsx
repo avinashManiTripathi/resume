@@ -153,7 +153,7 @@ export default function ResumeGuidePage() {
                         Use our resume builder to create an ATS-friendly resume in minutes.
                     </p>
                     <Link
-                        href="/editor"
+                        href="https://edit.profresume.com/editor"
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <FileText className="w-5 h-5" />

@@ -51,7 +51,7 @@ export default function SuccessStoriesPage() {
                 <div className="container">
                     <h2>Ready to Write Your Success Story?</h2>
                     <p>Join thousands who've transformed their careers with ProfResume</p>
-                    <a href="/editor" className="cta-button">Start Your Journey →</a>
+                    <a href="https://edit.profresume.com/editor" className="cta-button">Start Your Journey →</a>
                 </div>
             </section>
 

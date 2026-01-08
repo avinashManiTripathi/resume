@@ -153,7 +153,7 @@ export default function BestResumeBuilderPage() {
                     {/* CTA */}
                     <div className="text-center mb-8">
                         <Link
-                            href="/editor"
+                            href="https://edit.profresume.com/editor"
                             className="inline-flex items-center gap-2 px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold text-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-2xl"
                         >
                             Start Building Your Resume <ArrowRight className="w-6 h-6" />
@@ -307,7 +307,7 @@ export default function BestResumeBuilderPage() {
                             Plus unique features like voice input and job description matching that no other builder offers.
                         </p>
                         <Link
-                            href="/editor"
+                            href="https://edit.profresume.com/editor"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                         >
                             Try It Free Now <ArrowRight className="w-5 h-5" />
@@ -344,7 +344,7 @@ export default function BestResumeBuilderPage() {
                         Join 50,000+ professionals who've landed their dream jobs using our AI-powered resume builder
                     </p>
                     <Link
-                        href="/editor"
+                        href="https://edit.profresume.com/editor"
                         className="inline-flex items-center gap-2 px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl"
                     >
                         Start Building Free <ArrowRight className="w-6 h-6" />

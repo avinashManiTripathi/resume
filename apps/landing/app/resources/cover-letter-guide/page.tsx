@@ -170,7 +170,7 @@ export default function CoverLetterGuidePage() {
                         Build a professional resume that pairs perfectly with your cover letter.
                     </p>
                     <Link
-                        href="/editor"
+                        href="https://edit.profresume.com/editor"
                         className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <Award className="w-5 h-5" />

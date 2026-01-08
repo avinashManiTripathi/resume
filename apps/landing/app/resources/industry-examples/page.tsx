@@ -141,7 +141,7 @@ export default function IndustryExamplesPage() {
                                 </div>
 
                                 <Link
-                                    href="/editor"
+                                    href="https://edit.profresume.com/editor"
                                     className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors"
                                 >
                                     View Examples
@@ -203,7 +203,7 @@ export default function IndustryExamplesPage() {
                         Choose from our professionally designed templates tailored for your industry.
                     </p>
                     <Link
-                        href="/editor"
+                        href="https://edit.profresume.com/editor"
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <Briefcase className="w-5 h-5" />

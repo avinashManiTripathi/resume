@@ -72,7 +72,7 @@ export default function ExamplesPage() {
 
                     <div className="cta-box">
                         <h2>Ready to Create Your Success Story?</h2>
-                        <a href="/editor" className="cta-button">Start Building Your Resume →</a>
+                        <a href="https://edit.profresume.com/editor" className="cta-button">Start Building Your Resume →</a>
                     </div>
                 </div>
             </section>

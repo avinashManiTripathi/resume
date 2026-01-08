@@ -274,7 +274,7 @@ export default function KeywordGeneratorClient() {
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link
-                            href="/editor"
+                            href="https://edit.profresume.com/editor"
                             className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-10 py-5 rounded-full font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl hover:scale-105 active:scale-95"
                         >
                             Build My Resume

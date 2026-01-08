@@ -30,7 +30,7 @@ export default function UseCasesPage() {
                 <li>✓ Internship-focused layouts</li>
                 <li>✓ Free tier perfect for students</li>
               </ul>
-              <a href="/editor" className="cta-button">Start Your Resume</a>
+              <a href="https://edit.profresume.com/editor" className="cta-button">Start Your Resume</a>
             </div>
 
             {/* Professionals */}
@@ -44,7 +44,7 @@ export default function UseCasesPage() {
                 <li>✓ Easy experience tracking</li>
                 <li>✓ Multiple resume versions</li>
               </ul>
-              <a href="/editor" className="cta-button primary">Create Resume</a>
+              <a href="https://edit.profresume.com/editor" className="cta-button primary">Create Resume</a>
             </div>
 
             {/* Career Changers */}
@@ -58,7 +58,7 @@ export default function UseCasesPage() {
                 <li>✓ Industry-specific examples</li>
                 <li>✓ Career transition guides</li>
               </ul>
-              <a href="/editor" className="cta-button">Get Started</a>
+              <a href="https://edit.profresume.com/editor" className="cta-button">Get Started</a>
             </div>
 
             {/* Executives */}
@@ -72,7 +72,7 @@ export default function UseCasesPage() {
                 <li>✓ Leadership highlights</li>
                 <li>✓ Premium support</li>
               </ul>
-              <a href="/editor" className="cta-button">Build Executive Resume</a>
+              <a href="https://edit.profresume.com/editor" className="cta-button">Build Executive Resume</a>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default function UseCasesPage() {
         <div className="container">
           <h2>Ready to Create Your Perfect Resume?</h2>
           <p>Join thousands of job seekers who've landed their dream jobs with ProfResume</p>
-          <a href="/editor" className="cta-button large">Start Building Free →</a>
+          <a href="https://edit.profresume.com/editor" className="cta-button large">Start Building Free →</a>
         </div>
       </section>
 

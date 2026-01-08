@@ -198,7 +198,7 @@ export default function ATSGuidePage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
-                            href="/editor"
+                            href="https://edit.profresume.com/editor"
                             className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                         >
                             <Award className="w-5 h-5" />

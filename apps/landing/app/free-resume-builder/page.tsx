@@ -160,7 +160,7 @@ export default function FreeResumeBuilderPage() {
                         {/* Primary CTA */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <Link
-                                href="/editor"
+                                href="https://edit.profresume.com/editor"
                                 className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
                             >
                                 Start Building Free <ArrowRight className="w-5 h-5" />
@@ -248,7 +248,7 @@ export default function FreeResumeBuilderPage() {
 
                     <div className="text-center mt-12">
                         <Link
-                            href="/editor"
+                            href="https://edit.profresume.com/editor"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
                         >
                             Create My Free Resume <ArrowRight className="w-5 h-5" />
@@ -376,7 +376,7 @@ export default function FreeResumeBuilderPage() {
                         Join 50,000+ job seekers who've created professional resumes with our free builder
                     </p>
                     <Link
-                        href="/editor"
+                        href="https://edit.profresume.com/editor"
                         className="inline-flex items-center gap-2 px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl"
                     >
                         Start Building Now - It's Free <ArrowRight className="w-6 h-6" />
