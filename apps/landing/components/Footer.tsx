@@ -90,9 +90,9 @@ export function Footer() {
                         <div className="flex items-center gap-3">
                             {
                                 socials.links.map((el) =>
-                                    <a aria-label="Twitter" href={el.url} target="_blank" rel="noopener noreferrer"
+                                    <a key={el.name} aria-label={el.name} href={el.url} target="_blank" rel="noopener noreferrer"
                                         className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                        <el.icon name='twitter' className="w-5 h-5 text-white" />
+                                        <el.icon className="w-5 h-5 text-white" />
                                     </a>
                                 )
                             }
