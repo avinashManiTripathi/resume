@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FileText, Mail, Twitter, Linkedin, Github, Facebook, Instagram, MapPin, Phone, Send } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export function Footer() {
     const [email, setEmail] = useState('');
@@ -15,6 +15,41 @@ export function Footer() {
         setTimeout(() => setSubscribed(false), 3000);
         setEmail('');
     };
+
+
+    const FooterJson = {
+        socials: {
+            links: [
+                {
+                    name: "Twitter",
+                    url: "https://twitter.com",
+                    icon: Twitter
+                },
+                {
+                    name: "Linkedin",
+                    url: "https://linkedin.com",
+                    icon: Linkedin
+                },
+                {
+                    name: "Github",
+                    url: "https://github.com",
+                    icon: Github
+                },
+                {
+                    name: "Facebook",
+                    url: "https://facebook.com",
+                    icon: Facebook
+                },
+                {
+                    name: "Instagram",
+                    url: "https://instagram.com",
+                    icon: Instagram
+                }
+            ]
+        }
+    }
+
+    const { socials } = useMemo(() => FooterJson, []);
 
     return (
         <footer className="bg-gray-900 text-gray-400">
@@ -53,26 +88,14 @@ export function Footer() {
 
                         {/* Social Links */}
                         <div className="flex items-center gap-3">
-                            <a aria-label="Twitter" href="https://twitter.com" target="_blank" rel="noopener noreferrer"
-                                className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Twitter name='twitter' className="w-5 h-5 text-white" />
-                            </a>
-                            <a aria-label="Linkedin" href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
-                                className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Linkedin name="Linkedin" className="w-5 h-5 text-white" />
-                            </a>
-                            <a aria-label="Github" href="https://github.com" target="_blank" rel="noopener noreferrer"
-                                className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-colors">
-                                <Github name="Github" className="w-5 h-5 text-white" />
-                            </a>
-                            <a aria-label="Facebook" href="https://facebook.com" target="_blank" rel="noopener noreferrer"
-                                className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Facebook name="facebook" className="w-5 h-5 text-white" />
-                            </a>
-                            <a aria-label="Instagram" href="https://instagram.com" target="_blank" rel="noopener noreferrer"
-                                className="w-10 h-10 bg-gray-800 hover:bg-pink-600 rounded-lg flex items-center justify-center transition-colors">
-                                <Instagram name="Instagram" className="w-5 h-5 text-white" />
-                            </a>
+                            {
+                                socials.links.map((el) =>
+                                    <a aria-label="Twitter" href={el.url} target="_blank" rel="noopener noreferrer"
+                                        className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-colors">
+                                        <el.icon name='twitter' className="w-5 h-5 text-white" />
+                                    </a>
+                                )
+                            }
                         </div>
                     </div>
 
@@ -80,7 +103,7 @@ export function Footer() {
                     <div>
                         <h4 className="text-white font-bold mb-4 text-sm uppercase tracking-wider">Product</h4>
                         <ul className="space-y-3 text-sm">
-                            <li><Link href="/editor" className="hover:text-white transition-colors">Resume Builder</Link></li>
+                            <li><Link href="/resume-builder" className="hover:text-white transition-colors">Resume Builder</Link></li>
                             <li><Link href="/templates" className="hover:text-white transition-colors">Resume Templates</Link></li>
                             <li><Link href="/tailor" className="hover:text-white transition-colors">AI Resume Tailoring</Link></li>
                             <li><Link href="/ats-checker" className="hover:text-white transition-colors">ATS Checker</Link></li>

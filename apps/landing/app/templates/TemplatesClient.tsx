@@ -115,7 +115,7 @@ export default function TemplatesPageClient() {
                                 className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-xl"
                             >
                                 {/* Template Preview */}
-                                <div className="aspect-[8.5/11] bg-gray-100 relative overflow-hidden">
+                                <div className="p-[16px] bg-white aspect-[8.5/11] bg-gray-100 relative overflow-hidden">
                                     {template.thumbnail ? (
                                         <img
                                             src={"https://api.profresume.com" + template.thumbnail}
