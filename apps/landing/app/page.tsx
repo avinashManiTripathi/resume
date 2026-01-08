@@ -1042,60 +1042,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              Join thousands who landed their dream jobs
-            </h2>
-          </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah Chen",
-                role: "Software Engineer at Google",
-                text: "Got my dream job at Google! The AI suggestions made my resume stand out. I had 5 interview calls in the first week.",
-                avatar: "SC",
-                rating: 5
-              },
-              {
-                name: "Michael Rodriguez",
-                role: "Product Manager at Meta",
-                text: "The templates are absolutely professional. Landed 3 offers and negotiated 20% higher salary than expected!",
-                avatar: "MR",
-                rating: 5
-              },
-              {
-                name: "Emily Johnson",
-                role: "UX Designer at Apple",
-                text: "As a designer, I'm picky about aesthetics. These templates are clean, modern, and actually helped me get hired at Apple.",
-                avatar: "EJ",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-2xl transition-shadow">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-6 leading-relaxed italic">"{testimonial.text}"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <div className="font-bold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Final CTA */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-600 relative overflow-hidden">
