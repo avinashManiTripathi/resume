@@ -418,3 +418,83 @@ export function useDelete<T = any>(url: string): MutationState<T> {
         reset,
     };
 }
+
+/**
+ * usePostArrayBuffer - Hook for POST requests that return ArrayBuffer (e.g., PDF generation)
+ * Includes automatic request cancellation via AbortController
+ * 
+ * @param url - The URL to post to
+ * @returns Object with execute function, loading state, and error
+ * 
+ * @example
+ * const { execute, loading, error } = usePostArrayBuffer('/api/pdf/generate');
+ * const pdfData = await execute({ resumeData });
+ */
+export function usePostArrayBuffer(url: string) {
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const execute = useCallback(
+        async (body?: any): Promise<ArrayBuffer | null> => {
+            // Cancel previous request if still pending
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+
+            abortControllerRef.current = new AbortController();
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: body ? JSON.stringify(body) : undefined,
+                    signal: abortControllerRef.current.signal,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.arrayBuffer();
+                setLoading(false);
+                return data;
+            } catch (error) {
+                if (error instanceof Error && error.name === 'AbortError') {
+                    // Request was cancelled - this is expected behavior
+                    return null;
+                }
+                setError(error as Error);
+                setLoading(false);
+                return null;
+            }
+        },
+        [url]
+    );
+
+    const reset = useCallback(() => {
+        setLoading(false);
+        setError(null);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            // Cleanup: cancel any pending request on unmount
+            if (abortControllerRef.current) {
+                abortControllerRef.current.abort();
+            }
+        };
+    }, []);
+
+    return {
+        execute,
+        loading,
+        error,
+        reset,
+    };
+}

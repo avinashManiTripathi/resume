@@ -14,6 +14,7 @@ import ShareModal from "../ShareModal";
 import SmartImportModal from "../SmartImportModal";
 import { CloudCheck } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
+import { usePostArrayBuffer } from "@repo/hooks/network";
 
 
 function ResumeEditor() {
@@ -29,6 +30,9 @@ function ResumeEditor() {
   const [history, setHistory] = useState<any[]>([dummyData]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [resume, setResume] = useState(dummyData);
+
+  // Initialize PDF generation hook with auto-cancellation
+  const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(`${API_BASE}/convert-html-to-pdf`);
 
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
@@ -436,14 +440,12 @@ function ResumeEditor() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [historyIndex, history]);
 
-  // Render PDF with loading state
+  // Render PDF with loading state and auto-cancellation
   const renderPdf = async (page = currentPage) => {
     if (!canvasRef.current || !mainRef.current) return;
 
     setIsGeneratingPDF(true);
     try {
-      const apiUrl = `${API_BASE}/convert-html-to-pdf`;
-
       // Extract section labels from schema
       const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
         acc[key] = config.label;
@@ -458,14 +460,13 @@ function ResumeEditor() {
         order: debouncedSectionOrder
       };
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(resumeData),
-      });
+      // Use hook for automatic request cancellation
+      // If a new request comes in, the previous one is auto-cancelled
+      const pdfData = await generatePDF(resumeData);
 
-      const pdfData = await response.arrayBuffer();
-      await renderPDFPage(pdfData, page);
+      if (pdfData) {
+        await renderPDFPage(pdfData, page);
+      }
     } catch (error) {
       console.error("Error rendering PDF:", error);
     } finally {
