@@ -520,6 +520,20 @@ export default async function LandingPage() {
         </div>
       </section>
 
+
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <VoiceDemo />
+        </div>
+      </section>
+
+
       {/* Resume Builder Section - NEW */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <div className="max-w-7xl mx-auto">
@@ -1029,18 +1043,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <VoiceDemo />
-        </div>
-      </section>
 
 
 
