@@ -20,7 +20,7 @@ import {
     sortableKeyboardCoordinates,
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { CustomSectionModal, SECTION_TEMPLATES } from "./CustomSectionModal";
 
 interface Props {
@@ -51,18 +51,23 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
         }
     }, [schema, sectionOrder, setSectionOrder]);
 
+    // Sensors configuration - useSensors already returns stable references
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Prevents accidental drags
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
 
-    const updateSection = (key: string, value: any) => {
+    const updateSection = useCallback((key: string, value: any) => {
         onChange({ ...data, [key]: value });
-    };
+    }, [data, onChange]);
 
-    const addItem = (key: string) => {
+    const addItem = useCallback((key: string) => {
         const newItem = {};
         const updated = [...(data[key] || []), newItem];
         const newData = { ...data, [key]: updated };
@@ -92,9 +97,9 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
         }
 
         onChange(newData);
-    };
+    }, [data, onChange]);
 
-    const updateArrayItem = (
+    const updateArrayItem = useCallback((
         key: string,
         index: number,
         field: string,
@@ -130,16 +135,16 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
         }
 
         onChange(newData);
-    };
+    }, [data, onChange]);
 
-    const removeItem = (key: string, index: number) => {
+    const removeItem = useCallback((key: string, index: number) => {
         updateSection(
             key,
             data[key].filter((_: any, i: number) => i !== index)
         );
-    };
+    }, [data, updateSection]);
 
-    const handleSectionDragEnd = (event: DragEndEvent) => {
+    const handleSectionDragEnd = useCallback((event: DragEndEvent) => {
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
@@ -150,9 +155,9 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                 return arrayMove(items, oldIndex, newIndex);
             });
         }
-    };
+    }, [setSectionOrder]);
 
-    const handleItemDragEnd = (key: string) => (event: DragEndEvent) => {
+    const handleItemDragEnd = useCallback((key: string) => (event: DragEndEvent) => {
         const { active, over } = event;
 
         if (over && active.id !== over.id) {
@@ -164,9 +169,9 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                 updateSection(key, arrayMove(items, oldIndex, newIndex));
             }
         }
-    };
+    }, [data, updateSection]);
 
-    const handleAddCustomSection = (sectionId: string, sectionLabel: string) => {
+    const handleAddCustomSection = useCallback((sectionId: string, sectionLabel: string) => {
         const template = SECTION_TEMPLATES.find(t => t.id === sectionId);
         if (!template || !onSchemaChange) return;
 
@@ -216,7 +221,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
         onSchemaChange(newSchema);
 
         setIsModalOpen(false);
-    };
+    }, [schema, data, onChange, onSchemaChange, sectionOrder, setSectionOrder]);
 
 
     return (
@@ -342,4 +347,5 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
     );
 };
 
-export default GenericForm;
+// Wrap with React.memo to prevent re-renders when props haven't changed
+export default memo(GenericForm);

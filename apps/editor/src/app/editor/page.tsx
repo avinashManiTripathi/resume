@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useEffect, useLayoutEffect, useRef, useState, useMemo, Suspense } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback, Suspense } from "react";
 import { useDebounce, exportToDoc, canDownload, setSubscription, getSubscription, type SubscriptionTier } from "@repo/utils-client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
@@ -26,8 +26,8 @@ function ResumeEditor() {
   const urlTemplateId = searchParams.get('templateId');
   const defaultTemplateId = "6959f1c2de127e0f17295492";
 
-  // Undo/Redo history
-  const [history, setHistory] = useState<any[]>([dummyData]);
+  // Undo/Redo history - Use lazy initialization to prevent array creation on every render
+  const [history, setHistory] = useState<any[]>(() => [dummyData]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [resume, setResume] = useState(dummyData);
 
@@ -37,8 +37,7 @@ function ResumeEditor() {
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
 
-  // Loading state for PDF generation
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  // Note: Using isPdfGenerating from usePostArrayBuffer hook instead of separate state
 
   // Check subscription on mount - redirect if no active subscription
   useEffect(() => {
@@ -104,6 +103,14 @@ function ResumeEditor() {
 
   const debouncedResume = useDebounce(resume, 500);
 
+  // Memoize section labels computation - used in multiple places
+  const sectionLabels = useMemo(() => {
+    return Object.entries(schema).reduce((acc, [key, config]) => {
+      acc[key] = config.label;
+      return acc;
+    }, {} as Record<string, string>);
+  }, [schema]);
+
   // Initialize section order based on schema keys
   const initialSectionOrder = useMemo(() => Object.keys(schema), []);
   const [sectionOrder, setSectionOrder] = useState<string[]>(initialSectionOrder);
@@ -126,8 +133,8 @@ function ResumeEditor() {
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
 
 
-  // Calculate dynamic progress based on resume completion
-  const calculateProgress = () => {
+  // Calculate dynamic progress based on resume completion - Memoized to prevent recalculation on every render
+  const progress = useMemo(() => {
     let totalFields = 0;
     let filledFields = 0;
 
@@ -178,85 +185,100 @@ function ResumeEditor() {
     }
 
     return totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
-  };
-
-  const progress = calculateProgress();
+  }, [resume]);
 
 
-  // Add to history
-  const addToHistory = (newData: any) => {
-    const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(newData);
-    if (newHistory.length > 50) newHistory.shift(); // Keep original history limit
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  };
+  // Add to history - Using functional setState to avoid dependencies
+  const addToHistory = useCallback((newData: any) => {
+    setHistory(prev => {
+      setHistoryIndex(prevIndex => {
+        const newHistory = prev.slice(0, prevIndex + 1);
+        newHistory.push(newData);
+        if (newHistory.length > 50) newHistory.shift();
+        return newHistory.length - 1;
+      });
+      const newHistory = prev.slice(0, prev.length);
+      newHistory.push(newData);
+      if (newHistory.length > 50) newHistory.shift();
+      return newHistory;
+    });
+  }, []);
 
-  // Handle section name changes
-  const handleSectionNameChange = (sectionKey: string, newLabel: string) => {
-    const updatedSchema = {
-      ...schema,
+  // Handle section name changes - Memoized to prevent child re-renders
+  const handleSectionNameChange = useCallback((sectionKey: string, newLabel: string) => {
+    setSchema(prev => ({
+      ...prev,
       [sectionKey]: {
-        ...schema[sectionKey],
+        ...prev[sectionKey],
         label: newLabel
       }
-    };
-    setSchema(updatedSchema);
-  };
+    }));
+  }, []);
 
-  // Handle resume changes with history
-  const handleResumeChange = (newResume: any) => {
+  // Handle resume changes with history - Memoized to prevent GenericForm re-renders
+  const handleResumeChange = useCallback((newResume: any) => {
     setResume(newResume);
     addToHistory(newResume);
-  };
+  }, [addToHistory]);
 
-  // Undo/Redo functions
-  const undo = () => {
-    if (historyIndex > 0) {
-      const newIndex = historyIndex - 1;
-      setHistoryIndex(newIndex);
-      setResume(JSON.parse(JSON.stringify(history[newIndex])));
-    }
-  };
+  // Undo/Redo functions - Memoized for keyboard shortcuts and toolbar
+  const undo = useCallback(() => {
+    setHistoryIndex(prev => {
+      if (prev > 0) {
+        const newIndex = prev - 1;
+        // Access history through closure - it's stable from useState
+        setHistory(h => {
+          setResume(JSON.parse(JSON.stringify(h[newIndex])));
+          return h; // Return unchanged history
+        });
+        return newIndex;
+      }
+      return prev;
+    });
+  }, []);
 
-  const redo = () => {
-    if (historyIndex < history.length - 1) {
-      const newIndex = historyIndex + 1;
-      setHistoryIndex(newIndex);
-      setResume(JSON.parse(JSON.stringify(history[newIndex])));
-    }
-  };
+  const redo = useCallback(() => {
+    setHistoryIndex(prev => {
+      // Access history length through state
+      setHistory(h => {
+        if (prev < h.length - 1) {
+          const newIndex = prev + 1;
+          setResume(JSON.parse(JSON.stringify(h[newIndex])));
+          // Update historyIndex outside
+          setTimeout(() => setHistoryIndex(newIndex), 0);
+        }
+        return h; // Return unchanged history
+      });
+      return prev;
+    });
+  }, []);
 
-  // Page navigation
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  // Page navigation - Memoized for ProfileHeader
+  const nextPage = useCallback(() => {
+    setCurrentPage(prev => prev < totalPages ? prev + 1 : prev);
+  }, [totalPages]);
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  const prevPage = useCallback(() => {
+    setCurrentPage(prev => prev > 1 ? prev - 1 : prev);
+  }, []);
 
-  // Zoom controls
-  const zoomIn = () => {
-    const currentIndex = zoomLevels.indexOf(zoomLevel);
-    if (currentIndex < zoomLevels.length - 1) {
-      setZoomLevel(zoomLevels[currentIndex + 1]);
-    }
-  };
+  // Zoom controls - Memoized for ProfileHeader
+  const zoomIn = useCallback(() => {
+    setZoomLevel(prev => {
+      const currentIndex = zoomLevels.indexOf(prev);
+      return currentIndex < zoomLevels.length - 1 ? zoomLevels[currentIndex + 1] : prev;
+    });
+  }, [zoomLevels]);
 
-  const zoomOut = () => {
-    const currentIndex = zoomLevels.indexOf(zoomLevel);
-    if (currentIndex > 0) {
-      setZoomLevel(zoomLevels[currentIndex - 1]);
-    }
-  };
+  const zoomOut = useCallback(() => {
+    setZoomLevel(prev => {
+      const currentIndex = zoomLevels.indexOf(prev);
+      return currentIndex > 0 ? zoomLevels[currentIndex - 1] : prev;
+    });
+  }, [zoomLevels]);
 
-  // Handle profile image change
-  const handleProfileImageChange = (imageUrl: string) => {
+  // Handle profile image change - Memoized for ProfileHeader
+  const handleProfileImageChange = useCallback((imageUrl: string) => {
     setProfileImage(imageUrl);
     // Save to resume data so it's sent to backend
     setResume(prev => ({
@@ -266,9 +288,10 @@ function ResumeEditor() {
         profileImage: imageUrl
       }
     }));
-  };
+  }, []);
 
-  const handleExport = (format: "pdf" | "doc") => {
+  // Handle export - Memoized to prevent SettingsSidebar re-renders
+  const handleExport = useCallback((format: "pdf" | "doc") => {
     // Check subscription before allowing download
     if (!canDownload()) {
       // Redirect to subscription page instead of showing modal
@@ -277,25 +300,19 @@ function ResumeEditor() {
     }
 
     if (format === "pdf") {
-      // Extract section labels from schema
-      const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
-        acc[key] = config.label;
-        return acc;
-      }, {} as Record<string, string>);
-
       const resumeData = {
         templateId,
         sectionLabels,
+        fontFamily,
         ...resume,
         order: sectionOrder
       };
-
       downloadPdf(apiUrl, "resume", resumeData);
     } else {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
     }
-  };
+  }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 
   // Auto-populate form schema with custom sections when data exists
   useEffect(() => {
@@ -346,7 +363,8 @@ function ResumeEditor() {
     }
   }, [resume]);
 
-  const renderPDFPage = async (pdfData: ArrayBuffer, page: number) => {
+  // RenderPDFPage - Memoized to prevent re-creation on every render
+  const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
     if (!mainRef.current || !canvasRef.current) return;
 
     // Skip rendering if container is not visible (e.g., hidden on mobile)
@@ -421,9 +439,9 @@ function ResumeEditor() {
     } else {
       console.warn('Skipping drawImage: offscreen canvas has invalid dimensions');
     }
-  };
+  }, [zoomLevel]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts - Dependencies updated to use memoized callbacks
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Undo/Redo
@@ -438,24 +456,17 @@ function ResumeEditor() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [historyIndex, history]);
+  }, [undo, redo]);
 
-  // Render PDF with loading state and auto-cancellation
-  const renderPdf = async (page = currentPage) => {
+  // Render PDF with loading state and auto-cancellation - Memoized
+  const renderPdf = useCallback(async (page = currentPage) => {
     if (!canvasRef.current || !mainRef.current) return;
 
-    setIsGeneratingPDF(true);
     try {
-      // Extract section labels from schema
-      const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
-        acc[key] = config.label;
-        return acc;
-      }, {} as Record<string, string>);
-
       const resumeData = {
         templateId,
-        sectionLabels, // Include custom section labels
-        fontFamily, // Include font family
+        sectionLabels,  // Use memoized sectionLabels
+        fontFamily,
         ...debouncedResume as any,
         order: debouncedSectionOrder
       };
@@ -469,15 +480,13 @@ function ResumeEditor() {
       }
     } catch (error) {
       console.error("Error rendering PDF:", error);
-    } finally {
-      setIsGeneratingPDF(false);
     }
-  };
+  }, [currentPage, templateId, sectionLabels, fontFamily, debouncedResume, debouncedSectionOrder, generatePDF, renderPDFPage]);
 
+  // Auto-render PDF when data changes - renderPdf is memoized
   useEffect(() => {
     renderPdf();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedResume, currentPage, debouncedSectionOrder, templateId, zoomLevel, schema, fontFamily]);
+  }, [renderPdf]);
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
@@ -487,13 +496,14 @@ function ResumeEditor() {
         renderPdf(currentPage);
       }, 100);
     }
-  }, [showMobilePreview]);
+  }, [showMobilePreview, currentPage, renderPdf]);
 
+  // Re-render on window resize - renderPdf is memoized
   useLayoutEffect(() => {
     const onResize = () => renderPdf();
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  }, []);
+  }, [renderPdf]);
 
   // Update URL when template changes
   useEffect(() => {
@@ -504,7 +514,29 @@ function ResumeEditor() {
     }
     // Re-render PDF with new template
     renderPdf();
-  }, [urlTemplateId]);
+  }, [urlTemplateId, defaultTemplateId, renderPdf]);
+
+  // Memoized handlers for ProfileHeader - prevents re-renders
+  const handleDownload = useCallback(() => {
+    // Check subscription before allowing download
+    if (!canDownload()) {
+      router.push('/subscription?returnTo=editor');
+      return;
+    }
+
+    const resumeData = {
+      templateId,
+      sectionLabels,
+      fontFamily,
+      ...resume,
+      order: sectionOrder
+    };
+    downloadPdf(apiUrl, "resume", resumeData);
+  }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
+
+  const handleShare = useCallback(() => {
+    setShowShareModal(true);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen w-full bg-gray-100">
@@ -515,30 +547,8 @@ function ResumeEditor() {
         progress={progress}
         profileImage={profileImage}
         onProfileImageChange={handleProfileImageChange}
-        onShare={() => setShowShareModal(true)}
-        onDownload={() => {
-          // Check subscription before allowing download
-          if (!canDownload()) {
-            // Redirect to subscription page instead of showing modal
-            router.push('/subscription?returnTo=editor');
-            return;
-          }
-
-          // Extract section labels from schema
-          const sectionLabels = Object.entries(schema).reduce((acc, [key, config]) => {
-            acc[key] = config.label;
-            return acc;
-          }, {} as Record<string, string>);
-
-          const resumeData = {
-            templateId,
-            sectionLabels,
-            fontFamily,
-            ...resume,
-            order: sectionOrder
-          };
-          downloadPdf(apiUrl, "resume", resumeData);
-        }}
+        onShare={handleShare}
+        onDownload={handleDownload}
         onUndo={undo}
         onRedo={redo}
         canUndo={historyIndex > 0}
@@ -561,7 +571,7 @@ function ResumeEditor() {
           <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
 
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-              {isGeneratingPDF ? (
+              {isPdfGenerating ? (
                 <>
                   <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                   <span className="text-xs font-semibold text-blue-700 leading-none">Saving...</span>

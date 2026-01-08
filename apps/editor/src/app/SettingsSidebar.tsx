@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, memo } from "react";
 import { Home, FileText, Trophy, Megaphone, Folder, Trash2, Lock, Sparkles, LayoutGrid, Palette, Download, Settings, Type } from "lucide-react";
 import { ColorPicker } from "@repo/ui/color-picker";
 import { ThemeSelector } from "@repo/ui/theme-selector";
@@ -13,7 +13,7 @@ interface SettingsSidebarProps {
     onFontChange?: (font: string) => void;
 }
 
-export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImport, fontFamily, onFontChange }: SettingsSidebarProps) {
+const SettingsSidebar = ({ onExport, onTemplateChange, onSmartImport, fontFamily, onFontChange }: SettingsSidebarProps) => {
     const router = useRouter();
     const [themeColor, setThemeColor] = useState("#000000");
     const [colorOpacity, setColorOpacity] = useState(100);
@@ -25,7 +25,8 @@ export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImp
     const iconButtonClass = "w-12 h-12 rounded-xl bg-gray-100 hover:bg-blue-50 flex items-center justify-center text-gray-600 hover:text-blue-600 transition-all duration-200 hover:scale-105 border border-gray-200";
     const iconButtonActiveClass = "w-12 h-12 rounded-xl bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white transition-all duration-200 hover:scale-105 shadow-md";
 
-    const fonts = [
+    // Memoize fonts array to prevent recreation on every render
+    const fonts = useMemo(() => [
         { name: 'Inter', label: 'Inter' },
         { name: 'Roboto', label: 'Roboto' },
         { name: 'Open Sans', label: 'Open Sans' },
@@ -36,7 +37,7 @@ export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImp
         { name: 'Playfair Display', label: 'Playfair Display' },
         { name: 'Georgia', label: 'Georgia' },
         { name: 'Times New Roman', label: 'Times New Roman' },
-    ];
+    ], []);
 
     return (
         <div className="w-20 bg-white border-l border-blue-100 rounded-lg flex flex-col items-center py-6 gap-4 overflow-visible shadow-sm">
@@ -119,4 +120,7 @@ export default function SettingsSidebar({ onExport, onTemplateChange, onSmartImp
 
         </div>
     );
-}
+};
+
+// Wrap with React.memo to prevent re-renders when props haven't changed
+export default memo(SettingsSidebar);
