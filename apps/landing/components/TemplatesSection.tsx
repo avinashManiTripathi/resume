@@ -1,11 +1,37 @@
-"use client";
-
-import { useTemplates } from "@repo/hooks/useTemplate";
-import { TemplatesSlider } from "./TemplatesSlider";
 import { Check } from "lucide-react";
+import { TemplatesSlider } from "./TemplatesSlider";
 
-export function TemplatesSection() {
-    const { templates, loading, error } = useTemplates();
+interface Template {
+    _id: string;
+    name: string;
+    thumbnail: string | null;
+}
+
+async function getTemplates(): Promise<Template[]> {
+    try {
+        const apiUrl = "https://api.profresume.com";
+        const res = await fetch(`${apiUrl}/api/templates`, {
+            next: { revalidate: 300 }, // 5 minutes cache
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!res.ok) {
+            console.error('[TemplatesSection] API returned status:', res.status);
+            return [];
+        }
+
+        const data = await res.json();
+        return data.templates || [];
+    } catch (error) {
+        console.error('[TemplatesSection] Error fetching templates:', error);
+        return [];
+    }
+}
+
+export async function TemplatesSection() {
+    const templates = await getTemplates();
 
     return (
         <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
@@ -23,13 +49,7 @@ export function TemplatesSection() {
                     </p>
                 </div>
 
-                {error && (
-                    <div className="text-center py-10">
-                        <p className="text-red-600">Failed to load templates. Please try again later.</p>
-                    </div>
-                )}
-
-                <TemplatesSlider templates={(loading ? [] : templates || []) as any} />
+                <TemplatesSlider templates={templates} />
             </div>
         </section>
     );

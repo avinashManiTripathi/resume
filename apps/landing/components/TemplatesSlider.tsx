@@ -14,9 +14,12 @@ interface TemplatesSliderProps {
 }
 
 export function TemplatesSlider({ templates }: TemplatesSliderProps) {
-    if (!templates || templates.length === 0) {
+    // Always render the container with min-height to prevent layout shift
+    const isLoading = !templates || templates.length === 0;
+
+    if (isLoading) {
         return (
-            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4" style={{ minHeight: '500px' }}>
                 {[...Array(6)].map((_, index) => (
                     <div key={index} className="flex-shrink-0 w-80 bg-white rounded-2xl overflow-hidden border-2 border-gray-200 animate-pulse">
                         <div className="aspect-[8.5/11] bg-gray-200"></div>
@@ -35,7 +38,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
             <div
                 id="templates-slider"
                 className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', minHeight: '500px' }}
             >
                 {templates.map((template) => (
                     <Link
