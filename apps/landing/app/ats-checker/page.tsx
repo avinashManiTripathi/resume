@@ -214,7 +214,7 @@ export default function ATSCheckerPage() {
                                         />
                                         <label
                                             htmlFor="resume-upload"
-                                            className="flex items-center justify-center mx-auto w-fit border border-blue-500 items-center gap-2 inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer text-blue-600 transition-all"
+                                            className="flex text-white items-center justify-center mx-auto w-fit border border-blue-500 items-center gap-2 inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer text-blue-600 transition-all"
                                         >
                                             <File size={20} />
                                             Choose File
