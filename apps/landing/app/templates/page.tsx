@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
-import TemplatesPageClient from './TemplatesClient';
+
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
+import TemplatesPageClient from './TemplatesClient';
 
 export const metadata: Metadata = {
     title: 'Professional Resume Templates 2026 - Free ATS-Friendly Designs | ProfResume',
