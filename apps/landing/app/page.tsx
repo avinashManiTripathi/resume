@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
 import { ENV } from "./env";
-import { TemplatesSlider } from "@/components/TemplatesSlider";
+import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
 
 export const metadata: Metadata = {
@@ -12,21 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-async function getTemplates() {
-  try {
-    const apiUrl = ENV.API_URL.endsWith('/') ? ENV.API_URL.slice(0, -1) : ENV.API_URL;
-    const res = await fetch(`${apiUrl}/api/templates`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.templates || [];
-  } catch (error) {
-    // Silently fail in production
-    return [];
-  }
-}
-
-export default async function LandingPage() {
-  const templates = await getTemplates();
+export default function LandingPage() {
 
   // const [templates, setTemplates] = useState()
 
@@ -715,24 +701,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Tested Templates Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 border border-green-300 text-green-700 rounded-full text-sm font-semibold mb-6">
-              <Check className="w-4 h-4" />
-              Tested with top employers
-            </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              Professional resume templates
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Built with recruiters. Tested with top employers. Proven to get interviews.
-            </p>
-          </div>
-
-          <TemplatesSlider templates={templates || []} />
-        </div>
-      </section>
+      <TemplatesSection />
 
       {/* ATS Score Checker Section with Image */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 to-red-50">

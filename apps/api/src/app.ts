@@ -15,6 +15,7 @@ import atsRoutes from './routes/ats.routes';
 import templateRoutes from './routes/template.routes';
 import resumeRoutes from './routes/resume.routes';
 import landingRoutes from './routes/landing.routes';
+import coverLetterRoutes from './routes/cover-letter.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -132,6 +133,9 @@ export class App {
 
         // Landing page routes
         this.app.use('/api/landing', landingRoutes);
+
+        // Cover letter routes
+        this.app.use('/api/cover-letter', coverLetterRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

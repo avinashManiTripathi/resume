@@ -3,6 +3,9 @@ import { RESUMES } from '../constant';
 import { JSDOM } from 'jsdom';
 
 export class TemplateInjectorService {
+    // Track which template IDs have already logged a fallback warning
+    private static loggedFallbacks = new Set<string>();
+
     /**
      * Get template HTML by ID (fetch from database)
      */
@@ -26,10 +29,15 @@ export class TemplateInjectorService {
             return htmlContent;
         } catch (error) {
             // Fallback to RESUMES constant if database lookup fails
-            console.warn(`Database template lookup failed, falling back to RESUMES constant:`, error);
+            // Only log once per template ID to avoid console flooding
+            if (!TemplateInjectorService.loggedFallbacks.has(templateId)) {
+                console.warn(`Database template "${templateId}" not found, using fallback constant`);
+                TemplateInjectorService.loggedFallbacks.add(templateId);
+            }
+
             const template = RESUMES.find(r => r.id === templateId);
             if (!template) {
-                throw new Error(`Template with ID "${templateId}" not found`);
+                throw new Error(`Template with ID "${templateId}" not found in database or fallback constant`);
             }
             if (!template.html || template.html.trim() === '') {
                 throw new Error(`Template with ID "${templateId}" has no HTML content`);
