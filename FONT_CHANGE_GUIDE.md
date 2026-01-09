@@ -14,7 +14,7 @@ Navigate to: **`packages/fonts/index.ts`**
 ### 2. Replace the Font Import
 Change this line:
 ```typescript
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 ```
 
 To your preferred font, for example:
@@ -23,17 +23,22 @@ import { Roboto } from "next/font/google";
 ```
 
 ### 3. Update the Font Configuration
-Update the `primaryFont` export:
+Update both the `primaryFont` export AND the `FONT_VARIABLE`:
 ```typescript
 export const primaryFont = Roboto({
   variable: "--font-roboto",  // Update variable name
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
+
+export const FONT_VARIABLE = "--font-roboto";  // ⚠️ Don't forget this!
 ```
 
-**That's it!** The font will change across all apps.
+**That's it!** The font will change across:
+- ✅ All 4 apps (landing, admin, auth, editor)
+- ✅ All CSS files (automatically via CSS variables)
+- ✅ Tailwind utilities (font classes)
 
 ## 🔄 After Changing
 

@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 
 /**
  * Centralized font configuration for all apps.
@@ -8,10 +8,10 @@ import { Inter } from "next/font/google";
  * 2. Update the font configuration below
  * 3. All apps will automatically use the new font
  */
-export const primaryFont = Inter({
-    variable: "--font-inter",
+export const primaryFont = DM_Sans({
+    variable: "--font-dm-sans",
     subsets: ["latin"],
-    weight: ["300", "400", "500", "600", "700", "800", "900"],
+    weight: ["300", "400", "500", "600", "700", "800"],
     display: "swap",
 });
 
@@ -19,4 +19,4 @@ export const primaryFont = Inter({
  * The CSS variable name for the font.
  * Use this in your CSS files: font-family: var(--font-primary)
  */
-export const FONT_VARIABLE = "--font-inter";
+export const FONT_VARIABLE = "--font-dm-sans";
