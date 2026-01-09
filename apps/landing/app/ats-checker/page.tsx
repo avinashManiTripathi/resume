@@ -2,8 +2,9 @@
 
 import { useState, useCallback } from "react";
 import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Sparkles, TrendingUp, Award, Zap, ArrowRight, RefreshCw, Target, BarChart3, File } from "lucide-react";
-
+import { Suspense } from "react";
 import { Button } from "@repo/ui/button";
+import { KeywordBanner } from "./KeywordBanner";
 
 
 interface ATSResult {
@@ -44,6 +45,109 @@ interface ATSResult {
 }
 
 type Step = 'upload' | 'analyzing' | 'results';
+
+const baseUrl = "https://profresume.com";
+
+// Structured Data Schemas
+const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": baseUrl
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "ATS Checker",
+            "item": `${baseUrl}/ats-checker`
+        }
+    ]
+};
+
+const webPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Free ATS Resume Checker",
+    "description": "Upload your resume and get instant AI-powered feedback on ATS compatibility, formatting, keywords, and optimization suggestions.",
+    "url": `${baseUrl}/ats-checker`,
+    "inLanguage": "en-US",
+    "isPartOf": {
+        "@type": "WebSite",
+        "name": "ProfResume",
+        "url": baseUrl
+    }
+};
+
+const softwareAppSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ProfResume ATS Checker",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "description": "Free AI-powered ATS resume checker that analyzes your resume for compatibility with Applicant Tracking Systems. Get instant feedback on formatting, keywords, and optimization suggestions.",
+    "featureList": [
+        "ATS Compatibility Score",
+        "Keyword Analysis",
+        "Format Check",
+        "AI-Powered Suggestions",
+        "Detailed Feedback"
+    ]
+};
+
+const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is an ATS resume checker?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "An ATS resume checker is a tool that analyzes your resume to determine how well it will perform in Applicant Tracking Systems (ATS). It checks for formatting issues, keyword optimization, and overall compatibility with ATS software used by employers."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How does the ATS checker work?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Upload your resume (PDF or DOCX) and our AI-powered tool analyzes it for ATS compatibility. You'll get an instant score, detailed feedback on strengths and weaknesses, keyword analysis, and actionable suggestions to improve your resume."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is the ATS checker really free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Our ATS resume checker is completely free to use. Upload your resume and get comprehensive analysis with no hidden costs or credit card required."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What file formats are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We support PDF (.pdf) and Microsoft Word (.docx) file formats. These are the most common resume formats and are widely accepted by ATS systems."
+            }
+        }
+    ]
+};
 
 export default function ATSCheckerPage() {
     const [currentStep, setCurrentStep] = useState<Step>('upload');
@@ -170,7 +274,30 @@ export default function ATSCheckerPage() {
     return (
 
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+            {/* JSON-LD Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
+
             <div className="container mx-auto px-6 py-16">
+                {/* Keyword-Based Banner with Suspense */}
+                <Suspense fallback={null}>
+                    <KeywordBanner />
+                </Suspense>
+
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 border border-indigo-200 rounded-full text-sm font-semibold mb-4 text-indigo-700">

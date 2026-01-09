@@ -17,5 +17,5 @@ export const config = {
     },
 
     // AI configuration
-    geminiApiKey: process.env.GEMINI_API_KEY || 'AIzaSyAd9_y0iU0Tob_6i_df6ACwpwKi3NKhq9s',
+    geminiApiKey: process.env.GEMINI_API_KEY || 'AIzaSyBOR2xViSyfuQYY2zY5O2b-cWPtSrJxwmk',
 };

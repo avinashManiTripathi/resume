@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 
 
 
-let ai = new GoogleGenAI({ apiKey: "AIzaSyAd9_y0iU0Tob_6i_df6ACwpwKi3NKhq9s" });
+let ai = new GoogleGenAI({ apiKey: "AIzaSyBOR2xViSyfuQYY2zY5O2b-cWPtSrJxwmk" });
 
 /**
  * Initialize the AI client
