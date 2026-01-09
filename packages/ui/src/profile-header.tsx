@@ -61,7 +61,7 @@ export function ProfileHeader({
     };
 
     return (
-        <div className="md:m-[10px] m-0">
+        <div className="mb-2 mb-0 md:m-[10px]">
             <div className="flex flex-col md:flex-row items-stretch justify-between gap-2">
                 {/* Left: Profile Info */}
                 <div className="w-full md:w-[40%] bg-white justify-between rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4">

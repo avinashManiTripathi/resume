@@ -258,7 +258,7 @@ export function Navigation() {
     <>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200 z-[1000] py-4">
-        <div className="max-w-7xl mx-auto px-2 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           {/* Logo */}
           <a href="/" className="text-2xl font-extrabold text-gray-900 no-underline">
             <span className="text-blue-500">{navData?.logo.text}</span>{navData?.logo.accent}
@@ -323,11 +323,13 @@ export function Navigation() {
           </div>
 
           {/* Mobile Menu Button */}
-
-          <Button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} name="hamburgar"
-            className="md:hidden bg-transparent border-none text-gray-900 cursor-pointer p-2">
-            <Menu name="menu" />
-          </Button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+            className="md:hidden bg-transparent border-none text-gray-900 cursor-pointer p-0 m-0 leading-none"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
         </div>
       </nav>
 
