@@ -52,7 +52,7 @@ export function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`admin-sidebar fixed left-0 top-0 h-screen w-64 gradient-sidebar text-white flex flex-col z-50 dark-scrollbar transition-all duration-300 ${isMobileOpen ? "open" : ""}`}
+        className={`admin-sidebar h-full fixed left-0 top-0 h-screen w-64 gradient-sidebar text-white flex flex-col z-50 dark-scrollbar transition-all duration-300 ${isMobileOpen ? "open" : ""}`}
       >
         {/* Logo Section */}
         <div className="p-6 border-b border-white/10">
@@ -81,8 +81,8 @@ export function AdminSidebar() {
                 href={item.href}
                 onClick={closeMobileMenu}
                 className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                    ? "bg-white/10 text-white shadow-lg backdrop-blur-sm"
-                    : "text-gray-300 hover:bg-white/5 hover:text-white"
+                  ? "bg-white/10 text-white shadow-lg backdrop-blur-sm"
+                  : "text-gray-300 hover:bg-white/5 hover:text-white"
                   }`}
               >
                 <Icon

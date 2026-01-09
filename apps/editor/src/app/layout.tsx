@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import { Merriweather } from "next/font/google";
 import "./globals.css";
-
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
-  subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
-});
+import { primaryFont } from "@repo/fonts";
 
 export const metadata: Metadata = {
   title: "Resume Editor - Build Your Professional Resume",
@@ -27,9 +21,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
       </head>
-      <body className={`${merriweather.variable} antialiased min-h-screen overflow-hidden`} style={{ touchAction: 'pan-y pinch-zoom' }}>
+      <body className={`${primaryFont.variable} antialiased min-h-screen overflow-hidden`} style={{ touchAction: 'pan-y pinch-zoom' }}>
         {children}
       </body>
     </html>

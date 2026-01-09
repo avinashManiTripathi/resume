@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { Merriweather } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { GlobalSchema } from "@/components/SchemaMarkup";
-
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
-  subsets: ["latin"],
-  weight: ["300", "400", "700", "900"],
-  display: 'swap',
-});
+import { primaryFont } from "@repo/fonts";
 
 // Base URL configuration
 const baseUrl = 'https://profresume.com';
@@ -113,7 +106,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className={`${merriweather.variable} antialiased min-h-screen flex flex-col`}>
+      <body className={`${primaryFont.variable} antialiased min-h-screen flex flex-col`}>
         <GlobalSchema />
         <Navigation />
         <main className="flex-1 mt-[70px]">

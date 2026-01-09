@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@repo/fonts": "*",
     "@repo/hooks": "*",
     "@repo/tailwind-config": "*",
     "@repo/ui": "*",

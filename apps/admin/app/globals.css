@@ -1,4 +1,8 @@
-@import "tailwindcss";
+@import "@repo/colors";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ============================================
    CSS CUSTOM PROPERTIES - THEME SYSTEM
@@ -52,12 +56,6 @@
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 350ms ease;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-serif: var(--font-merriweather);
 }
 
 /* ============================================
@@ -397,9 +395,7 @@ body {
 @media (max-width: 768px) {
   .admin-sidebar {
     position: fixed;
-    left: -100%;
-    top: 0;
-    height: 100%;
+    inset: 0 auto 0 -100%;
     width: 16rem;
     z-index: 50;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);

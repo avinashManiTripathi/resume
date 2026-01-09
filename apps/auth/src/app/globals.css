@@ -1,29 +1,27 @@
-@import "tailwindcss";
+@import "@repo/colors";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-merriweather: var(--font-merriweather, Georgia, 'Times New Roman', Times, serif);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-serif: var(--font-merriweather);
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-merriweather), Georgia, 'Times New Roman', Times, serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
   overflow-x: hidden;
 }
 
