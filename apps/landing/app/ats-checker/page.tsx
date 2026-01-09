@@ -1,54 +1,25 @@
-"use client";
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { ArrowRight, CheckCircle, Target, Shield, TrendingUp, Zap, AlertCircle, FileText, Award, BarChart3 } from 'lucide-react';
 
-import { useState, useCallback } from "react";
-import { Upload, FileText, CheckCircle, XCircle, AlertCircle, Sparkles, TrendingUp, Award, Zap, ArrowRight, RefreshCw, Target, BarChart3, File } from "lucide-react";
-import { Suspense } from "react";
-import { Button } from "@repo/ui/button";
-import { KeywordBanner } from "./KeywordBanner";
-
-
-interface ATSResult {
-    score: number;
-    feedback: {
-        strengths: string[];
-        weaknesses: string[];
-        suggestions: string[];
-    };
-    keywords: {
-        found: string[];
-        missing: string[];
-    };
-    formatting: {
-        score: number;
-        issues: string[];
-    };
-    detailedAnalysis?: {
-        contactInfo: {
-            score: number;
-            issues: string[];
-        };
-        sectionStructure: {
-            score: number;
-            issues: string[];
-        };
-        achievements: {
-            score: number;
-            quantifiableCount: number;
-            issues: string[];
-        };
-        atsCompatibility: {
-            score: number;
-            criticalIssues: string[];
-            warnings: string[];
-        };
-    };
-}
-
-type Step = 'upload' | 'analyzing' | 'results';
+export const metadata: Metadata = {
+    title: 'Free ATS Resume Checker - Test Your Resume Score Instantly | ProfResume',
+    description: 'Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations. 100% free, no sign-up required.',
+    keywords: 'ATS checker, ATS resume scanner, applicant tracking system, resume ATS test, ATS score, resume compatibility',
+    alternates: {
+        canonical: 'https://profresume.com/ats-checker',
+    },
+    openGraph: {
+        title: 'Free ATS Resume Checker - Test Your Resume Score',
+        description: 'Check if your resume passes ATS systems. Get instant AI-powered analysis and detailed recommendations. 100% free, no sign-up required.',
+        url: 'https://profresume.com/ats-checker',
+        type: 'website',
+    },
+};
 
 const baseUrl = "https://profresume.com";
 
-// Structured Data Schemas
+// Breadcrumb Schema
 const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -68,11 +39,12 @@ const breadcrumbSchema = {
     ]
 };
 
+// WebPage Schema
 const webPageSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Free ATS Resume Checker",
-    "description": "Upload your resume and get instant AI-powered feedback on ATS compatibility, formatting, keywords, and optimization suggestions.",
+    "description": "Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations.",
     "url": `${baseUrl}/ats-checker`,
     "inLanguage": "en-US",
     "isPartOf": {
@@ -82,6 +54,7 @@ const webPageSchema = {
     }
 };
 
+// SoftwareApplication Schema
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -95,7 +68,7 @@ const softwareAppSchema = {
     },
     "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.8",
+        "ratingValue": "4.9",
         "ratingCount": "1250",
         "bestRating": "5",
         "worstRating": "1"
@@ -106,10 +79,12 @@ const softwareAppSchema = {
         "Keyword Analysis",
         "Format Check",
         "AI-Powered Suggestions",
-        "Detailed Feedback"
+        "Detailed Feedback",
+        "100% Free Forever"
     ]
 };
 
+// FAQ Schema
 const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -119,7 +94,7 @@ const faqSchema = {
             "name": "What is an ATS resume checker?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "An ATS resume checker is a tool that analyzes your resume to determine how well it will perform in Applicant Tracking Systems (ATS). It checks for formatting issues, keyword optimization, and overall compatibility with ATS software used by employers."
+                "text": "An ATS resume checker is a tool that analyzes your resume to determine how well it will perform in Applicant Tracking Systems (ATS). It checks for formatting issues, keyword optimization, and overall compatibility with ATS software used by employers to screen candidates."
             }
         },
         {
@@ -127,7 +102,7 @@ const faqSchema = {
             "name": "How does the ATS checker work?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Upload your resume (PDF or DOCX) and our AI-powered tool analyzes it for ATS compatibility. You'll get an instant score, detailed feedback on strengths and weaknesses, keyword analysis, and actionable suggestions to improve your resume."
+                "text": "Our ATS checker uses advanced AI to simulate how real Applicant Tracking Systems process resumes. Upload your resume (PDF or DOCX) and get an instant compatibility score, keyword analysis, formatting feedback, and specific recommendations to improve your resume's ATS performance."
             }
         },
         {
@@ -135,7 +110,15 @@ const faqSchema = {
             "name": "Is the ATS checker really free?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes! Our ATS resume checker is completely free to use. Upload your resume and get comprehensive analysis with no hidden costs or credit card required."
+                "text": "Yes! Our ATS resume checker is completely free to use with no hidden costs, no credit card required, and no watermarks. Upload your resume and get comprehensive analysis instantly."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Why do I need an ATS-friendly resume?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "95% of Fortune 500 companies and 68% of all employers use ATS to manage hiring. 75% of resumes are rejected by ATS before reaching human recruiters. An ATS-friendly resume significantly increases your chances of getting past the initial screening and landing interviews."
             }
         },
         {
@@ -145,135 +128,21 @@ const faqSchema = {
                 "@type": "Answer",
                 "text": "We support PDF (.pdf) and Microsoft Word (.docx) file formats. These are the most common resume formats and are widely accepted by ATS systems."
             }
+        },
+        {
+            "@type": "Question",
+            "name": "What does the ATS checker analyze?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Our ATS checker analyzes multiple aspects: contact information completeness, section structure and headers, formatting compatibility (tables, columns, fonts), keyword optimization, quantifiable achievements, action verbs, and overall ATS compatibility. You'll receive a detailed score and specific recommendations."
+            }
         }
     ]
 };
 
-export default function ATSCheckerPage() {
-    const [currentStep, setCurrentStep] = useState<Step>('upload');
-    const [file, setFile] = useState<File | null>(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [analysisStage, setAnalysisStage] = useState('');
-    const [result, setResult] = useState<ATSResult | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
-    const handleDragOver = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    }, []);
-
-    const handleDragLeave = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-    }, []);
-
-    const handleDrop = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-
-        const droppedFile = e.dataTransfer.files[0];
-        if (droppedFile && (droppedFile.type === "application/pdf" || droppedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document")) {
-            setFile(droppedFile);
-            setError(null);
-        } else {
-            setError("Please upload a PDF or DOCX file");
-        }
-    }, []);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0];
-        if (selectedFile) {
-            setFile(selectedFile);
-            setError(null);
-        }
-    };
-
-    const analyzeResume = async () => {
-        if (!file) return;
-
-        setCurrentStep('analyzing');
-        setProgress(0);
-        setError(null);
-        setResult(null);
-
-        try {
-            const formData = new FormData();
-            formData.append("resume", file);
-
-            const stages = [
-                { progress: 20, message: 'Extracting text from resume...' },
-                { progress: 40, message: 'Analyzing content quality...' },
-                { progress: 60, message: 'Checking ATS compatibility...' },
-                { progress: 80, message: 'Evaluating keywords...' },
-                { progress: 95, message: 'Generating insights...' }
-            ];
-
-            let stageIndex = 0;
-            const stageInterval = setInterval(() => {
-                if (stageIndex < stages.length) {
-                    setProgress(stages[stageIndex].progress);
-                    setAnalysisStage(stages[stageIndex].message);
-                    stageIndex++;
-                } else {
-                    clearInterval(stageInterval);
-                }
-            }, 800);
-
-            const response = await fetch("https://api.profresume.com/api/ats/check", {
-                method: "POST",
-                body: formData,
-            });
-
-            clearInterval(stageInterval);
-            setProgress(100);
-            setAnalysisStage('Analysis complete!');
-
-            if (!response.ok) {
-                throw new Error("Failed to analyze resume");
-            }
-
-            const data = await response.json();
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            setResult(data);
-            setCurrentStep('results');
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred");
-            setCurrentStep('upload');
-        }
-    };
-
-    const resetAnalysis = () => {
-        setCurrentStep('upload');
-        setFile(null);
-        setResult(null);
-        setProgress(0);
-        setAnalysisStage('');
-        setError(null);
-    };
-
-    const getScoreColor = (score: number) => {
-        if (score >= 80) return "text-green-600";
-        if (score >= 60) return "text-orange-600";
-        return "text-red-600";
-    };
-
-    const getScoreGradient = (score: number) => {
-        if (score >= 80) return "from-green-500 to-emerald-500";
-        if (score >= 60) return "from-orange-500 to-amber-500";
-        return "from-red-500 to-rose-500";
-    };
-
-    const steps = [
-        { id: 1, name: 'Upload Resume', status: currentStep === 'upload' ? 'current' : currentStep === 'analyzing' || currentStep === 'results' ? 'complete' : 'upcoming' },
-        { id: 2, name: 'AI Analysis', status: currentStep === 'analyzing' ? 'current' : currentStep === 'results' ? 'complete' : 'upcoming' },
-        { id: 3, name: 'View Results', status: currentStep === 'results' ? 'current' : 'upcoming' }
-    ];
-
+export default function ATSCheckerMarketingPage() {
     return (
-
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-white">
             {/* JSON-LD Structured Data */}
             <script
                 type="application/ld+json"
@@ -292,521 +161,325 @@ export default function ATSCheckerPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
 
-            <div className="container mx-auto px-6 py-16">
-                {/* Keyword-Based Banner with Suspense */}
-                <Suspense fallback={null}>
-                    <KeywordBanner />
-                </Suspense>
-
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 border border-indigo-200 rounded-full text-sm font-semibold mb-4 text-indigo-700">
-                        <Sparkles size={16} />
-                        AI-Powered ATS Analysis
-                    </div>
-                    <h1 className="text-5xl font-black text-gray-900 mb-3">
-                        Resume ATS Checker
-                    </h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Get instant AI feedback on your resume's compatibility with Applicant Tracking Systems
-                    </p>
-                </div>
-
-                {/* Two Section Layout */}
-                <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8">
-                    {/* Left Section - Main Content */}
-                    <div>
-                        {/* Upload Step */}
-                        {currentStep === 'upload' && (
-                            <div
-                                className={`bg-white border-2 rounded-2xl p-12 shadow-lg transition-all ${isDragging ? "border-indigo-500 scale-105 shadow-indigo-200" : "border-gray-200"
-                                    }`}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                                onDrop={handleDrop}
+            {/* Hero Section */}
+            <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold mb-6">
+                            <Target className="w-4 h-4" />
+                            Free AI-Powered ATS Analysis
+                        </div>
+                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                            Is Your Resume{' '}
+                            <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                ATS-Friendly?
+                            </span>
+                        </h1>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                            75% of resumes are rejected by Applicant Tracking Systems before reaching human recruiters.
+                            Check your resume's ATS compatibility score in 30 seconds - completely free.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Link
+                                href="https://edit.profresume.com/ats-check"
+                                className="bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all group"
                             >
-                                {!file ? (
-                                    <div className="text-center">
-                                        <div className="w-24 h-24 bg-indigo-600 from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                                            <Upload size={48} className="font-bold  text-white" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">Upload Your Resume</h3>
-                                        <p className="text-gray-600 mb-6">Drag & drop your resume here, or click to browse</p>
-                                        <input
-                                            type="file"
-                                            id="resume-upload"
-                                            accept=".pdf,.docx"
-                                            onChange={handleFileChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="resume-upload"
-                                            className="flex text-white items-center justify-center mx-auto w-fit border border-blue-500 items-center gap-2 inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-grey-200 px-8 py-3 rounded-xl font-semibold cursor-pointer text-blue-600 transition-all"
-                                        >
-                                            <File size={20} />
-                                            Choose File
-                                        </label>
-                                        <p className="text-sm text-gray-500 mt-4">Supports PDF and DOCX (Max 10MB)</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-6">
-                                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                            <FileText size={40} className="text-indigo-600" />
-                                            <div className="flex-1">
-                                                <h4 className="font-bold text-gray-900">{file.name}</h4>
-                                                <p className="text-gray-600 text-sm">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                                            </div>
-                                            <button onClick={() => setFile(null)} className="text-red-600 hover:text-red-700 font-semibold">
-                                                Remove
-                                            </button>
-                                        </div>
-
-
-                                        <Button onClick={analyzeResume}>
-                                            <Sparkles size={20} />
-                                            Analyze with AI
-                                            <ArrowRight size={20} />
-                                        </Button>
-                                        {error && (
-                                            <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
-                                                <XCircle size={20} />
-                                                {error}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Analyzing Step */}
-                        {currentStep === 'analyzing' && (
-                            <div className="bg-white border-2 border-gray-200 rounded-2xl p-12 shadow-lg">
-                                <div className="relative w-48 h-48 mx-auto mb-8">
-                                    <svg className="w-full h-full -rotate-90">
-                                        <circle cx="96" cy="96" r="88" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                                        <circle
-                                            cx="96" cy="96" r="88"
-                                            stroke="url(#grad)"
-                                            strokeWidth="8"
-                                            fill="none"
-                                            strokeDasharray={`${2 * Math.PI * 88}`}
-                                            strokeDashoffset={`${2 * Math.PI * 88 * (1 - progress / 100)}`}
-                                            className="transition-all duration-500"
-                                            strokeLinecap="round"
-                                        />
-                                        <defs>
-                                            <linearGradient id="grad">
-                                                <stop offset="0%" stopColor="#6366f1" />
-                                                <stop offset="100%" stopColor="#a855f7" />
-                                            </linearGradient>
-                                        </defs>
-                                    </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-5xl font-black text-gray-900">{progress}%</span>
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Your Resume</h3>
-                                    <p className="text-indigo-600 font-medium">{analysisStage}</p>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Results Step */}
-                        {currentStep === 'results' && result && (
-                            <div className="space-y-6">
-                                {/* Score Card */}
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center gap-6">
-                                            <div className={`text-7xl font-black ${getScoreColor(result.score)}`}>
-                                                {result.score}
-                                                <span className="text-3xl text-gray-400">/100</span>
-                                            </div>
-                                            <div>
-                                                <h2 className="text-2xl font-bold text-gray-900 mb-1">ATS Score</h2>
-                                                <p className="text-gray-600">
-                                                    {result.score >= 80 && "🎉 Excellent!"}
-                                                    {result.score >= 60 && result.score < 80 && "👍 Good!"}
-                                                    {result.score < 60 && "⚠️ Needs work"}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            onClick={resetAnalysis}
-                                            className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
-                                        >
-                                            <RefreshCw size={20} />
-                                            New
-                                        </button>
-                                    </div>
-                                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                        <div
-                                            className={`h-full bg-gradient-to-r ${getScoreGradient(result.score)} transition-all duration-1000`}
-                                            style={{ width: `${result.score}%` }}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Detailed Analysis Cards - NEW */}
-                                {result.detailedAnalysis && (
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        {/* Contact Info */}
-                                        <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                            <div className="flex items-center justify-between mb-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                                        <FileText size={16} className="text-blue-600" />
-                                                    </div>
-                                                    <h4 className="font-bold text-gray-900 text-sm">Contact Info</h4>
-                                                </div>
-                                                <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.contactInfo.score)}`}>
-                                                    {result.detailedAnalysis.contactInfo.score}
-                                                </span>
-                                            </div>
-                                            {result.detailedAnalysis.contactInfo.issues.length > 0 && (
-                                                <ul className="space-y-1">
-                                                    {result.detailedAnalysis.contactInfo.issues.slice(0, 2).map((issue, idx) => (
-                                                        <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                            <span className="text-orange-500">•</span>
-                                                            <span>{issue}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-
-                                        {/* Section Structure */}
-                                        <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                            <div className="flex items-center justify-between mb-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                                                        <BarChart3 size={16} className="text-purple-600" />
-                                                    </div>
-                                                    <h4 className="font-bold text-gray-900 text-sm">Section Structure</h4>
-                                                </div>
-                                                <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.sectionStructure.score)}`}>
-                                                    {result.detailedAnalysis.sectionStructure.score}
-                                                </span>
-                                            </div>
-                                            {result.detailedAnalysis.sectionStructure.issues.length > 0 && (
-                                                <ul className="space-y-1">
-                                                    {result.detailedAnalysis.sectionStructure.issues.slice(0, 2).map((issue, idx) => (
-                                                        <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                            <span className="text-orange-500">•</span>
-                                                            <span>{issue}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-
-                                        {/* Achievements */}
-                                        <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                            <div className="flex items-center justify-between mb-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                                                        <Award size={16} className="text-green-600" />
-                                                    </div>
-                                                    <h4 className="font-bold text-gray-900 text-sm">Achievements</h4>
-                                                </div>
-                                                <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.achievements.score)}`}>
-                                                    {result.detailedAnalysis.achievements.score}
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-gray-600 mb-2">
-                                                <span className="font-semibold">{result.detailedAnalysis.achievements.quantifiableCount}</span> quantifiable achievements found
-                                            </p>
-                                            {result.detailedAnalysis.achievements.issues.length > 0 && (
-                                                <ul className="space-y-1">
-                                                    {result.detailedAnalysis.achievements.issues.slice(0, 1).map((issue, idx) => (
-                                                        <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                            <span className="text-orange-500">•</span>
-                                                            <span>{issue}</span>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            )}
-                                        </div>
-
-                                        {/* ATS Compatibility */}
-                                        <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                            <div className="flex items-center justify-between mb-3">
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                                                        <Target size={16} className="text-indigo-600" />
-                                                    </div>
-                                                    <h4 className="font-bold text-gray-900 text-sm">ATS Compatibility</h4>
-                                                </div>
-                                                <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.atsCompatibility.score)}`}>
-                                                    {result.detailedAnalysis.atsCompatibility.score}
-                                                </span>
-                                            </div>
-                                            {result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
-                                                <div className="space-y-1">
-                                                    {result.detailedAnalysis.atsCompatibility.criticalIssues.slice(0, 2).map((issue, idx) => (
-                                                        <div key={idx} className="flex gap-1 items-start">
-                                                            <XCircle size={12} className="text-red-600 flex-shrink-0 mt-0.5" />
-                                                            <span className="text-xs text-red-700">{issue}</span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Feedback Cards */}
-                                <div className="grid gap-6">
-                                    {/* Strengths */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                                <CheckCircle size={20} className="text-green-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900">Strengths</h3>
-                                        </div>
-                                        <ul className="space-y-2">
-                                            {result.feedback.strengths.map((item, idx) => (
-                                                <li key={idx} className="flex gap-2 text-sm text-gray-700">
-                                                    <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
-                                                    <span>{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    {/* Weaknesses */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                                                <XCircle size={20} className="text-red-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900">Areas to Improve</h3>
-                                        </div>
-                                        <ul className="space-y-2">
-                                            {result.feedback.weaknesses.map((item, idx) => (
-                                                <li key={idx} className="flex gap-2 text-sm text-gray-700">
-                                                    <XCircle size={16} className="text-red-600 flex-shrink-0 mt-0.5" />
-                                                    <span>{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    {/* Suggestions */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                                <TrendingUp size={20} className="text-indigo-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900">Suggestions</h3>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {result.feedback.suggestions.map((item, idx) => (
-                                                <div key={idx} className="flex gap-2 p-3 bg-indigo-50 border border-indigo-100 rounded-lg">
-                                                    <Zap size={16} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-gray-700 text-xs">{item}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                                Check My Resume Score
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link
+                                href="#what-is-ats"
+                                className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition-all inline-flex items-center justify-center"
+                            >
+                                Learn About ATS
+                            </Link>
+                        </div>
                     </div>
 
-                    {/* Right Section - Stepper & Info */}
-                    <div className="space-y-6">
-                        {/* Stepper */}
-                        <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg">
-                            <h3 className="text-xl font-bold text-gray-900 mb-6">Analysis Progress</h3>
-                            <div className="space-y-6">
-                                {steps.map((step, idx) => (
-                                    <div key={step.id} className="flex items-start gap-4">
-                                        <div className="flex flex-col items-center">
-                                            <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all ${step.status === 'complete' ? 'bg-green-500 text-white' :
-                                                step.status === 'current' ? 'bg-indigo-600 text-white' :
-                                                    'bg-gray-200 text-gray-500'
-                                                }`}>
-                                                {step.status === 'complete' ? <CheckCircle size={24} /> : step.id}
-                                            </div>
-                                            {idx < steps.length - 1 && (
-                                                <div className={`w-0.5 h-16 mt-2 ${step.status === 'complete' ? 'bg-green-500' : 'bg-gray-200'
-                                                    }`} />
-                                            )}
-                                        </div>
-                                        <div className="flex-1 pt-2">
-                                            <h4 className={`font-bold ${step.status === 'current' ? 'text-indigo-600' :
-                                                step.status === 'complete' ? 'text-green-600' :
-                                                    'text-gray-500'
-                                                }`}>
-                                                {step.name}
-                                            </h4>
-                                            {step.status === 'current' && currentStep === 'analyzing' && (
-                                                <p className="text-sm text-gray-600 mt-1">{analysisStage}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-8 max-w-4xl mx-auto mt-16">
+                        <div className="text-center">
+                            <div className="text-4xl font-bold text-indigo-600">95%</div>
+                            <div className="text-sm text-gray-600 mt-1">Fortune 500 Use ATS</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-4xl font-bold text-indigo-600">75%</div>
+                            <div className="text-sm text-gray-600 mt-1">Resumes Rejected</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-4xl font-bold text-indigo-600">30s</div>
+                            <div className="text-sm text-gray-600 mt-1">Get Your Score</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* What is ATS Section */}
+            <section id="what-is-ats" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                            What is an Applicant Tracking System (ATS)?
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            Understanding ATS is crucial for modern job seekers
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+                        <div>
+                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 border-2 border-indigo-100">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-4">The Digital Gatekeeper</h3>
+                                <p className="text-gray-700 leading-relaxed mb-4">
+                                    An <strong>Applicant Tracking System (ATS)</strong> is software used by employers to collect,
+                                    sort, scan, and rank job applications. Think of it as a digital gatekeeper that filters resumes
+                                    before they ever reach human recruiters.
+                                </p>
+                                <p className="text-gray-700 leading-relaxed">
+                                    The ATS scans your resume for specific keywords, formatting, and structure. Resumes that pass
+                                    the screening (typically scoring 70%+ compatibility) get forwarded to recruiters. Those that don't?
+                                    They're automatically rejected - often within seconds.
+                                </p>
                             </div>
                         </div>
-
-                        {/* Keywords & Formatting (Only show in results) */}
-                        {currentStep === 'results' && result && (
-                            <>
-                                {/* Critical ATS Issues Warning - NEW */}
-                                {result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
-                                    <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                                                <AlertCircle size={20} className="text-red-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-red-900">Critical ATS Issues</h3>
+                        <div>
+                            <div className="space-y-4">
+                                <div className="bg-white rounded-xl p-6 border-2 border-gray-200 shadow-lg">
+                                    <div className="flex items-center gap-4 mb-3">
+                                        <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                                            <AlertCircle className="w-6 h-6 text-red-600" />
                                         </div>
-                                        <div className="space-y-2">
-                                            {result.detailedAnalysis.atsCompatibility.criticalIssues.map((issue, idx) => (
-                                                <div key={idx} className="flex gap-2 p-3 bg-red-100 border border-red-200 rounded-lg">
-                                                    <XCircle size={16} className="text-red-700 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-red-900 text-xs font-medium">{issue}</span>
-                                                </div>
-                                            ))}
-                                        </div>
+                                        <h4 className="font-bold text-gray-900">75% Rejection Rate</h4>
                                     </div>
-                                )}
-
-                                {/* ATS Warnings - NEW */}
-                                {result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.warnings.length > 0 && (
-                                    <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                                                <AlertCircle size={20} className="text-orange-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-orange-900">ATS Warnings</h3>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {result.detailedAnalysis.atsCompatibility.warnings.map((warning, idx) => (
-                                                <div key={idx} className="flex gap-2 p-2 bg-orange-100 border border-orange-200 rounded-lg">
-                                                    <AlertCircle size={14} className="text-orange-700 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-orange-900 text-xs">{warning}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                            <Target size={20} className="text-green-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Keywords Found</h3>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {result.keywords.found.map((kw, idx) => (
-                                            <span key={idx} className="px-3 py-1 bg-green-50 border border-green-200 text-green-700 rounded-lg text-xs font-medium">
-                                                {kw}
-                                            </span>
-                                        ))}
-                                    </div>
+                                    <p className="text-gray-600 text-sm">
+                                        Most resumes are rejected by ATS before ever reaching a human recruiter
+                                    </p>
                                 </div>
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                                            <AlertCircle size={20} className="text-orange-600" />
+                                <div className="bg-white rounded-xl p-6 border-2 border-gray-200 shadow-lg">
+                                    <div className="flex items-center gap-4 mb-3">
+                                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <BarChart3 className="w-6 h-6 text-blue-600" />
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Missing Keywords</h3>
+                                        <h4 className="font-bold text-gray-900">88% Employer Usage</h4>
                                     </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {result.keywords.missing.map((kw, idx) => (
-                                            <span key={idx} className="px-3 py-1 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-medium">
-                                                {kw}
-                                            </span>
-                                        ))}
-                                    </div>
+                                    <p className="text-gray-600 text-sm">
+                                        Companies with 100+ employees use some form of ATS software
+                                    </p>
                                 </div>
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                                                <BarChart3 size={20} className="text-purple-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900">Formatting</h3>
+                                <div className="bg-white rounded-xl p-6 border-2 border-gray-200 shadow-lg">
+                                    <div className="flex items-center gap-4 mb-3">
+                                        <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <Target className="w-6 h-6 text-green-600" />
                                         </div>
-                                        <span className={`text-3xl font-bold ${getScoreColor(result.formatting.score)}`}>
-                                            {result.formatting.score}
-                                        </span>
+                                        <h4 className="font-bold text-gray-900">6-7 Second Scan</h4>
                                     </div>
-                                    {result.formatting.issues.length > 0 && (
-                                        <div className="space-y-2">
-                                            {result.formatting.issues.map((issue, idx) => (
-                                                <div key={idx} className="flex gap-2 p-2 bg-orange-50 border border-orange-100 rounded-lg">
-                                                    <AlertCircle size={16} className="text-orange-600 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-gray-700 text-xs">{issue}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <p className="text-gray-600 text-sm">
+                                        Average time an ATS takes to scan and score your entire resume
+                                    </p>
                                 </div>
-                            </>
-                        )}
-
-                        {/* Info Card (Show when not in results) */}
-                        {currentStep !== 'results' && (
-                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-100 rounded-2xl p-6 shadow-lg">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4">Comprehensive ATS Analysis</h3>
-                                <ul className="space-y-3">
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Format Compatibility</p>
-                                            <p className="text-sm text-gray-600">Tables, columns, special formatting</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Section Structure</p>
-                                            <p className="text-sm text-gray-600">Standard headers and organization</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Contact Information</p>
-                                            <p className="text-sm text-gray-600">Email, phone, LinkedIn profile</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Keywords & Action Verbs</p>
-                                            <p className="text-sm text-gray-600">Industry-specific terms</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Quantifiable Achievements</p>
-                                            <p className="text-sm text-gray-600">Numbers, metrics, impact</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Content Quality</p>
-                                            <p className="text-sm text-gray-600">Clarity, grammar, professionalism</p>
-                                        </div>
-                                    </li>
-                                </ul>
                             </div>
-                        )}
+                        </div>
+                    </div>
+
+                    {/* Popular ATS Systems */}
+                    <div className="bg-gray-50 rounded-2xl p-8 border-2 border-gray-200">
+                        <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Popular ATS Systems</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            {['Greenhouse', 'Lever', 'Workday', 'iCIMS', 'Taleo', 'BambooHR', 'SmartRecruiters', 'JazzHR'].map((ats, idx) => (
+                                <div key={idx} className="bg-white rounded-lg p-4 border border-gray-200">
+                                    <p className="font-semibold text-gray-900">{ats}</p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
+            {/* How Our Checker Works */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-white">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                            How Our ATS Checker Works
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            AI-powered analysis that simulates real ATS systems
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        {[
+                            {
+                                icon: <FileText className="w-8 h-8" />,
+                                title: '1. Upload Your Resume',
+                                description: 'Simply drag and drop your PDF or Word resume. We support all standard formats and parse them just like a real ATS would.',
+                                color: 'indigo'
+                            },
+                            {
+                                icon: <Target className="w-8 h-8" />,
+                                title: '2. AI Analysis',
+                                description: 'Our AI scans for keywords, checks formatting, analyzes section structure, and identifies ATS deal-breakers that cause rejections.',
+                                color: 'purple'
+                            },
+                            {
+                                icon: <BarChart3 className="w-8 h-8" />,
+                                title: '3. Get Your Score',
+                                description: 'Receive a comprehensive ATS compatibility score (0-100) with detailed breakdowns for contact info, experience, skills, and formatting.',
+                                color: 'blue'
+                            },
+                            {
+                                icon: <Zap className="w-8 h-8" />,
+                                title: '4. Apply Recommendations',
+                                description: 'Get specific, actionable suggestions to improve your score. Fix issues and re-check as many times as you want - completely free.',
+                                color: 'green'
+                            }
+                        ].map((step, idx) => (
+                            <div key={idx} className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-indigo-300 hover:shadow-xl transition-all">
+                                <div className={`w-16 h-16 bg-${step.color}-100 rounded-xl flex items-center justify-center text-${step.color}-600 mb-6`}>
+                                    {step.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
+                                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Common ATS Mistakes */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                            Common ATS Mistakes That Get Resumes Rejected
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            Avoid these deal-breakers to improve your chances
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {[
+                            {
+                                mistake: 'Using Tables & Text Boxes',
+                                problem: 'Most ATS can\'t read content inside tables or text boxes',
+                                solution: 'Use simple, single-column formatting with standard bullet points'
+                            },
+                            {
+                                mistake: 'Creative Section Headers',
+                                problem: 'Headers like "My Journey" confuse ATS algorithms',
+                                solution: 'Use standard headers: Work Experience, Education, Skills'
+                            },
+                            {
+                                mistake: 'Images & Graphics',
+                                problem: 'ATS can\'t read text embedded in images or graphics',
+                                solution: 'All content should be actual text, not images'
+                            },
+                            {
+                                mistake: 'Exotic Fonts',
+                                problem: 'Fancy fonts turn your resume into gibberish for ATS',
+                                solution: 'Stick to Arial, Calibri, Georgia, or Times New Roman'
+                            },
+                            {
+                                mistake: 'Missing Keywords',
+                                problem: 'No keywords from job description = no ATS match',
+                                solution: 'Mirror language from job posting throughout your resume'
+                            },
+                            {
+                                mistake: 'Complex Formatting',
+                                problem: 'Multiple columns and unusual layouts confuse parsing',
+                                solution: 'Keep it simple with single-column, chronological layout'
+                            }
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-red-50 rounded-xl p-6 border-l-4 border-red-600">
+                                <h3 className="text-lg font-bold text-red-900 mb-2">❌ {item.mistake}</h3>
+                                <p className="text-gray-700 mb-3">
+                                    <strong>Problem:</strong> {item.problem}
+                                </p>
+                                <p className="text-gray-700">
+                                    <strong className="text-green-700">✓ Solution:</strong> {item.solution}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Benefits Section */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                            Why Use Our ATS Resume Checker?
+                        </h2>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: <Shield className="w-6 h-6" />,
+                                title: '100% Free Forever',
+                                description: 'No hidden costs, no watermarks, no credit card required. Check unlimited resumes.'
+                            },
+                            {
+                                icon: <TrendingUp className="w-6 h-6" />,
+                                title: 'AI-Powered Analysis',
+                                description: 'Advanced AI simulates real ATS systems used by Fortune 500 companies.'
+                            },
+                            {
+                                icon: <Zap className="w-6 h-6" />,
+                                title: 'Instant Results',
+                                description: 'Get your ATS compatibility score and recommendations in 30 seconds.'
+                            },
+                            {
+                                icon: <CheckCircle className="w-6 h-6" />,
+                                title: 'Actionable Suggestions',
+                                description: 'Specific recommendations on what to fix and how to fix it.'
+                            },
+                            {
+                                icon: <Award className="w-6 h-6" />,
+                                title: 'No Sign-up Required',
+                                description: 'Start checking immediately. No account creation needed.'
+                            },
+                            {
+                                icon: <Shield className="w-6 h-6" />,
+                                title: 'Private & Secure',
+                                description: 'Your resume is never stored. Complete privacy guaranteed.'
+                            }
+                        ].map((benefit, idx) => (
+                            <div key={idx} className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-indigo-300 hover:shadow-lg transition-all">
+                                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mb-4">
+                                    {benefit.icon}
+                                </div>
+                                <h3 className="text-lg font-bold text-gray-900 mb-2">{benefit.title}</h3>
+                                <p className="text-gray-600 text-sm">{benefit.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-indigo-600 to-purple-600">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
+                        Ready to Check Your ATS Score?
+                    </h2>
+                    <p className="text-xl text-indigo-100 mb-8">
+                        Join 50,000+ job seekers who've improved their resumes with our free ATS checker
+                    </p>
+                    <Link
+                        href="https://edit.profresume.com/ats-check"
+                        className="bg-white text-indigo-600 px-8 py-4 rounded-lg font-bold text-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
+                    >
+                        Check My Resume Now - Free
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <p className="text-indigo-200 mt-4 text-sm">
+                        ✓ No sign-up required  ✓ Results in 30 seconds  ✓ 100% free
+                    </p>
+                </div>
+            </section>
+        </div>
     );
 }

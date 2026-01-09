@@ -5,6 +5,9 @@ import { Metadata } from "next";
 import { ENV } from "./env";
 import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
+import { ProductSchema } from "@/components/ProductSchema";
+import { HowItWorks } from "@/components/HowItWorks";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
 
 export const metadata: Metadata = {
   alternates: {
@@ -31,6 +34,8 @@ export default async function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Product Schema for SEO - Star Ratings in Google */}
+      <ProductSchema />
       {/* Hero Section */}
       <section className="pt-5 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="max-w-7xl mx-auto">
@@ -138,6 +143,9 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* How It Works - SEO Section */}
+      <HowItWorks />
 
       {/* Way Beyond Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
@@ -796,6 +804,9 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Why Choose Us - SEO Comparison Section */}
+      <WhyChooseUs />
 
       {/* Success Stories Section with Real Image */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
