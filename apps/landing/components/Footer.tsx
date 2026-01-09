@@ -59,9 +59,11 @@ export function Footer() {
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                                <FileText className="w-6 h-6 text-white" />
-                            </div>
+                            <img
+                                src="/icon-512.png"
+                                alt="ProfResume Logo"
+                                className="w-10 h-10"
+                            />
                             <span className="text-2xl font-bold text-white">ProfResume</span>
                         </div>
                         <p className="text-sm mb-6 leading-relaxed max-w-md">

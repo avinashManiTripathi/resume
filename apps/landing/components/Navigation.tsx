@@ -260,8 +260,15 @@ export function Navigation() {
       <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-gray-200 z-[1000] py-4">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
           {/* Logo */}
-          <a href="/" className="text-2xl font-extrabold text-gray-900 no-underline">
-            <span className="text-blue-500">{navData?.logo.text}</span>{navData?.logo.accent}
+          <a href="/" className="flex items-center gap-2 no-underline group">
+            <img
+              src="/icon-512.png"
+              alt="ProfResume Logo"
+              className="w-8 h-8 transition-transform group-hover:scale-110"
+            />
+            <span className="text-2xl font-extrabold text-gray-900">
+              <span className="text-blue-500">{navData?.logo.text}</span>{navData?.logo.accent}
+            </span>
           </a>
 
           {/* Desktop Navigation Links */}
