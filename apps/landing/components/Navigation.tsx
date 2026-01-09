@@ -195,7 +195,7 @@ export function Navigation() {
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 no-underline group">
               <img
-                src="/icon-512.png"
+                src="/icon.png"
                 alt="ProfResume Logo"
                 className="w-9 h-9 transition-transform group-hover:scale-105"
               />

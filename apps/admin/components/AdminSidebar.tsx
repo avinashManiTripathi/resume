@@ -59,7 +59,12 @@ export function AdminSidebar() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-11 h-11 gradient-primary rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <FileText className="w-6 h-6 text-white" />
+                <img
+                  src="/icon.png"
+                  alt="ProfResume Logo"
+                  style={{ width: "40px", height: '40px' }}
+                  className="w-9 h-9 transition-transform group-hover:scale-105"
+                />
               </div>
               <div className="absolute -inset-1 gradient-primary rounded-xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-300" />
             </div>

@@ -6,6 +6,16 @@ import { primaryFont } from "@repo/fonts";
 export const metadata: Metadata = {
   title: "ProfResume Admin - Manage Users & Templates",
   description: "Admin panel for managing users and resume templates",
+
+  // Icons (Next.js App Router best practice)
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({

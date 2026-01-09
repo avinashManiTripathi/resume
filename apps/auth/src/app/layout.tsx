@@ -5,6 +5,16 @@ import { primaryFont } from "@repo/fonts";
 export const metadata: Metadata = {
   title: "Resume Builder - Sign In",
   description: "Sign in to create your professional resume with AI-powered optimization",
+
+  // Icons (Next.js App Router best practice)
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    shortcut: '/favicon.png',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
