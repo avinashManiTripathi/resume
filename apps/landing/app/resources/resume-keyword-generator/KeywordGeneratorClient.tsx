@@ -283,10 +283,6 @@ export default function KeywordGeneratorClient() {
                     </div>
                 </div>
             </section>
-
-            <div className="py-8 bg-gray-50 text-center border-t border-gray-200">
-                <p className="text-gray-400 text-sm">© 2026 Professional Resume Builder. All rights reserved.</p>
-            </div>
         </div>
     );
 }

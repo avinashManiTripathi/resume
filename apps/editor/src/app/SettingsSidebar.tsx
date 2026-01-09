@@ -3,6 +3,7 @@ import { Home, FileText, Trophy, Megaphone, Folder, Trash2, Lock, Sparkles, Layo
 import { ColorPicker } from "@repo/ui/color-picker";
 import { ThemeSelector } from "@repo/ui/theme-selector";
 import { ExportOptions } from "@repo/ui/export-options";
+import { Tooltip } from "@repo/ui/tooltip";
 import { useRouter } from "next/navigation";
 
 interface SettingsSidebarProps {
@@ -44,32 +45,35 @@ const SettingsSidebar = ({ onExport, onTemplateChange, onSmartImport, fontFamily
 
 
             {/* AI Smart Import */}
-            <button
-                className={iconButtonClass}
-                title="Smart Import"
-                onClick={onSmartImport}
-            >
-                <Sparkles size={20} />
-            </button>
+            <Tooltip content="Smart Import" position="left">
+                <button
+                    className={iconButtonClass}
+                    onClick={onSmartImport}
+                >
+                    <Sparkles size={20} />
+                </button>
+            </Tooltip>
 
             {/* Change Template */}
-            <button
-                className={iconButtonClass}
-                title="Change Template"
-                onClick={onTemplateChange}
-            >
-                <LayoutGrid size={20} />
-            </button>
+            <Tooltip content="Change Template" position="left">
+                <button
+                    className={iconButtonClass}
+                    onClick={onTemplateChange}
+                >
+                    <LayoutGrid size={20} />
+                </button>
+            </Tooltip>
 
             {/* Font Family Selector */}
             <div className="relative">
-                <button
-                    className={showFontSelector ? iconButtonActiveClass : iconButtonClass}
-                    title="Change Font"
-                    onClick={() => setShowFontSelector(!showFontSelector)}
-                >
-                    <Type size={20} />
-                </button>
+                <Tooltip content="Change Font" position="left">
+                    <button
+                        className={showFontSelector ? iconButtonActiveClass : iconButtonClass}
+                        onClick={() => setShowFontSelector(!showFontSelector)}
+                    >
+                        <Type size={20} />
+                    </button>
+                </Tooltip>
 
                 {showFontSelector && (
                     <div className="absolute right-full mr-2 top-0 bg-white rounded-lg shadow-xl border border-gray-200 p-4 w-64 z-[9999]">
@@ -108,14 +112,14 @@ const SettingsSidebar = ({ onExport, onTemplateChange, onSmartImport, fontFamily
             <div className="w-10 h-px bg-blue-200 my-2"></div>
 
             {/* Tailor Resume */}
-            <button
-                className={iconButtonClass}
-                title="Tailor My Resume"
-                onClick={() => router.push('/tailor')}
-            >
-                <Trophy size={20} />
-            </button>
-
+            <Tooltip content="Tailor My Resume" position="left">
+                <button
+                    className={iconButtonClass}
+                    onClick={() => router.push('/tailor')}
+                >
+                    <Trophy size={20} />
+                </button>
+            </Tooltip>
 
 
         </div>
