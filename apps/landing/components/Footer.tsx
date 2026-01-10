@@ -55,7 +55,40 @@ export function Footer() {
         <footer className="bg-gray-50 text-gray-600">
             {/* Main Footer Content */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+
+                {/* Newsletter Section */}
+                <div className="border-b border-gray-200 pt-8 pb-8 mb-12">
+                    <div className="max-w-2xl mx-auto text-center">
+                        <h3 className="text-gray-900 font-bold text-xl mb-2">Get Career Tips & Resume Advice</h3>
+                        <p className="text-sm mb-6">Join 50,000+ subscribers getting weekly career tips, resume templates, and job search strategies.</p>
+
+                        <form onSubmit={handleSubscribe} className="flex gap-3 max-w-md mx-auto">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                                required
+                                className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 placeholder-gray-400"
+                            />
+                            <button
+                                type="submit"
+                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
+                            >
+                                {subscribed ? (
+                                    <>✓ Subscribed</>
+                                ) : (
+                                    <>
+                                        Subscribe
+                                        <Send className="w-4 h-4" />
+                                    </>
+                                )}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12 pt-8 pb-8">
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-4">
@@ -84,6 +117,34 @@ export function Footer() {
                             <div className="flex items-center gap-3">
                                 <MapPin className="w-4 h-4 text-blue-500" />
                                 <span>Maharajganj Gorakhpur Uttar Pradesh 273303</span>
+                            </div>
+                        </div>
+
+                        {/* Trust Badges */}
+                        <div className="mt-6 mb-6 flex flex-col gap-6 text-xs">
+                            <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold">✓</span>
+                                </div>
+                                <span>SSL Secured</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold">✓</span>
+                                </div>
+                                <span>GDPR Compliant</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold">★</span>
+                                </div>
+                                <span>4.9/5 Rating</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center">
+                                    <span className="text-white font-bold">50K+</span>
+                                </div>
+                                <span>Happy Users</span>
                             </div>
                         </div>
 
@@ -150,37 +211,6 @@ export function Footer() {
                     </div>
                 </div>
 
-                {/* Newsletter Section */}
-                <div className="border-t border-gray-200 pt-8 pb-8">
-                    <div className="max-w-2xl mx-auto text-center">
-                        <h3 className="text-gray-900 font-bold text-xl mb-2">Get Career Tips & Resume Advice</h3>
-                        <p className="text-sm mb-6">Join 50,000+ subscribers getting weekly career tips, resume templates, and job search strategies.</p>
-
-                        <form onSubmit={handleSubscribe} className="flex gap-3 max-w-md mx-auto">
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Enter your email"
-                                required
-                                className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 text-gray-900 placeholder-gray-400"
-                            />
-                            <button
-                                type="submit"
-                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all flex items-center gap-2"
-                            >
-                                {subscribed ? (
-                                    <>✓ Subscribed</>
-                                ) : (
-                                    <>
-                                        Subscribe
-                                        <Send className="w-4 h-4" />
-                                    </>
-                                )}
-                            </button>
-                        </form>
-                    </div>
-                </div>
 
                 {/* Bottom Bar */}
                 <div className="border-t border-gray-200 pt-8">
@@ -196,33 +226,7 @@ export function Footer() {
                         </div>
                     </div>
 
-                    {/* Trust Badges */}
-                    <div className="mt-6 flex flex-wrap justify-center items-center gap-6 text-xs">
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold">✓</span>
-                            </div>
-                            <span>SSL Secured</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold">✓</span>
-                            </div>
-                            <span>GDPR Compliant</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-purple-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold">★</span>
-                            </div>
-                            <span>4.9/5 Rating</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 bg-orange-600 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold">50K+</span>
-                            </div>
-                            <span>Happy Users</span>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </footer>
