@@ -2,26 +2,19 @@ import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { Sparkles, Users, Target, Award, Heart, Zap } from "lucide-react";
 import Image from "next/image";
+import { IntroSection } from "@/components/IntroSection";
 
 export default function AboutPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
             {/* Hero Section */}
-            <section className="pt-32 pb-20 px-6">
-                <div className="max-w-6xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                        <Sparkles size={16} />
-                        About Us
-                    </div>
-                    <h1 className="text-6xl mx-auto font-extrabold text-gray-900 mb-6">
-                        We're on a Mission to Help You
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Land Your Dream Job</span>
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Building the world's most powerful resume builder to help millions of job seekers create professional resumes in minutes.
-                    </p>
-                </div>
-            </section>
+            <IntroSection
+                badgeIcon={<Sparkles />}
+                label={"About Us"}
+                title={"We're on a Mission to Help You"}
+                description={"Building the world's most powerful resume builder to help millions of job seekers create professional resumes in minutes."}
+                highlightText={"Land Your Dream Job"}
+            />
 
             {/* Stats Section */}
             <section className="py-16 px-6 bg-white">
