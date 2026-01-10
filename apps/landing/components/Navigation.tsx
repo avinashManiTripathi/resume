@@ -195,14 +195,10 @@ export function Navigation() {
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 no-underline group">
               <img
-                src="/icon.png"
+                src="/logo.png"
                 alt="ProfResume Logo"
-                className="w-9 h-9 transition-transform group-hover:scale-105"
+                className="w-15 h-9 transition-transform group-hover:scale-105"
               />
-              <span className="text-xl font-bold text-gray-900">
-                <span className="text-blue-600">{navigation.logo.text}</span>
-                {navigation.logo.accent}
-              </span>
             </a>
 
             {/* Desktop Navigation */}

@@ -60,11 +60,10 @@ export function Footer() {
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-4">
                             <img
-                                src="/icon.png"
+                                src="/logo.png"
                                 alt="ProfResume Logo"
-                                className="w-10 h-10"
+                                className="w-15 h-9 transition-transform group-hover:scale-105"
                             />
-                            <span className="text-2xl font-bold text-white">ProfResume</span>
                         </div>
                         <p className="text-sm mb-6 leading-relaxed max-w-md">
                             Build professional, ATS-friendly resumes that get you hired. Join 50,000+ job seekers who landed their dream jobs with our AI-powered resume builder.
