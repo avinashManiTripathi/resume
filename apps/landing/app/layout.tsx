@@ -117,7 +117,7 @@ export default function RootLayout({
       <body className={`${primaryFont.variable} antialiased min-h-screen flex flex-col`}>
         <GlobalSchema />
         <Navigation />
-        <main className="flex-1 mt-[70px]">
+        <main className="flex-1 mt-[65px]">
           {children}
         </main>
         <Footer />
