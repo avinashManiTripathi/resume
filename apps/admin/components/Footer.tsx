@@ -47,7 +47,7 @@ export function Footer() {
                             </div>
                             <div className="flex items-center gap-3">
                                 <MapPin className="w-4 h-4 text-blue-500" />
-                                <span>Maharajganj Gorakhpur Uttar Pradesh 273303</span>
+                                <span>Uttar Pradesh, India</span>
                             </div>
                         </div>
 
