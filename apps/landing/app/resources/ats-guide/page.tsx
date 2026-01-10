@@ -1,10 +1,23 @@
-"use client";
-
 import { Navigation } from "@/components/Navigation";
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { Bot, CheckCircle, XCircle, Lightbulb, Target, Award, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Complete ATS Guide 2026 - Beat Applicant Tracking Systems | ProfResume',
+    description: 'Master ATS optimization with our complete guide. Learn how ATS works, formatting best practices, and keyword strategies to get past the initial screening.',
+    alternates: {
+        canonical: '/resources/ats-guide',
+    },
+    openGraph: {
+        title: 'Complete ATS Guide - Beat Applicant Tracking Systems',
+        description: 'Master ATS optimization with our complete guide. Learn how ATS works and how to beat it.',
+        url: '/resources/ats-guide',
+    },
+};
 
 export default function ATSGuidePage() {
     const faqs = [
@@ -20,7 +33,7 @@ export default function ATSGuidePage() {
             <ArticleSchema
                 title="Complete ATS Guide - Beat Applicant Tracking Systems"
                 description="Master ATS optimization with our complete guide. Learn how ATS works, formatting best practices, and keyword strategies."
-                url="https://profresume.com/resources/ats-guide"
+                url={`${ENV.BASE_URL}/resources/ats-guide`}
             />
             <FAQSchema faqs={faqs} />
 
@@ -198,7 +211,7 @@ export default function ATSGuidePage() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link
-                            href="https://edit.profresume.com/editor"
+                            href={`${ENV.EDITOR_URL}/editor`}
                             className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                         >
                             <Award className="w-5 h-5" />

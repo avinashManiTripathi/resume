@@ -1,10 +1,23 @@
-"use client";
-
 import { Navigation } from "@/components/Navigation";
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { Briefcase, Code, Palette, TrendingUp, Heart, Wrench, GraduationCap, Users } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Resume Examples by Industry 2026 - Professional Templates | ProfResume',
+    description: 'Browse industry-specific resume examples and templates. Tailored formats for tech, healthcare, finance, design, and more to land your dream job.',
+    alternates: {
+        canonical: '/resources/industry-examples',
+    },
+    openGraph: {
+        title: 'Resume Examples by Industry - Professional Templates',
+        description: 'Browse industry-specific resume examples and templates for all major fields.',
+        url: '/resources/industry-examples',
+    },
+};
 
 export default function IndustryExamplesPage() {
     const industries = [
@@ -90,7 +103,7 @@ export default function IndustryExamplesPage() {
             <ArticleSchema
                 title="Resume Examples by Industry - Professional Templates"
                 description="Browse industry-specific resume examples and templates. Tailored formats for tech, healthcare, finance, and more."
-                url="https://profresume.com/resources/industry-examples"
+                url={`${ENV.BASE_URL}/resources/industry-examples`}
             />
             <FAQSchema faqs={faqs} />
             {/* Hero Section */}
@@ -141,7 +154,7 @@ export default function IndustryExamplesPage() {
                                 </div>
 
                                 <Link
-                                    href="https://edit.profresume.com/editor"
+                                    href={`${ENV.EDITOR_URL}/editor`}
                                     className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors"
                                 >
                                     View Examples
@@ -203,7 +216,7 @@ export default function IndustryExamplesPage() {
                         Choose from our professionally designed templates tailored for your industry.
                     </p>
                     <Link
-                        href="https://edit.profresume.com/editor"
+                        href={`${ENV.EDITOR_URL}/editor`}
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <Briefcase className="w-5 h-5" />

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-const baseUrl = "https://profresume.com";
 
 export const metadata: Metadata = {
     title: "Free ATS Resume Checker | Test Your Resume for ATS Compatibility | ProfResume",
@@ -21,18 +20,18 @@ export const metadata: Metadata = {
     creator: "ProfResume",
     publisher: "ProfResume",
     alternates: {
-        canonical: `${baseUrl}/ats-checker`,
+        canonical: `/ats-checker`,
     },
     openGraph: {
         title: "Free ATS Resume Checker - Test Your Resume Instantly",
         description: "Upload your resume and get instant AI-powered feedback on ATS compatibility Free AI analysis to help you pass Applicant Tracking Systems.",
-        url: `${baseUrl}/ats-checker`,
+        url: `/ats-checker`,
         siteName: "ProfResume",
         locale: "en_US",
         type: "website",
         images: [
             {
-                url: `${baseUrl}/og-image.png`,
+                url: `/og-image.png`,
                 width: 1200,
                 height: 630,
                 alt: "ProfResume ATS Checker Tool",
@@ -43,7 +42,7 @@ export const metadata: Metadata = {
         card: "summary_large_image",
         title: "Free ATS Resume Checker | ProfResume",
         description: "Test your resume's ATS compatibility with our free AI-powered tool. Get instant feedback and optimization suggestions.",
-        images: [`${baseUrl}/og-image.png`],
+        images: [`/og-image.png`],
         creator: "@profresume",
     },
     robots: {

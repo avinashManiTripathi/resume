@@ -1,7 +1,20 @@
-"use client";
-
 import { Calendar, Clock, ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Career Blog - Resume Tips & Job Search Advice | ProfResume',
+    description: 'Expert advice on resume writing, career growth, and job search strategies. Read our latest articles to land your dream job.',
+    alternates: {
+        canonical: '/blog',
+    },
+    openGraph: {
+        title: 'ProfResume Career Blog',
+        description: 'Stay ahead in your career with expert tips.',
+        url: '/blog',
+        type: 'website',
+    },
+};
 
 const blogPosts = [
     { id: 1, title: "10 Resume Tips That Will Get You Hired in 2024", excerpt: "Learn the latest strategies to make your resume stand out in today's competitive job market.", author: "Avinash Mani Tripathi", date: "Dec 15, 2024", readTime: "5 min read", category: "Tips & Tricks", image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&auto=format&fit=crop" },
@@ -13,13 +26,15 @@ const blogPosts = [
 ];
 
 export default function BlogPage() {
+    return <BlogContent />;
+}
+
+function BlogContent() {
     const featuredPost = blogPosts[0];
     const recentPosts = blogPosts.slice(1);
 
     return (
         <>
-
-
             {/* Hero Section */}
             <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
                 <div className="max-w-7xl mx-auto text-center">
@@ -86,7 +101,7 @@ export default function BlogPage() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-4 mb-8">
+                            <div className="flex items-center gap-4 mb-6">
                                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                                     {featuredPost.author.split(" ").map(n => n[0]).join("")}
                                 </div>
@@ -208,7 +223,6 @@ export default function BlogPage() {
                     </div>
                 </div>
             </section>
-
         </>
     );
 }

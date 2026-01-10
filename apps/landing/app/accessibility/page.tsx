@@ -1,10 +1,20 @@
 import { Metadata } from "next";
 import { Eye, Keyboard, MousePointer, Volume2, Accessibility, Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: "Accessibility - Resume Builder",
     description: "Learn about our commitment to accessibility and the features we provide to ensure everyone can use our resume builder.",
+    alternates: {
+        canonical: "/accessibility",
+    },
+    openGraph: {
+        title: "Accessibility - Resume Builder",
+        description: "Learn about our commitment to accessibility and the features we provide.",
+        url: "/accessibility",
+        type: "website",
+    },
 };
 
 export default function AccessibilityPage() {
@@ -173,8 +183,8 @@ export default function AccessibilityPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Feedback & Support</h2>
                         <p className="text-gray-700 leading-relaxed mb-4">
                             We welcome feedback on the accessibility of our platform. If you encounter any barriers or have suggestions for improvement, please contact us at{" "}
-                            <a href="mailto:accessibility@profresume.com" className="text-blue-600 hover:underline">
-                                accessibility@profresume.com
+                            <a href={`mailto:${ENV.ACCESSIBILITY_EMAIL}`} className="text-blue-600 hover:underline">
+                                {ENV.ACCESSIBILITY_EMAIL}
                             </a>
                         </p>
                         <p className="text-sm text-gray-600 mb-6">

@@ -1,165 +1,75 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, Target, Shield, TrendingUp, Zap, AlertCircle, FileText, Award, BarChart3 } from 'lucide-react';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
+import { FAQSchema } from '@/components/FAQSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { GlobalSchema } from '@/components/SchemaMarkup';
+import { ENV } from '@/app/env';
 
 export const metadata: Metadata = {
     title: 'Free ATS Resume Checker - Test Your Resume Score Instantly | ProfResume',
     description: 'Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations. 100% free, no sign-up required.',
     keywords: 'ATS checker, ATS resume scanner, applicant tracking system, resume ATS test, ATS score, resume compatibility',
     alternates: {
-        canonical: 'https://profresume.com/ats-checker',
+        canonical: '/ats-checker',
     },
     openGraph: {
         title: 'Free ATS Resume Checker - Test Your Resume Score',
         description: 'Check if your resume passes ATS systems. Get instant AI-powered analysis and detailed recommendations. 100% free, no sign-up required.',
-        url: 'https://profresume.com/ats-checker',
+        url: '/ats-checker',
         type: 'website',
     },
 };
 
-const baseUrl = "https://profresume.com";
+const baseUrl = ENV.BASE_URL;
 
-// Breadcrumb Schema
-const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-        {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": baseUrl
-        },
-        {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "ATS Checker",
-            "item": `${baseUrl}/ats-checker`
-        }
-    ]
-};
+const breadcrumbs = [
+    { name: "Home", url: "/" },
+    { name: "ATS Checker", url: "/ats-checker" }
+];
 
-// WebPage Schema
-const webPageSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Free ATS Resume Checker",
-    "description": "Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations.",
-    "url": `${baseUrl}/ats-checker`,
-    "inLanguage": "en-US",
-    "isPartOf": {
-        "@type": "WebSite",
-        "name": "ProfResume",
-        "url": baseUrl
+const faqs = [
+    {
+        question: "What is an ATS resume checker?",
+        answer: "An ATS resume checker is a tool that analyzes your resume to determine how well it will perform in Applicant Tracking Systems (ATS). It checks for formatting issues, keyword optimization, and overall compatibility with ATS software used by employers to screen candidates."
+    },
+    {
+        question: "How does the ATS checker work?",
+        answer: "Our ATS checker uses advanced AI to simulate how real Applicant Tracking Systems process resumes. Upload your resume (PDF or DOCX) and get an instant compatibility score, keyword analysis, formatting feedback, and specific recommendations to improve your resume's ATS performance."
+    },
+    {
+        question: "Is the ATS checker really free?",
+        answer: "Yes! Our ATS resume checker is completely free to use with no hidden costs, no credit card required, and no watermarks. Upload your resume and get comprehensive analysis instantly."
+    },
+    {
+        question: "Why do I need an ATS-friendly resume?",
+        answer: "95% of Fortune 500 companies and 68% of all employers use ATS to manage hiring. 75% of resumes are rejected by ATS before reaching human recruiters. An ATS-friendly resume significantly increases your chances of getting past the initial screening and landing interviews."
+    },
+    {
+        question: "What file formats are supported?",
+        answer: "We support PDF (.pdf) and Microsoft Word (.docx) file formats. These are the most common resume formats and are widely accepted by ATS systems."
+    },
+    {
+        question: "What does the ATS checker analyze?",
+        answer: "Our ATS checker analyzes multiple aspects: contact information completeness, section structure and headers, formatting compatibility (tables, columns, fonts), keyword optimization, quantifiable achievements, action verbs, and overall ATS compatibility. You'll receive a detailed score and specific recommendations."
     }
-};
-
-// SoftwareApplication Schema
-const softwareAppSchema = {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "ProfResume ATS Checker",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "1250",
-        "bestRating": "5",
-        "worstRating": "1"
-    },
-    "description": "Free AI-powered ATS resume checker that analyzes your resume for compatibility with Applicant Tracking Systems. Get instant feedback on formatting, keywords, and optimization suggestions.",
-    "featureList": [
-        "ATS Compatibility Score",
-        "Keyword Analysis",
-        "Format Check",
-        "AI-Powered Suggestions",
-        "Detailed Feedback",
-        "100% Free Forever"
-    ]
-};
-
-// FAQ Schema
-const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-        {
-            "@type": "Question",
-            "name": "What is an ATS resume checker?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "An ATS resume checker is a tool that analyzes your resume to determine how well it will perform in Applicant Tracking Systems (ATS). It checks for formatting issues, keyword optimization, and overall compatibility with ATS software used by employers to screen candidates."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "How does the ATS checker work?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Our ATS checker uses advanced AI to simulate how real Applicant Tracking Systems process resumes. Upload your resume (PDF or DOCX) and get an instant compatibility score, keyword analysis, formatting feedback, and specific recommendations to improve your resume's ATS performance."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "Is the ATS checker really free?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes! Our ATS resume checker is completely free to use with no hidden costs, no credit card required, and no watermarks. Upload your resume and get comprehensive analysis instantly."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "Why do I need an ATS-friendly resume?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "95% of Fortune 500 companies and 68% of all employers use ATS to manage hiring. 75% of resumes are rejected by ATS before reaching human recruiters. An ATS-friendly resume significantly increases your chances of getting past the initial screening and landing interviews."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "What file formats are supported?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "We support PDF (.pdf) and Microsoft Word (.docx) file formats. These are the most common resume formats and are widely accepted by ATS systems."
-            }
-        },
-        {
-            "@type": "Question",
-            "name": "What does the ATS checker analyze?",
-            "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Our ATS checker analyzes multiple aspects: contact information completeness, section structure and headers, formatting compatibility (tables, columns, fonts), keyword optimization, quantifiable achievements, action verbs, and overall ATS compatibility. You'll receive a detailed score and specific recommendations."
-            }
-        }
-    ]
-};
+];
 
 export default function ATSCheckerMarketingPage() {
     return (
         <div className="min-h-screen bg-white">
-            {/* JSON-LD Structured Data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            <BreadcrumbSchema items={breadcrumbs} />
+            <FAQSchema faqs={faqs} />
+            <ArticleSchema
+                title="Free ATS Resume Checker"
+                description="Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations."
+                url={`${baseUrl}/ats-checker`}
+                datePublished="2024-11-20"
+                dateModified={new Date().toISOString()}
+                author="ProfResume Career Experts"
             />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-            />
+            <GlobalSchema />
 
             {/* Hero Section */}
             <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -181,7 +91,7 @@ export default function ATSCheckerMarketingPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                href="https://edit.profresume.com/ats-check"
+                                href={ENV.EDITOR_URL}
                                 className="bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all group"
                             >
                                 Check My Resume Score
@@ -469,7 +379,7 @@ export default function ATSCheckerMarketingPage() {
                         Join 50,000+ job seekers who've improved their resumes with our free ATS checker
                     </p>
                     <Link
-                        href="https://edit.profresume.com/ats-check"
+                        href={ENV.EDITOR_URL}
                         className="bg-white text-indigo-600 px-8 py-4 rounded-lg font-bold text-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
                     >
                         Check My Resume Now - Free

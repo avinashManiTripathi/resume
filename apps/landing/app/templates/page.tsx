@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
@@ -9,15 +10,15 @@ export const metadata: Metadata = {
     description: 'Browse 50+ professional resume templates designed by experts. All templates are ATS-friendly, customizable, and free to use. Choose from modern, creative, and classic designs.',
     keywords: 'resume templates, CV templates, professional resume, ATS resume templates, free resume templates, modern resume, creative resume, resume design',
     alternates: {
-        canonical: 'https://profresume.com/templates',
+        canonical: "/templates",
     },
     openGraph: {
         title: 'Professional Resume Templates - Free ATS-Friendly Designs',
         description: 'Browse 50+ professional resume templates. ATS-friendly, customizable, and free.',
-        url: 'https://profresume.com/templates',
+        url: "/templates",
         type: 'website',
         images: [{
-            url: 'https://profresume.com/og-templates.jpg',
+            url: "/og-templates.jpg",
             width: 1200,
             height: 630,
             alt: 'Professional Resume Templates',
@@ -27,14 +28,14 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'Professional Resume Templates - Free ATS-Friendly Designs',
         description: 'Browse 50+ professional resume templates. ATS-friendly and customizable.',
-        images: ['https://profresume.com/og-templates.jpg'],
+        images: ["/og-templates.jpg"],
     },
 };
 
 export default function TemplatesPage() {
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Templates", url: "https://profresume.com/templates" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Templates", url: `${ENV.BASE_URL}/templates` }
     ];
 
     const faqs = [

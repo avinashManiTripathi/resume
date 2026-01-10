@@ -1,5 +1,6 @@
 import { FileText, Sparkles, Download, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
 
 export function HowItWorks() {
     const steps = [
@@ -32,13 +33,38 @@ export function HowItWorks() {
         "@type": "HowTo",
         "name": "How to Create a Professional Resume with ProfResume",
         "description": "Step-by-step guide to creating an ATS-friendly resume using our free resume builder in under 5 minutes",
-        "image": "https://profresume.com/how-to-create-resume.png",
+        "image": `${ENV.BASE_URL}/how-to-create-resume.png`,
         "totalTime": "PT5M",
+        "estimatedCost": {
+            "@type": "MonetaryAmount",
+            "currency": "USD",
+            "value": "0"
+        },
+        "supply": [
+            {
+                "@type": "HowToSupply",
+                "name": "Professional Information"
+            },
+            {
+                "@type": "HowToSupply",
+                "name": "Work Experience Details"
+            }
+        ],
+        "tool": [
+            {
+                "@type": "HowToTool",
+                "name": "ProfResume Online Builder"
+            },
+            {
+                "@type": "HowToTool",
+                "name": "Web Browser"
+            }
+        ],
         "step": steps.map((step, index) => ({
             "@type": "HowToStep",
             "name": step.title,
             "text": step.description,
-            "url": `https://profresume.com#step-${index + 1}`
+            "url": `${ENV.BASE_URL}#step-${index + 1}`
         }))
     };
 
@@ -104,7 +130,7 @@ export function HowItWorks() {
                     {/* CTA */}
                     <div className="text-center">
                         <Link
-                            href="https://edit.profresume.com"
+                            href={ENV.EDITOR_URL}
                             target="_blank"
                             className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl group"
                         >

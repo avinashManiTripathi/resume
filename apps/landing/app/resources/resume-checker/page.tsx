@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Free Resume Checker 2026 - ATS Compatibility Scanner & Error Detector | Instant Results',
     description: 'Free online resume checker that scans for formatting errors, typos, ATS compatibility issues, and weak content. Get instant feedback and fix issues before applying. Check your resume in 30 seconds.',
     keywords: 'resume checker, free resume scanner, online resume review, resume builder checker, ats compatibility checker, resume error detector, resume formatting check, resume quality checker',
+    alternates: {
+        canonical: '/resources/resume-checker',
+    },
+    openGraph: {
+        title: 'Free Resume Checker - ATS Compatibility Scanner & Error Detector',
+        description: 'Scan your resume for formatting errors, typos, and ATS issues. Get instant feedback in 30 seconds.',
+        url: '/resources/resume-checker',
+        type: 'website',
+    },
 };
 
 export default function ResumeCheckerPage() {
@@ -28,7 +38,7 @@ export default function ResumeCheckerPage() {
             <ArticleSchema
                 title="Free Resume Checker - Instant ATS & Quality Analysis"
                 description="Get instant feedback on your resume with our professional resume checker. ATS compatibility, formatting, content quality, and improvement suggestions."
-                url="https://profresume.com/resources/resume-checker"
+                url={`${ENV.BASE_URL}/resources/resume-checker`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -86,10 +96,10 @@ export default function ResumeCheckerPage() {
                             Recruiters spend an average of only <strong>6 seconds</strong> looking at a resume. If they spot a typo, formatting glitch, or ATS issue, your application is likely headed for the rejection pile—no matter how qualified you are. A <strong>free resume checker</strong> helps you eliminate these risks before it's too late.
                         </p>
                         <div className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-lg">
-                            <h4 className="font-bold text-red-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-red-900 mb-2 flex items-center gap-2">
                                 <AlertCircle className="w-5 h-5" />
                                 The Harsh Reality
-                            </h4>
+                            </h3>
                             <p className="text-gray-700 mb-3">
                                 <strong>76% of resumes are rejected immediately for typos or formatting errors.</strong> Most job seekers don't even know their resume has issues until they've applied to 50+ jobs with zero callbacks.
                             </p>
@@ -336,10 +346,10 @@ export default function ResumeCheckerPage() {
                         ].map((item, idx) => (
                             <div key={idx} className="bg-gray-50 border-l-4 border-orange-500 rounded-r-lg p-5">
                                 <div className="flex items-start justify-between mb-2">
-                                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                                    <h3 className="font-bold text-gray-900 flex items-center gap-2">
                                         <XCircle className="w-5 h-5 text-red-600" />
                                         {item.issue}
-                                    </h4>
+                                    </h3>
                                     <span className={`px-2 py-1 rounded text-xs font-bold ${item.severity === 'Critical' ? 'bg-red-100 text-red-800' :
                                         item.severity === 'High' ? 'bg-orange-100 text-orange-800' :
                                             'bg-yellow-100 text-yellow-800'
@@ -441,7 +451,7 @@ export default function ResumeCheckerPage() {
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: faq.a }} />
                             </div>
                         ))}
@@ -453,7 +463,7 @@ export default function ResumeCheckerPage() {
                 title="Is Your Resume Ready? Check It Now"
                 subtitle={
                     <>
-                        Get instant feedback on your resume in 30 seconds. Use our free <Link href="https://edit.profresume.com" className="text-green-600 hover:underline font-semibold">resume builder</Link> with built-in checking, or try our <Link href="/resources/ai-resume-review" className="text-green-600 hover:underline font-semibold">AI resume review</Link> for comprehensive analysis.
+                        Get instant feedback on your resume in 30 seconds. Use our free <Link href={`${ENV.EDITOR_URL}/editor`} className="text-green-600 hover:underline font-semibold">resume builder</Link> with built-in checking, or try our <Link href="/resources/ai-resume-review" className="text-green-600 hover:underline font-semibold">AI resume review</Link> for comprehensive analysis.
                     </>
                 }
             />

@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { ENV } from '@/app/env'
 
 interface ArticleSchemaProps {
     title: string
@@ -17,8 +18,9 @@ export function ArticleSchema({
     datePublished = '2024-01-01',
     dateModified = new Date().toISOString(),
     author = 'ProfResume Team',
-    image = 'https://profresume.com/og-image.png'
+    image = `${ENV.BASE_URL}/og-image.png`
 }: ArticleSchemaProps) {
+    const baseUrl = ENV.BASE_URL
     const schema = {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -36,7 +38,7 @@ export function ArticleSchema({
             "name": "ProfResume",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://profresume.com/logo.png"
+                "url": `${baseUrl}/logo.png`
             }
         },
         "image": image,

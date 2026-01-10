@@ -1,20 +1,26 @@
+import { ENV } from "@/app/env";
+import Script from "next/script";
+
 export function ProductSchema() {
+    const baseUrl = ENV.BASE_URL
     const schema = {
         "@context": "https://schema.org",
         "@type": "Product",
         "name": "ProfResume - Free Resume Builder",
-        "image": "https://profresume.com/og-image.png",
+        "image": `${baseUrl}/og-image.png`,
         "description": "Free online resume builder with AI-powered tools, 50+ ATS-friendly templates, and instant PDF/Word export. No credit card required, no watermarks.",
         "brand": {
             "@type": "Brand",
             "name": "ProfResume"
         },
+        "sku": "PR-FREE-V1",
+        "mpn": "PR-FREE-V1",
         "offers": {
             "@type": "Offer",
             "price": "0",
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock",
-            "url": "https://profresume.com"
+            "url": baseUrl
         },
         "aggregateRating": {
             "@type": "AggregateRating",

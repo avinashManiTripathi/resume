@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { Users, Target, TrendingUp, Award, Shield, CheckCircle, Zap, BarChart, Briefcase, Crown } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     description: 'Build a powerful manager resume for team lead, director, and executive roles. Showcase leadership achievements, team management, and strategic impact with ATS-friendly executive templates.',
     keywords: 'manager resume, executive resume, leadership resume, director resume, team lead resume, senior manager resume, management resume builder',
     alternates: {
-        canonical: 'https://profresume.com/resume-builder/manager',
+        canonical: '/resume-builder/manager',
     },
 };
 
@@ -25,9 +26,9 @@ export default function ManagerResumePage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Resume Builder", url: "https://profresume.com/resume-builder" },
-        { name: "Manager", url: "https://profresume.com/resume-builder/manager" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Resume Builder", url: `${ENV.BASE_URL}/resume-builder` },
+        { name: "Manager", url: `${ENV.BASE_URL}/resume-builder/manager` }
     ];
 
     return (
@@ -36,7 +37,7 @@ export default function ManagerResumePage() {
             <ArticleSchema
                 title="Manager Resume Builder 2026 - Executive Leadership Resumes"
                 description="Build a powerful manager resume that showcases leadership, strategic impact, and team achievements. Perfect for directors, VPs, and senior management roles."
-                url="https://profresume.com/resume-builder/manager"
+                url={`${ENV.BASE_URL}/resume-builder/manager`}
             />
             <FAQSchema faqs={faqs} />
 

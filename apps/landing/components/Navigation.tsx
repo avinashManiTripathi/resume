@@ -180,7 +180,7 @@ const navigation = {
   },
   cta: {
     text: "Start Free",
-    href: "https://edit.profresume.com"
+    href: ENV.EDITOR_URL
   }
 };
 

@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Resume Fixer 2026 - Fix Resume Formatting, Gaps & Weak Content | Instant Solutions',
     description: 'Professional resume fixer tool to resolve formatting errors, employment gaps, weak descriptions, and ATS issues. Fix your resume mistakes instantly with expert solutions and examples.',
     keywords: 'resume fixer, repair resume, fix resume formatting, resume gap solutions, fix resume errors, resume repair tool, resume problem solver, fix ats issues',
+    alternates: {
+        canonical: '/resources/resume-fixer',
+    },
+    openGraph: {
+        title: 'Resume Fixer - Fix Formatting, Gaps & Weak Content',
+        description: 'Professional resume fixer tool to resolve formatting errors, employment gaps, and ATS issues.',
+        url: '/resources/resume-fixer',
+        type: 'website',
+    },
 };
 
 export default function ResumeFixerPage() {
@@ -28,7 +38,7 @@ export default function ResumeFixerPage() {
             <ArticleSchema
                 title="Resume Fixer - Fix Common Resume Mistakes Instantly"
                 description="Identify and fix common resume mistakes automatically. Improve formatting, fix typos, optimize keywords, and boost ATS compatibility."
-                url="https://profresume.com/resources/resume-fixer"
+                url={`${ENV.BASE_URL}/resources/resume-fixer`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -86,10 +96,10 @@ export default function ResumeFixerPage() {
                             A "broken" resume is any document that fails to pass through ATS systems or fails to engage a recruiter within 6 seconds—regardless of how qualified you are. Our <strong>Resume Fixer</strong> approach focuses on the most common failure points that cost job seekers thousands of missed opportunities.
                         </p>
                         <div className="bg-orange-50 border-l-4 border-orange-600 p-6 rounded-r-lg">
-                            <h4 className="font-bold text-orange-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-orange-900 mb-2 flex items-center gap-2">
                                 <AlertCircle className="w-5 h-5" />
                                 The Hidden Cost of Resume Problems
-                            </h4>
+                            </h3>
                             <p className="text-gray-700 mb-2">
                                 If you're applying to 50+ jobs with less than 10% callback rate, your resume likely has fixable issues. <strong>Most people don't realize their resume is broken until they've wasted months of job searching.</strong>
                             </p>
@@ -199,7 +209,7 @@ export default function ResumeFixerPage() {
                         ].map((item, idx) => (
                             <div key={idx} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-red-300 transition-colors">
                                 <div className="flex items-start gap-4 mb-4">
-                                    <div className="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
+                                    <div className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">
                                         {item.number}
                                     </div>
                                     <div className="flex-1">
@@ -339,7 +349,7 @@ export default function ResumeFixerPage() {
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: faq.a }} />
                             </div>
                         ))}
@@ -351,7 +361,7 @@ export default function ResumeFixerPage() {
                 title="Ready to Fix Your Resume?"
                 subtitle={
                     <>
-                        Use our <Link href="https://edit.profresume.com" className="text-red-600 hover:underline font-semibold">ATS-friendly resume builder</Link> with automatic formatting fixes, or get instant feedback with our <Link href="/resources/resume-checker" className="text-red-600 hover:underline font-semibold">free resume checker</Link>.
+                        Use our <Link href={`${ENV.EDITOR_URL}/editor`} className="text-red-600 hover:underline font-semibold">ATS-friendly resume builder</Link> with automatic formatting fixes, or get instant feedback with our <Link href="/resources/resume-checker" className="text-red-600 hover:underline font-semibold">free resume checker</Link>.
                     </>
                 }
             />

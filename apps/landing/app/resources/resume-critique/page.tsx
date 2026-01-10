@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Professional Resume Critique Service 2026 - Expert Resume Review & Feedback',
     description: 'Get comprehensive professional resume critique and feedback. Expert analysis of your resume structure, content, formatting, and ATS compatibility. Improve your interview rate by 250%.',
     keywords: 'resume critique, resume feedback, professional resume analysis, resume review guide, resume evaluation, expert resume review, resume assessment',
+    alternates: {
+        canonical: '/resources/resume-critique',
+    },
+    openGraph: {
+        title: 'Professional Resume Critique Service - Expert Review',
+        description: 'Get comprehensive professional resume critique and feedback. Expert analysis of your resume structure and ATS compatibility.',
+        url: '/resources/resume-critique',
+        type: 'website',
+    },
 };
 
 export default function ResumeCritiquePage() {
@@ -28,7 +38,7 @@ export default function ResumeCritiquePage() {
             <ArticleSchema
                 title="Professional Resume Critique Service - Expert Review"
                 description="Get detailed resume critique from industry experts. Comprehensive analysis of formatting, content, keywords, and ATS optimization."
-                url="https://profresume.com/resources/resume-critique"
+                url={`${ENV.BASE_URL}/resources/resume-critique`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -309,10 +319,10 @@ export default function ResumeCritiquePage() {
                             }
                         ].map((item, idx) => (
                             <div key={idx} className="bg-gray-50 rounded-lg p-5 border-l-4 border-red-500">
-                                <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                                <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
                                     <XCircle className="w-5 h-5 text-red-600" />
                                     {item.mistake}
-                                </h4>
+                                </h3>
                                 <p className="text-gray-600 text-sm mb-2"><strong>Why it's wrong:</strong> {item.why}</p>
                                 <p className="text-gray-700 text-sm"><strong>✅ Fix:</strong> {item.fix}</p>
                             </div>
@@ -343,10 +353,13 @@ export default function ResumeCritiquePage() {
                                 "Will it pass ATS (no tables, headers, or graphics)?",
                                 "Is every line adding value or could it be cut?"
                             ].map((question, idx) => (
-                                <div key={idx} className="flex items-start gap-3 bg-white p-3 rounded-lg">
-                                    <input type="checkbox" className="mt-1 w-5 h-5 text-purple-600" />
-                                    <label className="text-gray-700 cursor-pointer">{question}</label>
-                                </div>
+                                <label className="flex items-start gap-3 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="mt-1 w-5 h-5 text-purple-600"
+                                    />
+                                    <span className="text-gray-700">{question}</span>
+                                </label>
                             ))}
                         </div>
                         <div className="mt-6 bg-purple-100 border border-purple-300 rounded-lg p-4">
@@ -401,11 +414,11 @@ export default function ResumeCritiquePage() {
                             },
                             {
                                 q: "Is it okay to use a resume template?",
-                                a: "Yes! Templates ensure professional formatting and structure. However, customize the content completely—never leave placeholder text. Choose ATS-friendly templates (avoid heavy graphics, tables, text boxes). Our <Link href='https://edit.profresume.com' className='text-purple-600 hover:underline font-semibold'>resume builder</Link> offers vetted, ATS-optimized templates."
+                                a: `Yes! Templates ensure professional formatting and structure. However, customize the content completely—never leave placeholder text. Choose ATS-friendly templates (avoid heavy graphics, tables, text boxes). Our <Link href='${ENV.EDITOR_URL}/editor' className='text-purple-600 hover:underline font-semibold'>resume builder</Link> offers vetted, ATS-optimized templates.`
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed">{faq.a}</p>
                             </div>
                         ))}
@@ -422,7 +435,7 @@ export default function ResumeCritiquePage() {
                             Learn about AI resume review
                         </Link>
                         {' '}or{' '}
-                        <Link href="https://edit.profresume.com" className="text-purple-600 hover:underline font-semibold">
+                        <Link href={`${ENV.EDITOR_URL}/editor`} className="text-purple-600 hover:underline font-semibold">
                             build your resume now
                         </Link>
                         .

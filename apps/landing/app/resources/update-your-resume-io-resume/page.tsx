@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { RefreshCw, FileText, ArrowRightLeft, Zap, ShieldCheck, Target } from 'lucide-react';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
@@ -9,6 +10,15 @@ export const metadata: Metadata = {
     title: 'Update Your Resume.io Resume - Professional Resume Overhaul',
     description: 'Looking to update your resume.io resume? Transition to our professional resume builder for more customization, ATS optimization, and better templates.',
     keywords: 'update resume.io resume, resume.io alternative, export resume.io, professional resume update',
+    alternates: {
+        canonical: '/resources/update-your-resume-io-resume',
+    },
+    openGraph: {
+        title: 'Update Your Resume.io Resume - Professional Upgrade',
+        description: 'Transition from resume.io to a professional, high-performance resume builder.',
+        url: '/resources/update-your-resume-io-resume',
+        type: 'website',
+    },
 };
 
 export default function UpdateResumeIoPage() {
@@ -24,15 +34,15 @@ export default function UpdateResumeIoPage() {
         <div className="min-h-screen bg-white">
             <BreadcrumbSchema
                 items={[
-                    { name: "Home", url: "https://profresume.com" },
-                    { name: "Resources", url: "https://profresume.com/resources" },
-                    { name: "Update Resume.io Resume", url: "https://profresume.com/resources/update-your-resume-io-resume" }
+                    { name: "Home", url: ENV.BASE_URL },
+                    { name: "Resources", url: `${ENV.BASE_URL}/resources` },
+                    { name: "Update Resume.io Resume", url: `${ENV.BASE_URL}/resources/update-your-resume-io-resume` }
                 ]}
             />
             <ArticleSchema
                 title="Update Your Resume.io Resume - Migration Guide"
                 description="Comprehensive guide to updating and migrating your Resume.io resume. Tips, best practices, and professional alternatives."
-                url="https://profresume.com/resources/update-your-resume-io-resume"
+                url={`${ENV.BASE_URL}/resources/update-your-resume-io-resume`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero

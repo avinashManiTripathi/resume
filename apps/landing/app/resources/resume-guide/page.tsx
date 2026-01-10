@@ -1,9 +1,22 @@
-"use client";
-
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { FileText, CheckCircle, AlertCircle, Lightbulb, Target, Award, TrendingUp, Users } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'The Ultimate Resume Writing Guide 2026 | ProfResume',
+    description: 'Everything you need to know to create a professional, ATS-friendly resume. Comprehensive guide covering formatting, content, and modern best practices.',
+    alternates: {
+        canonical: '/resources/resume-guide',
+    },
+    openGraph: {
+        title: 'The Ultimate Resume Writing Guide - Expert Advice',
+        description: 'Comprehensive resume writing guide covering formatting, content, and ATS optimization.',
+        url: '/resources/resume-guide',
+    },
+};
 
 export default function ResumeGuidePage() {
     const sections = [
@@ -74,7 +87,7 @@ export default function ResumeGuidePage() {
             <ArticleSchema
                 title="Complete Resume Writing Guide 2026"
                 description="Comprehensive resume writing guide covering formatting, content, ATS optimization, and modern best practices."
-                url="https://profresume.com/resources/resume-guide"
+                url={`${ENV.BASE_URL}/resources/resume-guide`}
             />
             <FAQSchema faqs={faqs} />
             {/* Hero Section */}
@@ -153,7 +166,7 @@ export default function ResumeGuidePage() {
                         Use our resume builder to create an ATS-friendly resume in minutes.
                     </p>
                     <Link
-                        href="https://edit.profresume.com/editor"
+                        href={`${ENV.EDITOR_URL}/editor`}
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <FileText className="w-5 h-5" />

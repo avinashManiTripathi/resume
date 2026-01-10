@@ -1,61 +1,61 @@
-"use client";
+import { Metadata } from "next";
 
-
-
+export const metadata: Metadata = {
+    title: 'Integrations - Connect Your Job Search Cloud | ProfResume',
+    description: 'Sync your resume with LinkedIn, Google Drive, and more. Our upcoming integrations will streamline your application process across all platforms.',
+    alternates: {
+        canonical: '/integrations',
+    },
+    openGraph: {
+        title: 'ProfResume Integrations',
+        description: 'Connect with your favorite platforms soon.',
+        url: '/integrations',
+        type: 'website',
+    },
+};
 
 export default function IntegrationsPage() {
     return (
-        <main className="page">
-
-
-            <section className="hero-simple">
-                <div className="container">
-                    <h1>Integrations</h1>
-                    <p className="lead">Connect ProfResume with your favorite platforms (Coming Soon)</p>
+        <main className="bg-gray-50 min-h-screen">
+            <section className="pt-32 pb-16 px-6 bg-gradient-to-br from-gray-50 to-gray-100 text-center">
+                <div className="max-w-4xl mx-auto">
+                    <h1 className="text-5xl font-black text-gray-900 mb-6">Integrations</h1>
+                    <p className="text-xl text-gray-600">Connect ProfResume with your favorite platforms (Coming Soon)</p>
                 </div>
             </section>
 
-            <section className="integrations">
-                <div className="container">
-                    <div className="integration-grid">
-                        <div className="integration-card coming-soon">
-                            <div className="integration-icon">💼</div>
-                            <h3>LinkedIn</h3>
-                            <p>Import your LinkedIn profile data automatically</p>
-                            <span className="badge">Coming Soon</span>
-                        </div>
-                        <div className="integration-card coming-soon">
-                            <div className="integration-icon">📧</div>
-                            <h3>Email</h3>
-                            <p>Send resumes directly to employers</p>
-                            <span className="badge">Coming Soon</span>
-                        </div>
-                        <div className="integration-card coming-soon">
-                            <div className="integration-icon">☁️</div>
-                            <h3>Cloud Storage</h3>
-                            <p>Save to Google Drive, Dropbox, and more</p>
-                            <span className="badge">Coming Soon</span>
-                        </div>
+            <section className="py-16 px-6">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: "💼",
+                                title: "LinkedIn",
+                                description: "Import your LinkedIn profile data automatically"
+                            },
+                            {
+                                icon: "📧",
+                                title: "Email",
+                                description: "Send resumes directly to employers"
+                            },
+                            {
+                                icon: "☁️",
+                                title: "Cloud Storage",
+                                description: "Save to Google Drive, Dropbox, and more"
+                            }
+                        ].map((item, idx) => (
+                            <div key={idx} className="bg-white p-10 rounded-3xl border-2 border-gray-100 text-center opacity-60 shadow-sm transition-all hover:shadow-md">
+                                <div className="text-5xl mb-4">{item.icon}</div>
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                                <p className="text-gray-500 mb-4">{item.description}</p>
+                                <span className="inline-block bg-amber-100 text-amber-800 px-4 py-1 rounded-full text-sm font-bold">
+                                    Coming Soon
+                                </span>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
-
-
-            <style jsx>{`
-        .page { background: #FAFAFA; min-height: 100vh; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-        .hero-simple { padding: 6rem 2rem 4rem; background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%); text-align: center; }
-        .hero-simple h1 { font-size: 3rem; font-weight: 900; color: #111827; margin-bottom: 1.5rem; }
-        .lead { font-size: 1.25rem; color: #6B7280; }
-        .integrations { padding: 4rem 2rem; }
-        .integration-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-        .integration-card { background: white; padding: 2.5rem; border-radius: 1.5rem; border: 2px solid #E5E7EB; text-align: center; }
-        .integration-card.coming-soon { opacity: 0.6; }
-        .integration-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .integration-card h3 { font-size: 1.5rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem; }
-        .integration-card p { color: #6B7280; margin-bottom: 1rem; }
-        .badge { display: inline-block; background: #FEF3C7; color: #92400E; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.875rem; font-weight: 600; }
-      `}</style>
         </main>
     );
 }

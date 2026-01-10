@@ -1,6 +1,7 @@
 import React from 'react';
 import { LucideIcon, ArrowRight, FileText } from 'lucide-react';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 interface Topic {
     title: string;
@@ -66,7 +67,7 @@ export const ResourceCTA = ({ title, subtitle }: { title: string; subtitle: stri
                 {subtitle}
             </p>
             <Link
-                href="https://edit.profresume.com/editor"
+                href={ENV.EDITOR_URL}
                 className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
             >
                 <FileText className="w-5 h-5" />

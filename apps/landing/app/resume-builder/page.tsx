@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { FileText, Zap, CheckCircle, Award, Target, TrendingUp, Download, Users, Clock, Shield } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -11,12 +12,12 @@ export const metadata: Metadata = {
     description: 'Build your professional resume for free with our AI-powered resume builder. Choose from 20+ ATS-friendly templates, get real-time feedback, and download as PDF. Trusted by 50,000+ professionals.',
     keywords: 'resume builder, free resume builder, professional resume, ATS resume builder, online resume maker, CV builder, resume creator, resume template',
     alternates: {
-        canonical: 'https://profresume.com/resume-builder',
+        canonical: '/resume-builder',
     },
     openGraph: {
         title: 'Free Resume Builder - Create Professional Resumes in Minutes',
         description: 'Build ATS-friendly resumes with AI assistance. 20+ templates, instant PDF download, completely free.',
-        url: 'https://profresume.com/resume-builder',
+        url: '/resume-builder',
         type: 'website',
     },
 };
@@ -31,8 +32,8 @@ export default function ResumeBuilderPage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Resume Builder", url: "https://profresume.com/resume-builder" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Resume Builder", url: `${ENV.BASE_URL}/resume-builder` }
     ];
 
     const resumeTypes = [
@@ -68,7 +69,7 @@ export default function ResumeBuilderPage() {
             <ArticleSchema
                 title="Free Resume Builder 2026 - Create Professional Resumes in Minutes"
                 description="Build your professional resume for free with our AI-powered resume builder. Choose from 20+ ATS-friendly templates and download as PDF."
-                url="https://profresume.com/resume-builder"
+                url={`${ENV.BASE_URL}/resume-builder`}
             />
             <FAQSchema faqs={faqs} />
 

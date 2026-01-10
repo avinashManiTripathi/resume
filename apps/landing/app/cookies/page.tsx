@@ -1,10 +1,20 @@
 import { Metadata } from "next";
 import { Cookie, Shield, Settings, Check, X } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
-    title: "Cookie Policy - Resume Builder",
+    title: "Cookie Policy - ProfResume",
     description: "Learn about how we use cookies to improve your experience on our resume builder platform.",
+    alternates: {
+        canonical: "/cookies",
+    },
+    openGraph: {
+        title: "Cookie Policy - ProfResume",
+        description: "Learn about how we use cookies to improve your experience on our resume builder platform.",
+        url: "/cookies",
+        type: "website",
+    },
 };
 
 export default function CookiesPage() {
@@ -135,8 +145,8 @@ export default function CookiesPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Questions?</h2>
                         <p className="text-gray-700 leading-relaxed mb-4">
                             If you have any questions about our use of cookies, please contact us at{" "}
-                            <a href="mailto:privacy@profresume.com" className="text-blue-600 hover:underline">
-                                privacy@profresume.com
+                            <a href={`mailto:${ENV.PRIVACY_EMAIL}`} className="text-blue-600 hover:underline">
+                                {ENV.PRIVACY_EMAIL}
                             </a>
                         </p>
                         <div className="flex flex-wrap gap-4">
@@ -156,6 +166,6 @@ export default function CookiesPage() {
                     </section>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

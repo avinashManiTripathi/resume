@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Free Resume Scanner 2026 - See Your Resume Through ATS Eyes | Instant Parse Test',
     description: 'Free resume scanner simulates how Applicant Tracking Systems parse your resume. Identify hidden issues, test ATS compatibility, and optimize for automated hiring software. Instant results.',
     keywords: 'resume scanner, ats scanner, resume parser online, check resume for system compatibility, ats simulation, resume parsing test, ats readability test',
+    alternates: {
+        canonical: '/resources/resume-scanner',
+    },
+    openGraph: {
+        title: 'Free Resume Scanner - See Your Resume Through ATS Eyes',
+        description: 'Simulate how ATS systems parse your resume. Identify hidden issues and optimize for automated hiring software.',
+        url: '/resources/resume-scanner',
+        type: 'website',
+    },
 };
 
 export default function ResumeScannerPage() {
@@ -28,7 +38,7 @@ export default function ResumeScannerPage() {
             <ArticleSchema
                 title="Free ATS Resume Scanner - Test Your Resume Score"
                 description="Scan your resume like an ATS would. Get instant compatibility score, keyword analysis, and detailed optimization recommendations."
-                url="https://profresume.com/resources/resume-scanner"
+                url={`${ENV.BASE_URL}/resources/resume-scanner`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -86,10 +96,10 @@ export default function ResumeScannerPage() {
                             Modern recruitment relies on speed and scale—<strong>99% of Fortune 500 companies use Applicant Tracking Systems (ATS)</strong> to filter candidates before human review. A <strong>resume scanner</strong> simulates this first critical filter, showing you exactly what the machine sees.
                         </p>
                         <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
-                            <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
                                 <AlertCircle className="w-5 h-5" />
                                 The ATS Reality
-                            </h4>
+                            </h3>
                             <ul className="space-y-2 text-gray-700">
                                 <li className="flex items-start gap-2">
                                     <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
@@ -247,7 +257,7 @@ export default function ResumeScannerPage() {
                             ].map((rule, idx) => (
                                 <div key={idx} className="bg-gradient-to-br from-gray-50 to-white border-2 border-gray-200 rounded-xl p-6">
                                     <div className="flex justify-center mb-4">{rule.icon}</div>
-                                    <h4 className="font-bold text-gray-900 text-center mb-3">{rule.rule}</h4>
+                                    <h3 className="font-bold text-gray-900 text-center mb-3">{rule.rule}</h3>
                                     <p className="text-sm text-gray-600 text-center mb-4">{rule.explanation}</p>
                                     <div className="bg-white rounded-lg p-3 border border-gray-200">
                                         <p className="text-xs font-semibold text-gray-700 mb-2">Examples:</p>
@@ -297,11 +307,11 @@ export default function ResumeScannerPage() {
                                     score: "Below 60: Poor (Critical Issues)",
                                     color: "red",
                                     meaning: "Your resume is probably unreadable to most ATS systems. This explains zero callback rates despite qualifications.",
-                                    action: "Complete formatting overhaul required. Use our <a href='https://edit.profresume.com' class='text-blue-600 underline font-semibold'>ATS-friendly resume builder</a> templates. Don't try to fix current version—rebuild from scratch."
+                                    action: `Complete formatting overhaul required. Use our <a href='${ENV.EDITOR_URL}/editor' class='text-blue-600 underline font-semibold'>ATS-friendly resume builder</a> templates. Don't try to fix current version—rebuild from scratch.`
                                 }
                             ].map((result, idx) => (
                                 <div key={idx} className={`border-l-4 border-${result.color}-500 bg-${result.color}-50 p-5 rounded-r-lg`}>
-                                    <h4 className={`font-bold text-${result.color}-900 text-lg mb-2`}>{result.score}</h4>
+                                    <h3 className={`font-bold text-${result.color}-900 text-lg mb-2`}>{result.score}</h3>
                                     <p className="text-gray-700 mb-3"><strong>What it means:</strong> {result.meaning}</p>
                                     <p className="text-gray-700 text-sm" dangerouslySetInnerHTML={{ __html: `<strong>Action steps:</strong> ${result.action}` }} />
                                 </div>
@@ -350,7 +360,7 @@ export default function ResumeScannerPage() {
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed" dangerouslySetInnerHTML={{ __html: faq.a }} />
                             </div>
                         ))}
@@ -362,7 +372,7 @@ export default function ResumeScannerPage() {
                 title="Scan Your Resume for Free"
                 subtitle={
                     <>
-                        Ensure your resume is 100% machine-readable before you apply. Use our <Link href="https://edit.profresume.com" className="text-blue-600 hover:underline font-semibold">ATS-optimized resume builder</Link> with built-in scanning, or get comprehensive analysis with our <Link href="/resources/ai-resume-review" className="text-blue-600 hover:underline font-semibold">AI resume review</Link>.
+                        Ensure your resume is 100% machine-readable before you apply. Use our <Link href={`${ENV.EDITOR_URL}/editor`} className="text-blue-600 hover:underline font-semibold">ATS-optimized resume builder</Link> with built-in scanning, or get comprehensive analysis with our <Link href="/resources/ai-resume-review" className="text-blue-600 hover:underline font-semibold">AI resume review</Link>.
                     </>
                 }
             />

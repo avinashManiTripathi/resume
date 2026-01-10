@@ -1,7 +1,7 @@
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { ENV } from "./env";
 import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
@@ -11,7 +11,7 @@ import { WhyChooseUs } from "@/components/WhyChooseUs";
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "https://profresume.com",
+    canonical: "/",
   },
 };
 
@@ -46,7 +46,7 @@ export default async function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link target="_blank" href={"https://edit.profresume.com"} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <Link target="_blank" href={ENV.EDITOR_URL} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Resume Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -336,7 +336,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="https://edit.profresume.com/editor"
+                href={ENV.EDITOR_URL}
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Start Writing with AI
@@ -504,7 +504,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="https://edit.profresume.com/cover-letter"
+                href={`${ENV.EDITOR_URL}/cover-letter`}
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Create Cover Letter
@@ -760,7 +760,7 @@ export default async function LandingPage() {
               <div className="rounded-2xl overflow-hidden shadow-2xl relative h-[500px]">
                 <Image
                   src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop&q=80"
-                  alt="Team collaboration"
+                  alt="Professional team discussing resume optimization and ATS compliance"
                   fill
                   className="object-cover"
                 />
@@ -818,7 +818,7 @@ export default async function LandingPage() {
                 <div className="h-64 md:h-auto relative">
                   <Image
                     src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80"
-                    alt="Professional woman"
+                    alt="Sarah Martinez - Software Engineer success story using ProfResume"
                     fill
                     className="object-cover"
                   />
@@ -848,7 +848,7 @@ export default async function LandingPage() {
                 <div className="h-64 md:h-auto relative">
                   <Image
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80"
-                    alt="Professional man"
+                    alt="James Chen - Product Manager success story using AI resume tailoring"
                     fill
                     className="object-cover"
                   />
@@ -1031,7 +1031,7 @@ export default async function LandingPage() {
 
           <div className="text-center mt-12">
             <Link
-              href="https://edit.profresume.com/editor"
+              href={ENV.EDITOR_URL + "/editor"}
               className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
             >
               Get Started Now - It's Free
@@ -1057,7 +1057,7 @@ export default async function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href={"https://edit.profresume.com"}
+              href={ENV.EDITOR_URL}
               className="bg-white text-blue-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl flex items-center justify-center gap-3 group"
             >
               Create Your Resume Now

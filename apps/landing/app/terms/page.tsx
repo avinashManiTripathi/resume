@@ -1,6 +1,20 @@
-"use client";
-
 import { IntroSection } from "@/components/IntroSection";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Terms of Service - ProfResume",
+    description: "Read our terms of service to understand your rights and responsibilities when using our resume builder.",
+    alternates: {
+        canonical: "/terms",
+    },
+    openGraph: {
+        title: "Terms of Service - ProfResume",
+        description: "Read our terms of service to understand your rights and responsibilities.",
+        url: "/terms",
+        type: "website",
+    },
+};
 
 export default function TermsPage() {
     return (
@@ -77,12 +91,9 @@ export default function TermsPage() {
                             8. Contact
                         </h2>
                         <p className="text-gray-600 leading-relaxed">
-                            For questions about these Terms, contact us at{" "}
-                            <a
-                                href="mailto:legal@ProfResume.com"
-                                className="text-blue-600 font-medium hover:underline"
-                            >
-                                legal@ProfResume.com
+                            If you have any questions about these Terms, please contact us at{" "}
+                            <a href={`mailto:${ENV.LEGAL_EMAIL}`} className="text-blue-600 hover:underline">
+                                {ENV.LEGAL_EMAIL}
                             </a>
                         </p>
                     </div>

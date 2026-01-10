@@ -4,15 +4,20 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema'
 import { ArticleSchema } from '@/components/ArticleSchema'
 import { FAQSchema } from '@/components/FAQSchema'
 import { BREADCRUMBS } from '@/constants/breadcrumbs'
+import { ENV } from "@/app/env";
 import KeywordGeneratorClient from "./KeywordGeneratorClient";
 
 export const metadata: Metadata = {
     title: "Free Resume Keyword Generator 2026 - Extract ATS Keywords from Job Descriptions",
     description: "Free AI-powered resume keyword generator. Extract critical skills and keywords from any job description in seconds. Optimize your resume for ATS and beat the 75% rejection rate. Instant results.",
     keywords: "resume keyword generator, ats optimization, job description analyzer, resume keywords, resume skills extraction, ats keywords, keyword optimization tool, resume scanner, ats checker",
+    alternates: {
+        canonical: '/resources/resume-keyword-generator',
+    },
     openGraph: {
         title: "Free Resume Keyword Generator | Beat ATS Systems",
         description: "Extract the most important keywords from job descriptions to optimize your resume for ATS. Free tool with instant results.",
+        url: '/resources/resume-keyword-generator',
         type: "website",
     }
 };
@@ -32,7 +37,7 @@ export default function ResumeKeywordGeneratorPage() {
             <ArticleSchema
                 title="Resume Keyword Generator - ATS Optimization Tool"
                 description="Generate optimized keywords for your resume based on job descriptions. Improve ATS compatibility and recruiter visibility."
-                url="https://profresume.com/resources/resume-keyword-generator"
+                url={`${ENV.BASE_URL}/resources/resume-keyword-generator`}
             />
             <FAQSchema faqs={faqs} />
             <KeywordGeneratorClient />

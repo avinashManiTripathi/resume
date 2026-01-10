@@ -1,9 +1,22 @@
-"use client";
-
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { Briefcase, TrendingUp, Users, Target, Lightbulb, BookOpen, Award, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Career Tips & Job Search Strategy 2026 | ProfResume',
+    description: 'Expert career advice and job search strategies. Learn how to discover hidden opportunities, improve your networking, and land your dream job faster.',
+    alternates: {
+        canonical: '/resources/career-tips',
+    },
+    openGraph: {
+        title: 'Career Tips & Job Search Strategy',
+        description: 'Expert career advice and job search strategies to help you land your dream job.',
+        url: '/resources/career-tips',
+    },
+};
 
 export default function CareerTipsPage() {
     const tips = [
@@ -128,7 +141,7 @@ export default function CareerTipsPage() {
             <ArticleSchema
                 title="Career Tips & Job Search Strategies"
                 description="Expert career tips and job search strategies. Interview prep, networking, salary negotiation, and career development advice."
-                url="https://profresume.com/resources/career-tips"
+                url={`${ENV.BASE_URL}/resources/career-tips`}
             />
             <FAQSchema faqs={faqs} />
 
@@ -218,7 +231,7 @@ export default function CareerTipsPage() {
                     </p>
 
                     <Link
-                        href="https://edit.profresume.com/editor"
+                        href={`${ENV.EDITOR_URL}/editor`}
                         className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <BookOpen className="w-5 h-5" />

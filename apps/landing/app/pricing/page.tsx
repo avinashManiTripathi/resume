@@ -1,4 +1,19 @@
 import { Check, Sparkles, Zap, Crown, Shield, Star } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Pricing - Choose Your Plan | ProfResume',
+    description: 'Affordable pricing for every job seeker. Start free and upgrade to Pro or Premium for advanced AI features and unlimited downloads.',
+    alternates: {
+        canonical: '/pricing',
+    },
+    openGraph: {
+        title: 'Simple and Transparent Pricing | ProfResume',
+        description: 'Choose the right plan for your career. Free, Pro, and Premium options available.',
+        url: '/pricing',
+        type: 'website',
+    },
+};
 
 
 const pricingTiers = [

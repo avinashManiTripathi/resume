@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
-import { Building2, Users, Rocket, BarChart3, Globe, ShieldCheck, Award, TrendingUp, CheckCircle, Target, Briefcase, GraduationCap } from 'lucide-react';
+import { Users, Building2, Shield, Zap, Globe, BarChart3, Clock, CheckCircle, ArrowRight, Mail, Rocket, Award, TrendingUp, Target, Briefcase, GraduationCap, ShieldCheck } from 'lucide-react';
+import { ENV } from "@/app/env";
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
@@ -8,8 +9,17 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
     title: 'Resume Solutions for Organizations 2026 - Enterprise Resume Tools for Teams & Universities',
-    description: 'Enterprise resume builder solutions forHR teams, universities, and career services. Bulk licensing, white-label options, and analytics dashboard. Empower 100s-1000s of users with professional resume tools.',
+    description: 'Enterprise resume builder solutions for HR teams, universities, and career services. Bulk licensing, white-label options, and analytics dashboard. Empower 100s-1000s of users with professional resume tools.',
     keywords: 'resume tools for organizations, b2b resume builder, employee outplacement tools, university career services software, enterprise resume solution, bulk resume licensing, white-label resume builder',
+    alternates: {
+        canonical: '/resources/for-organizations',
+    },
+    openGraph: {
+        title: 'Resume Solutions for Organizations - Enterprise Resume Tools',
+        description: 'Enterprise resume builder solutions for HR teams, universities, and career services.',
+        url: '/resources/for-organizations',
+        type: 'website',
+    },
 };
 
 export default function ForOrganizationsPage() {
@@ -25,15 +35,15 @@ export default function ForOrganizationsPage() {
         <div className="min-h-screen bg-white">
             <BreadcrumbSchema
                 items={[
-                    { name: "Home", url: "https://profresume.com" },
-                    { name: "Resources", url: "https://profresume.com/resources" },
-                    { name: "For Organizations", url: "https://profresume.com/resources/for-organizations" }
+                    { name: "Home", url: ENV.BASE_URL },
+                    { name: "Resources", url: `${ENV.BASE_URL}/resources` },
+                    { name: "For Organizations", url: `${ENV.BASE_URL}/resources/for-organizations` }
                 ]}
             />
             <ArticleSchema
                 title="Resume Tools for Organizations - Enterprise Solutions"
                 description="Professional resume tools for universities, career centers, and HR departments. Bulk licensing, white-label options, and dedicated support."
-                url="https://profresume.com/resources/for-organizations"
+                url={`${ENV.BASE_URL}/resources/for-organizations`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -146,7 +156,7 @@ export default function ForOrganizationsPage() {
                                     </div>
                                 </div>
                                 <div className="ml-12">
-                                    <h4 className="font-semibold text-gray-900 mb-3">Common Use Cases:</h4>
+                                    <h3 className="font-semibold text-gray-900 mb-3">Common Use Cases:</h3>
                                     <ul className="space-y-2 mb-4">
                                         {sector.useCases.map((useCase, uidx) => (
                                             <li key={uidx} className="flex items-start gap-2 text-gray-700">
@@ -224,7 +234,7 @@ export default function ForOrganizationsPage() {
                                             <span className="bg-yellow-400 text-gray-900 px-3 py-1 rounded-full text-xs font-bold">MOST POPULAR</span>
                                         </div>
                                     )}
-                                    <h4 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.tier}</h4>
+                                    <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.tier}</h3>
                                     <p className={`text-sm mb-4 ${plan.popular ? 'text-blue-100' : 'text-gray-600'}`}>{plan.range}</p>
                                     <p className={`text-3xl font-bold mb-6 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>{plan.price}</p>
                                     <ul className="space-y-3 mb-6">
@@ -292,7 +302,7 @@ export default function ForOrganizationsPage() {
                                 }
                             ].map((phase, idx) => (
                                 <div key={idx} className="bg-white border-2 border-gray-200 rounded-lg p-6">
-                                    <h4 className="font-bold text-gray-900 mb-4">{phase.phase}</h4>
+                                    <h3 className="font-bold text-gray-900 mb-4">{phase.phase}</h3>
                                     <ul className="space-y-2">
                                         {phase.items.map((item, iidx) => (
                                             <li key={iidx} className="flex items-start gap-2 text-sm text-gray-600">
@@ -355,7 +365,7 @@ export default function ForOrganizationsPage() {
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed">{faq.a}</p>
                             </div>
                         ))}
@@ -368,7 +378,7 @@ export default function ForOrganizationsPage() {
                 subtitle={
                     <>
                         Schedule a demo to see how our enterprise resume solutions can benefit your team. Contact our sales team at{' '}
-                        <a href="mailto:enterprise@profresume.com" className="text-blue-600 hover:underline font-semibold">enterprise@profresume.com</a>
+                        <a href={`mailto:${ENV.ENTERPRISE_EMAIL}`} className="text-blue-600 hover:underline font-semibold">{ENV.ENTERPRISE_EMAIL}</a>
                         {' '}or fill out our{' '}
                         <Link href="/contact" className="text-blue-600 hover:underline font-semibold">contact form</Link>
                         {' '}to get started.

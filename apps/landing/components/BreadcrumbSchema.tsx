@@ -1,4 +1,5 @@
 import Script from 'next/script'
+import { ENV } from '@/app/env'
 
 interface BreadcrumbItem {
     name: string
@@ -17,7 +18,7 @@ export function BreadcrumbSchema({ items }: BreadcrumbSchemaProps) {
             "@type": "ListItem",
             "position": index + 1,
             "name": item.name,
-            "item": item.url
+            "item": item.url.startsWith('http') ? item.url : `${ENV.BASE_URL}${item.url.startsWith('/') ? '' : '/'}${item.url}`
         }))
     }
 

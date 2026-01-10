@@ -4,16 +4,17 @@ import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import { GlobalSchema } from "@/components/SchemaMarkup";
 import { primaryFont } from "@repo/fonts";
+import { ENV } from "./env";
 
 // Base URL configuration
-const baseUrl = 'https://profresume.com';
+const baseUrl = ENV.BASE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
 
   // Canonical URL (Critical for SEO)
   alternates: {
-    canonical: baseUrl,
+    canonical: '/',
   },
 
   // Basic Metadata
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "ProfResume",
     images: [
       {
-        url: `${baseUrl}/og-image.png`,
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: "ProfResume - Professional Resume Builder",
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Professional Resume Builder | ProfResume",
     description: "Build ATS-friendly resumes in minutes. 20+ templates, AI feedback, instant PDF download.",
-    images: [`${baseUrl}/og-image.png`],
+    images: ['/og-image.png'],
     creator: "@profresume",
   },
 

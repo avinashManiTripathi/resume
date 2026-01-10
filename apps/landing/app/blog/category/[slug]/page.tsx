@@ -2,6 +2,7 @@ import { Calendar, Clock, ArrowLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { ENV } from "@/app/env";
 
 // Blog posts database (in a real app, this would come from a CMS or database)
 const allBlogPosts = [
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const baseUrl = "https://profresume.com";
+    const baseUrl = ENV.BASE_URL;
     const categoryUrl = `${baseUrl}/blog/category/${slug}`;
 
     const categoryPosts = allBlogPosts.filter(post =>
@@ -60,18 +61,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         creator: "ProfResume",
         publisher: "ProfResume",
         alternates: {
-            canonical: categoryUrl,
+            canonical: `/blog/category/${slug}`,
         },
         openGraph: {
             title: `${category.name} Articles | ProfResume Blog`,
             description: category.description,
-            url: categoryUrl,
+            url: `/blog/category/${slug}`,
             siteName: "ProfResume",
             locale: "en_US",
             type: "website",
             images: [
                 {
-                    url: `${baseUrl}/og-image.png`,
+                    url: `/og-image.png`,
                     width: 1200,
                     height: 630,
                     alt: `ProfResume ${category.name} Blog`,
@@ -82,7 +83,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: "summary_large_image",
             title: `${category.name} - Resume & Career Advice`,
             description: category.description,
-            images: [`${baseUrl}/og-image.png`],
+            images: [`/og-image.png`],
             creator: "@profresume",
         },
         robots: {
@@ -121,7 +122,7 @@ export default async function CategoryPage({ params }: PageProps) {
         post.category.toLowerCase().replace(/\s+/g, '-').replace(/&/g, '') === slug.replace(/&/g, '')
     );
 
-    const baseUrl = "https://profresume.com";
+    const baseUrl = ENV.BASE_URL;
     const categoryUrl = `${baseUrl}/blog/category/${slug}`;
 
     // JSON-LD Structured Data

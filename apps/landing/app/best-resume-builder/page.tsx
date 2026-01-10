@@ -4,18 +4,19 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Best Resume Builder 2026 - AI-Powered Professional Resume Maker',
     description: 'Create winning resumes with the best AI-powered resume builder. 20+ ATS-friendly templates, voice input, job-specific tailoring, and unlimited free access. Trusted by 50,000+ job seekers.',
     keywords: 'best resume builder, resume builder, AI resume builder, professional resume maker, ATS resume builder, resume creator',
     alternates: {
-        canonical: 'https://profresume.com/best-resume-builder',
+        canonical: '/best-resume-builder',
     },
     openGraph: {
         title: 'Best Resume Builder 2026 - AI-Powered & ATS-Friendly',
         description: 'The most advanced resume builder with AI writing, voice input, and job-specific optimization. Get hired faster.',
-        url: 'https://profresume.com/best-resume-builder',
+        url: '/best-resume-builder',
         type: 'article',
     },
 };
@@ -33,8 +34,8 @@ export default function BestResumeBuilderPage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Best Resume Builder", url: "https://profresume.com/best-resume-builder" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Best Resume Builder", url: `${ENV.BASE_URL}/best-resume-builder` }
     ];
 
     const keyFeatures = [
@@ -110,7 +111,7 @@ export default function BestResumeBuilderPage() {
             <ArticleSchema
                 title="Best Resume Builder 2026 - Professional Resume Maker"
                 description="Discover the most advanced resume builder with AI-powered features, voice input, and ATS optimization to help you land your dream job."
-                url="https://profresume.com/best-resume-builder"
+                url={`${ENV.BASE_URL}/best-resume-builder`}
                 datePublished="2026-01-01"
                 dateModified="2026-01-08"
                 author="ProfResume"
@@ -153,7 +154,7 @@ export default function BestResumeBuilderPage() {
                     {/* CTA */}
                     <div className="text-center mb-8">
                         <Link
-                            href="https://edit.profresume.com/editor"
+                            href={ENV.EDITOR_URL}
                             className="inline-flex items-center gap-2 px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold text-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-2xl"
                         >
                             Start Building Your Resume <ArrowRight className="w-6 h-6" />
@@ -307,7 +308,7 @@ export default function BestResumeBuilderPage() {
                             Plus unique features like voice input and job description matching that no other builder offers.
                         </p>
                         <Link
-                            href="https://edit.profresume.com/editor"
+                            href={ENV.EDITOR_URL}
                             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                         >
                             Try It Free Now <ArrowRight className="w-5 h-5" />
@@ -344,7 +345,7 @@ export default function BestResumeBuilderPage() {
                         Join 50,000+ professionals who've landed their dream jobs using our AI-powered resume builder
                     </p>
                     <Link
-                        href="https://edit.profresume.com/editor"
+                        href={ENV.EDITOR_URL}
                         className="inline-flex items-center gap-2 px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl"
                     >
                         Start Building Free <ArrowRight className="w-6 h-6" />

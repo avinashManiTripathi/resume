@@ -1,18 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-    Search,
-    FileText,
-    Zap,
-    Target,
-    ShieldCheck,
-    Lightbulb,
-    ArrowRight,
-    Copy,
-    CheckCircle2,
-    RefreshCw
-} from "lucide-react";
+import { RefreshCw, Search, Target, FileText, ArrowRight, Zap, Copy, CheckCircle, Brain, Sparkles, ShieldCheck, Lightbulb } from 'lucide-react';
+import { ENV } from "@/app/env";
 import Link from "next/link";
 
 export default function KeywordGeneratorClient() {
@@ -222,7 +212,7 @@ export default function KeywordGeneratorClient() {
 
                         <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
                             <div className="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-6">
-                                <CheckCircle2 className="w-8 h-8" />
+                                <CheckCircle className="w-8 h-8" />
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-4">Improve Relevancy</h3>
                             <p className="text-gray-600 leading-relaxed">
@@ -274,7 +264,7 @@ export default function KeywordGeneratorClient() {
                     </p>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <Link
-                            href="https://edit.profresume.com/editor"
+                            href={`${ENV.EDITOR_URL}/editor`}
                             className="inline-flex items-center justify-center gap-2 bg-white text-indigo-600 px-10 py-5 rounded-full font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl hover:scale-105 active:scale-95"
                         >
                             Build My Resume

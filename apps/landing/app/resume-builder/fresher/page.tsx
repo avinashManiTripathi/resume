@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { GraduationCap, Sparkles, TrendingUp, Target, Award, CheckCircle, Lightbulb, Users, FileText, Rocket } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     description: 'Build your first professional resume with our fresher-focused builder. Highlight internships, projects, coursework, and skills even without work experience. Land your first job faster.',
     keywords: 'fresher resume, entry level resume, first job resume, graduate resume, student resume builder, resume for beginners, no experience resume',
     alternates: {
-        canonical: 'https://profresume.com/resume-builder/fresher',
+        canonical: '/resume-builder/fresher',
     },
 };
 
@@ -25,9 +26,9 @@ export default function FresherResumePage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Resume Builder", url: "https://profresume.com/resume-builder" },
-        { name: "Fresher", url: "https://profresume.com/resume-builder/fresher" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Resume Builder", url: `${ENV.BASE_URL}/resume-builder` },
+        { name: "Fresher", url: `${ENV.BASE_URL}/resume-builder/fresher` }
     ];
 
     return (
@@ -36,7 +37,7 @@ export default function FresherResumePage() {
             <ArticleSchema
                 title="Fresher Resume Builder 2026 - Land Your First Job"
                 description="Build a professional entry-level resume that gets interviews even without work experience. Perfect for recent graduates and career starters."
-                url="https://profresume.com/resume-builder/fresher"
+                url={`${ENV.BASE_URL}/resume-builder/fresher`}
             />
             <FAQSchema faqs={faqs} />
 

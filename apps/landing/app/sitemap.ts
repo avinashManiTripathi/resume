@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { ENV } from './env'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = 'https://profresume.com'
+    const baseUrl = ENV.BASE_URL
     const currentDate = new Date()
 
     // Homepage (highest priority)

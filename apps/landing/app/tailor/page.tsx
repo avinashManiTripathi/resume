@@ -1,21 +1,22 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Check, Target, Sparkles, Zap, Brain, TrendingUp, Shield } from 'lucide-react';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'AI Resume Tailoring - Customize Your Resume for Any Job | ProfResume',
     description: 'Tailor your resume to any job in 30 seconds with AI. Paste a job description and get an optimized resume that matches requirements and passes ATS. Increase your interview chances by 3x.',
     keywords: 'AI resume tailoring, job-specific resume, ATS optimization, resume customization, job description matching, AI resume optimizer',
     alternates: {
-        canonical: 'https://profresume.com/tailor',
+        canonical: '/tailor',
     },
     openGraph: {
         title: 'AI Resume Tailoring - Match Any Job in 30 Seconds',
         description: 'Use AI to tailor your resume for any job. Automatic keyword optimization, ATS-friendly formatting, and skill highlighting.',
-        url: 'https://profresume.com/tailor',
+        url: '/tailor',
         type: 'website',
         images: [{
-            url: 'https://profresume.com/og-tailor.jpg',
+            url: '/og-tailor.jpg',
             width: 1200,
             height: 630,
             alt: 'AI Resume Tailoring',
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'AI Resume Tailoring - Match Any Job in 30 Seconds',
         description: 'Tailor your resume to any job with AI. Increase interview chances by 3x.',
-        images: ['https://profresume.com/og-tailor.jpg'],
+        images: ['/og-tailor.jpg'],
     },
 };
 
@@ -52,7 +53,7 @@ export default function TailorPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                href="https://edit.profresume.com/tailor"
+                                href={ENV.EDITOR_URL}
                                 className="bg-purple-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-purple-700 shadow-lg hover:shadow-xl transition-all group"
                             >
                                 Start Tailoring Now
@@ -205,7 +206,7 @@ export default function TailorPage() {
                         Start tailoring your resume today and see the difference it makes
                     </p>
                     <Link
-                        href="https://edit.profresume.com/tailor"
+                        href={ENV.EDITOR_URL}
                         className="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
                     >
                         Tailor Your Resume Now

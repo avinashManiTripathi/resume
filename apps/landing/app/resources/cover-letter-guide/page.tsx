@@ -1,9 +1,22 @@
-"use client";
-
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { Mail, CheckCircle, FileText, Lightbulb, Target, Award } from "lucide-react";
 import Link from "next/link";
+import { ENV } from "@/app/env";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Cover Letter Writing Guide 2026 - Templates & Examples | ProfResume',
+    description: 'Learn how to write compelling cover letters that get noticed. Templates, examples, and proven strategies for success in every job application.',
+    alternates: {
+        canonical: '/resources/cover-letter-guide',
+    },
+    openGraph: {
+        title: 'Cover Letter Writing Guide - Templates & Examples',
+        description: 'Learn how to write compelling cover letters that get noticed with our comprehensive guide.',
+        url: '/resources/cover-letter-guide',
+    },
+};
 
 export default function CoverLetterGuidePage() {
     const faqs = [
@@ -19,7 +32,7 @@ export default function CoverLetterGuidePage() {
             <ArticleSchema
                 title="Cover Letter Writing Guide - Templates & Examples"
                 description="Learn how to write compelling cover letters that get noticed. Templates, examples, and proven strategies for success."
-                url="https://profresume.com/resources/cover-letter-guide"
+                url={`${ENV.BASE_URL}/resources/cover-letter-guide`}
             />
             <FAQSchema faqs={faqs} />
 
@@ -170,7 +183,7 @@ export default function CoverLetterGuidePage() {
                         Build a professional resume that pairs perfectly with your cover letter.
                     </p>
                     <Link
-                        href="https://edit.profresume.com/editor"
+                        href={`${ENV.EDITOR_URL}/editor`}
                         className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all shadow-xl"
                     >
                         <Award className="w-5 h-5" />

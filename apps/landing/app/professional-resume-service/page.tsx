@@ -4,13 +4,20 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Professional Resume Service vs Resume Builder - Which is Right for You?',
     description: 'Compare professional resume writing services ($200-$800) vs resume builders (free-$30/mo). See which option gets you hired faster. Expert analysis and cost breakdown included.',
     keywords: 'professional resume service, resume writing service, resume builder vs service, professional resume writer, resume service cost',
     alternates: {
-        canonical: 'https://profresume.com/professional-resume-service',
+        canonical: '/professional-resume-service',
+    },
+    openGraph: {
+        title: 'Professional Resume Service vs Resume Builder',
+        description: 'Compare professional resume writing services with resume builders. Expert analysis and cost breakdown included.',
+        url: '/professional-resume-service',
+        type: 'article',
     },
 };
 
@@ -25,8 +32,8 @@ export default function ProfessionalResumeServicePage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Professional Resume Service", url: "https://profresume.com/professional-resume-service" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Professional Resume Service", url: `${ENV.BASE_URL}/professional-resume-service` }
     ];
 
     const comparisonData = [
@@ -47,7 +54,7 @@ export default function ProfessionalResumeServicePage() {
             <ArticleSchema
                 title="Professional Resume Service vs Resume Builder"
                 description="Compare professional resume writing services with resume builders. Expert analysis helps you choose the right option for your career."
-                url="https://profresume.com/professional-resume-service"
+                url={`${ENV.BASE_URL}/professional-resume-service`}
                 datePublished="2026-01-01"
                 dateModified="2026-01-08"
             />

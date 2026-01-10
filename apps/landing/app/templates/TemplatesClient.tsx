@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTemplates } from '@repo/hooks/useTemplate';
 import { Sparkles, Search, Crown } from 'lucide-react';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export default function TemplatesPageClient() {
     const { templates, loading, error, isCached } = useTemplates();
@@ -59,17 +60,26 @@ export default function TemplatesPageClient() {
                             />
                         </div>
                         <div className="md:w-64">
+                            <label htmlFor="category-select" className="sr-only">
+                                Select category
+                            </label>
+
                             <select
+                                id="category-select"
                                 value={selectedCategory}
                                 onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg
+             focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                             >
-                                {categories.map((cat: string = '') => (
+                                {categories.map((cat: string = "") => (
                                     <option key={cat} value={cat}>
-                                        {cat === 'all' ? 'All Categories' : cat?.charAt(0).toUpperCase() + cat?.slice(1)}
+                                        {cat === "all"
+                                            ? "All Categories"
+                                            : cat.charAt(0).toUpperCase() + cat.slice(1)}
                                     </option>
                                 ))}
                             </select>
+
                         </div>
                     </div>
                 </div>
@@ -324,14 +334,14 @@ export default function TemplatesPageClient() {
                         {filteredTemplates.map((template) => (
                             <Link
                                 key={template._id}
-                                href={`https://edit.profresume.com/editor?templateId=${template._id}`}
+                                href={`${ENV.EDITOR_URL}/editor?templateId=${template._id}`}
                                 className="group bg-white rounded-xl border-2 border-gray-200 hover:border-blue-500 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-xl"
                             >
                                 {/* Template Preview */}
                                 <div className="p-[16px] bg-white aspect-[8.5/11] bg-gray-100 relative overflow-hidden">
                                     {template.thumbnail ? (
                                         <img
-                                            src={"https://api.profresume.com" + template.thumbnail}
+                                            src={ENV.API_URL + template.thumbnail}
                                             alt={template.name}
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                         />
@@ -387,7 +397,7 @@ export default function TemplatesPageClient() {
                         "@type": "CollectionPage",
                         "name": "Professional Resume Templates",
                         "description": "Browse our collection of ATS-friendly professional resume templates",
-                        "url": "https://profresume.com/templates",
+                        "url": `${ENV.BASE_URL}/templates`,
                         "mainEntity": {
                             "@type": "ItemList",
                             "numberOfItems": templates?.length || 0,
@@ -398,7 +408,7 @@ export default function TemplatesPageClient() {
                                     "@type": "CreativeWork",
                                     "name": template.name,
                                     "description": template.description || `Professional ${template.name} resume template`,
-                                    "url": `https://profresume.com/editor?templateId=${template._id}`
+                                    "url": `${ENV.EDITOR_URL}/editor?templateId=${template._id}`
                                 }
                             }))
                         }

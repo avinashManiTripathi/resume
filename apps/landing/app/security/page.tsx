@@ -1,5 +1,6 @@
 import { Metadata } from "next";
-import { Shield, Lock, Key, Server, Eye, FileCheck, AlertTriangle, Check } from "lucide-react";
+import { Shield, Lock, Key, Server, Eye, FileCheck, AlertTriangle, Check, CheckCircle, Search, Mail, ArrowLeft } from "lucide-react";
+import { ENV } from "@/app/env";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -147,8 +148,8 @@ export default function SecurityPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Security Concerns?</h2>
                         <p className="text-gray-700 leading-relaxed mb-4">
                             If you have discovered a security vulnerability or have questions about our security practices, please contact our security team at{" "}
-                            <a href="mailto:security@profresume.com" className="text-blue-600 hover:underline">
-                                security@profresume.com
+                            <a href={`mailto:${ENV.SECURITY_EMAIL}`} className="text-blue-600 hover:underline">
+                                {ENV.SECURITY_EMAIL}
                             </a>
                         </p>
                         <div className="flex flex-wrap gap-4">

@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'AI Resume Review 2026 - Instant Professional Feedback & ATS Optimization | Free Tool',
     description: 'Get instant AI-powered resume review and feedback. Analyze ATS compatibility, keyword optimization, and formatting in seconds. Increase interview callbacks by 200%. Free AI resume scanner.',
     keywords: 'ai resume review, automated resume feedback, resume analysis, ats review, ai resume scanner, resume optimization tool, ai resume checker, resume feedback ai',
+    alternates: {
+        canonical: '/resources/ai-resume-review',
+    },
+    openGraph: {
+        title: 'AI Resume Review - Instant Professional Feedback',
+        description: 'Get AI-powered resume review with actionable suggestions.',
+        url: '/resources/ai-resume-review',
+        type: 'article',
+    },
 };
 
 export default function AIResumeReviewPage() {
@@ -28,7 +38,7 @@ export default function AIResumeReviewPage() {
             <ArticleSchema
                 title="AI Resume Review - Instant Professional Feedback"
                 description="Get AI-powered resume review with actionable suggestions. Instant analysis of content, keywords, formatting, and ATS optimization."
-                url="https://profresume.com/resources/ai-resume-review"
+                url={`${ENV.BASE_URL}/resources/ai-resume-review`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -86,10 +96,10 @@ export default function AIResumeReviewPage() {
                             In today's competitive job market, over <strong>75% of resumes are rejected by Applicant Tracking Systems (ATS)</strong> before a human even sees them. Our AI-powered resume review simulates this exact screening process, giving you a critical advantage.
                         </p>
                         <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
-                            <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
                                 <ShieldCheck className="w-5 h-5" />
                                 The ATS Reality
-                            </h4>
+                            </h3>
                             <p className="text-gray-700 mb-3">
                                 <strong className="text-blue-900">Did you know?</strong> 98% of Fortune 500 companies use ATS to screen candidates. Your resume needs to pass the AI filter before impressing human recruiters.
                             </p>
@@ -276,7 +286,7 @@ export default function AIResumeReviewPage() {
                             </table>
                         </div>
                         <div className="bg-green-50 border border-green-200 rounded-lg p-5">
-                            <h4 className="font-bold text-green-900 mb-2">💡 Best Approach</h4>
+                            <h3 className="font-bold text-green-900 mb-2">💡 Best Approach</h3>
                             <p className="text-gray-700">
                                 <strong>Use AI first</strong> to catch technical issues, ATS problems, and keyword gaps. Then, for senior roles or career changes, consider a human expert for strategic narrative guidance. This combo gives you the best of both worlds at a fraction of the cost.
                             </p>
@@ -298,7 +308,7 @@ export default function AIResumeReviewPage() {
                                     range: "90-100: Excellent",
                                     color: "green",
                                     meaning: "Your resume is highly optimized for ATS and will likely pass most screenings. You're ready to apply confidently.",
-                                    action: "Fine-tune for specific job descriptions using our <a href='/resources/targeted-resume' class='text-green-700 underline font-semibold'>targeting guide</a>."
+                                    action: `Fine-tune for specific job descriptions using our <a href='/resources/targeted-resume' class='text-green-700 underline font-semibold'>targeting guide</a>.`
                                 },
                                 {
                                     range: "75-89: Good",
@@ -316,11 +326,11 @@ export default function AIResumeReviewPage() {
                                     range: "Below 60: Needs Work",
                                     color: "red",
                                     meaning: "Your resume has critical issues preventing it from passing ATS. This explains low callback rates.",
-                                    action: "Major overhaul needed. Consider using our <a href='https://edit.profresume.com' class='text-red-700 underline font-semibold'>resume builder</a> with ATS-optimized templates."
+                                    action: `Major overhaul needed. Consider using our <a href='${ENV.EDITOR_URL}/editor' class='text-red-700 underline font-semibold'>resume builder</a> with ATS-optimized templates.`
                                 }
                             ].map((score, idx) => (
                                 <div key={idx} className={`border-l-4 border-${score.color}-500 bg-${score.color}-50 p-5 rounded-r-lg`}>
-                                    <h4 className={`font-bold text-${score.color}-900 text-lg mb-2`}>{score.range}</h4>
+                                    <h3 className={`font-bold text-${score.color}-900 text-lg mb-2`}>{score.range}</h3>
                                     <p className="text-gray-700 mb-3"><strong>What it means:</strong> {score.meaning}</p>
                                     <p className="text-gray-700 text-sm" dangerouslySetInnerHTML={{ __html: `<strong>Next steps:</strong> ${score.action}` }} />
                                 </div>
@@ -338,12 +348,12 @@ export default function AIResumeReviewPage() {
                             {
                                 issue: "Low ATS Compatibility Score",
                                 cause: "Your resume uses formatting that ATS can't parse (tables, text boxes, headers/footers, columns).",
-                                fix: "Rebuild your resume using a simple, single-column layout with standard fonts. Use our ATS-friendly templates in the <a href='https://edit.profresume.com' class='text-blue-600 underline font-semibold'>resume builder</a>."
+                                fix: `Rebuild your resume using a simple, single-column layout with standard fonts. Use our ATS-friendly templates in the <a href='${ENV.EDITOR_URL}/editor' class='text-blue-600 underline font-semibold'>resume builder</a>.`
                             },
                             {
                                 issue: "Insufficient Keyword Density",
                                 cause: "You're not using enough relevant industry terms that recruiters search for.",
-                                fix: "Use our <a href='/resources/resume-keyword-generator' class='text-blue-600 underline font-semibold'>keyword generator</a> to extract terms from job descriptions, then naturally integrate them into your bullets."
+                                fix: `Use our <a href='/resources/resume-keyword-generator' class='text-blue-600 underline font-semibold'>keyword generator</a> to extract terms from job descriptions, then naturally integrate them into your bullets.`
                             },
                             {
                                 issue: "Weak Impact Statements",
@@ -379,7 +389,7 @@ export default function AIResumeReviewPage() {
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow">
                                 <div className="flex items-start gap-3 mb-3">
                                     <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
-                                    <h4 className="font-bold text-gray-900">{item.issue}</h4>
+                                    <h3 className="font-bold text-gray-900">{item.issue}</h3>
                                 </div>
                                 <div className="ml-8">
                                     <p className="text-sm text-gray-600 mb-2"><strong className="text-gray-700">Why this happens:</strong> {item.cause}</p>
@@ -430,7 +440,7 @@ export default function AIResumeReviewPage() {
                             }
                         ].map((faq, idx) => (
                             <div key={idx} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed">{faq.a}</p>
                             </div>
                         ))}
@@ -443,7 +453,7 @@ export default function AIResumeReviewPage() {
                 subtitle={
                     <>
                         Ready to see how your resume stacks up? Use our AI-powered review tool to get instant, actionable feedback.{' '}
-                        <Link href="https://edit.profresume.com" className="text-blue-600 hover:underline font-semibold">
+                        <Link href={`${ENV.EDITOR_URL}/editor`} className="text-blue-600 hover:underline font-semibold">
                             Upload your resume now
                         </Link>
                         {' '}and increase your interview rate by 200%.

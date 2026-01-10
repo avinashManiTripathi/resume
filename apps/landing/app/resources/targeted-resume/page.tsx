@@ -6,13 +6,20 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Targeted Resume Guide 2026 - Tailor Your Resume for Every Job | 300% More Interviews',
     description: 'Master the art of creating targeted resumes that beat ATS systems and impress recruiters. Proven strategies to increase interview callbacks by 300%. Free tools & examples included.',
     keywords: 'targeted resume, tailored resume, customize resume, resume customization, matching job description, resume targeting, personalized resume, job-specific resume, ATS optimization',
     alternates: {
-        canonical: 'https://profresume.com/resources/targeted-resume',
+        canonical: '/resources/targeted-resume',
+    },
+    openGraph: {
+        title: 'Targeted Resume Guide 2026 - Tailor Your Resume for Every Job',
+        description: 'Master the art of creating targeted resumes that beat ATS systems and impress recruiters.',
+        url: '/resources/targeted-resume',
+        type: 'article',
     },
 };
 
@@ -31,7 +38,7 @@ export default function TargetedResumePage() {
             <ArticleSchema
                 title="Targeted Resume Guide 2026 - Tailor Your Resume for Every Job"
                 description="Master the art of creating targeted resumes that beat ATS systems and impress recruiters. Proven strategies to increase interview callbacks by 300%."
-                url="https://profresume.com/resources/targeted-resume"
+                url={`${ENV.BASE_URL}/resources/targeted-resume`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -89,10 +96,10 @@ export default function TargetedResumePage() {
                             A <strong>targeted resume</strong> is a customized version of your resume specifically tailored to match a particular job opening. Rather than using a one-size-fits-all approach, you strategically highlight the most relevant skills, experiences, and achievements that align with the employer's specific requirements.
                         </p>
                         <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
-                            <h4 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
                                 <FileText className="w-5 h-5" />
                                 The Reality Check
-                            </h4>
+                            </h3>
                             <p className="text-gray-700">
                                 The average recruiter spends just <strong>6-8 seconds</strong> reviewing your resume. If they don't immediately see relevant keywords and experience matching their job description, your resume goes to the rejection pile—no matter how qualified you are.
                             </p>
@@ -175,7 +182,7 @@ export default function TargetedResumePage() {
                                             </div>
                                         </div>
                                         <div className="flex-1">
-                                            <h4 className="font-bold text-gray-900 text-lg mb-2">{item.title}</h4>
+                                            <h3 className="font-bold text-gray-900 text-lg mb-2">{item.title}</h3>
                                             <p className="text-gray-600 mb-3">{item.description}</p>
                                             <ul className="space-y-2">
                                                 {item.details.map((detail, idx) => (
@@ -205,7 +212,7 @@ export default function TargetedResumePage() {
                             <div className="border-2 border-red-200 rounded-xl p-6 bg-red-50">
                                 <div className="flex items-center gap-2 mb-4">
                                     <AlertCircle className="w-5 h-5 text-red-600" />
-                                    <h4 className="font-bold text-red-900">Generic Resume ❌</h4>
+                                    <h3 className="font-bold text-red-900">Generic Resume ❌</h3>
                                 </div>
                                 <div className="bg-white p-4 rounded-lg space-y-3 text-sm">
                                     <p className="font-semibold text-gray-900">Marketing Professional</p>
@@ -279,7 +286,7 @@ export default function TargetedResumePage() {
                             }
                         ].map((item, index) => (
                             <div key={index} className="bg-gray-50 border-l-4 border-orange-500 p-5 rounded-r-lg">
-                                <h4 className="font-bold text-gray-900 mb-2">❌ {item.mistake}</h4>
+                                <h3 className="font-bold text-gray-900 mb-2">❌ {item.mistake}</h3>
                                 <p className="text-gray-600 text-sm mb-2"><strong>Why it's wrong:</strong> {item.explanation}</p>
                                 <p className="text-gray-700 text-sm"><strong>✅ Fix:</strong> {item.fix}</p>
                             </div>
@@ -327,7 +334,7 @@ export default function TargetedResumePage() {
                             }
                         ].map((faq, index) => (
                             <div key={index} className="bg-white border border-gray-200 rounded-lg p-6">
-                                <h4 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h4>
+                                <h3 className="font-semibold text-gray-900 text-lg mb-3">{faq.q}</h3>
                                 <p className="text-gray-600 leading-relaxed">{faq.a}</p>
                             </div>
                         ))}

@@ -4,6 +4,7 @@ import { Mic, MicOff, Send, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
 import router from "next/router";
+import { ENV } from "@/app/env";
 
 export function VoiceDemo() {
     return (
@@ -59,7 +60,7 @@ export function VoiceDemo() {
                 </div>
 
                 <Link
-                    href="https://edit.profresume.com/editor"
+                    href={`${ENV.EDITOR_URL}/editor`}
                     className="inline-flex items-center justify-center gap-3 sm:gap-6
              px-6 py-4 sm:p-5
              border-2 rounded-xl font-semibold
@@ -149,7 +150,7 @@ export function VoiceDemo() {
                     </div>
 
                     <div className="flex gap-3 justify-end">
-                        <Button variant="primary" onClick={() => router.push("https://edit.profresume.com/editor")}>
+                        <Button variant="primary" onClick={() => router.push(`${ENV.EDITOR_URL}/editor`)}>
                             <Send className="w-5 h-5" strokeWidth={2} />
                             Generate with AI
                         </Button>

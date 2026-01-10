@@ -1,21 +1,22 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Check, FileText, Sparkles, Zap, Clock, Brain, Target, Download } from 'lucide-react';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'AI Cover Letter Generator - Create Professional Cover Letters in 2 Minutes | ProfResume',
     description: 'Generate perfectly tailored cover letters instantly with AI. Just paste a job description and get a professional, customized cover letter that matches your resume. Free to use, instant PDF download.',
     keywords: 'AI cover letter generator, cover letter builder, job application letter, professional cover letter, AI writing assistant, cover letter template',
     alternates: {
-        canonical: 'https://profresume.com/cover-letter',
+        canonical: '/cover-letter',
     },
     openGraph: {
         title: 'AI Cover Letter Generator - Professional Letters in 2 Minutes',
         description: 'Create tailored cover letters instantly with AI. Match any job, professionally written, instant PDF download.',
-        url: 'https://profresume.com/cover-letter',
+        url: '/cover-letter',
         type: 'website',
         images: [{
-            url: 'https://profresume.com/og-cover-letter.jpg',
+            url: '/og-cover-letter.jpg',
             width: 1200,
             height: 630,
             alt: 'AI Cover Letter Generator',
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
         card: 'summary_large_image',
         title: 'AI Cover Letter Generator - Professional Letters in 2 Minutes',
         description: 'Generate tailored cover letters with AI. Instant, professional, free.',
-        images: ['https://profresume.com/og-cover-letter.jpg'],
+        images: ['/og-cover-letter.jpg'],
     },
 };
 
@@ -52,7 +53,7 @@ export default function CoverLetterPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                href="https://edit.profresume.com/cover-letter"
+                                href={`${ENV.EDITOR_URL}/cover-letter`}
                                 className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-green-700 shadow-lg hover:shadow-xl transition-all group"
                             >
                                 Create Cover Letter Free
@@ -183,7 +184,7 @@ export default function CoverLetterPage() {
                                     ))}
                                 </ul>
                                 <Link
-                                    href={`https://edit.profresume.com/cover-letter?template=${template.name.toLowerCase().replace(' ', '-')}`}
+                                    href={`${ENV.EDITOR_URL}/cover-letter?template=${template.name.toLowerCase().replace(' ', '-')}`}
                                     className={`block text-center bg-${template.color}-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-${template.color}-700 transition-all`}
                                 >
                                     Use This Template
@@ -261,7 +262,7 @@ export default function CoverLetterPage() {
                         Join thousands who've landed interviews with AI-generated cover letters
                     </p>
                     <Link
-                        href="https://edit.profresume.com/cover-letter"
+                        href={`${ENV.EDITOR_URL}/cover-letter`}
                         className="bg-white text-green-600 px-8 py-4 rounded-lg font-bold text-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
                     >
                         Generate Cover Letter Free

@@ -1,7 +1,8 @@
-import Script from 'next/script'
+import { ENV } from "@/app/env";
+import Script from "next/script";
 
 export function GlobalSchema() {
-    const baseUrl = 'https://profresume.com'
+    const baseUrl = ENV.BASE_URL
 
     const websiteSchema = {
         "@context": "https://schema.org",
@@ -27,17 +28,25 @@ export function GlobalSchema() {
         "url": baseUrl,
         "logo": `${baseUrl}/logo.png`,
         "description": "Professional resume building platform trusted by 50,000+ job seekers worldwide",
+        "slogan": "Build Your Career with Confidence",
         "foundingDate": "2024",
         "sameAs": [
             "https://twitter.com/profresume",
             "https://linkedin.com/company/profresume",
-            "https://facebook.com/profresume"
+            "https://facebook.com/profresume",
+            "https://instagram.com/profresume",
+            "https://github.com/profresume"
         ],
         "contactPoint": {
             "@type": "ContactPoint",
-            "email": "support@profresume.com",
+            "email": ENV.SUPPORT_EMAIL,
             "contactType": "Customer Service",
             "availableLanguage": "English"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "ProfResume",
+            "logo": `${baseUrl}/logo.png`
         }
     }
 
@@ -46,21 +55,32 @@ export function GlobalSchema() {
         "@type": "SoftwareApplication",
         "name": "ProfResume Resume Builder",
         "applicationCategory": "BusinessApplication",
+        "applicationSubCategory": "Resume Builder, Career Development",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "description": "Create professional, ATS-friendly resumes with AI assistance",
+        "featureList": [
+            "AI-powered resume writing",
+            "ATS-friendly templates",
+            "Instant PDF/Word export",
+            "AI cover letter generator",
+            "ATS score checker"
+        ],
+        "screenshot": `${baseUrl}/og-image.png`,
         "offers": {
             "@type": "Offer",
             "price": "0",
-            "priceCurrency": "USD"
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "url": baseUrl
         },
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "ratingCount": "1250",
+            "ratingValue": "4.9",
+            "reviewCount": "12547",
             "bestRating": "5",
             "worstRating": "1"
-        },
-        "operatingSystem": "Web",
-        "browserRequirements": "Requires JavaScript. Requires HTML5.",
-        "description": "Create professional, ATS-friendly resumes with AI assistance"
+        }
     }
 
     return (

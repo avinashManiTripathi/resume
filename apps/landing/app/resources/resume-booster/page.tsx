@@ -6,11 +6,21 @@ import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { BREADCRUMBS } from '@/constants/breadcrumbs';
 import Link from 'next/link';
+import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
     title: 'Resume Booster 2026 - 15 Proven Strategies to Boost Resume Impact | Get Hired Faster',
     description: 'Boost your resume effectiveness with 15 proven strategies. Learn powerful action verbs, quantification techniques, and ATS optimization to increase interview rate by 250%. Free resume booster tips.',
     keywords: 'resume booster, enhance resume impact, increase resume visibility, resume profile boost, resume improvement tips, boost resume score, resume power words, resume optimization',
+    alternates: {
+        canonical: '/resources/resume-booster',
+    },
+    openGraph: {
+        title: 'Resume Booster - 15 Proven Strategies to Boost Resume Impact',
+        description: 'Boost your resume effectiveness with 15 proven strategies. Learn powerful action verbs, quantification techniques, and ATS optimization.',
+        url: '/resources/resume-booster',
+        type: 'website',
+    },
 };
 
 export default function ResumeBoosterPage() {
@@ -28,7 +38,7 @@ export default function ResumeBoosterPage() {
             <ArticleSchema
                 title="Resume Booster - Amplify Your Resume Impact"
                 description="Boost your resume effectiveness with proven strategies. Enhance achievements, optimize keywords, and stand out to recruiters."
-                url="https://profresume.com/resources/resume-booster"
+                url={`${ENV.BASE_URL}/resources/resume-booster`}
             />
             <FAQSchema faqs={faqs} />
             <ResourceHero
@@ -392,7 +402,7 @@ export default function ResumeBoosterPage() {
                 title="Boost Your Resume with AI"
                 subtitle={
                     <>
-                        Ready to supercharge your resume? Use our AI-powered <Link href="https://edit.profresume.com" className="text-orange-600 hover:underline font-semibold">resume builder</Link> to automatically implement these boosting strategies. Or try our <Link href="/resources/ai-resume-review" className="text-orange-600 hover:underline font-semibold">AI resume review</Link> to see exactly where your resume needs improvement.
+                        Ready to supercharge your resume? Use our AI-powered <Link href={`${ENV.EDITOR_URL}/editor`} className="text-orange-600 hover:underline font-semibold">resume builder</Link> to automatically implement these boosting strategies. Or try our <Link href="/resources/ai-resume-review" className="text-orange-600 hover:underline font-semibold">AI resume review</Link> to see exactly where your resume needs improvement.
                     </>
                 }
             />

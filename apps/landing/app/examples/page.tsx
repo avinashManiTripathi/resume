@@ -1,105 +1,103 @@
-"use client";
+import { Metadata } from 'next';
+import { ENV } from "@/app/env";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
-
+export const metadata: Metadata = {
+    title: 'Resume Examples - Real Resumes That Landed Interviews | ProfResume',
+    description: 'Explore real resume examples from professionals in tech, marketing, design, and finance that helped them land dream jobs using ProfResume.',
+    alternates: {
+        canonical: '/examples',
+    },
+    openGraph: {
+        title: 'Professional Resume Examples - Success Showcases',
+        description: 'See real resumes created with ProfResume that landed positions at top companies. Use them as inspiration for your own.',
+        url: '/examples',
+        type: 'website',
+    },
+};
 
 export default function ExamplesPage() {
+    const examples = [
+        {
+            badge: "Software Engineer",
+            title: "Senior Software Engineer",
+            desc: "Landed position at FAANG company with 40% salary increase",
+            stats: ["⏱️ Created in 15 min", "📧 12 interviews"],
+            color: "blue"
+        },
+        {
+            badge: "Marketing",
+            title: "Marketing Manager",
+            desc: "Transitioned from coordinator to manager role",
+            stats: ["⏱️ Created in 20 min", "📧 8 interviews"],
+            color: "purple"
+        },
+        {
+            badge: "Design",
+            title: "UX Designer",
+            desc: "Career change from graphic design to UX",
+            stats: ["⏱️ Created in 18 min", "📧 10 interviews"],
+            color: "indigo"
+        },
+        {
+            badge: "Finance",
+            title: "Financial Analyst",
+            desc: "Recent graduate landed first job at top firm",
+            stats: ["⏱️ Created in 12 min", "📧 6 interviews"],
+            color: "emerald"
+        }
+    ];
+
     return (
-        <main className="page">
-
-
-            <section className="hero-simple">
-                <div className="container">
-                    <h1>Resume Examples That Get Results</h1>
-                    <p className="lead">Real resumes created with ProfResume that helped professionals land their dream jobs.</p>
+        <main className="min-h-screen bg-gray-50">
+            {/* Hero Section */}
+            <section className="pt-32 pb-16 px-4 bg-gradient-to-br from-gray-50 to-gray-100 text-center">
+                <div className="max-w-7xl mx-auto">
+                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">Resume Examples That Get Results</h1>
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real resumes created with ProfResume that helped professionals land their dream jobs.</p>
                 </div>
             </section>
 
-            <section className="examples">
-                <div className="container">
-                    <div className="example-grid">
-                        <div className="example-card">
-                            <div className="example-badge">Software Engineer</div>
-                            <div className="example-preview">
-                                <div className="preview-placeholder">Resume Preview</div>
+            {/* Examples Grid */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                        {examples.map((example, i) => (
+                            <div key={i} className="bg-white rounded-3xl overflow-hidden border-2 border-gray-100 hover:border-blue-500 hover:shadow-2xl transition-all group flex flex-col h-full">
+                                <div className="bg-blue-600 text-white py-2 px-4 text-sm font-bold text-center">
+                                    {example.badge}
+                                </div>
+                                <div className="h-64 bg-gray-100 flex items-center justify-center p-8">
+                                    <div className="w-full h-full bg-white shadow-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 font-medium italic text-sm">
+                                        Resume Preview
+                                    </div>
+                                </div>
+                                <div className="p-6 flex flex-col flex-1">
+                                    <h2 className="text-xl font-bold text-gray-900 mb-2">{example.title}</h2>
+                                    <p className="text-gray-600 text-sm mb-6 flex-1">{example.desc}</p>
+                                    <div className="flex gap-4 pt-4 border-t border-gray-100 text-[13px] text-gray-500 font-medium">
+                                        {example.stats.map((stat, idx) => (
+                                            <span key={idx}>{stat}</span>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
-                            <h3>Senior Software Engineer</h3>
-                            <p>Landed position at FAANG company with 40% salary increase</p>
-                            <div className="stats">
-                                <span>⏱️ Created in 15 min</span>
-                                <span>📧 12 interviews</span>
-                            </div>
-                        </div>
-
-                        <div className="example-card">
-                            <div className="example-badge">Marketing</div>
-                            <div className="example-preview">
-                                <div className="preview-placeholder">Resume Preview</div>
-                            </div>
-                            <h3>Marketing Manager</h3>
-                            <p>Transitioned from coordinator to manager role</p>
-                            <div className="stats">
-                                <span>⏱️ Created in 20 min</span>
-                                <span>📧 8 interviews</span>
-                            </div>
-                        </div>
-
-                        <div className="example-card">
-                            <div className="example-badge">Design</div>
-                            <div className="example-preview">
-                                <div className="preview-placeholder">Resume Preview</div>
-                            </div>
-                            <h3>UX Designer</h3>
-                            <p>Career change from graphic design to UX</p>
-                            <div className="stats">
-                                <span>⏱️ Created in 18 min</span>
-                                <span>📧 10 interviews</span>
-                            </div>
-                        </div>
-
-                        <div className="example-card">
-                            <div className="example-badge">Finance</div>
-                            <div className="example-preview">
-                                <div className="preview-placeholder">Resume Preview</div>
-                            </div>
-                            <h3>Financial Analyst</h3>
-                            <p>Recent graduate landed first job at top firm</p>
-                            <div className="stats">
-                                <span>⏱️ Created in 12 min</span>
-                                <span>📧 6 interviews</span>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
-                    <div className="cta-box">
-                        <h2>Ready to Create Your Success Story?</h2>
-                        <a href="https://edit.profresume.com/editor" className="cta-button">Start Building Your Resume →</a>
+                    {/* CTA Box */}
+                    <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-[2.5rem] p-12 text-center text-white shadow-2xl">
+                        <h2 className="text-3xl md:text-4xl font-extrabold mb-8">Ready to Create Your Success Story?</h2>
+                        <Link
+                            href={ENV.EDITOR_URL}
+                            className="inline-flex items-center gap-3 bg-white text-blue-600 px-10 py-5 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all"
+                        >
+                            Start Building Your Resume <ArrowRight className="w-5 h-5" />
+                        </Link>
                     </div>
                 </div>
             </section>
-
-
-            <style jsx>{`
-        .page { background: #FAFAFA; min-height: 100vh; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-        .hero-simple { padding: 6rem 2rem 4rem; background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%); text-align: center; }
-        .hero-simple h1 { font-size: 3rem; font-weight: 900; color: #111827; margin-bottom: 1.5rem; }
-        .lead { font-size: 1.25rem; color: #6B7280; max-width: 700px; margin: 0 auto; }
-        .examples { padding: 4rem 2rem; }
-        .example-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
-        .example-card { background: white; border-radius: 1.5rem; overflow: hidden; border: 2px solid #E5E7EB; transition: all 0.3s; }
-        .example-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); border-color: #3B82F6; }
-        .example-badge { background: #3B82F6; color: white; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; text-align: center; }
-        .example-preview { height: 300px; background: #F3F4F6; display: flex; align-items: center; justify-content: center; }
-        .preview-placeholder { color: #9CA3AF; font-weight: 600; }
-        .example-card h3 { font-size: 1.25rem; font-weight: 700; color: #111827; margin: 1.5rem 1.5rem 0.5rem; }
-        .example-card p { color: #6B7280; margin: 0 1.5rem 1rem; }
-        .stats { display: flex; gap: 1rem; padding: 1rem 1.5rem; border-top: 1px solid #F3F4F6; font-size: 0.875rem; color: #6B7280; }
-        .cta-box { background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%); padding: 4rem 2rem; border-radius: 2rem; text-align: center; color: white; }
-        .cta-box h2 { font-size: 2rem; font-weight: 900; margin-bottom: 2rem; }
-        .cta-button { display: inline-block; padding: 1rem 2rem; background: white; color: #3B82F6; border-radius: 0.75rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .cta-button:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); }
-        @media (max-width: 768px) { .hero-simple h1 { font-size: 2rem; } .example-grid { grid-template-columns: 1fr; } }
-      `}</style>
         </main>
     );
 }

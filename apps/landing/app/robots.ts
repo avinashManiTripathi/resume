@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
+import { ENV } from './env'
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = 'https://profresume.com'
+    const baseUrl = ENV.BASE_URL
 
     return {
         rules: [

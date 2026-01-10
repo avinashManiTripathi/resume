@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { TemplatesSlider } from "./TemplatesSlider";
+import { ENV } from "@/app/env";
 
 interface Template {
     _id: string;
@@ -9,7 +10,7 @@ interface Template {
 
 async function getTemplates(): Promise<Template[]> {
     try {
-        const apiUrl = "https://api.profresume.com";
+        const apiUrl = ENV.API_URL;
         const res = await fetch(`${apiUrl}/api/templates`, {
             next: { revalidate: 300 }, // 5 minutes cache
             headers: {

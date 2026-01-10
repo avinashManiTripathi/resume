@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { FileText, Mail, Twitter, Linkedin, Github, Facebook, Instagram, MapPin, Phone, Send } from 'lucide-react';
+import { ENV } from "@/app/env";
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
@@ -110,8 +111,8 @@ export function Footer() {
                         <div className="space-y-3 text-sm mb-6">
                             <div className="flex items-center gap-3">
                                 <Mail className="w-4 h-4 text-blue-500" />
-                                <a href="mailto:avinashmanitripathi97@gmail.com" className="hover:text-blue-600 transition-colors">
-                                    avinashmanitripathi97@gmail.com
+                                <a href={`mailto:${ENV.SUPPORT_EMAIL}`} className="hover:text-blue-600 transition-colors">
+                                    {ENV.SUPPORT_EMAIL}
                                 </a>
                             </div>
                             <div className="flex items-center gap-3">

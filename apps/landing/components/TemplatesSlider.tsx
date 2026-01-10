@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ENV } from "@/app/env";
 
 interface Template {
     _id: string;
@@ -43,13 +44,13 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                 {templates.map((template) => (
                     <Link
                         key={template._id}
-                        href={`https://edit.profresume.com/editor?template=${template._id}`}
+                        href={`${ENV.EDITOR_URL}/editor?template=${template._id}`}
                         className="flex-shrink-0 w-80 group bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-all hover:shadow-2xl"
                     >
                         <div className="bg-white p-[16px] aspect-[8.5/11] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                             {template.thumbnail ? (
                                 <Image
-                                    src={"https://api.profresume.com" + template.thumbnail}
+                                    src={ENV.API_URL + template.thumbnail}
                                     alt={template.name}
                                     width={320}
                                     height={415}

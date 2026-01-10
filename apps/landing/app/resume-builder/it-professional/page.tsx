@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { Server, Database, Cloud, Shield, Code, CheckCircle, Zap, Award, Target, TrendingUp, Terminal, Cpu } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     description: 'Build an IT professional resume for network admin, sysadmin, DevOps, cloud engineer, and cybersecurity roles. ATS-friendly templates with IT certifications and technical skills sections.',
     keywords: 'IT resume, IT professional resume, network admin resume, DevOps resume, sysadmin resume, cloud engineer resume, IT support resume, cybersecurity resume',
     alternates: {
-        canonical: 'https://profresume.com/resume-builder/it-professional',
+        canonical: '/resume-builder/it-professional',
     },
 };
 
@@ -25,9 +26,9 @@ export default function ITProfessionalResumePage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Resume Builder", url: "https://profresume.com/resume-builder" },
-        { name: "IT Professional", url: "https://profresume.com/resume-builder/it-professional" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Resume Builder", url: `${ENV.BASE_URL}/resume-builder` },
+        { name: "IT Professional", url: `${ENV.BASE_URL}/resume-builder/it-professional` }
     ];
 
     return (
@@ -36,7 +37,7 @@ export default function ITProfessionalResumePage() {
             <ArticleSchema
                 title="IT Professional Resume Builder 2026 - Network, DevOps & Cloud Resumes"
                 description="Build a powerful IT professional resume for network admin, DevOps, cloud, and cybersecurity roles with ATS-optimized templates and IT-specific sections."
-                url="https://profresume.com/resume-builder/it-professional"
+                url={`${ENV.BASE_URL}/resume-builder/it-professional`}
             />
             <FAQSchema faqs={faqs} />
 

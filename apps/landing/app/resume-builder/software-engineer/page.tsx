@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ENV } from "@/app/env";
 import { Code, Terminal, Rocket, Award, Target, TrendingUp, CheckCircle, Zap, FileText, Brain } from 'lucide-react';
 import { ResourceHero, ResourceFeatureGrid, ResourceCTA, ResourceContentSection } from '@/components/ResourcePage';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     description: 'Build a standout software engineer resume with our specialized builder. ATS-friendly tech templates, coding project sections, and GitHub integration. Land interviews at top tech companies.',
     keywords: 'software engineer resume, developer resume builder, tech resume, coding resume, FAANG resume, programmer resume, software developer CV',
     alternates: {
-        canonical: 'https://profresume.com/resume-builder/software-engineer',
+        canonical: '/resume-builder/software-engineer',
     },
 };
 
@@ -25,9 +26,9 @@ export default function SoftwareEngineerResumePage() {
     ];
 
     const breadcrumbs = [
-        { name: "Home", url: "https://profresume.com" },
-        { name: "Resume Builder", url: "https://profresume.com/resume-builder" },
-        { name: "Software Engineer", url: "https://profresume.com/resume-builder/software-engineer" }
+        { name: "Home", url: ENV.BASE_URL },
+        { name: "Resume Builder", url: `${ENV.BASE_URL}/resume-builder` },
+        { name: "Software Engineer", url: `${ENV.BASE_URL}/resume-builder/software-engineer` }
     ];
 
     return (
@@ -36,7 +37,7 @@ export default function SoftwareEngineerResumePage() {
             <ArticleSchema
                 title="Software Engineer Resume Builder 2026 - Land Your Dream Tech Job"
                 description="Build a standout software engineer resume with specialized tech templates, project sections, and ATS optimization for FAANG and top tech companies."
-                url="https://profresume.com/resume-builder/software-engineer"
+                url={`${ENV.BASE_URL}/resume-builder/software-engineer`}
             />
             <FAQSchema faqs={faqs} />
 

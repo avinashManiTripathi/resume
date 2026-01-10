@@ -3,6 +3,21 @@ import { Navigation } from "@/components/Navigation";
 import { Sparkles, Users, Target, Award, Heart, Zap } from "lucide-react";
 import Image from "next/image";
 import { IntroSection } from "@/components/IntroSection";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'About Us | ProfResume - Our Mission & Team',
+    description: 'Learn about the mission behind ProfResume, the AI-powered resume builder. Meet our team of designers, developers, and career experts dedicated to your success.',
+    alternates: {
+        canonical: '/about',
+    },
+    openGraph: {
+        title: 'About Us | ProfResume',
+        description: 'Building the world\'s most powerful resume builder to help millions of job seekers.',
+        url: '/about',
+        type: 'website',
+    },
+};
 
 export default function AboutPage() {
     return (
