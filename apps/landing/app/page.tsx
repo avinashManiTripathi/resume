@@ -131,11 +131,11 @@ export default async function LandingPage() {
               </div>
 
               {/* Floating Badges */}
-              <div className="absolute -top-4 -right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg font-semibold text-sm flex items-center gap-2">
+              <div className="absolute -top-4 -right-4 bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg font-semibold text-sm flex items-center gap-2">
                 <Check className="w-4 h-4" />
                 ATS Optimized
               </div>
-              <div className="absolute -bottom-4 -left-4 bg-purple-500 text-white px-4 py-2 rounded-lg shadow-lg font-semibold text-sm flex items-center gap-2">
+              <div className="absolute -bottom-4 -left-4 bg-purple-700 text-white px-4 py-2 rounded-lg shadow-lg font-semibold text-sm flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 Instant PDF
               </div>
@@ -468,7 +468,7 @@ export default async function LandingPage() {
 
                     {/* Action Buttons */}
                     <div className="pt-4 flex gap-3">
-                      <div className="flex-1 bg-green-600 text-white text-center py-2 rounded-lg text-sm font-semibold">
+                      <div className="flex-1 bg-green-700 text-white text-center py-2 rounded-lg text-sm font-semibold">
                         Download PDF
                       </div>
                       <div className="flex-1 border-2 border-gray-300 text-gray-700 text-center py-2 rounded-lg text-sm font-semibold">
@@ -585,7 +585,7 @@ export default async function LandingPage() {
 
             <Link
               href="/resume-builder/fresher"
-              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-green-500 hover:shadow-2xl transition-all group"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-300 hover:border-green-600 hover:shadow-2xl transition-all group"
             >
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Users className="w-8 h-8 text-white" />
@@ -596,14 +596,14 @@ export default async function LandingPage() {
               <p className="text-gray-600 mb-4">
                 Perfect for recent graduates. Emphasize education, projects, and potential even without experience.
               </p>
-              <div className="flex items-center gap-2 text-green-600 font-semibold">
+              <div className="flex items-center gap-2 text-green-800 font-semibold">
                 Build Fresher Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
 
             <Link
               href="/resume-builder/it-professional"
-              className="bg-white rounded-2xl p-8 border-2 border-gray-200 hover:border-cyan-500 hover:shadow-2xl transition-all group"
+              className="bg-white rounded-2xl p-8 border-2 border-gray-300 hover:border-cyan-700 hover:shadow-2xl transition-all group"
             >
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Shield className="w-8 h-8 text-white" />
@@ -614,7 +614,7 @@ export default async function LandingPage() {
               <p className="text-gray-600 mb-4">
                 Network admin, DevOps, cloud engineer, and cybersecurity resumes with certification sections.
               </p>
-              <div className="flex items-center gap-2 text-cyan-600 font-semibold">
+              <div className="flex items-center gap-2 text-cyan-800 font-semibold">
                 Build IT Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -676,7 +676,7 @@ export default async function LandingPage() {
               <p className="text-gray-600 mb-6">
                 Create professional resumes 100% free. No credit card required, no watermarks. 20+ templates, AI-powered suggestions, unlimited downloads.
               </p>
-              <div className="flex items-center gap-2 text-green-600 font-semibold">
+              <div className="flex items-center gap-2 text-green-800 font-semibold">
                 Start Building Free <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -1058,7 +1058,7 @@ export default async function LandingPage() {
 
 
       {/* Final CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-600 relative overflow-hidden">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-600 text-white relative overflow-hidden">
         {/* Background Pattern */}
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -1077,7 +1077,7 @@ export default async function LandingPage() {
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-          <p className="text-white/80 mt-6 text-sm">No credit card required • Free forever</p>
+          <p className="text-white mt-6 text-sm">No credit card required • Free forever</p>
         </div>
       </section>
     </div>

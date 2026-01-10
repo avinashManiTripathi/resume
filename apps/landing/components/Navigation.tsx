@@ -2,6 +2,7 @@
 
 import { ENV } from '@/app/env';
 import { Menu, X, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const navigation = {
@@ -194,13 +195,15 @@ export function Navigation() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 no-underline group">
-              <img
+              <Image
                 src="/logo.png"
                 alt="ProfResume Logo"
-                className="w-15 h-9 transition-transform group-hover:scale-105"
+                width={158}   // w-15 → 60px
+                height={36}  // h-9 → 36px
+                className="transition-transform group-hover:scale-105"
+                priority
               />
             </a>
-
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-2">
               {/* Mega Menu Items */}

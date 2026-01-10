@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { FileText, Mail, Twitter, Linkedin, Github, Facebook, Instagram, MapPin, Phone, Send } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import Image from 'next/image';
 
 export function Footer() {
     const [email, setEmail] = useState('');
@@ -92,10 +93,13 @@ export function Footer() {
                     {/* Brand Section */}
                     <div className="lg:col-span-2">
                         <div className="flex items-center gap-2 mb-4">
-                            <img
+                            <Image
                                 src="/logo.png"
                                 alt="ProfResume Logo"
-                                className="w-15 h-9 transition-transform group-hover:scale-105"
+                                width={158}   // w-15 → 60px
+                                height={36}  // h-9 → 36px
+                                className="transition-transform group-hover:scale-105"
+                                priority
                             />
                         </div>
                         <p className="text-sm mb-6 leading-relaxed max-w-md">

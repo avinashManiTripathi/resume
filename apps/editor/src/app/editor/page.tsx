@@ -516,8 +516,14 @@ function ResumeEditor() {
     renderPdf();
   }, [urlTemplateId, defaultTemplateId, renderPdf]);
 
+  const userName = useMemo(() => {
+    const name = `${resume?.personalInfo?.firstName || ""} ${resume?.personalInfo?.lastName || ""}`
+    return name.trim();
+  }, [resume.personalInfo.firstName, resume.personalInfo.lastName]);
+
   // Memoized handlers for ProfileHeader - prevents re-renders
   const handleDownload = useCallback(async () => {
+    const name = userName?.replace(" ", '_')
     // Check subscription before allowing download
     if (!canDownload()) {
       router.push('/subscription?returnTo=editor');
@@ -531,7 +537,9 @@ function ResumeEditor() {
       ...resume,
       order: sectionOrder
     };
-    await downloadPdf(apiUrl, "resume", resumeData);
+
+
+    await downloadPdf(apiUrl, name, resumeData);
   }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 
   const handleShare = useCallback(() => {
@@ -542,7 +550,7 @@ function ResumeEditor() {
     <div className="flex flex-col h-screen w-full bg-gray-100">
       {/* Header */}
       <ProfileHeader
-        name={`${resume?.personalInfo?.firstName || "Avinash Mani"} ${resume?.personalInfo?.lastName || "Tripathi"}'s Resume`}
+        name={userName + "'s Resume"}
         title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
         progress={progress}
         profileImage={profileImage}
