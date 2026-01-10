@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     },
 };
 
-const baseUrl = ENV.BASE_URL;
+const baseUrl = ENV.EDITOR_URL;
 
 const breadcrumbs = [
     { name: "Home", url: "/" },
@@ -64,7 +64,7 @@ export default function ATSCheckerMarketingPage() {
             <ArticleSchema
                 title="Free ATS Resume Checker"
                 description="Check if your resume passes Applicant Tracking Systems (ATS). Get instant AI-powered analysis, ATS compatibility score, and detailed recommendations."
-                url={`${baseUrl}/ats-checker`}
+                url={`${baseUrl}/ats-check`}
                 datePublished="2024-11-20"
                 dateModified={new Date().toISOString()}
                 author="ProfResume Career Experts"
@@ -91,7 +91,7 @@ export default function ATSCheckerMarketingPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                href={ENV.EDITOR_URL}
+                                href={ENV.EDITOR_URL + "/ats-check"}
                                 className="bg-indigo-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all group"
                             >
                                 Check My Resume Score

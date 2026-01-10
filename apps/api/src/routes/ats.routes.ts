@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import mammoth from 'mammoth';
-import { analyzeResumeWithAI } from '@repo/utils-server';
+import { analyzeResumeWithAI } from '../services/ai-analysis.service';
 const { PDFParse } = require("pdf-parse");
 const pdfParse = PDFParse;
 
@@ -40,7 +40,6 @@ async function extractTextFromFile(file: Buffer): Promise<string> {
         if (!result || !result.text) {
             throw new Error('No text extracted from PDF');
         }
-
         console.log('PDF parsed successfully, text length:', result.text.length);
         return result.text;
     } catch (error: any) {

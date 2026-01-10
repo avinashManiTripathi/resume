@@ -83,7 +83,6 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
         });
         return pdfBuffer;
     } catch (error) {
-        console.log({ error })
         throw error
     } finally {
         await page.close();

@@ -127,7 +127,6 @@ export function useTemplates(options?: {
         return refetch();
     }, [cacheKey, refetch]);
 
-    console.log({ cachedData, data })
 
     return {
         templates: cachedData?.templates || data?.templates,

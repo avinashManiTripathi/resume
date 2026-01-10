@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
+import { parseResumeWithAI } from '../services/ai-analysis.service';
 const { PDFParse } = require("pdf-parse");
 const pdfParse = PDFParse;
 const router = Router();
@@ -88,7 +89,6 @@ router.post('/parse', upload.single('resume'), async (req: Request, res: Respons
         const resumeText = await extractTextFromFile(req.file.buffer);
 
         // Parse resume with AI
-        const { parseResumeWithAI } = await import('@repo/utils-server');
         const parsedData = await parseResumeWithAI(
             resumeText,
             jobDescription,
@@ -125,7 +125,8 @@ async function extractTextFromFile(file: Buffer): Promise<string> {
             throw new Error('No text extracted from PDF');
         }
 
-        console.log('PDF parsed successfully, text length:', result.text.length);
+
+        console.log('PDF parsed successfully, text length  :', result.text.length);
         return result.text;
     } catch (error: any) {
         console.error('PDF parsing error:', error);

@@ -2,14 +2,20 @@ import { GoogleGenAI } from "@google/genai";
 
 
 
-let ai = new GoogleGenAI({ apiKey: "AIzaSyCDSugzsIRrSbKT2eimReibCncLozIuKEg" });
+
+let ai: any
+
 
 /**
- * Initialize the AI client
- * @param apiKey - Google API key
+ * Initialize AI client with API key
+ * @param apikey - Google GenAI API key
  */
-export const initAI = (apiKey: string) => {
-  // ai = new GoogleGenAI({ apiKey });
+export const initAI = (apikey: string) => {
+  console.log({ apikey })
+  if (!ai) {
+    ai = new GoogleGenAI({ apiKey: apikey });
+  }
+  return ai
 }
 
 /**
@@ -26,6 +32,7 @@ export const parseResumeWithAI = async (
   jobTitle?: string,
   company?: string
 ): Promise<any> => {
+  console.log({ key: process.env.GENAI_API_KEY })
   try {
     const prompt = `You are an expert resume parser and ATS optimization specialist. Your task is to:
 
@@ -259,6 +266,8 @@ Return ONLY the JSON object, nothing else.`;
  * Analyze resume with AI - Strict ATS Checker
  */
 export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
+
+  console.log({ key: process.env.GENAI_API_KEY })
   const prompt = `
 You are an expert ATS (Applicant Tracking System) analyzer and career coach. Perform a STRICT and COMPREHENSIVE analysis of the following resume.
 

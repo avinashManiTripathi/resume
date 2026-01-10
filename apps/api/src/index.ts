@@ -1,12 +1,25 @@
 import { App } from './app';
 import { database } from './config/database';
-require('dotenv').config()
+import dotenv from 'dotenv';
+import { initAI } from './services/ai-analysis.service';
+dotenv.config({
+    path: process.env.NODE_ENV === "production"
+        ? ".env.production"
+        : ".env"
+});
+
+console.log("Environment: ", process.env.NODE_ENV);
 
 // Create and start the application
 const app = new App();
+if (process.env.GENAI_API_KEY) {
+    initAI(process.env.GENAI_API_KEY);
+}
 app.listen();
 
-// Graceful shutdown
+
+
+// Gracef   ul shutdown
 process.on('SIGTERM', async () => {
     console.log('SIGTERM signal received: closing HTTP server');
     await database.disconnect();
