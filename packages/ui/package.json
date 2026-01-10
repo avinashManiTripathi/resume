@@ -32,7 +32,8 @@
     "./pricing-modal": "./src/pricing-modal.tsx",
     "./payment-method-selector": "./src/payment-method-selector.tsx",
     "./billing-form": "./src/billing-form.tsx",
-    "./subscription-dashboard": "./src/subscription-dashboard.tsx"
+    "./subscription-dashboard": "./src/subscription-dashboard.tsx",
+    "./not-found": "./src/not-found.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
