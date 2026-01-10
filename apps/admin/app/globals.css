@@ -15,12 +15,12 @@
   --foreground-secondary: #475569;
 
   /* Sidebar Colors */
-  --sidebar-bg-start: #0F172A;
-  --sidebar-bg-end: #1E293B;
-  --sidebar-text: #E2E8F0;
-  --sidebar-text-muted: #94A3B8;
-  --sidebar-active-bg: rgba(59, 130, 246, 0.15);
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-bg-start: #FFFFFF;
+  --sidebar-bg-end: #F8FAFC;
+  --sidebar-text: #1E293B;
+  --sidebar-text-muted: #64748B;
+  --sidebar-active-bg: rgba(59, 130, 246, 0.1);
+  --sidebar-hover-bg: rgba(59, 130, 246, 0.05);
 
   /* Primary Colors */
   --primary: #3B82F6;

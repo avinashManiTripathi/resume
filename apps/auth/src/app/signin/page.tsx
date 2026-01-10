@@ -35,10 +35,13 @@ function SignInContent() {
                 {/* Left Side - Branding */}
                 <div className="space-y-6 animate-fade-in">
                     <div className="flex items-center gap-3 animate-slide-in-left">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                            <FileText className="w-7 h-7 text-white" />
+                        <div className="flex items-center gap-2 mb-4">
+                            <img
+                                src="/logo.png"
+                                alt="ProfResume Logo"
+                                className="w-15 h-9 transition-transform group-hover:scale-105"
+                            />
                         </div>
-                        <h1 className="text-3xl font-bold text-gray-900">Resume Builder</h1>
                     </div>
 
                     <h2 className="text-4xl font-bold text-gray-900 leading-tight animate-slide-in-left animation-delay-100">

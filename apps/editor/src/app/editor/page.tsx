@@ -517,7 +517,7 @@ function ResumeEditor() {
   }, [urlTemplateId, defaultTemplateId, renderPdf]);
 
   // Memoized handlers for ProfileHeader - prevents re-renders
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     // Check subscription before allowing download
     if (!canDownload()) {
       router.push('/subscription?returnTo=editor');
@@ -531,7 +531,7 @@ function ResumeEditor() {
       ...resume,
       order: sectionOrder
     };
-    downloadPdf(apiUrl, "resume", resumeData);
+    await downloadPdf(apiUrl, "resume", resumeData);
   }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 
   const handleShare = useCallback(() => {

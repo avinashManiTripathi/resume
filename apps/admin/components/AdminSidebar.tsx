@@ -52,25 +52,24 @@ export function AdminSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`admin-sidebar h-full fixed left-0 top-0 h-screen w-64 gradient-sidebar text-white flex flex-col z-50 dark-scrollbar transition-all duration-300 ${isMobileOpen ? "open" : ""}`}
+        className={`admin-sidebar h-full fixed left-0 top-0 h-screen w-64 gradient-sidebar border-r border-gray-200 text-slate-900 flex flex-col z-50 transition-all duration-300 ${isMobileOpen ? "open" : ""}`}
       >
         {/* Logo Section */}
-        <div className="p-6 border-b border-white/10">
+        <div className="p-6 border-b border-gray-100">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-11 h-11 gradient-primary rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <div className="w-11 h-11 flex items-center justify-center">
                 <img
-                  src="/icon.png"
+                  src="/favicon.ico"
                   alt="ProfResume Logo"
-                  style={{ width: "40px", height: '40px' }}
                   className="w-9 h-9 transition-transform group-hover:scale-105"
                 />
               </div>
               <div className="absolute -inset-1 gradient-primary rounded-xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-300" />
             </div>
             <div>
-              <h1 className="text-lg font-bold">ProfResume</h1>
-              <p className="text-xs text-gray-400">Admin Panel</p>
+              <h1 className="text-lg font-bold text-gray-900">ProfResume</h1>
+              <p className="text-xs text-gray-500">Admin Panel</p>
             </div>
           </Link>
         </div>
@@ -86,8 +85,8 @@ export function AdminSidebar() {
                 href={item.href}
                 onClick={closeMobileMenu}
                 className={`group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
-                  ? "bg-white/10 text-white shadow-lg backdrop-blur-sm"
-                  : "text-gray-300 hover:bg-white/5 hover:text-white"
+                  ? "bg-blue-50 text-blue-600 shadow-sm"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   }`}
               >
                 <Icon
@@ -103,19 +102,19 @@ export function AdminSidebar() {
         </nav>
 
         {/* User Profile Section */}
-        <div className="p-4 border-t border-white/10">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 mb-2">
+        <div className="p-4 border-t border-gray-100">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 mb-2">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-sm">
               AD
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">Admin User</p>
-              <p className="text-xs text-gray-400 truncate">admin@example.com</p>
+              <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
+              <p className="text-xs text-gray-500 truncate">admin@example.com</p>
             </div>
           </div>
 
           {/* Logout Button */}
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-300 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 w-full group">
+          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 w-full group">
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
             <span>Logout</span>
           </button>

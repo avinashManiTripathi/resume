@@ -1,7 +1,8 @@
 "use client";
 
-import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2, PencilLine } from "lucide-react";
+import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2, PencilLine, Loader2 } from "lucide-react";
 import { Button } from "./button";
+import { useState } from "react";
 
 interface ProfileHeaderProps {
     name: string;
@@ -9,7 +10,7 @@ interface ProfileHeaderProps {
     profileImage?: string;
     progress?: number;
     onShare?: () => void;
-    onDownload?: () => void;
+    onDownload?: () => Promise<void>;
     onUndo?: () => void;
     onRedo?: () => void;
     canUndo?: boolean;
@@ -47,6 +48,9 @@ export function ProfileHeader({
     onZoomOut,
     onProfileImageChange,
 }: ProfileHeaderProps) {
+
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file && onProfileImageChange) {
@@ -57,6 +61,14 @@ export function ProfileHeader({
                 onProfileImageChange(base64String);
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const handleDownload = async () => {
+        if (onDownload) {
+            setIsDownloading(true);
+            await onDownload();
+            setIsDownloading(false);
         }
     };
 
@@ -98,7 +110,7 @@ export function ProfileHeader({
                     <Button variant="outline" onClick={onShare} className="md:hidden">
                         <Share2 size={18} />
                     </Button>
-                    <Button variant="outline" onClick={onDownload} className="md:hidden">
+                    <Button variant="outline" onClick={handleDownload} className="md:hidden">
                         <Download size={18} />
                     </Button>
                     <div className="hidden md:flex  ml-2 md:ml-4  items-center gap-2">
@@ -215,9 +227,18 @@ export function ProfileHeader({
                             <Share2 className="w-4 h-4 md:mr-2" />
                             <span >Share</span>
                         </Button>
-                        <Button onClick={onDownload} variant="primary" className="flex-1 md:flex-initial">
-                            <Download className="w-4 h-4 md:mr-2" />
-                            <span >Download</span>
+                        <Button onClick={handleDownload} variant="primary" className="flex-1 md:flex-initial">
+                            {isDownloading ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    <span>Downloading</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="w-4 h-4 md:mr-2" />
+                                    <span>Download</span>
+                                </>
+                            )}
                         </Button>
                     </div>
                 </div>
