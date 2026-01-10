@@ -289,7 +289,8 @@ export default function ResumeBoosterPage() {
                             <div key={idx} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-orange-300 transition-colors">
                                 <div className="flex items-start gap-4 mb-4">
                                     <div className="flex-shrink-0 flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold text-lg">
+                                        <div className="w-10 h-10 bg-orange-200 text-orange-900 rounded-full flex items-center justify-center font-bold text-lg
+">
                                             {strategy.number}
                                         </div>
                                         {strategy.icon}
@@ -366,8 +367,8 @@ export default function ResumeBoosterPage() {
                             ].map((step, idx) => (
                                 <div key={idx} className="bg-white rounded-lg p-4 flex items-center justify-between border border-gray-200">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
-                                            <span className="text-orange-600 font-bold">{step.time}</span>
+                                        <div className="w-16 h-16 bg-orange-200 rounded-full flex items-center justify-center">
+                                            <span className="text-orange-800 font-bold">{step.time}</span>
                                         </div>
                                         <div>
                                             <p className="font-semibold text-gray-900">{step.task}</p>

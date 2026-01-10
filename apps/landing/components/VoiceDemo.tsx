@@ -59,13 +59,32 @@ export function VoiceDemo() {
                 </div>
 
                 <Link
-                    href={"https://edit.profresume.com/editor"}
-                    className="inline-flex items-center justify-center gap-3 sm:gap-6 w-full sm:w-auto px-6 py-4 sm:p-5 border-2 font-semibold rounded-xl border-blue-600 text-blue-700 hover:bg-blue-50 transition-all group"
+                    href="https://edit.profresume.com/editor"
+                    className="inline-flex items-center justify-center gap-3 sm:gap-6
+             px-6 py-4 sm:p-5
+             border-2 rounded-xl font-semibold
+             bg-white
+             border-blue-700 text-blue-900
+             hover:bg-blue-100
+             transition-all group"
                 >
-                    <Mic className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 text-blue-700 stroke-2" strokeWidth={2.5} />
-                    <span className="font-bold">Try Voice Command Now</span>
-                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 text-blue-700 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+                    <Mic
+                        className="w-6 h-6 sm:w-7 sm:h-7 text-blue-900"
+                        strokeWidth={2.5}
+                    />
+
+                    <span className="font-bold">
+                        Try Voice Command Now
+                    </span>
+
+                    <ArrowRight
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-blue-900
+               group-hover:translate-x-1 transition-transform"
+                        strokeWidth={2}
+                    />
                 </Link>
+
+
             </div>
 
             {/* Right: Visual Demo */}

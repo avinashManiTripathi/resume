@@ -36,7 +36,8 @@
     "./not-found": "./src/not-found.tsx",
     "./title": "./src/title.tsx",
     "./section-badge": "./src/section-badge.tsx",
-    "./description": "./src/description.tsx"
+    "./description": "./src/description.tsx",
+    "./select": "./src/select.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

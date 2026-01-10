@@ -17,19 +17,6 @@ export const metadata: Metadata = {
 
 export default async function LandingPage() {
 
-  // const [templates, setTemplates] = useState()
-
-  // const getAllTemplates = async () => {
-  //   const templates = await getTemplates();
-  //   setTemplates(templates)
-
-  // }
-
-  // useEffect(() => {
-  //   getAllTemplates()
-  // }, [])
-
-
 
 
   return (
@@ -1058,14 +1045,14 @@ export default async function LandingPage() {
 
 
       {/* Final CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-600 text-white relative overflow-hidden">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-700 text-white relative overflow-hidden">
         {/* Background Pattern */}
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6">
             Ready to land your dream job?
           </h2>
-          <p className="text-xl md:text-2xl text-white/90 mb-10">
+          <p className="text-xl md:text-2xl text-white mb-10">
             Join 50,000+ professionals who transformed their careers
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

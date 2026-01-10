@@ -343,7 +343,7 @@ export function Navigation() {
               <a href="/resume-builder" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Resume Builder</a>
               <a href="/cover-letter" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline relative inline-flex items-center" onClick={() => setMobileMenuOpen(false)}>
                 Cover Letter
-                <span className="ml-2 px-1.5 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded">NEW</span>
+                <span className="ml-2 px-1.5 py-0.5 bg-green-700 text-white text-[10px] font-bold rounded">NEW</span>
               </a>
               <a href="/tailor" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>AI Tailor</a>
               <a href="/ats-checker" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>ATS Checker</a>
