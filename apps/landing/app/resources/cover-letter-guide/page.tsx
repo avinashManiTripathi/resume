@@ -4,6 +4,7 @@ import { Mail, CheckCircle, FileText, Lightbulb, Target, Award } from "lucide-re
 import Link from "next/link";
 import { ENV } from "@/app/env";
 import { Metadata } from "next";
+import { IntroSection } from '@/components/IntroSection';
 
 export const metadata: Metadata = {
     title: 'Cover Letter Writing Guide 2026 - Templates & Examples | ProfResume',
@@ -38,21 +39,14 @@ export default function CoverLetterGuidePage() {
 
 
             {/* Hero Section */}
-            <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-blue-50">
-                <div className="max-w-7xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-6">
-                        <Mail className="w-4 h-4" />
-                        Cover Letter Guide
-                    </div>
-                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
-                        How to Write a Winning Cover Letter
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Master the art of writing compelling cover letters that complement your resume and get you noticed by hiring managers.
-                    </p>
-                </div>
-            </section>
 
+            <IntroSection
+                sectionClassName="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50"
+                badgeIcon={<Mail className="w-4 h-4" />}
+                label="Cover Letter Guide"
+                title='How to Write a Winning Cover Letter'
+                description="Master the art of writing compelling cover letters that complement your resume and get you noticed by hiring managers."
+            />
             {/* Main Content */}
             <section className="py-16 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto">

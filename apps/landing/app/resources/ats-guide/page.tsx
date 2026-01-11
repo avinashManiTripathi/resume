@@ -1,10 +1,10 @@
-import { Navigation } from "@/components/Navigation";
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { Bot, CheckCircle, XCircle, Lightbulb, Target, Award, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { ENV } from "@/app/env";
 import { Metadata } from "next";
+import { IntroSection } from "@/components/IntroSection";
 
 export const metadata: Metadata = {
     title: 'Complete ATS Guide 2026 - Beat Applicant Tracking Systems | ProfResume',
@@ -38,21 +38,14 @@ export default function ATSGuidePage() {
             <FAQSchema faqs={faqs} />
 
             {/* Hero Section */}
-            <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50">
-                <div className="max-w-7xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold mb-6">
-                        <Bot className="w-4 h-4" />
-                        ATS Guide
-                    </div>
-                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
-                        Beat Applicant Tracking Systems
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Learn how to optimize your resume to pass ATS screening and land more interviews.
-                    </p>
-                </div>
-            </section>
 
+            <IntroSection
+                sectionClassName="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50"
+                badgeIcon={<Bot className="w-4 h-4" />}
+                label="ATS Guide"
+                title="Beat Applicant Tracking Systems"
+                description="Learn how to optimize your resume to pass ATS screening and land more interviews."
+            />
             {/* What is ATS */}
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-4xl mx-auto">

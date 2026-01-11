@@ -4,6 +4,7 @@ import { Briefcase, TrendingUp, Users, Target, Lightbulb, BookOpen, Award, Check
 import Link from "next/link";
 import { ENV } from "@/app/env";
 import { Metadata } from "next";
+import { IntroSection } from '@/components/IntroSection';
 
 export const metadata: Metadata = {
     title: 'Career Tips & Job Search Strategy 2026 | ProfResume',
@@ -144,22 +145,14 @@ export default function CareerTipsPage() {
                 url={`${ENV.BASE_URL}/resources/career-tips`}
             />
             <FAQSchema faqs={faqs} />
-
             {/* Hero Section */}
-            <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
-                <div className="max-w-7xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-                        <Lightbulb className="w-4 h-4" />
-                        Expert Career Advice
-                    </div>
-                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
-                        Career Tips & Strategies
-                    </h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                        Practical advice and proven strategies to help you advance your career, land your dream job, and achieve professional success.
-                    </p>
-                </div>
-            </section>
+            <IntroSection
+                sectionClassName="pt-24 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50"
+                badgeIcon={<Lightbulb className="w-4 h-4" />}
+                label="Expert Career Advice"
+                title="Career Tips & Strategies"
+                description="Practical advice and proven strategies to help you advance your career, land your dream job, and achieve professional success."
+            />
 
             {/* Quick Tips Section */}
             <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white border-b border-gray-200">

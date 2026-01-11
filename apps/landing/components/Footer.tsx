@@ -56,7 +56,7 @@ export function Footer() {
                         <Image src={brand.logo} alt={brand.name} width={158} height={36} />
                         <p className="text-sm my-6 max-w-md">{brand.description}</p>
 
-                        <div className="space-y-3 text-sm">
+                        <div className="mt-6space-y-3 text-sm">
                             <div className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-blue-500" />
                                 <Link href={`mailto:${ENV.SUPPORT_EMAIL}`}>
@@ -88,7 +88,7 @@ export function Footer() {
                         </div>
 
                         {/* Socials */}
-                        <div className="flex gap-3 mt-6">
+                        <div className="mt-6 flex gap-3 mt-6">
                             {socials.map((s) => (
                                 <Link
                                     key={s.name}
