@@ -32,7 +32,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
       </head>
-      <body className={`${primaryFont.variable} antialiased min-h-screen overflow-hidden`} style={{ touchAction: 'pan-y pinch-zoom' }}>
+      <body className={`${primaryFont.variable} antialiased min-h-screen`} style={{ touchAction: 'pan-y pinch-zoom' }}>
         {children}
       </body>
     </html>
