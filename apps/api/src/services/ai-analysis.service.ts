@@ -291,7 +291,12 @@ Perform detailed checks across ALL of the following areas and be STRICT in your 
 
 3. **CONTACT INFORMATION QUALITY**:
    - Ensure email, phone number are clearly present
-   - Check for LinkedIn profile or professional links
+   - Check for LinkedIn and GitHub presence with tolerance:
+     - Accept full URLs, usernames/handles, OR plain text labels (e.g., "LinkedIn", "GitHub")
+     - Plain text labels without URLs or usernames must NOT be treated as errors
+     - Do NOT deduct score for plain text labels
+     - If present only as plain text, classify as an OPTIONAL SUGGESTION
+     - Penalize score ONLY if professional links are entirely absent (no mention at all)
    - Verify location/address information
 
 4. **DATE FORMATTING**:
@@ -340,6 +345,19 @@ SCORING CRITERIA (Be strict - most resumes should score 60-80):
 - Content Quality (15%): Clear, professional, error-free
 - Skills Section (10%): Relevant, organized, comprehensive
 
+
+FALSE POSITIVE PREVENTION RULE (CRITICAL):
+
+Do NOT flag the following as errors or weaknesses:
+- "LinkedIn" or "GitHub" mentioned without URL or username
+- Partial or unformatted professional profile references
+
+These should be treated as OPTIONAL IMPROVEMENTS only and must NOT:
+- Reduce scores
+- Appear as critical issues
+- Appear as ATS-breaking problems
+
+
 Provide your analysis in this JSON format:
 {
   "score": <number between 0-100, be STRICT>,
@@ -379,6 +397,203 @@ Provide your analysis in this JSON format:
 }
 
 BE STRICT AND THOROUGH. Most resumes have issues. Provide specific, actionable feedback with examples from the resume text when possible.
+
+ADDITIONAL RESPONSIBILITY: RESUME FIXING AND NORMALIZATION
+
+After completing the ATS analysis, you must also:
+
+1. ANALYZE the resume issues identified in your own feedback
+2. FIX the resume content logically and professionally
+3. IMPROVE clarity, ATS-friendliness, keywords, and structure
+4. NORMALIZE the improved resume into a structured JSON object called "fixedData"
+
+
+MANDATORY FIX APPLICATION RULE (CRITICAL):
+
+Treat ALL items listed under:
+- feedback.weaknesses
+- feedback.suggestions
+- formatting.issues
+- detailedAnalysis.*.issues
+
+as REQUIRED FIXES.
+
+You must NOT merely suggest improvements.
+You must APPLY every fix directly when generating "fixedData".
+
+If an issue appears in the analysis:
+- The fixedData output must explicitly resolve it.
+- No known issue should remain unfixed in fixedData.
+
+Examples of mandatory fixes:
+- Missing or weak quantification → rewrite bullets with implied or contextual impact (without fabricating data)
+- Non-standard section headers → normalize to ATS-friendly headers
+- Missing education dates → add approximate start dates if implied or leave empty ONLY if truly unavailable
+- Poor skills organization → restructure into categorized, ATS-optimized skills
+- Missing soft skills → explicitly add relevant soft skills
+- Missing or partial profile links → include URLs IF present or normalize safely without inventing data
+
+
+
+IMPORTANT RULES:
+- DO NOT modify, remove, or rename any existing ATS analysis keys
+- "fixedData" must be appended as a NEW root-level key
+- The fixed version must be based ONLY on resume content + reasonable professional improvements
+- Do NOT fabricate companies, degrees, or experience
+- You MAY:
+  - Rewrite summaries
+  - Improve bullet points
+  - Add missing metrics where implied (but not fake numbers)
+  - Normalize job titles
+  - Infer skill levels conservatively
+- If any field is missing in the resume, return:
+  - "" for strings
+  - [] for arrays
+  - false for booleans
+- All dates must be normalized to YYYY-MM
+- Descriptions must be ATS-safe and concise
+- HTML formatting is allowed ONLY where explicitly required
+
+"fixedData": {
+  "personalInfo": {
+    "firstName": "",
+    "lastName": "",
+    "email": "",
+    "phone": "",
+    "city": "",
+    "pincode": "",
+    "country": "",
+    "state": "",
+    "jobTitle": "",
+    "summary": "2–3 improved, ATS-optimized sentences tailored to the candidate’s role",
+    "linkedin": "",
+    "github": ""
+  },
+  "experience": [
+    {
+      "jobTitle": "",
+      "company": "",
+      "startDate": "",
+      "endDate": "",
+      "description": "<ul><li>Improved, action-oriented, ATS-safe bullet points</li></ul>"
+    }
+  ],
+  "education": [
+    {
+      "degree": "",
+      "institution": "",
+      "startDate": "",
+      "endDate": ""
+    }
+  ],
+  "skills": [
+    {
+      "name": "",
+      "level": "Beginner|Intermediate|Advanced|Expert"
+    }
+  ],
+  "languages": [
+    {
+      "language": "",
+      "proficiency": "Native|Fluent|Proficient|Intermediate|Basic"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "",
+      "description": "Impact-focused rewritten achievement",
+      "date": ""
+    }
+  ],
+  "certifications": [
+    {
+      "name": "",
+      "issuer": "",
+      "date": "",
+      "expiryDate": "",
+      "credentialId": "",
+      "url": ""
+    }
+  ],
+  "awards": [
+    {
+      "title": "",
+      "issuer": "",
+      "date": "",
+      "description": ""
+    }
+  ],
+  "publications": [
+    {
+      "title": "",
+      "publisher": "",
+      "date": "",
+      "url": "",
+      "description": ""
+    }
+  ],
+  "volunteer": [
+    {
+      "role": "",
+      "organization": "",
+      "startDate": "",
+      "endDate": "",
+      "currentlyVolunteering": false,
+      "description": ""
+    }
+  ],
+  "interests": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "references": [
+    {
+      "name": "",
+      "jobTitle": "",
+      "company": "",
+      "email": "",
+      "phone": ""
+    }
+  ],
+  "projects": [
+    {
+      "name": "",
+      "startDate": "",
+      "endDate": "",
+      "description": "<ul><li>Improved project description aligned with job role</li></ul>"
+    }
+  ]
+}
+
+
+
+IMPROVEMENT LOGIC (CRITICAL):
+
+Derive "Areas to Improve" internally using:
+- feedback.weaknesses
+- feedback.suggestions
+- formatting issues
+- missing keywords
+
+Then APPLY these improvements directly when generating "fixedData".
+
+Do NOT output a separate "Areas to Improve" section.
+All improvements must be reflected in:
+- rewritten summary
+- improved experience bullet points
+- optimized skills list
+- normalized job titles
+- ATS-friendly structure
+
+
+Return ONLY one valid JSON object that includes:
+
+1) The complete ATS analysis JSON (unchanged)
+2) The appended "fixedData" object containing the IMPROVED resume
+
+Do NOT return explanations, markdown, or additional text.
 
 Return ONLY the JSON object, nothing else.`;
 

@@ -62,7 +62,8 @@ function ResumeEditor() {
   // Check for resume data from tailor page
   useEffect(() => {
     const fromTailor = searchParams.get('fromTailor');
-    if (fromTailor === 'true') {
+    const fromAtsCheck = searchParams.get("fromAtsCheck");
+    if (fromTailor === 'true' || fromAtsCheck === 'true') {
       try {
         // Get data from sessionStorage
         const storedData = sessionStorage.getItem('parsedResumeData');

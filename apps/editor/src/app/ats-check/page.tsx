@@ -42,6 +42,7 @@ interface ATSResult {
             warnings: string[];
         };
     };
+    fixedData?: any
 }
 
 type Step = 'upload' | 'analyzing' | 'results';
@@ -242,6 +243,16 @@ export default function ATSCheckerPage() {
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred");
             setCurrentStep('upload');
+        }
+    };
+
+    const handleFixResume = () => {
+        const dataToStore = (result && result.fixedData) ? result.fixedData : null;
+        if (dataToStore) {
+            // Store extracted/fixed data in sessionStorage for the editor
+            sessionStorage.setItem('parsedResumeData', JSON.stringify(dataToStore));
+            // Redirect to editor with fromTailor flag to trigger import
+            router.push('/editor?fromAtsCheck=true');
         }
     };
 
@@ -644,6 +655,22 @@ export default function ATSCheckerPage() {
                                         style={{ width: `${result.score}%` }}
                                     />
                                 </div>
+
+                                {result.fixedData && (
+                                    <div className="mt-8">
+                                        <button
+                                            onClick={handleFixResume}
+                                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-indigo-200 transition-all flex items-center justify-center gap-3 group"
+                                        >
+                                            <Sparkles size={22} className="group-hover:animate-pulse" />
+                                            <span className="text-lg">Fix Your Resume Now</span>
+                                            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                                        </button>
+                                        <p className="text-center text-xs text-gray-500 mt-2">
+                                            AI has pre-filled the editor with your resume details
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Detailed Analysis Cards - NEW */}
