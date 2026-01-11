@@ -1,0 +1,58 @@
+{
+    "slug": "python-senior-interview-questions",
+    "title": "Python Architect: 50+ Senior & Lead Interview Deep-Dives (2026)",
+    "description": "Master high-performance Python systems. 50+ deep questions on PEP 703 (NoGIL), distributed task orchestration, CPython internals, and AI infrastructure.",
+    "heroBadge": "Senior Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Strategy & Impact: The Senior Python Perspective",
+            "content": "At a **Senior Level**, Python engineering is a series of **strategic trade-offs**. You must know when to leverage Python's rapid development speed and when to move critical logic to the system layer. In 2026, the focus has shifted to **No-GIL concurrency**, **Distributed ML pipelines**, and **Type-safe enterprise backends**. This guide covers 50+ advanced questions for the elite Python architect.",
+            "image": "/images/interviews/python-main.png"
+        },
+        {
+            "title": "1. The Future of Python: No-GIL & PEP 703",
+            "content": "**Q1: What is PEP 703 and why does it matter?**\nExplain the 'Free-threading' build of Python 3.13+. How does removing the Global Interpreter Lock (GIL) change the way we write multi-threaded code? Discuss the move towards 'Mimalloc' for thread-safe memory management.\n\n**Q2: Thread-safe data structures in a No-GIL world.**\nWith the GIL gone, internal structures like dictionaries and lists are no longer inherently thread-safe. Discuss the importance of `threading.Lock` and atomic operations in modern Python.\n\n**Q3: The 'Faster CPython' project (PEP 659).**\nExplain 'Specializing Adaptive Interpreters'. How does Python 3.11+ optimize bytecode at runtime based on the types it sees?\n\n**Q4: Static vs. Dynamic: The Type-Hinting Evolution.**\nHow does `mypy` and `pyright` improve architectural reliability? Discuss the use of `Protocol` for structural subtyping and `TypeGuard` for complex logic.\n\n**Q5: Python for WebAssembly (Wasm).**\nDiscuss the state of PyScript and running Python in the browser. When should you use a Python Wasm build vs. a traditional JS/Rust approach?"
+        },
+        {
+            "title": "2. High-Performance Concurrency & Asyncio",
+            "content": "**Q6: Asyncio Event Loop Internals.**\nHow does `asyncio` handle thousands of concurrent connections using a single thread? Discuss the role of `EPoll` (Linux) and `KQueue` (macOS).\n\n**Q7: Debugging Deadlocks in Asyncio.**\nExemplify a scenario where a coroutine blocks the loop. How do you find and fix it using `asyncio.run(..., debug=True)`?\n\n**Q8: Bridging Sync and Async Logic.**\nWhen should you use `run_in_executor` vs. `asyncio.to_thread`? Discuss the thread-safety implications of calling legacy sync libraries from an async context.\n\n**Q9: Asyncio.TaskGroup (Python 3.11).**\nHow does structured concurrency improve error handling compared to `asyncio.gather`? Discuss 'nursery-like' behavior for child tasks.\n\n**Q10: High-Frequency Messaging with Redis Streams.**\nImplementing backpressure and consumer groups in Python. How do you ensure no messages are lost in a 10M+ message/day system?"
+        },
+        {
+            "title": "3. CPython Internals & Memory Management",
+            "content": "**Q11: The Small Integer Cache & String Interning.**\nWhy does `a = 256; b = 256; a is b` return True, but 257 might not? Discuss how CPython optimizes memory for common values.\n\n**Q12: Slots and Memory Optimization.**\nExplain `__slots__`. How does it reduce the memory footprint of millions of objects by bypassing the instance `__dict__`?\n\n**Q13: Reference Counting vs. Generational GC.**\nHow does Python handle 'Circular References'? Discuss the `gc` module and how to manually trigger or tune the garbage collector in long-running processes.\n\n**Q14: Writing C-Extensions (Cython vs. PyO3).**\nWhen is Python too slow? Discuss moving CPU-bound logic to Rust (via PyO3) or C (via Cython) while maintaining a Pythonic API.\n\n**Q15: Bytecode Analysis (The 'dis' module).**\nExplain how to read Python bytecode to identify invisible bottlenecks in simple-looking code (e.g., constant folding)."
+        },
+        {
+            "title": "4. Enterprise Architecture & System Design",
+            "content": "**Q16: The Saga Pattern in Python Microservices.**\nHow do you handle distributed transactions across 5 services without a global DB? Discuss Implementing 'Compensating Transactions' using Celery.\n\n**Q17: Dependency Injection in Python.**\nDiscuss using libraries like `python-dependency-injector` vs. manual DI. Why is DI critical for testing large-scale enterprise apps?\n\n**Q18: Domain-Driven Design (DDD) in Python.**\nHow do you implement 'Entities', 'Value Objects', and 'Aggregates' in a way that doesn't feel like 'Java in Python'?\n\n**Q19: Hexagonal Architecture (Ports and Adapters).**\nDecoupling your core business logic from frameworks like Django or FastAPI. How does this facilitate easier migrations and testing?\n\n**Q20: Multi-Tenant Database Strategies.**\nImplementing 'Row-level security' vs. 'Schema-per-tenant' in Python ORMs (SQLAlchemy/Django)."
+        },
+        {
+            "title": "5. API Infrastructure & Data Engineering",
+            "content": "**Q21: Gunicorn vs. Uvicorn: The Worker Revolution.**\nExplain the 'Process-per-worker' model. How do you choose the right number of workers based on CPU cores and I/O wait times?\n\n**Q22: Pydantic v2 Architecture.**\nWhy is Pydantic v2 (written in Rust) such a game-changer for Python APIs? Discuss serialization speed and strict mode vs. lax mode.\n\n**Q23: GraphQL in Python (Strawberry/Ariadne).**\nSolving the 'N+1 problem' with `DataLoader`. Discuss schema-stitching and federation in a Python-heavy ecosystem.\n\n**Q24: Real-time Data with WebSockets (FastAPI).**\nHandling thousands of persistent connections. Discuss sticky sessions and horizontal scaling for stateful WebSocket servers.\n\n**Q25: Data Pipelines: Airflow vs. Prefect.**\nChoosing an orchestrator for massive ETL tasks. Discuss 'Dynamic DAGs' and handling mid-pipeline failures safely."
+        },
+        {
+            "title": "6. Advanced Testing & Chaos Engineering",
+            "content": "**Q26: Property-Based Testing (Hypothesis).**\nWhy are standard unit tests often insufficient? Discuss generating thousands of edge cases automatically to find subtle bugs in logic.\n\n**Q27: Chaos Testing in Distributed Python Systems.**\nUsing tools like `Gremlin` or custom scripts to inject failures (e.g., database latency) and verify that your Python app handles it gracefully.\n\n**Q28: Mocking at the Socket Layer.**\nWhy is `unittest.mock` sometimes dangerous? Discuss using `Responses` or `HTTPretty` to intercept network calls reliably.\n\n**Q29: Snapshot Testing for Complex UI/Data Outputs.**\nHow to verify that a complex JSON response or a generated report hasn't changed across versions using `pytest-snapshot`.\n\n**Q30: Mutation Testing (Mutmut).**\nTesting the 'Strength' of your tests. How do you know if your 100% code coverage is actually catching logic errors?"
+        },
+        {
+            "title": "7. Infrastructure, CI/CD & DevOps",
+            "content": "**Q31: Distroless & Alpine Docker Images.**\nHow to build a 50MB Python production image. Discuss the challenges of compiling C-extensions on Alpine (`musl` vs `glibc`).\n\n**Q32: Dependency Management: Poetry vs. PDM vs. UV.**\nIn 2026, why is `uv` (written in Rust) replacing traditional pip? Discuss lock-file security and reproducible builds.\n\n**Q33: Observability with OpenTelemetry.**\nImplementing 'Automatic Instrumentation' for Python apps. How do you trace a request from a FastAPI frontend to a Celery worker?\n\n**Q34: Infrastructure as Code (CDK for Python).**\nManaging AWS/GCP resources using Python code instead of YAML. Discuss the benefits of 'Typed Infrastructure'.\n\n**Q35: Zero-Downtime Deployments.**\nHow to handle database migrations that add columns while old app versions are still running (Double Writing)."
+        },
+        {
+            "title": "8. Machine Learning Infrastructure",
+            "content": "**Q36: Model Serving at Scale.**\nUsing Ray Serve or Triton to serve models. Discuss the 'Cold Start' problem for GPU-bound containers.\n\n**Q37: Vector Databases (Chroma/Pinecone) in Python.**\nArchitecting RAG (Retrieval Augmented Generation) systems. How to optimize embedding generation and search latency.\n\n**Q38: Distributed Training Orchestration.**\nScaling PyTorch or TensorFlow across multiple GPUs. Discuss the role of 'Distributed Data Parallel' (DDP).\n\n**Q39: ML Governance and Data Lineage.**\nHow to track which version of a model produced which result. Discuss the 'Traceability' requirements for enterprise AI.\n\n**Q40: Feature Stores (Feast).**\nWhy decouple feature engineering from model training? Discuss the 'Online' vs. 'Offline' feature serving problem."
+        },
+        {
+            "title": "9. Engineering Leadership & Governance",
+            "content": "**Q41: Driving the 'RFC' Culture.**\nHow to encourage engineers to document their architectural decisions before a single line of code is written.\n\n**Q42: Technical Debt: The Silent Killer.**\nHow to quantify the cost of 'stuck on Python 3.8' to management. Discuss the 'Security' and 'Developer Velocity' arguments.\n\n**Q43: Code Review as a Mentorship Tool.**\nMoving beyond 'nitpicking' syntax to reviewing 'Intent' and 'Scalability'. How to give feedback that empowers seniors.\n\n**Q44: Handling Production Outages.**\nDesigning the 'War Room' protocol for Python-based outages. How to isolate issues in complex, multi-service environments.\n\n**Q45: Building vs. Buying in the AI Era.**\nWhen should you build your own embedding pipeline vs. using OpenAI's API? Discuss cost, latency, and data privacy."
+        },
+        {
+            "title": "10. Vision 2026: The Python Renaissance",
+            "content": "**Q46: Python as the 'Glue Language' of the AI Era.**\nWhy hasn't Rust or Mojo replaced Python in AI? Discuss the power of the Python ecosystem and low-level C-bindings.\n\n**Q47: Sustainable Computing in Python.**\nHow to optimize Python code to reduce cloud costs and energy consumption. Discuss 'Green' coding practices.\n\n**Q48: The Rise of Mojo and Interoperability.**\nIs Mojo a threat or an opportunity? Discuss how Python architects can leverage Mojo's speed while keeping the Python ecosystem.\n\n**Q49: Ethics in AI Automation.**\nAs an architect, what are your responsibilities when building systems that automate jobs? Discuss biased data and explainable AI.\n\n**Q50: Continuous Learning: Staying Relevant.**\nHow do you filter the noise? Discuss specific newsletters, PEP trackers, and tech blogs that keep a senior engineer ahead of the curve."
+        },
+        {
+            "title": "Summary: The Python Architect's Creed",
+            "content": "A Senior Python Architect is defined by their **Judgment**. You've mastered the language, but your true skill is in knowing when to use its various features—and when to avoid them. In 2026, Python is more powerful than ever. Lead with stability, scale with precision, and always remember: 'Beautiful is better than ugly'.",
+            "image": "/images/interviews/python-main.png"
+        }
+    ]
+}

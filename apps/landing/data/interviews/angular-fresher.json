@@ -1,0 +1,58 @@
+{
+    "slug": "angular-interview-question-for-fresher",
+    "title": "Angular Framework: 50+ Fresher Interview Questions & Answers (2026)",
+    "description": "Start your enterprise frontend journey. 50+ essential questions covering Angular CLI, components, templates, data binding, and basic dependency injection.",
+    "heroBadge": "Fresher Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: Mastering the Enterprise Framework",
+            "content": "Angular is a complete platform for building scalable web applications. For freshers in 2026, the key is understanding **Components**, **Directives**, and the power of the **Angular CLI**. Unlike lightweight libraries, Angular provides everything out of the box. This guide covers 50+ fundamental questions to help you land your first role as an Angular developer.",
+            "image": "/images/interviews/angular-main.png"
+        },
+        {
+            "title": "1. Angular Fundamentals",
+            "content": "**Q1: What is Angular?**\nAngular is an open-source, TypeScript-based web application framework maintained by Google. It's used for building Single-Page Applications (SPAs) and providing a structured development environment.\n\n**Q2: Angular vs. AngularJS.**\nAngularJS (1.x) was JavaScript-based. Angular (2+) is a complete rewrite based on TypeScript and is component-based, more performant, and has better tooling.\n\n**Q3: What is TypeScript?**\nA superset of JavaScript developed by Microsoft. It adds static typing to JavaScript, making it easier to find errors during development and improving code maintainability.\n\n**Q4: What is a Single Page Application (SPA)?**\nA web application that interacts with the user by dynamically rewriting the current web page with new data from the web server, instead of loading entire new pages.\n\n**Q5: What is the Angular CLI?**\nA command-line interface tool used to initialize, develop, scaffold, and maintain Angular applications directly from a shell."
+        },
+        {
+            "title": "2. Components & Layout",
+            "content": "**Q6: What is a Component?**\nThe basic building block of an Angular UI. Every component consists of a TypeScript class (logic), an HTML template (view), and a CSS/Sass file (style).\n\n**Q7: The `@Component` decorator.**\nA function that attaches metadata to a class. It tells Angular which template and styles to use and how to refer to the component in other templates via its `selector`.\n\n**Q8: What is a Template?**\nA form of HTML that tells Angular how to render the component. Templates use special syntax like `{{ }}` or `[ ]` to bind data from the class to the view.\n\n**Q9: What is Selector?**\nA CSS selector that identifies this component in a template. Example: `<app-root></app-root>` uses the selector `app-root`.\n\n**Q10: Inline vs. External templates.**\nYou can write your HTML directly in the `.ts` file using the `template` property, or keep it in a separate `.html` file using `templateUrl`. External is preferred for complex views."
+        },
+        {
+            "title": "3. Data Binding Mastery",
+            "content": "**Q11: What is Interpolation?**\nUsing double curly braces `{{ value }}` to display component data in the template. It flows data from the TypeScript class to the HTML view.\n\n**Q12: What is Property Binding?**\nUsing square brackets `[property]=\"value\"` to set the value of an HTML element's property. Example: `[src]=\"imagePath\"`.\n\n**Q13: What is Event Binding?**\nUsing parentheses `(event)=\"handler()\"` to listen for user actions (like clicks). It flows data from the view back to the TypeScript class.\n\n**Q14: What is Two-Way Data Binding?**\nUsing the `[(ngModel)]` syntax. Changes in the UI update the class property, and changes in the class property update the UI simultaneously.\n\n**Q15: When to use `ngModel`?**\nMainly in forms to synchronize input values with component data. You must import `FormsModule` from `@angular/forms` to use it."
+        },
+        {
+            "title": "4. Directives: Logic in HTML",
+            "content": "**Q16: What are Directives?**\nClasses that add new behavior or modify the structure/style of elements in the DOM.\n\n**Q17: Structural vs. Attribute Directives.**\nStructural directives (`*ngIf`, `*ngFor`) change the DOM layout by adding/removing elements. Attribute directives (`ngClass`, `ngStyle`) change the appearance or behavior of an existing element.\n\n**Q18: How does `*ngIf` work?**\nIt conditionally includes or removes an element from the DOM based on a boolean expression. Note the asterisk (`*`), which denotes a structural directive.\n\n**Q19: How does `*ngFor` work?**\nIt iterates over a list of items and renders a template block for each item in the list.\n\n**Q20: What is `ngSwitch`?**\nSimilar to a JavaScript switch statement. It chooses one element from multiple possible options to display based on a condition."
+        },
+        {
+            "title": "5. Component Communication",
+            "content": "**Q21: How to pass data from Parent to Child?**\nUsing the `@Input()` decorator in the child component class and property binding in the parent template.\n\n**Q22: How to pass data from Child to Parent?**\nUsing the `@Output()` decorator with an `EventEmitter` in the child component. The parent listens for the event in its template.\n\n**Q23: What is an EventEmitter?**\nA class used to emit custom events in Angular, typically used with the `@Output()` decorator.\n\n**Q24: What is 'Content Projection'?**\nUsing the `<ng-content></ng-content>` tag to inject HTML or other components from a parent into a specific spot in a child component.\n\n**Q25: What is Template Reference Variable?**\nUsing a hash symbol `#variableName` in HTML to get a reference to a DOM element or an Angular component/directive to use it elsewhere in the template."
+        },
+        {
+            "title": "6. Life Cycle Hooks",
+            "content": "**Q26: What are Life Cycle Hooks?**\nSpecial methods that Angular calls at specific moments during a component's life (creation, update, destruction).\n\n**Q27: What is `ngOnInit`?**\nThe most common hook. It's called once after the component's properties have been initialized. Use it for initialization logic and data fetching.\n\n**Q28: `constructor` vs. `ngOnInit`.**\nThe constructor is a standard TypeScript feature for class initialization. `ngOnInit` is an Angular hook that runs after Angular has finished setting up the component's inputs and properties.\n\n**Q29: What is `ngOnDestroy`?**\nCalled just before Angular destroys the component. Use it for cleanup logic (like unsubscribing from observables or clearing timers).\n\n**Q30: What is `ngOnChanges`?**\nCalled whenever one or more input properties (`@Input`) of the component change. It receives a `SimpleChanges` object."
+        },
+        {
+            "title": "7. Services & Dependency Injection",
+            "content": "**Q31: What is a Service?**\nA broad category encompassing any value, function, or feature that an application needs. Frequently used for data fetching and sharing logic across components.\n\n**Q32: What is Dependency Injection (DI)?**\nA design pattern where a class requests dependencies (like services) from external sources rather than creating them itself. Angular has a built-in DI system.\n\n**Q33: How to create a Service?**\nUsing the Angular CLI: `ng generate service my-service`. This creates a class decorated with `@Injectable()`.\n\n**Q34: What is `@Injectable()`?**\nA decorator that marks a class as available to be provided and injected as a dependency.\n\n**Q35: What is `providedIn: 'root'`?**\nIt tells Angular to provide the service at the root level, making it a singleton available throughout the entire application and allowing the compiler to 'tree-shake' it (remove it if unused)."
+        },
+        {
+            "title": "8. Pipes & Data Transformation",
+            "content": "**Q36: What are Pipes?**\nSimple functions used in templates to transform data before displaying it (e.g., formatting dates, currency, or case).\n\n**Q37: Common built-in pipes.**\n`uppercase`, `lowercase`, `date`, `currency`, `percent`, `decimal`, and `json`.\n\n**Q38: How to use a pipe?**\nUsing the pipe `|` character in an interpolation expression: `{{ birthday | date }}`.\n\n**Q39: What is the Async Pipe?**\nA powerful pipe that subscribes to an Observable or Promise and returns the latest value it has emitted. It also handles unsubscription automatically.\n\n**Q40: Can you create custom pipes?**\nYes. You create a class decorated with `@Pipe()` and implement the `PipeTransform` interface's `transform()` method."
+        },
+        {
+            "title": "9. Basic Routing & Navigation",
+            "content": "**Q41: What is the Angular Router?**\nA library that enables navigation among different views or components in the application as the user interacts with it.\n\n**Q42: What is `<router-outlet>`?**\nA directive that acts as a placeholder where the router renders the matched component for the current URL.\n\n**Q43: What is a Route?**\nAn object that maps a URL path to a specific component. Example: `{ path: 'home', component: HomeComponent }`.\n\n**Q44: What is `routerLink`?**\nA directive used on anchor tags to navigate to different routes without a full page reload. Example: `<a routerLink=\"/home\">Home</a>`.\n\n**Q45: Wildcard Route.**\nA route with path `**` that matches any URL. It's often used to display a '404 - Not Found' page."
+        },
+        {
+            "title": "10. Environment & Tooling",
+            "content": "**Q46: What is 'NgModule'?**\nA class decorated with `@NgModule` that groups components, directives, pipes, and services into functional blocks. In modern Angular, 'Standalone Components' are often used instead.\n\n**Q47: What are Standalone Components?**\nComponents that don't need to be part of an `NgModule`. They are the new standard for building Angular apps as of v14+.\n\n**Q48: How to run an Angular app?**\nBy running `ng serve` in the terminal. This starts a development server and reloads the browser automatically when you make changes.\n\n**Q49: What is 'Ahead-of-Time' (AOT) compilation?**\nA process where Angular compiles your application components and templates into efficient JavaScript code *before* the browser downloads it.\n\n**Q50: What is `angular.json`?**\nThe main configuration file for the Angular workspace. It defines build settings, asset paths, and project-specific options."
+        },
+        {
+            "title": "Summary & Next Steps",
+            "content": "Awesome! You've successfully reviewed 50+ fundamental questions for an Angular Fresher role. Angular is a powerful framework with a great community. The next step is to build a small app with CRUD operations to solidfy your knowledge. Happy coding and good luck!",
+            "image": "/images/interviews/angular-main.png"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "slug": "node-interview-question-for-fresher",
+    "title": "Node.js Essentials: 50+ Fresher Interview Questions & Answers (2026)",
+    "description": "Start your backend journey. 50+ essential questions covering Node.js architecture, modules, File System, and basic asynchronous programming for entry-level roles.",
+    "heroBadge": "Fresher Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: Foundation for Backend Engineering",
+            "content": "Moving into backend development with Node.js in 2026 requires a solid grasp of how JavaScript runs outside the browser. You need to understand the **Event Loop**, working with the **File System**, and the power of **NPM**. This guide covers 50+ fundamental questions to help freshers build a career in backend engineering.",
+            "image": "/images/interviews/node-main.png"
+        },
+        {
+            "title": "1. Node.js Basics & Architecture",
+            "content": "**Q1: What is Node.js?**\nNode.js is an open-source, cross-platform, JavaScript runtime environment that executes JavaScript code outside a web browser. It's built on the V8 JavaScript engine (used in Chrome).\n\n**Q2: Is Node.js a programming language?**\nNo, Node.js is not a language. It is a runtime environment that allows you to run JavaScript on the server side.\n\n**Q3: What makes Node.js different from browser JS?**\nBrowser JS interacts with the DOM and browser APIs (like `window`). Node.js interacts with the operating system, file system, and network, but lacks DOM/UI APIs.\n\n**Q4: What is the 'V8 Engine'?**\nV8 is the high-performance JavaScript engine developed by Google for Chrome. It compiles JavaScript code directly into optimized machine code before executing it.\n\n**Q5: What is 'Single-Threaded' in Node.js?**\nNode.js runs the main event loop on a single thread. This means it handles multiple operations by delegating them to the system or a thread pool without blocking the main execution path."
+        },
+        {
+            "title": "2. Modules & NPM",
+            "content": "**Q6: What are Modules in Node.js?**\nModules are independent units of functionality that can be reused across an application. They are like libraries or packages.\n\n**Q7: CommonJS vs. ES Modules.**\nCommonJS (`require`/`module.exports`) is the legacy standard in Node.js. ES Modules (`import`/`export`) is the modern JavaScript standard now fully supported by Node.js.\n\n**Q8: What is NPM?**\nNPM (Node Package Manager) is the default package manager for Node.js. It allows developers to install, share, and manage third-party libraries.\n\n**Q9: What is `package.json`?**\nA manifest file that contains metadata about the project, including its name, version, and the list of dependencies required to run the application.\n\n**Q10: `package-lock.json` vs. `package.json`.**\n`package.json` lists the desired versions (ranges) of dependencies. `package-lock.json` records the *exact* versions installed to ensure consistent builds across different machines."
+        },
+        {
+            "title": "3. Asynchronous Programming Foundation",
+            "content": "**Q11: What is Non-blocking I/O?**\nIt means that Node.js doesn't wait for a slow operation (like reading a file or a network request) to finish. It continues executing other code and handles the result via a callback or promise later.\n\n**Q12: What is the Event Loop?**\nThe heart of Node.js. It's a mechanism that allows Node.js to perform non-blocking I/O operations by offloading tasks to the system kernel whenever possible.\n\n**Q13: Callback Functions.**\nA function passed as an argument to another function, which is executed after the completion of an asynchronous task.\n\n**Q14: What is 'Callback Hell'?**\nA situation where multiple nested callbacks make the code hard to read and maintain. It's also known as the 'Pyramid of Doom'.\n\n**Q15: Promises in Node.js.**\nA Promise is an object representing the eventual completion (or failure) of an asynchronous operation and its resulting value. It's a cleaner alternative to callbacks."
+        },
+        {
+            "title": "4. Core Modules: File System & Path",
+            "content": "**Q16: The `fs` (File System) module.**\nAllows you to interact with the file system (loading, writing, deleting, and renaming files). It provides both synchronous and asynchronous methods.\n\n**Q17: `fs.readFile` vs. `fs.readFileSync`.**\n`readFile` is asynchronous and doesn't block the execution. `readFileSync` is synchronous and stops everything until the file is read. Asynchronous is generally preferred.\n\n**Q18: What is the `path` module?**\nProvides utilities for working with file and directory paths. It handles cross-platform differences (like slashes vs. backslashes) automatically.\n\n**Q19: `__dirname` vs. `process.cwd()`.**\n`__dirname` gives the path to the directory where the current script is located. `process.cwd()` gives the path to the directory from which the Node process was started.\n\n**Q20: How to write to a file?**\nUsing `fs.writeFile` or `fs.appendFile`. For larger datasets, using a Writable Stream is more memory-efficient."
+        },
+        {
+            "title": "5. Events & Streams",
+            "content": "**Q21: What is the EventEmitter class?**\nA core part of Node.js that allows you to create and handle custom events. Most Node.js objects (like HTTP servers) inherit from this.\n\n**Q22: How to listen for an event?**\nUsing the `.on('eventName', callback)` method on an EventEmitter instance.\n\n**Q23: What are Streams?**\nStreams allow you to read or write data chunk-by-chunk rather than loading the entire content into memory. This is essential for handling large files or real-time data.\n\n**Q24: Types of Streams.**\n1. Readable (e.g., source file). 2. Writable (e.g., target file). 3. Duplex (both read/write). 4. Transform (modifies data as it's read/written).\n\n**Q25: What is 'Piping' in streams?**\nPiping (`source.pipe(destination)`) is a way to connect the output of a Readable stream directly to the input of a Writable stream."
+        },
+        {
+            "title": "6. Basic Networking & HTTP",
+            "content": "**Q26: What is the `http` module?**\nA core module that allows Node.js to transfer data over the HyperText Transfer Protocol (HTTP). You can use it to create an HTTP server.\n\n**Q27: How to create a simple server?**\nUsing `http.createServer((req, res) => { ... }).listen(port)`. It takes a callback that handles requests and sends responses.\n\n**Q28: Req and Res objects.**\n`req` (IncomingMessage) contains data about the client's request (headers, url). `res` (ServerResponse) is used to send back status codes and data to the client.\n\n**Q29: Common HTTP Status Codes.**\n200 (OK), 201 (Created), 400 (Bad Request), 404 (Not Found), 500 (Internal Server Error).\n\n**Q30: What is 'JSON' in backend?**\nJavaScript Object Notation. It's the standard data format for sending and receiving data between a client and a server in modern Web APIs."
+        },
+        {
+            "title": "7. Error Handling & Debugging",
+            "content": "**Q31: The 'Error-First' Callback pattern.**\nA convention where the first argument of a callback is an error object (if something failed) and subsequent arguments are data. `(err, data) => { ... }`.\n\n**Q32: Try...Catch with Async/Await.**\nThe modern way to handle errors in asynchronous code. It makes async error handling look and behave like synchronous code.\n\n**Q33: Global Error Handling.**\nListening for `process.on('uncaughtException', ...)` and `process.on('unhandledRejection', ...)` to catch errors that weren't handled locally.\n\n**Q34: How to debug a Node.js app?**\nUsing `console.log`, the built-in `node --inspect` debugger, or the debugging tools provided by VS Code.\n\n**Q35: What is the `util.inspect` method?**\nUseful for printing complex nested objects to the console in a readable format, including hidden properties and circular references."
+        },
+        {
+            "title": "8. Global Objects & Process",
+            "content": "**Q36: What are Global Objects?**\nObjects available in all modules without needing to require them (e.g., `process`, `console`, `Buffer`, `__dirname`, `setTimeout`).\n\n**Q37: What is the `process` object?**\nA global object that provides information and control over the current Node.js process (e.g., architecture, platform, environment variables).\n\n**Q38: How to read environment variables?**\nUsing `process.env.VARIABLE_NAME`. These are often used for sensitive data like API keys or database credentials.\n\n**Q39: What is the 'Buffer' class?**\nUsed to handle binary data directly in memory. It's essential when working with streams or low-level network protocols.\n\n**Q40: `process.exit()`**\nImmediately terminates the Node.js process with a specified exit code (0 for success, non-zero for failure)."
+        },
+        {
+            "title": "9. Scripting & Build Tools",
+            "content": "**Q41: What are NPM Scripts?**\nCustom commands defined in `package.json` that automate tasks like starting the server, running tests, or building the project.\n\n**Q42: `npm install` vs `npm ci`.**\n`npm install` updates your `package-lock.json` if needed. `npm ci` (Clean Install) is faster and strictly follows the lock-file, ideal for automated build environments.\n\n**Q43: What is 'Nodemon'?**\nA popular development tool that automatically restarts your Node application whenever you make changes to your source code.\n\n**Q44: What is a 'Dependency' vs 'DevDependency'?**\nDependencies are needed to run the app in production. DevDependencies are only needed for development and testing (like builders or linters).\n\n**Q45: Node.js standard libraries.**\nBuilt-in modules that come with Node.js and don't need to be installed via NPM (e.g., `fs`, `path`, `os`, `url`, `querystring`)."
+        },
+        {
+            "title": "10. Environment & Career",
+            "content": "**Q46: Why choose Node.js for backend?**\n1. High performance (V8). 2. Single language (JS) for full stack. 3. Massive ecosystem (NPM). 4. Great for real-time apps.\n\n**Q47: What is 'REPL'?**\nRead-Eval-Print-Loop. An interactive computer environment where you can execute JavaScript code line-by-line directly in the terminal.\n\n**Q48: How to check Node version?**\nRunning `node -v` in your terminal.\n\n**Q49: What is 'Blocking' code example?**\nAny operation that takes a long time and prevents the event loop from continuing (e.g., a massive `for` loop or a synchronous network call).\n\n**Q50: Getting help in the ecosystem.**\nOfficial Node.js documentation, Stack Overflow, and the active NPM community are the best resources for solving problems."
+        },
+        {
+            "title": "Summary & Next Steps",
+            "content": "You've now covered 50+ fundamental questions for a Node.js Fresher role. The backend is a vast and exciting world. The next step is to build a basic API, connect it to a database, and understand how data flows. Keep learning, keep building, and good luck!",
+            "image": "/images/interviews/node-main.png"
+        }
+    ]
+}

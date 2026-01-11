@@ -1,0 +1,58 @@
+{
+    "slug": "angular-senior-interview-questions",
+    "title": "Angular Architect: 50+ Senior & Lead Interview Deep-Dives (2026)",
+    "description": "Master enterprise Angular systems. 50+ deep questions on Zone-less architecture, Signal-based reactivity, Module Federation, and leading large-scale SPA projects.",
+    "heroBadge": "Senior Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Mastery at Scale: The Senior Angular Perspective",
+            "content": "At a **Senior or Lead Level**, Angular engineering is about **scalability, stability, and organizational velocity**. You are responsible for systems that can be maintained by hundreds of developers over a decade. In 2026, the focus has shifted to **Zone-less Angular**, **Signal-based fine-grained reactivity**, and **Module Federation**. This guide covers 50+ high-level questions for the modern Angular architect.",
+            "image": "/images/interviews/angular-main.png"
+        },
+        {
+            "title": "1. The Future of Angular: Zone-less & Signals",
+            "content": "**Q1: Why the move from Zone.js to Signals?**\nExplain how Zone.js's 'monkey-patching' approach impacts performance and bundle size. Discuss how Signals allow for 'Fine-grained' updates, potentially bypassing the need to check the entire component tree.\n\n**Q2: Signal-based Components (Signal Components).**\nHow do components behave differently when they rely entirely on Signals for input, output, and queries? Discuss the performance gains of 'local' change detection.\n\n**Q3: The `effect` and `computed` primitives.**\nExplain the dependency tracking mechanism of Signals. Why is it important to never 'write' to a signal inside an `effect`? Discuss 'Glitch-free' execution.\n\n**Q4: Interoperability: RxJS & Signals.**\nWhen should you use `toSignal` vs `toObservable`? Discuss the architectural decision of using Signals for UI state and RxJS for asynchronous event streams.\n\n**Q5: Pre-rendering and Hydration in 2026.**\nDiscuss 'Non-destructive Hydration' and how Angular 16+ prevents the 'flicker' during initial load. How does 'Zone-less' impact the hydration lifecycle?"
+        },
+        {
+            "title": "2. Micro-Frontends & Module Federation",
+            "content": "**Q6: Implementing Module Federation in Angular.**\nHow does the Shell app load Remote modules at runtime? Discuss the role of `loadRemoteModule` and the shared dependency configuration.\n\n**Q7: State Sharing in a Distributed Frontend.**\nHow do you share user authentication or theme state across independent Angular builds? Discuss using a 'Secondary Entry Point' or a shared Event Bus.\n\n**Q8: CSS Encapsulation across Micro-Frontends.**\nHow to prevent global style leakage when different teams use different versions of a UI library. Discuss the use of 'ViewEncapsulation.ShadowDom' vs. 'Emulated'.\n\n**Q9: Versioning & The 'Diamond Dependency' Problem.**\nWhat happens when Team A needs Angular v18 and Team B needs v19 within the same Shell? Discuss the 'Singleton' vs. 'Multiple Version' strategies.\n\n**Q10: CI/CD for Angular Monorepos (Nx).**\nDiscuss 'Computation Caching' and 'Affected Builds'. How do you ensure that a monorepo with 50+ libs and 10 apps stays fast in the PR pipeline?"
+        },
+        {
+            "title": "3. Advanced Change Detection & Performance",
+            "content": "**Q11: Detaching the Change Detector (`cd.detach()`).**\nWhen is manually triggering change detection with `cd.detectChanges()` better than relying on the standard cycle? Discuss high-frequency data streams (e.g., Stock tickers).\n\n**Q12: Running 'Outside Angular' (`ngZone.runOutsideAngular`).**\nUsing this for heavy computations or animations that don't need to trigger UI updates. Discuss the Performance cost of 'Zone overhead'.\n\n**Q13: TrackBy & Performance in Large Lists.**\nExplain how Angular diffs lists. Why is a unique ID mandatory for list performance, and what are the consequences of using the 'index' as a key?\n\n**Q14: Web Workers for Heavy Computation.**\nHow do you offload CPU-bound logic (like image processing) to a Web Worker? Discuss the communication bridge between the worker and the Angular main thread.\n\n**Q15: Differential Loading & Modern Bundling.**\nHow does the Angular CLI optimize for modern browsers while supporting legacy ones? Discuss the impact of ES2022+ features on bundle size."
+        },
+        {
+            "title": "4. Enterprise State Management Patterns",
+            "content": "**Q16: NgRx Store at Scale.**\nWhen is a global Redux-style store overkill? Discuss the 'Boilerplate Tax' vs. the 'Predictability' of NgRx for large, multi-team projects.\n\n**Q17: NgRx Component Store vs. Global Store.**\nWhen should state live in a feature-level store instead of the global one? Discuss local state encapsulation and lifetime.\n\n**Q18: Entity State Adapter.**\nHow does `@ngrx/entity` optimize the management of collections? Discuss CRUD operations and performance when handling thousands of items.\n\n**Q19: Effects vs. Actions.**\nWhen should an action trigger an effect vs. a reducer update? Discuss the 'Side-effect' lifecycle and error handling in NgRx.\n\n**Q20: Reactive Forms with Complex Objects.**\nManaging dynamic arrays and nested groups. How do you implement a 'ControlValueAccessor' for custom complex UI components?"
+        },
+        {
+            "title": "5. Dependency Injection & Service Design",
+            "content": "**Q21: Hierarchical Injectors.**\nExplain the difference between Platform, Root, Module, and Component injectors. When would you purposefully provide a service at the component level?\n\n**Q22: ForwardRef and Circular Dependencies.**\nHow does Angular handle cases where two classes depend on each other? Discuss the architectural debt of circular dependencies and how to fix them.\n\n**Q23: InjectionTokens for Configuration.**\nHow to provide non-class dependencies (like an API URL or a feature flag) using `InjectionToken`. Discuss the use of `factory` functions.\n\n**Q24: The `@Optional()` and `@Host()` decorators.**\nControlling where the DI system looks for dependencies. Discuss use cases in complex UI directives.\n\n**Q25: Tree-shakeable Providers.**\nWhy is `providedIn: 'root'` the industry standard? Discuss how it allows the compiler to remove unused services from the final bundle."
+        },
+        {
+            "title": "6. Advanced Routing & Navigation",
+            "content": "**Q26: CanMatch vs. CanActivate Guards.**\nIn standalone apps, why is `CanMatch` preferred for lazy loading? Discuss preventing unauthorized code chunks from being downloaded.\n\n**Q27: RouterLinkActive and Breadcrumb Logic.**\nHow to build a dynamic breadcrumb service using the Router state tree. Discuss accessing `activatedRoute.snapshot` vs. `activatedRoute.params`.\n\n**Q28: Solving the 'Scroll to Top' on Navigation.**\nCustomizing scroll behavior in the router. Discuss handling 'anchor' tagging and restoring scroll position on 'Back' navigation.\n\n**Q29: Data Resolvers & UX.**\nWhen is a resolver better than a 'loading' spinner inside the component? Discuss the impact on perceived performance.\n\n**Q30: Auxiliary Routes (Named Outlets).**\nUsing multiple `<router-outlet>`s for sidebars or modals. Discuss the complexities of URL synchronization."
+        },
+        {
+            "title": "7. Directives, Pipes & Low-level DOM",
+            "content": "**Q31: Structural Directives (`*`).**\nExplain how `*ngIf` uses `TemplateRef` and `ViewContainerRef` under the hood. How would you build your own structural directive (e.g., `*appPermission`)??\n\n**Q32: Pure vs. Impure Pipes Performance.**\nWhy do impure pipes run on every change detection cycle? Discuss the risks of making API calls or heavy math inside an impure pipe.\n\n**Q33: HostBinding and HostListener vs. Renderer2.**\nWhat is the 'Angular Way' to interact with the DOM? Discuss platform-abstraction (Web worker/SSR support) when using `Renderer2`.\n\n**Q34: Content Projection Slotting.**\nUsing `select` in `ng-content` for complex multi-slot component design (e.g., a Card with Header, Body, and Footer sloth).\n\n**Q35: ViewChild vs. ContentChild Lifecycle.**\nWhy is `ViewChild` only available in `ngAfterViewInit`? Discuss the timing of template rendering."
+        },
+        {
+            "title": "8. Security & Enterprise Compliance",
+            "content": "**Q36: DomSanitizer and XSS.**\nWhen is it safe to use `bypassSecurityTrustHtml`? Discuss the organizational responsibility of handling third-party or user-generated HTML.\n\n**Q37: Content Security Policy (CSP) in Angular.**\nHandling 'Inline Styles' and 'Eval' issues with Angular's compiler. Discuss configuring a strict CSP for enterprise apps.\n\n**Q38: OAuth2 with Angular (oidc-client).**\nImplementing Silent Renew and handling token expiration in a Single Page Application. Discuss security risks of storing tokens in LocalStorage.\n\n**Q39: Cross-Site Request Forgery (CSRF).**\nUsing Angular's built-in `HttpClientXsrfModule`. How does it interact with backend tokens?\n\n**Q40: Accessibility (A11y) Governance.**\nUsing the CDK's A11y tools (LiveAnnouncer, FocusTrap). How to enforce accessibility standards in the shared component library."
+        },
+        {
+            "title": "9. Engineering Leadership & CI/CD",
+            "content": "**Q41: The Angular RFC Process.**\nHow to lead the transition from Modules to Standalone Components across 500+ files. Discuss the 'Migration Strategy'.\n\n**Q42: Technical Debt in Angular Apps.**\nHow to manage the upgrade cycle (every 6 months). Discuss the cost of being 3 versions behind vs. the cost of constant upgrading.\n\n**Q43: Build Optimization (Brotli/Gzip).**\nHow to achieve 'Production Grade' bundle sizes. Discuss bundle budget warnings and analyzing the `stats.json` file.\n\n**Q44: Mentoring from Mid to Senior.**\nHow to teach an engineer to think in 'Observables' and 'Reactivity' rather than 'Imperative Logic'.\n\n**Q45: Post-Mortems for Frontend Crashes.**\nUsing Sentry to track 'Angular Error Handler' issues. How to conduct a blameless root-cause analysis for a UI production failure."
+        },
+        {
+            "title": "10. Vision 2026: The Angular Framework",
+            "content": "**Q46: Angular vs. React/Vue in 2026.**\nWhere does Angular fit in the modern ecosystem? Discuss its dominance in Fintech, Healthcare, and enterprise-grade tools.\n\n**Q47: The 'Zoneless' Horizon.**\nIs Zone.js finally dead? Discuss the implications for legacy apps and the roadmap for future Angular releases.\n\n**Q48: AI-Assisted Angular Development.**\nUsing LLMs to generate boilerplate (Modules, Components). How to audit AI-generated code for security and architectural alignment.\n\n**Q49: The 'Server-Side' Hybrid Future.**\nDiscuss 'Partial Hydration' and 'Islands' architecture in the context of Angular. How does it compete with Qwik or Astro?\n\n**Q50: Ethical Engineering & Performance.**\nHow does loading a 2MB bundle impact mobile users in regions with poor connectivity? Discuss the 'Responsibility of the Developer'."
+        },
+        {
+            "title": "Summary: The Architect's Standard",
+            "content": "A Senior Angular Architect is a master of structure and discipline. You've now navigated 50+ deep-dive questions that separate the coders from the architects. Keep your foundations strong, embrace the Signal-based future, and always build for the developer who has to maintain your code in five years.",
+            "image": "/images/interviews/angular-main.png"
+        }
+    ]
+}

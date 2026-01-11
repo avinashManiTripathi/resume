@@ -1,0 +1,58 @@
+{
+    "slug": "react-senior-interview-questions",
+    "title": "React Architect: 50+ Senior & Lead Interview Deep-Dives (2026)",
+    "description": "Master enterprise React architecture. 50+ deep questions on RSC, Micro-frontends, concurrent rendering, and leading global engineering teams.",
+    "heroBadge": "Senior Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Architectural Vision: The Senior React Perspective",
+            "content": "At a **Senior or Lead level**, your value isn't just in writing hooks; it's in making decisions that affect dozens of developers and millions of users. You must understand the **trade-offs of the modern web**: when to use Server Components, how to scale state across micro-frontends, and how to maintain a world-class design system. This guide covers 50+ high-level questions designed for architects.",
+            "image": "/images/interviews/react-main.png"
+        },
+        {
+            "title": "1. React Server Components (RSC) & Data Architecture",
+            "content": "**Q1: Explain the RSC wire format.**\nUnlike HTML, RSCs send a serialized representation of the component tree to the client. This allows React to weave server-rendered parts with client-side state without losing user focus or scroll position.\n\n**Q2: The 'Request-Response' mental model shift.**\nIn the past, we fetched data *after* the component rendered. With RSC, data fetching is part of the rendering itself. How does this eliminate 'Waterfall' requests?\n\n**Q3: Sharing state between RSC and Client Components.**\nYou can't pass a function (like a state setter) from an RSC to a Client Component. How do you handle shared state? (Hint: Composition, URL params, or specialized providers).\n\n**Q4: Server Actions vs. API Routes.**\nWhy use Server Actions over traditional POST endpoints? Discuss standard security, 'Progressive Enhancement', and the reduction of boilerplate code.\n\n**Q5: Poisoning the Client Bundle.**\nUsing the `server-only` package to ensure sensitive logic or large libraries (like Prisma or heavy parsers) never leak into the client-side JavaScript."
+        },
+        {
+            "title": "2. High-Scale Rendering & Performance",
+            "content": "**Q6: Concurrent Rendering: Under the Hood.**\nHow does React use 'Time Slicing' to break down heavy re-renders? Discuss how it yields control back to the browser to prevent frame drops.\n\n**Q7: Selective Hydration.**\nExplain how `Suspense` allows React to start hydrating parts of the page before the entire bundle has even finished downloading.\n\n**Q8: Optimizing 'Initial Load' vs 'Interaction to Next Paint' (INP).**\nSeniors must balance TTI with interactivity. How do `useTransition` and `useDeferredValue` specifically target INP improvements?\n\n**Q9: Virtualization Strategies.**\nBeyond `react-window`, how do you handle variable-height items in a multi-thousand-row list without layout shifts?\n\n**Q10: Memory Management in Long-Running Apps.**\nIdentifying leaks in `useEffect` closures, global event listeners, and oversized caches in libraries like Apollo or TanStack Query."
+        },
+        {
+            "title": "3. State Management System Design",
+            "content": "**Q11: The Global Store Paradox.**\nWhy are large organizations moving away from 'one big Redux store'? Discuss the scalability issues of centralized state in micro-frontend environments.\n\n**Q12: Atomic State (Jotai/Recoil).**\nHow do atoms allow for highly granular re-renders compared to selector-based stores? When is this a performance win?\n\n**Q13: Finite State Machines (XState) in React.**\nWhen is a Reducer not enough? Discuss managing complex UI flows (like checkout or multi-step forms) using formal state machines to eliminate 'Impossible States'.\n\n**Q14: Context API vs. State Management Libraries.**\nExplain the 'Unnecessary Re-render' problem with Context and how to solve it without moving to an external library (e.g., splitting contexts or memoization).\n\n**Q15: Persistence and Hydration of Client State.**\nHandling state synchronization between LocalStorage, Cookies, and React State in a way that is secure and SSR-compatible."
+        },
+        {
+            "title": "4. Micro-Frontends & Monorepos",
+            "content": "**Q16: Module Federation (Webpack 5 / Rspack).**\nHow does runtime code sharing actually work? Discuss dependency versioning (Shared vs Single-Instance) and the 'Diamond Dependency' problem.\n\n**Q17: Design System Orchestration.**\nHow do you prevent 'Version Drift' across 20 different teams using the same component library? Discuss peer dependencies vs internal bundling.\n\n**Q18: Testing in a Distributed Frontend.**\nHow do you run E2E tests when one team's change might break another team's app? Discuss 'Contract Testing' for the frontend.\n\n**Q19: CI/CD for Monorepos (Nx/Turbo).**\nExplain 'Computation Caching' and 'Affected Commands'. How do you ensure a 100-app monorepo has a sub-10-minute build time?\n\n**Q20: The Shell App Pattern.**\nDefining the responsibilities of the 'Host' app (Auth, Global Nav, Routing) vs the 'Remotes' (Features)."
+        },
+        {
+            "title": "5. Advanced Testing & Quality Assurance",
+            "content": "**Q21: Visual Regression Testing.**\nUsing tools like Chromatic or Playwright-Visual to catch layout shifts and CSS issues that standard unit tests miss.\n\n**Q22: Testing 'Rhythms' not 'Implementations'.**\nWhy does React Testing Library discourage testing state? Explain the philosophy of testing the 'User Experience Contract'.\n\n**Q23: Mocking at the Network Level (MSW).**\nWhy is mocking `fetch` manually a bad idea? Discuss why intercepting at the network layer is the standard for resilient tests.\n\n**Q24: Code Coverage: Vanity Metric vs Value.**\nHow much coverage is enough? Discuss the 'Pareto Principle' in testing and where to focus efforts (Business logic vs UI primitives).\n\n**Q25: Integration vs E2E.**\nWhere do you draw the line? When should a test be a fast Vitest integration test vs a slow Playwright E2E test?"
+        },
+        {
+            "title": "6. Security & Infrastructure",
+            "content": "**Q26: Content Security Policy (CSP) for SPAs.**\nHow do you handle 'nonce' generation in a statically generated (SSG) app? Discuss the challenges of secure script execution.\n\n**Q27: JWT vs Session Cookies in 2026.**\nWhy is the industry moving back to HttpOnly Secure cookies? Discuss the vulnerability of LocalStorage to XSS.\n\n**Q28: Sanitization & Trusted Types.**\nHow do you render user-generated HTML safely? Discuss `DOMPurify` and the 'Trusted Types' browser API.\n\n**Q29: Edge Rendering (Vercel/Cloudflare Workers).**\nMoving logic closer to the user. How does middleware handle auth and redirects before the request even hits your main server?\n\n**Q30: Infrastructure as Code (IaC) for Frontend.**\nDo you need to know Terraform? Discuss how senior devs manage DNS, SSL, and CDN invalidation policies in modern stacks."
+        },
+        {
+            "title": "7. Design Systems & Component Design",
+            "content": "**Q31: Headless UI Components.**\nWhat are the trade-offs of using Radix/Aria-UI vs building from scratch? Discuss maintenance vs customization.\n\n**Q32: Polymorphic Components in TypeScript.**\nBuilding a `<Button />` that can be an `<a>`, a `button`, or a `Link`. How do you handle proper type inference for additional props?\n\n**Q33: Layout Stability (CLS).**\nHow do you prevent layout shifts when loading large images or dynamic components? Discuss 'Skeleton Screens' and aspect-ratio CSS.\n\n**Q34: Theming Strategy.**\nCSS Variables vs CSS-in-JS. In 2026, why is the industry leaning back towards native CSS variables for performance and SSR?\n\n**Q35: Icons & Assets.**\nSVG Sprites vs Icon Fonts vs Component-based icons. How do you optimize for bundle size and render speed?"
+        },
+        {
+            "title": "8. API Design & Data Orchestration",
+            "content": "**Q36: GraphQL vs REST: The Senior Choice.**\nWhen should you introduce the complexity of GraphQL? Discuss schema-first design and type safety across the stack.\n\n**Q37: Backend for Frontend (BFF) Pattern.**\nWhy build a dedicated Node.js layer for your React app? Discuss data masking, aggregation, and reducing mobile payload size.\n\n**Q38: Optimistic UI Updates.**\nImplementing mutations that feel 'instant'. How do you handle 'Rollbacks' when the server eventually returns an error?\n\n**Q39: Streaming & Progressive Hydration.**\nHow does the browser handle a stream of HTML? Discuss the impact on 'Largest Contentful Paint' (LCP).\n\n**Q40: Rate Limiting & Debouncing at Scale.**\nPreventing users from overwhelming your backend through UI-level throttling and server-side protection."
+        },
+        {
+            "title": "9. Engineering Leadership & Soft Skills",
+            "content": "**Q41: The 'Request for Comments' (RFC) Process.**\nHow do you drive consensus for a major architectural change (like moving from Redux to Zustand)?\n\n**Q42: Technical Debt Management.**\nHow do you convince stakeholders to pause feature development for a refactor? Discuss the 'Business Value' of developer velocity.\n\n**Q43: Mentorship & Growth.**\nHow do you distinguish between a 'Mid' and a 'Senior' developer? How do you help someone bridge that gap?\n\n**Q44: Incident Response.**\nWhen production goes down due to a frontend error, what is your protocol? Discuss 'Blameless Post-mortems'.\n\n**Q45: Building vs Buying.**\nWhen do you build an internal tool (like an internal CMS) vs using an OTS (Off-the-shelf) solution?"
+        },
+        {
+            "title": "10. Strategic Vision 2026",
+            "content": "**Q46: The Death of the 'Classic SPA'.**\nWhy are we moving back to multi-page-style heavy server rendering? Discuss the pendulum swing of web architecture.\n\n**Q47: AI-Assisted Development.**\nHow do Copilot and LLMs change the job of a Senior Engineer? Discuss 'Prompt Engineering' and code auditing over raw coding.\n\n**Q48: WebAssembly (Wasm) in React.**\nWhen should you move logic to Rust or C++? Discuss video editing, heavy data processing, and crypto in the browser.\n\n**Q49: The 'Zoneless' Movement.**\nAngular is going zoneless, but what is the equivalent in React? Discuss Signal-like fine-grained reactivity in the React ecosystem.\n\n**Q50: Sustainability & Green IT.**\nHow does bundle size and CPU usage impact carbon footprint? Discuss the ethical responsibility of high-traffic frontend apps."
+        },
+        {
+            "title": "Summary: The Path Ahead",
+            "content": "A Senior React Architect is a master of trade-offs. You've now seen 50 questions that test your ability to think beyond a single component. The web is moving towards a hybrid, server-heavy future where performance and security are paramount. Keep your architectural vision sharp, and always ask: 'What happens when this scales to 100 developers?'.",
+            "image": "/images/interviews/react-main.png"
+        }
+    ]
+}

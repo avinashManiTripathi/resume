@@ -1,0 +1,58 @@
+{
+    "slug": "node-junior-interview-questions",
+    "title": "Node.js Architect: 50+ Junior to Mid Interview Deep-Dives (2026)",
+    "description": "Master the Node.js ecosystem. 50+ deep questions on the Event Loop, memory management, stream pipelines, and scaling enterprise-grade backends with Node.js 22+.",
+    "heroBadge": "Backend Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: Theoretical to Practical Backend Engineering",
+            "content": "Moving from Junior to Mid-level in the Node.js world requires a deep understanding of **how the platform manages resources**. It's not just about writing Express routes; it's about understanding **asynchronous bottlenecks**, memory leaks, and distributed system design. This guide covers 50+ questions that test your readiness for high-scale backend roles.",
+            "image": "/images/interviews/node-main.png"
+        },
+        {
+            "title": "1. Node.js Internals & The Event Loop",
+            "content": "**Q1: What is V8?**\nGoogle's open-source high-performance JavaScript engine. It compiles JavaScript directly to native machine code before executing it, using JIT (Just-In-Time) compilation.\n\n**Q2: Explain the Event Loop Phases.**\n1. Timers (setTimeout, setInterval). 2. Pending Callbacks (I/O). 3. Idle, Prepare. 4. Poll (Accept new connections). 5. Check (setImmediate). 6. Close Callbacks. Understanding this order is vital for predicting code execution.\n\n**Q3: process.nextTick() vs. setImmediate()?**\n`process.nextTick()` fires immediately after the current operation, before the event loop continues. `setImmediate()` fires in the 'Check' phase of the *next* event loop iteration.\n\n**Q4: What is Libuv?**\nA multi-platform C library that provides asynchronous I/O based on event loops. It's what handles the thread pool for file system, DNS, and user-defined tasks in Node.\n\n**Q5: Is Node.js truly single-threaded?**\nJavaScript execution is single-threaded (in the 'main thread'). However, Node.js itself uses many threads (via Libuv) for I/O operations, cryptography, and compression. It also supports Worker Threads for parallel JS execution."
+        },
+        {
+            "title": "2. Asynchronous Architecture & Patterns",
+            "content": "**Q6: Callback Hell and how to solve it.**\nCallback hell happens when multiple nested callbacks make code unreadable. Solve it using Promises, Async/Await, or named functions. Modularizing logic is the key.\n\n**Q7: How does `Async/Await` work under the hood?**\nIt's syntactic sugar over Promises and Generators. An `async` function always returns a promise, and `await` pauses execution until the promise settles.\n\n**Q8: Promise.all vs. Promise.allSettled?**\n`Promise.all` fails if *any* promise rejects. `Promise.allSettled` waits for all to complete regardless of success or failure, returning an array of results/errors.\n\n**Q9: Error Handling in Async code.**\nAlways wrap `await` calls in `try/catch` or attach a `.catch()` to the promise. In Express, always call `next(err)` to pass the error to a global error handler.\n\n**Q10: Top-level Await.**\nAvailable in ES Modules. It allows you to use `await` outside of an `async` function at the top level of a module, which is great for database connections or initial configuration."
+        },
+        {
+            "title": "3. Buffers and Streams (The Performance Layer)",
+            "content": "**Q11: What is a Buffer?**\nA way to handle raw binary data outside the V8 heap. It's a fixed-size chunk of memory used for file I/O, network packets, and image processing.\n\n**Q12: Why use Streams?**\nStreams allow you to process data piece-by-piece without loading the entire content into memory. This is critical for large file transfers (e.g., streaming a 5GB video).\n\n**Q13: Types of Streams.**\nReadable (from source), Writable (to destination), Duplex (both), and Transform (modifies data like zipping/unzipping).\n\n**Q14: What is 'Backpressure'?**\nWhen a Writable stream can't keep up with the speed of a Readable stream. Node handles this by pausing the Readable stream until the Writable is ready for more data.\n\n**Q15: The `pipeline()` utility vs. `.pipe()`.**\n`pipeline()` is preferred because it handles error cleanup and stream destruction automatically, whereas `.pipe()` doesn't handle errors well in complex chains."
+        },
+        {
+            "title": "4. Networking & HTTP Design",
+            "content": "**Q16: Statelessness in REST API.**\nEach request from a client must contain all the information necessary to understand and process the request. No client context is stored on the server between requests.\n\n**Q17: HTTP Methods (PUT vs PATCH).**\nPUT replaces the entire resource. PATCH updates specific fields. Knowing the semantic difference is essential for clean API design.\n\n**Q18: What are WebSockets?**\nA persistent, full-duplex communication channel over a single TCP connection. Best for real-time apps like chats or live dashboards.\n\n**Q19: Handling CORS.**\nCross-Origin Resource Sharing. You must configure headers (like `Access-Control-Allow-Origin`) to tell the browser which origins are allowed to access your API.\n\n**Q20: gRPC vs. REST.**\ngRPC uses Protocol Buffers and HTTP/2 for high-performance, low-latency communication, often used in internal microservices. REST uses JSON/XML and is standard for public APIs."
+        },
+        {
+            "title": "5. Security & Authentication",
+            "content": "**Q21: JWT Structure (Header, Payload, Signature).**\nHeader (algorithm), Payload (claims/user data), and Signature (secret key verification). JWTs are stateless but can't be easily invalidated if stolen.\n\n**Q22: Refresh Tokens vs. Access Tokens.**\nAccess tokens are short-lived. Refresh tokens are long-lived and stored securely (e.g., HttpOnly cookies) to get new access tokens without the user re-logging.\n\n**Q23: Protecting against SQL Injection.**\nNever use string concatenation for queries. Always use parameterized queries or an ORM that does this for you automatically.\n\n**Q24: Hashing Passwords (bcrypt/argon2).**\nNever store passwords in plain text. Use a slow hashing algorithm like `bcrypt` with a unique 'salt' to protect against rainbow table attacks.\n\n**Q25: Helmet.js and Security Headers.**\nHelmet is a collection of 14+ small middleware functions that set HTTP response headers to prevent common vulnerabilities like XSS and Clickjacking."
+        },
+        {
+            "title": "6. Performance, Scaling & Clusters",
+            "content": "**Q26: Scaling Horizontaly (Cluster Module).**\nSpawns multiple processes on the same machine to utilize multi-core CPUs. Each process shares the server port but has its own memory.\n\n**Q27: Scaling Vertically?**\nIncreasing the resources of a single server (CPU/RAM). In Node, this is limited because it's single-threaded, so horizontal scaling is usually preferred.\n\n**Q28: Sticky Sessions?**\nWhen using a load balancer, sticky sessions ensure a specific client always hits the same server instance. Often needed for older socket.io implementations or local caching.\n\n**Q29: Avoiding Garbage Collection overhead.**\nDon't create large temporary objects in loops. Keep the V8 heap small by using streams for large data and avoiding global variables.\n\n**Q30: Node.js Clusters vs. PM2.**\nPM2 is a production process manager that handles clustering, automatic restarts on crashes, and log management out of the box."
+        },
+        {
+            "title": "7. Databases & Persistence",
+            "content": "**Q31: ACID vs. BASE.**\nACID (Atomicity, Consistency, Isolation, Durability) is for SQL. BASE (Basically Available, Soft state, Eventual consistency) is for NoSQL/distributed systems.\n\n**Q32: Normalization vs. Denormalization.**\nNormalization reduces redundancy (SQL). Denormalization improves read performance by duplicating data (NoSQL).\n\n**Q33: Database Indexing.**\nEssential for `SELECT` performance but slows down `INSERT/UPDATE`. Use them on columns you search by frequently.\n\n**Q34: Connection Pooling.**\nPre-creating a set of database connections to reuse them. This saves the overhead of opening potentially thousands of individual connections.\n\n**Q35: Transactions.**\nEnsuring multiple DB operations either all succeed or all fail. Critical for financial applications (e.g., bank transfers)."
+        },
+        {
+            "title": "8. Enterprise Design Patterns",
+            "content": "**Q36: Singleton Pattern.**\nEnsures a class has only one instance (e.g., a Database Connection instance or a Logger).\n\n**Q37: Dependency Injection (DI).**\nPassing dependencies (like services/repos) into a class/function instead of importing/creating them inside. Makes testing much easier (mocking).\n\n**Q38: Middleware as 'Chain of Responsibility'.**\nEach middleware handles a specific part of the request lifecycle and chooses to end or pass the request forward.\n\n**Q39: Pub/Sub vs. Message Queues.**\nPub/Sub is for broadcasting to many. Message Queues (like RabbitMQ/BullMQ) are for reliable, one-to-one task processing (e.g., processing an order).\n\n**Q40: Microservices vs. Monolith.**\nMonolith: Everything in one codebase. Microservices: Scale pieces independently but increased complexity in communication and deployment."
+        },
+        {
+            "title": "9. Ecosystem & Production (The Senior Edge)",
+            "content": "**Q41: Logging (Winston/Pino).**\nUse structured logging (JSON) for production so they can be parsed by ELK/Datadog. Avoid `console.log` as it's synchronous and blocks the thread.\n\n**Q42: Graceful Shutdown.**\nHandling `SIGTERM` to close database connections and finish pending requests before the process exits. This prevents data corruption.\n\n**Q43: Monitoring & APM.**\nUsing tools like New Relic or Prometheus to track response times, error rates, and resource usage in real-time.\n\n**Q44: CI/CD Pipelines.**\nAutomating testing, linting, and deployment. Ensure your tests pass before merging into the main branch.\n\n**Q45: Dockerizing Node.js.**\nUse Multi-stage builds to keep production images small. Use non-root users inside containers for security."
+        },
+        {
+            "title": "10. Career & Technical Leadership",
+            "content": "**Q46: Solving a difficult bug.**\nTalk about your process: reproduce -> isolate -> analyze logs -> fix -> add a regression test. Mention the tools you used.\n\n**Q47: Mentoring Juniors.**\nExplain your approach to code reviews: focusing on teaching, explaining 'why', and being supportive rather than just pointing out errors.\n\n**Q48: Handling Technical Debt.**\nChoosing the balanced path. Acknowledge when a quick fix is necessary but insist on documenting it for a future 'refactor sprint'.\n\n**Q49: Estimating tasks.**\nBreaking large features into smaller tickets and using story points or hours based on previous similar tasks.\n\n**Q50: Vision 2026: The future of Node.js.**\nDiscuss Bun, Deno, and the convergence of standards. Mention native support for .env and TypeScript. Show you are thinking ahead."
+        },
+        {
+            "title": "Summary & Mastery",
+            "content": "Node.js is more than just a runtime; it's the backbone of the modern web. By mastering these 50 questions, you've demonstrated you understand the depth required to build resilient systems. Keep building, keep optimizing, and always stay curious about what's happening under the hood.",
+            "image": "/images/interviews/node-main.png"
+        }
+    ]
+}

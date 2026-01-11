@@ -125,6 +125,55 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.3,
     }))
 
+    // Interview Question Articles (dynamic)
+    let interviewPages: any[] = []
+    try {
+        const path = await import('path')
+        const fs = await import('fs/promises')
+
+        const possiblePaths = [
+            path.join(process.cwd(), "data/interviews"),
+            path.join(process.cwd(), "apps/landing/data/interviews"),
+            path.join(process.cwd(), "../../data/interviews"),
+        ]
+
+        let interviewsDir = ""
+        for (const p of possiblePaths) {
+            try {
+                await fs.access(p)
+                interviewsDir = p
+                break
+            } catch {
+                continue
+            }
+        }
+
+        if (interviewsDir) {
+            const files = await fs.readdir(interviewsDir)
+            for (const file of files) {
+                if (!file.endsWith(".json")) continue
+                const content = await fs.readFile(path.join(interviewsDir, file), "utf-8")
+                const data = JSON.parse(content)
+                interviewPages.push({
+                    url: `${baseUrl}/interviews/${data.slug}`,
+                    lastModified: currentDate,
+                    changeFrequency: 'weekly' as const,
+                    priority: 0.85,
+                })
+            }
+
+            // Add the main interviews index page
+            interviewPages.push({
+                url: `${baseUrl}/interviews`,
+                lastModified: currentDate,
+                changeFrequency: 'weekly' as const,
+                priority: 0.9,
+            })
+        }
+    } catch (e) {
+        console.error("Error generating interview sitemap:", e)
+    }
+
     return [
         ...homepage,
         ...pillarPages,
@@ -134,5 +183,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...blogCategoryPages,
         ...supportPages,
         ...legalPages,
+        ...interviewPages,
     ]
 }

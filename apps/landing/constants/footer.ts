@@ -17,12 +17,7 @@ export const FOOTER = {
             "Build professional, ATS-friendly resumes that get you hired. Join 50,000+ job seekers who landed their dream jobs with our AI-powered resume builder.",
         phone: "+91 6393177038",
         location: "Uttar Pradesh, India",
-        trustBadges: [
-            { label: "SSL Secured", color: "bg-green-600", icon: "✓" },
-            { label: "GDPR Compliant", color: "bg-blue-600", icon: "✓" },
-            { label: "4.9/5 Rating", color: "bg-purple-600", icon: "★" },
-            { label: "50K+ Happy Users", color: "bg-orange-600", icon: "50K+" },
-        ],
+        trustBadges: [],
     },
 
     socials: [
@@ -56,6 +51,13 @@ export const FOOTER = {
             { label: "Help Center", href: "/help" },
             { label: "Privacy Policy", href: "/privacy" },
             { label: "Terms of Service", href: "/terms" },
+        ],
+        interviews: [
+            { label: "React Interview Guide", href: "/interviews/react-junior-interview-questions" },
+            { label: "Node.js Interview Guide", href: "/interviews/node-junior-interview-questions" },
+            { label: "Python Interview Guide", href: "/interviews/python-junior-interview-questions" },
+            { label: "Angular Interview Guide", href: "/interviews/angular-junior-interview-questions" },
+            { label: "View All Guides", href: "/interviews" },
         ],
     },
 

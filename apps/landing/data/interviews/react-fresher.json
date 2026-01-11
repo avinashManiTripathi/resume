@@ -1,0 +1,58 @@
+{
+    "slug": "react-interview-question-for-fresher",
+    "title": "React Foundation: 50+ Fresher Interview Questions & Answers (2026)",
+    "description": "Kickstart your React career. 50+ essential questions covering JSX, components, state, props, and fundamental React hooks for entry-level roles.",
+    "heroBadge": "Fresher Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: Building a Strong React Foundation",
+            "content": "Landing your first React role in 2026 requires more than just knowing how to write a component. You need to understand **why React exists**, how it differs from traditional JavaScript development, and the core building blocks like **JSX**, **Props**, and **State**. This guide covers 50+ fundamental questions to help freshers ace their first technical interview.",
+            "image": "/images/interviews/react-main.png"
+        },
+        {
+            "title": "1. React Basics & JSX",
+            "content": "**Q1: What is React?**\nReact is an open-source JavaScript library for building user interfaces, especially for single-page applications. It's maintained by Meta (Facebook) and a community of individual developers.\n\n**Q2: What is JSX?**\nJSX stands for JavaScript XML. It allows us to write HTML-like code inside JavaScript, which is then transformed into regular JavaScript objects (`React.createElement`) by tools like Babel.\n\n**Q3: Can browsers read JSX?**\nNo, browsers cannot read JSX directly. It must be compiled (transpiled) into standard JavaScript using a tool like Babel or ESBuild before it can be executed in the browser.\n\n**Q4: Why use React instead of Vanilla JS?**\nReact uses a declarative approach and a Virtual DOM to optimize updates. It makes managing complex UI states much easier compared to manual DOM manipulation in Vanilla JS.\n\n**Q5: What is a Component?**\nComponents are the building blocks of a React application. They are independent, reusable bits of code that serve the same purpose as JavaScript functions but work in isolation and return HTML via a render function."
+        },
+        {
+            "title": "2. Components & Props",
+            "content": "**Q6: Functional vs. Class Components.**\nFunctional components are simple JavaScript functions that return JSX. Class components are ES6 classes. In modern React, functional components with Hooks are the industry standard.\n\n**Q7: What are Props?**\nProps (short for properties) are read-only inputs passed from a parent component to a child component. They allow you to pass data and configuration down the component tree.\n\n**Q8: Can a component change its own Props?**\nNo. Props are immutable. A component should never modify the props it receives; it should only read them.\n\n**Q9: What is 'Props Drilling'?**\nWhen you pass props through multiple levels of components just to reach a deep child that needs the data. This makes code hard to maintain.\n\n**Q10: What is `children` prop?**\n`props.children` is a special prop that allows you to pass components or elements as data to other components, enabling component composition (nesting content)."
+        },
+        {
+            "title": "3. State Management Basics",
+            "content": "**Q11: What is State?**\nState is an updatable structure that is used to contain data or information about the component. Unlike props, state is managed *within* the component and can change over time.\n\n**Q12: How to update State?**\nYou should never modify state directly (e.g., `this.state.count = 5`). Instead, use the `setState` function (in classes) or the updater function from the `useState` hook.\n\n**Q13: Why is state update asynchronous?**\nReact batches state updates for performance reasons. This ensures that multiple state changes don't trigger multiple unnecessary re-renders in a short period.\n\n**Q14: What is the 'useState' hook?**\nA built-in hook that allows you to add React state to functional components. It returns an array with the current state value and a function to update it.\n\n**Q15: Difference between Props and State.**\nProps are external and passed to the component (like function arguments). State is internal and managed by the component itself (like variables declared inside a function)."
+        },
+        {
+            "title": "4. Handling Events & Forms",
+            "content": "**Q16: How to handle events in React?**\nReact events are named using camelCase (e.g., `onClick` instead of `onclick`). You pass a function as the event handler rather than a string.\n\n**Q17: What is a 'Controlled Component'?**\nA component where the form data (like an input value) is handled by the React component's state. React is the 'single source of truth'.\n\n**Q18: What is an 'Uncontrolled Component'?**\nA component where the form data is handled by the DOM itself. You use `refs` to get the values from the DOM elements when needed.\n\n**Q19: How to prevent the default behavior of a form?**\nBy calling `event.preventDefault()` inside your form's `onSubmit` handler. This prevents the page from reloading on submission.\n\n**Q20: What is Event Delegation in React?**\nReact doesn't attach event listeners to individual nodes. Instead, it attaches a single listener to the root element. This is handled automatically by React's Synthetic Event system."
+        },
+        {
+            "title": "5. Lists & Fragments",
+            "content": "**Q21: How to render a list in React?**\nBy using the JavaScript `map()` function to iterate over an array of data and returning a JSX element for each item.\n\n**Q22: Why do we need the 'key' prop in lists?**\nKeys help React identify which items have changed, been added, or been removed. They are essential for performance and for maintaining component state during re-renders.\n\n**Q23: Can we use 'index' as a key?**\nOnly as a last resort. Using the index can cause issues with component state and performance if the list order changes. It's always better to use a unique ID from your data.\n\n**Q24: What is a Fragment?**\nFragments (`<React.Fragment>` or `<>...</>`) allow you to group a list of children without adding extra nodes to the DOM. This keeps the HTML structure clean.\n\n**Q25: When to use Fragments over Divs?**\nUse Fragments when you need to return multiple elements from a component but don't want to break the CSS layout or accessibility tree with an unnecessary wrapper div."
+        },
+        {
+            "title": "6. Life Cycle & useEffect",
+            "content": "**Q26: What are the main phases of a component lifecycle?**\n1. Mounting (being born). 2. Updating (changing). 3. Unmounting (dying).\n\n**Q27: What is the 'useEffect' hook?**\nA hook that lets you perform side effects in functional components (e.g., data fetching, manual DOM changes, subscriptions).\n\n**Q28: How to run an effect only once?**\nBy passing an empty dependency array `[]` as the second argument to `useEffect`. This tells React to run the effect only after the initial render.\n\n**Q29: How to clean up an effect?**\nBy returning a function from the `useEffect` callback. React will call this 'cleanup' function when the component unmounts or before re-running the effect.\n\n**Q30: What happens if you omit the dependency array in useEffect?**\nThe effect will run after **every** single render of the component. This can lead to significant performance issues or infinite loops if the effect updates state."
+        },
+        {
+            "title": "7. Styling & Assets",
+            "content": "**Q31: How to apply CSS styles in React?**\n1. External CSS files. 2. Inline styles (using objects). 3. CSS Modules. 4. CSS-in-JS libraries (like Styled Components).\n\n**Q32: Inline styles syntax.**\nIn JSX, inline styles are written as objects with camelCase property names: `<div style={{ backgroundColor: 'red', fontSize: '14px' }}>`.\n\n**Q33: What is 'className' in React?**\nSince `class` is a reserved keyword in JavaScript, React uses `className` to specify CSS classes on elements.\n\n**Q34: How to import images in React?**\nYou can import images at the top of your file (`import logo from './logo.png'`) and use the variable in the `src` attribute of an `<img>` tag.\n\n**Q35: Conditional Styling.**\nYou can use template literals or ternary operators to dynamically apply classes: `className={isActive ? 'active' : 'inactive'}`."
+        },
+        {
+            "title": "8. Conditional Rendering",
+            "content": "**Q36: How to render elements conditionally?**\nUsing standard JavaScript operators like `if`, the ternary operator `? :`, or the logical AND operator `&&`.\n\n**Q37: The ternary operator in JSX.**\n`{isLoggedIn ? <LogoutButton /> : <LoginButton />}`. This is the most common way to toggle between two views.\n\n**Q38: The logical AND operator (`&&`).**\n`{unreadMessages.length > 0 && <h2>You have unread messages!</h2>}`. If the left side is true, the right side renders. If false, nothing renders.\n\n**Q39: Preventing a component from rendering.**\nYou can return `null` from a component's render method to prevent it from displaying anything in the UI.\n\n**Q40: Switch statements in render.**\nYou can use a switch statement inside a helper function to decide which complex component to render based on a state (e.g., different steps of a wizard)."
+        },
+        {
+            "title": "9. React Hooks (Essentials)",
+            "content": "**Q41: What are Hooks?**\nFunctions that let you 'hook into' React state and lifecycle features from functional components. They were introduced in React 16.8.\n\n**Q42: The Rules of Hooks.**\n1. Only call hooks at the top level. 2. Only call hooks from React function components or custom hooks.\n\n**Q43: What is 'useRef'?**\nA hook that returns a mutable ref object whose `.current` property is persistent. It's commonly used to access DOM elements directly or to store values that don't trigger re-renders.\n\n**Q44: What is 'useContext'?**\nA hook that allows you to subscribe to React context without nesting. It provides a way to share data (like themes or auth) without manually passing props down.\n\n**Q45: Can we create custom hooks?**\nYes. A custom hook is a JavaScript function whose name starts with 'use' and that may call other hooks. It allows you to extract and reuse component logic."
+        },
+        {
+            "title": "10. Environment & Tools",
+            "content": "**Q46: What is 'Node.js' in the context of React?**\nNode.js is used as a development environment to run tools (like npm, Vite, or Webpack) that compile and bundle your React code.\n\n**Q47: What is 'npm' or 'yarn'?**\nPackage managers used to install libraries and dependencies for your React project.\n\n**Q48: What is 'Vite' or 'Create React App' (CRA)?**\nToolkits that provide a pre-configured build setup for React applications, including a dev server and build scripts.\n\n**Q49: What is the 'Production Build'?**\nA version of your app that has been minified and optimized for deployment. It removes development warnings and reduces the file size.\n\n**Q50: Why is 'React DevTools' useful?**\nIt's a browser extension that allows you to inspect the React component tree, view props/state of individual components, and debug re-renders."
+        },
+        {
+            "title": "Summary & Next Steps",
+            "content": "Congratulations! You've covered over 50 essential questions for a React Fresher role. The key to success is not just memorizing answers, but building small projects to see these concepts in action. Keep coding, stay curious, and good luck with your interviews!",
+            "image": "/images/interviews/react-main.png"
+        }
+    ]
+}

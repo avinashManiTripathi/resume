@@ -1,0 +1,58 @@
+{
+    "slug": "node-senior-interview-questions",
+    "title": "Node.js Architect: 50+ Senior & Lead Interview Deep-Dives (2026)",
+    "description": "Master high-scale backend engineering. 50+ deep questions on distributed systems, V8 internals, gRPC, event-driven architecture, and CI/CD at scale.",
+    "heroBadge": "Senior Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "The Evolution of a Senior Backend Architect",
+            "content": "At a **Senior or Lead Level**, backend engineering is no longer about just writing REST endpoints; it's about **system reliability**, **observability**, and **distributed architecture**. In 2026, a Node.js architect must excel in **Event-Driven Architecture (EDA)**, **Cloud-Native scaling**, and **V8 performance tuning**. This guide covers 50+ high-level questions for masters of the backend.",
+            "image": "/images/interviews/node-main.png"
+        },
+        {
+            "title": "1. V8 Internals & Performance Tuning",
+            "content": "**Q1: Hidden Classes (Shapes) and Inline Caching.**\nHow does V8 optimize property access in JS? Explain why adding properties in different orders can 'de-optimize' your code and how to write V8-friendly objects.\n\n**Q2: The Garbage Collection (GC) Lifecycle.**\nDeep dive into the 'Young Generation' (Scavenge) vs. 'Old Generation' (Mark-Sweep-Compact). How do you identify 'GC thrashing' in a production app?\n\n**Q3: max-old-space-size in Containers.**\nWhy is setting this flag critical in Kubernetes? Discuss how Node.js's default memory limits can lead to containers being OOM-killed (Out of Memory) prematurely.\n\n**Q4: Profiling with Flamegraphs.**\nExplain how to read a flamegraph to identify 'Hot Functions'. Discuss the use of the `--prof` flag and the `node-inspect` tool.\n\n**Q5: TurboFan vs. Maglev.**\nExplain the different optimization tiers in modern V8. How does the engine decide when to 'Tier Up' a function to highly optimized machine code?"
+        },
+        {
+            "title": "2. Advanced Event Loop & Concurrency",
+            "content": "**Q6: The 'Thundering Herd' Problem in Caching.**\nWhat happens when 10,000 requests hit an expired cache key at once? Explain 'Promise Coalescing' and how to ensure only one request hits the DB while others wait.\n\n**Q7: Worker Threads vs. Child Processes.**\nWhen should you use shared memory (`SharedArrayBuffer`) instead of message passing? Discuss the use cases for heavy CPU-bound tasks in a primarily I/O-bound platform.\n\n**Q8: Event Loop Blockage Detection.**\nHow do you monitor 'Event Loop Lag' in real-time? Discuss the impact of synchronous operations in a high-concurrency environment.\n\n**Q9: Libuv and the Thread Pool.**\nWhy do certain operations (like FS or Crypto) have a default of 4 threads? When and how should you increase `UV_THREADPOOL_SIZE`?\n\n**Q10: AbortController in Node.js.**\nHow to use the standard `AbortController` to cancel deep trees of asynchronous work (e.g., HTTP requests + DB queries) simultaneously."
+        },
+        {
+            "title": "3. Distributed Systems & Scaling",
+            "content": "**Q11: The Transactional Outbox Pattern.**\nHow do you ensure that a database update and a message sent to Kafka are atomic? Discuss preventing 'Ghost Messages' or lost updates.\n\n**Q12: Idempotency in Distributed Workflows.**\nWhy must consumers be able to handle the same message multiple times? Discuss implementing 'Idempotency Keys' across service boundaries.\n\n**Q13: Graceful Shutdown Protocols.**\nHow do you close 10,000 active WebSocket or DB connections without dropping data during a deployment? Discuss handling `SIGTERM` correctly.\n\n**Q14: Horizontal vs. Vertical Scaling for Node.js.**\nDiscuss the trade-offs of the `cluster` module vs. running multiple independent replicas in Kubernetes.\n\n**Q15: Distributed Tracing (OpenTelemetry).**\nHow do you trace a request across 10 microservices? Explain 'Context Propagation' and the role of 'Span IDs' and 'Trace IDs'."
+        },
+        {
+            "title": "4. API Engineering & Communication",
+            "content": "**Q16: gRPC vs. REST for Internal Comms.**\nWhy use Protocol Buffers? Discuss the performance benefits of HTTP/2 multiplexing, streaming, and strict schema typing for service-to-service calls.\n\n**Q17: GraphQL Scaffolding at Scale.**\nHow to prevent the 'N+1 Query Problem'? Discuss DataLoader patterns and schema federation for large engineering organizations.\n\n**Q18: Webhooks & Reliability.**\nHow do you design a robust webhook system? Discuss retries with exponential backoff, signature verification, and dead-letter queues.\n\n**Q19: Versioning Strategies.**\nHeader-based vs Path-based vs GraphQL-style 'No Versions'. When is a breaking change truly necessary?\n\n**Q20: Rate Limiting: Distributed Leaky Bucket.**\nImplementing global rate limits using Redis. How do you handle 'Burstiness' without sacrificing system stability?"
+        },
+        {
+            "title": "5. Security & Threat Modeling",
+            "content": "**Q21: SSRF (Server-Side Request Forgery).**\nHow to prevent your server from being used as a proxy to scan internal networks. Discuss URL validation and allow-listing.\n\n**Q22: Supply Chain Security.**\nHow do you trust your 1,000 dependencies? Discuss `npm audit`, `snyk`, and the risk of 'Prototype Pollution' in common libraries.\n\n**Q23: Secrets Management.**\nWhy is `.env` not enough for production? Discuss HashiCorp Vault, AWS Secrets Manager, and rotating keys without downtime.\n\n**Q24: NoSQL Injection & ORM Safety.**\nCan you get 'Injected' even when using Mongoose or Prisma? Discuss the risks of raw queries and dynamic object keys.\n\n**Q25: Content Security Policy (CSP) Reporting.**\nHow do you use the `report-to` directive to find security violations in the wild without breaking the user experience?"
+        },
+        {
+            "title": "6. Data Persistence & Caching Strategies",
+            "content": "**Q26: SQL vs. NoSQL: The Architect's Dilemma.**\nWhen is the 'Schema-less' nature of MongoDB a liability? Discuss the 'ACID' properties and when a relational DB is mandatory.\n\n**Q27: Redis as More Than Just a Cache.**\nUsing Redis for Distributed Locking (`Redlock`), Pub/Sub, and Rate Limiting. Discuss memory eviction policies (`allkeys-lru`).\n\n**Q28: Database connection pooling at scale.**\nWhy does every Node.js instance need a pool limit? Discuss the risk of 'Connection Exhaustion' in Postgres or MySQL.\n\n**Q29: CQRS (Command Query Responsibility Segregation).**\nWhen should you split your 'read' and 'write' databases? Discuss the eventual consistency trade-offs.\n\n**Q30: Migration Strategies.**\nHow do you perform a zero-downtime database migration for 100 million rows? Discuss 'Double Writing' and 'Blue-Green' data shifts."
+        },
+        {
+            "title": "7. Observability & Monitoring",
+            "content": "**Q31: The Four Golden Signals.**\nLatency, Traffic, Errors, and Saturation. How do you build a dashboard that actually warns you *before* the crash?\n\n**Q32: Structured Logging (Pino/Winston).**\nWhy is `console.log` banned in production? Discuss JSON logging for ELK stacks and the performance cost of string formatting.\n\n**Q33: Anomaly Detection.**\nHow to distinguish between an 'Expected Spike' (e.g., Marketing push) and a 'Bot Attack' or 'Memory Leak'.\n\n**Q34: Profiling in Production.**\nUsing tools like `Clinic.js` or `Pyroscope` to capture performance data on live traffic safely.\n\n**Q35: Health Checks vs. Readiness Probes.**\nExplain the difference in Kubernetes. When should a pod stop receiving traffic vs. when should it be restarted?"
+        },
+        {
+            "title": "8. Infrastructure & CI/CD",
+            "content": "**Q36: Dockerfile Optimization.**\nMulti-stage builds and `alpine` images. How do you reduce a Node.js image from 1GB to 100MB?\n\n**Q37: Infrastructure as Code (Terraform/Pulumi).**\nWhy should backend engineers care about IaC? Discuss the benefits of 'Reproducible Environments'.\n\n**Q38: Canary Deployments.**\nDeploying a new version to 1% of users. How do you automate the 'Rollback' if the error rate increases?\n\n**Q39: Serverless Node.js Cold Starts.**\nTechniques to minimize cold start latency. Discuss 'Provisioned Concurrency' and why large dependencies hurt serverless boot times.\n\n**Q40: Edge Computing (Deno/Bun/Edge Workers).**\nHow is the runtime landscape shifting? Discuss the use cases for 'Node-compatible' runtimes at the edge."
+        },
+        {
+            "title": "9. Engineering Leadership",
+            "content": "**Q41: The RFC (Request for Comments) Process.**\nHow do you drive a technical vision across multiple teams? Discuss the 'Write Once, Review Many' philosophy.\n\n**Q42: Technical Debt: The Stinky Code.**\nHow to quantify 'Cruft' to management. Discuss the 'Interest Rate' of bad architecture and how to prioritize refactors.\n\n**Q43: Mentoring Seniors to Leads.**\nHow do you help a high-performing engineer stop 'Doing' and start 'Enabling'?\n\n**Q44: Post-Mortem Culture.**\nDesigning 'Blameless' reviews after a major outage. How to ensure the same mistake never happens twice.\n\n**Q45: Interviewing for Architectural Depth.**\nHow do you spot a 'Senior' who just has 1 year of experience repeated 5 times?"
+        },
+        {
+            "title": "10. Strategic Vision 2026",
+            "content": "**Q46: Node.js 22+: Modern Built-ins.**\nDiscuss the native Fetch API, Test Runner, and `.env` loader. Why is the library-heavy era of Node.js ending?\n\n**Q47: AI Integration in Backends.**\nImplementing LLM chains (LangChain) in Node.js. Discuss streaming responses and rate-limiting expensive AI credits.\n\n**Q48: WebAssembly (Wasm) on the Server.**\nRunning high-performance C++/Rust logic inside Node.js for image processing or heavy math.\n\n**Q49: The 'Deno vs Bun vs Node' War.**\nWhere does Node.js stand in 2026? Discuss its dominance in the enterprise and the 'Standardization' of the JS runtime.\n\n**Q50: Ethical Engineering at Scale.**\nHow do you handle 'Right to be Forgotten' (GDPR) in a distributed database system?"
+        },
+        {
+            "title": "Summary: The Architect's Journey",
+            "content": "A Senior Node.js Architect balances power with responsibility. You've now seen 50 questions that cover the entire backend spectrum. The key is to never stop learning about the underlying platform (V8/Libuv) while keeping your eye on the cloud infrastructure that runs it. Build systems that are bored when stable.",
+            "image": "/images/interviews/node-main.png"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "slug": "python-interview-questions-for-fresher",
+    "title": "Python Programming: 50+ Fresher Interview Questions & Answers (2026)",
+    "description": "Master the world's most versatile language. 50+ essential questions covering Python syntax, data structures, OOP, and the standard library for entry-level roles.",
+    "heroBadge": "Fresher Masterclass: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: The Power of Pythonic Thinking",
+            "content": "Python's readability and simplicity make it the perfect language for freshers, but its depth makes it a powerhouse for enterprises. To land a role in 2026, you need to understand the **core syntax**, the difference between **mutable and immutable types**, and how to use the standard library effectively. This guide covers 50+ fundamental questions to jumpstart your Python career.",
+            "image": "/images/interviews/python-main.png"
+        },
+        {
+            "title": "1. Python Language Basics",
+            "content": "**Q1: What is Python?**\nPython is a high-level, interpreted, general-purpose programming language. It is known for its clear syntax and readability, which helps developers write clear, logical code for small and large-scale projects.\n\n**Q2: What does 'Interpreted' mean?**\nIt means that Python code is executed line-by-line by an interpreter, rather than being compiled into machine code before execution. This makes development faster but can be slower for CPU-bound tasks.\n\n**Q3: Is Python dynamically or statically typed?**\nPython is dynamically typed. You don't need to declare the variable type; it is determined at runtime based on the value assigned to it.\n\n**Q4: What is PEP 8?**\nPEP 8 is the official Style Guide for Python Code. It provides guidelines and best practices on how to write Python code to make it readable and consistent.\n\n**Q5: How is memory managed in Python?**\nPython uses private heap space and a Garbage Collector (GC) to manage memory. It uses reference counting to track object usage and a cyclic garbage collector to clean up circular references."
+        },
+        {
+            "title": "2. Data Types & Operators",
+            "content": "**Q6: Mutable vs. Immutable. Explain.**\nMutable objects can be changed after they are created (e.g., lists, sets, dictionaries). Immutable objects cannot be changed once created (e.g., strings, tuples, integers).\n\n**Q7: Difference between List and Tuple.**\nLists are mutable (ordered collections enclosed in `[]`). Tuples are immutable (ordered collections enclosed in `()`). Tuples are generally faster and take up less memory than lists.\n\n**Q8: What is a Set?**\nA set is an unordered collection of unique elements enclosed in `{}`. It doesn't allow duplicates and is highly optimized for membership testing.\n\n**Q9: What is a Dictionary?**\nA dictionary is an unordered collection of data in key-value pairs (`{key: value}`). Keys must be unique and hashable (immutable), while values can be of any type.\n\n**Q10: The difference between '==' and 'is'.**\n`==` checks for equality (comparing values). `is` checks for identity (comparing memory addresses to see if they are the exact same object)."
+        },
+        {
+            "title": "3. Control Flow & Logic",
+            "content": "**Q11: How do you handle conditions in Python?**\nUsing `if`, `elif`, and `else` statements. Python uses indentation to define the code blocks.\n\n**Q12: For Loop vs. While Loop.**\n`for` loops are used to iterate over a sequence (list, string, range). `while` loops continue as long as a specified Boolean condition remains true.\n\n**Q13: What is the `range()` function?**\nA built-in function that generates a sequence of numbers, commonly used in `for` loops. Example: `range(0, 5)` produces numbers from 0 to 4.\n\n**Q14: How to break out of a loop?**\nUsing the `break` statement to exit the loop immediately. Use `continue` to skip the current iteration and move to the next one.\n\n**Q15: What is a 'List Comprehension'?**\nA concise way to create lists. Instead of a full `for` loop, you use a single line: `[x*2 for x in range(10)]`. It's generally faster and more readable."
+        },
+        {
+            "title": "4. Functions & Scoping",
+            "content": "**Q16: How to define a function?**\nUsing the `def` keyword, followed by the function name and parentheses containing parameters. Code blocks are defined by indentation.\n\n**Q17: What are `*args` and `**kwargs`?**\n`*args` allows you to pass a variable number of non-keyword arguments to a function as a tuple. `**kwargs` allows you to pass a variable number of keyword arguments as a dictionary.\n\n**Q18: What is a Lambda function?**\nAn anonymous, one-line function defined using the `lambda` keyword. It can take any number of arguments but can only have one expression.\n\n**Q19: Local vs. Global variables.**\nVariables defined inside a function are local to that function. Variables defined outside are global. Use the `global` keyword to modify a global variable inside a function.\n\n**Q20: What is a Decorator?**\nA powerful tool that allows you to wrap another function to extend its behavior without permanently modifying it. They are often used for logging, authentication, or timing."
+        },
+        {
+            "title": "5. Object-Oriented Programming (OOP)",
+            "content": "**Q21: What are the four pillars of OOP?**\n1. Abstraction. 2. Encapsulation. 3. Inheritance. 4. Polymorphism. Python supports all of these.\n\n**Q22: What is a Class and an Object?**\nA class is a blueprint for creating objects. An object is an instance of a class that contains real data and can perform actions defined in the class.\n\n**Q23: What is `__init__`?**\nThe constructor method. It's automatically called when a new object of a class is created, allowing you to initialize its attributes.\n\n**Q24: What is `self` in Python?**\n`self` represents the instance of the class. It is used to access the attributes and methods of the class within its own code.\n\n**Q25: Single vs. Multiple Inheritance.**\nSingle inheritance is when a class inherits from one parent. Multiple inheritance is when a class inherits from more than one parent class. Python supports both."
+        },
+        {
+            "title": "6. Exception Handling",
+            "content": "**Q26: How to handle errors in Python?**\nUsing `try`, `except`, `else`, and `finally` blocks. This prevents the program from crashing when an error occurs.\n\n**Q27: Difference between `except` and `finally`.**\nThe `except` block runs only if an error occurs. The `finally` block runs NO MATTER WHAT, often used for cleanup tasks like closing files.\n\n**Q28: How to raise a custom exception?**\nUsing the `raise` keyword, followed by an instance of an exception class (e.g., `raise ValueError('Invalid input')`).\n\n**Q29: Common Python Built-in Exceptions.**\n`TypeError`, `ValueError`, `IndexError`, `KeyError`, `AttributeError`, `ZeroDivisionError`.\n\n**Q30: What is the `else` block in try-except?**\nIt runs only if the code in the `try` block executes successfully without raising any exceptions."
+        },
+        {
+            "title": "7. File I/O & context Managers",
+            "content": "**Q31: How to open a file in Python?**\nUsing the built-in `open(filename, mode)` function. Modes include 'r' (read), 'w' (write), 'a' (append), and 'b' (binary).\n\n**Q32: Why use the `with` statement?**\nThe `with` statement is a context manager that ensures resources are properly closed after use (like a file), even if an error occurs. It handles `f.close()` automatically.\n\n**Q33: Read vs. Readlines.**\n`read()` reads the entire file as a single string. `readlines()` reads the file and returns a list where each element is a line from the file.\n\n**Q34: How to write to a CSV file?**\nUsing the built-in `csv` module. It provides functions to read and write rows of data in the comma-separated values format.\n\n**Q35: What is 'Pickling'?**\nPickling is the process of serializing (converting) a Python object into a byte stream. Unpickling is the reverse process. Use the `pickle` module for this."
+        },
+        {
+            "title": "8. Standard Library & Packages",
+            "content": "**Q36: What is 'pip'?**\nThe standard package manager for Python. It allows you to install and manage additional libraries that are not part of the standard library.\n\n**Q37: What is a 'Module' vs. a 'Package'?**\nA module is a single Python file (.py). A package is a directory containing multiple modules and an `__init__.py` file.\n\n**Q38: The `os` module.**\nProvides a way to use operating system-dependent functionality like reading or writing to the file system or environment variables.\n\n**Q39: The `json` module.**\nUsed to parse JSON strings and convert Python objects (like dictionaries) into JSON format for APIs or file storage.\n\n**Q40: The `datetime` module.**\nProvides classes for manipulating dates and times. Essential for logging, scheduling, or data processing."
+        },
+        {
+            "title": "9. Advanced Python Concepts (Light)",
+            "content": "**Q41: What is a Generator?**\nA special type of function that returns an iterator. It uses the `yield` keyword to return values one at a time, saving memory compared to lists.\n\n**Q42: What is an Iterator?**\nAn object that can be iterated over, meaning you can traverse through all the values. It implements the `__iter__()` and `__next__()` methods.\n\n**Q43: What is 'Duck Typing'?**\nA concept where an object's suitability is determined by the presence of certain methods and properties, rather than its actual type ('If it walks like a duck and quacks like a duck, it's a duck').\n\n**Q44: What are 'Dunder' methods?**\nDouble-underscore methods like `__init__`, `__str__`, or `__add__`. They are built-in methods that you can override to change how your objects behave with standard operators.\n\n**Q45: Docstrings.**\nStrings enclosed in triple quotes (`'''` or `\"\"\"`) used for documenting modules, classes, and functions. They are accessible via the `__doc__` attribute."
+        },
+        {
+            "title": "10. Environment & career",
+            "content": "**Q46: What is a Virtual Environment (venv)?**\nA self-contained directory tree that contains a Python installation for a particular version of Python, plus a number of additional packages. It prevents dependency conflicts between projects.\n\n**Q47: Why is Python popular in Data Science/AI?**\nDue to its clear syntax and a massive ecosystem of libraries like NumPy, Pandas, Scikit-learn, and TensorFlow.\n\n**Q48: How to check Python version?**\nRunning `python --version` in your terminal.\n\n**Q49: What is the Python REPL?**\nThe interactive 'shell' where you can type Python code and see the results instantly. Useful for testing small chunks of logic.\n\n**Q50: Where to find Python documentation?**\nThe official docs at `docs.python.org` are the most reliable and comprehensive resource for learners and experts alike."
+        },
+        {
+            "title": "Summary & Next Steps",
+            "content": "Well done! You have now reviewed 50+ fundamental questions for a Python Fresher role. Python is a language that rewards curiosity. The best next step is to pick a small automation task or a basic web project and start writing code. Welcome to the Python ecosystem!",
+            "image": "/images/interviews/python-main.png"
+        }
+    ]
+}

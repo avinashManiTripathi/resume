@@ -30,7 +30,7 @@ export const NAVIGATION = {
                         href: "/tailor"
                     },
                     {
-                        icon: "�",
+                        icon: "📄",
                         title: "Templates",
                         description: "200+ professional designs",
                         href: "/templates"
@@ -85,13 +85,13 @@ export const NAVIGATION = {
                         href: "/resources/ats-guide"
                     },
                     {
-                        icon: "",
+                        icon: "🔑",
                         title: "Keyword Generator",
                         description: "Find the right keywords",
                         href: "/resources/resume-keyword-generator"
                     },
                     {
-                        icon: "�",
+                        icon: "💡",
                         title: "Career Tips",
                         description: "Job search strategies",
                         href: "/resources/career-tips"
@@ -109,6 +109,55 @@ export const NAVIGATION = {
                     links: [
                         { text: "All Guides", href: "/resources" },
                         { text: "Help Center", href: "/help" }
+                    ]
+                }
+            }
+        },
+        {
+            id: "interviews",
+            label: "Interviews",
+            type: "mega-dropdown",
+            megaMenu: {
+                title: "Interview Masterclass",
+                description: "Master your technical interviews with our expert-curated guides.",
+                items: [
+                    {
+                        icon: "⚛️",
+                        title: "React.js Guide",
+                        description: "Fresher to Senior questions",
+                        href: "/interviews/react-junior-interview-questions"
+                    },
+                    {
+                        icon: "🟢",
+                        title: "Node.js Guide",
+                        description: "Scalability and testing",
+                        href: "/interviews/node-junior-interview-questions"
+                    },
+                    {
+                        icon: "🐍",
+                        title: "Python Guide",
+                        description: "Data science and backend",
+                        href: "/interviews/python-junior-interview-questions"
+                    },
+                    {
+                        icon: "🅰️",
+                        title: "Angular Guide",
+                        description: "Enterprise patterns",
+                        href: "/interviews/angular-junior-interview-questions"
+                    },
+                    {
+                        icon: "📚",
+                        title: "All Guides",
+                        description: "Browse 12+ guides",
+                        href: "/interviews"
+                    }
+                ],
+                featured: {
+                    title: "Interview Success",
+                    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop",
+                    links: [
+                        { text: "System Design Guide", href: "/interviews" },
+                        { text: "Interview Checklist", href: "/interviews" }
                     ]
                 }
             }
@@ -152,7 +201,7 @@ export const NAVIGATION = {
                         href: "/privacy"
                     },
                     {
-                        icon: "️",
+                        icon: "🛡️",
                         title: "Security",
                         description: "Your data is safe",
                         href: "/security"

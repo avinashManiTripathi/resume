@@ -22,7 +22,7 @@ export function Footer() {
     const { newsletter, brand, socials, links, bottomLinks } = FOOTER;
 
     return (
-        <footer className="bg-gray-50 text-gray-600">
+        <footer className="bg-gray-50 text-gray-700">
             <div className="max-w-7xl mx-auto px-4 py-12">
                 {/* Newsletter */}
                 <div className="border-b border-gray-200 py-8 mb-12 text-center">
@@ -49,14 +49,14 @@ export function Footer() {
                 </div>
 
                 {/* Main Grid */}
-                <div className="grid lg:grid-cols-5 gap-8 mb-12">
+                <div className="grid lg:grid-cols-6 gap-8 mb-12">
 
                     {/* Brand */}
                     <div className="lg:col-span-2">
                         <Image src={brand.logo} alt={brand.name} width={158} height={36} />
                         <p className="text-sm my-6 max-w-md">{brand.description}</p>
 
-                        <div className="mt-6space-y-3 text-sm">
+                        <div className="mt-6space-y-3 text-sm flex flex-col gap-4">
                             <div className="flex items-center gap-2">
                                 <Mail className="w-4 h-4 text-blue-500" />
                                 <Link href={`mailto:${ENV.SUPPORT_EMAIL}`}>
@@ -73,31 +73,20 @@ export function Footer() {
                             </div>
                         </div>
 
-                        {/* Trust Badges */}
-                        <div className="mt-6 space-y-3 text-xs">
-                            {brand.trustBadges.map((b) => (
-                                <div key={b.label} className="flex items-center gap-2">
-                                    <div
-                                        className={`w-6 h-6 ${b.color} rounded-full flex items-center justify-center text-white`}
-                                    >
-                                        {b.icon}
-                                    </div>
-                                    {b.label}
-                                </div>
-                            ))}
-                        </div>
+
 
                         {/* Socials */}
-                        <div className="mt-6 flex gap-3 mt-6">
+                        <div className="mt-6 flex gap-3">
                             {socials.map((s) => (
                                 <Link
                                     key={s.name}
                                     href={s.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-10 h-10 border rounded-lg flex items-center justify-center hover:bg-blue-600 group"
+                                    className="w-10 h-10 border border-gray-200 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors group"
+                                    aria-label={`Follow us on ${s.name}`}
                                 >
-                                    <s.icon className="w-5 h-5 group-hover:text-white" />
+                                    <s.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                                 </Link>
                             ))}
                         </div>
