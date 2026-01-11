@@ -20,7 +20,8 @@ export function ProductSchema() {
             "price": "0",
             "priceCurrency": "USD",
             "availability": "https://schema.org/InStock",
-            "url": baseUrl
+            "url": baseUrl,
+            "priceValidUntil": "2026-12-31",
         },
         "aggregateRating": {
             "@type": "AggregateRating",
