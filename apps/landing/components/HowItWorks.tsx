@@ -92,7 +92,7 @@ export function HowItWorks() {
                     </div>
 
                     {/* Steps */}
-                    <div className="grid md:grid-cols-3 gap-8 mb-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
                         {steps.map((step, index) => (
                             <div
                                 key={index}

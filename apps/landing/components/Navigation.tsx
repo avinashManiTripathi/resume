@@ -1,188 +1,12 @@
 "use client";
 
 import { ENV } from '@/app/env';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, DockIcon } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
-const navigation = {
-  logo: { text: "Prof", accent: "Resume" },
-  menuItems: [
-    {
-      id: "product",
-      label: "Product",
-      type: "mega-dropdown",
-      megaMenu: {
-        title: "Products",
-        description: "Automate and easily manage the pre and post purchase experience of your clients.",
-        items: [
-          {
-            icon: "✏️",
-            title: "Resume Builder",
-            description: "Create professional resumes in minutes",
-            href: "/resume-builder"
-          },
-          {
-            icon: "🔍",
-            title: "ATS Checker",
-            description: "Test your resume compatibility",
-            href: "/ats-checker"
-          },
-          {
-            icon: "🎯",
-            title: "AI Resume Tailor",
-            description: "Customize for each job",
-            href: "/tailor"
-          },
-          {
-            icon: "�",
-            title: "Templates",
-            description: "200+ professional designs",
-            href: "/templates"
-          },
-          {
-            icon: "📊",
-            title: "Resume Score",
-            description: "Get instant feedback",
-            href: "/resources/resume-checker"
-          },
-          {
-            icon: "✨",
-            title: "Examples",
-            description: "Real resume showcases",
-            href: "/examples"
-          }
-        ],
-        featured: {
-          title: "For Professionals",
-          image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=400&fit=crop",
-          links: [
-            { text: "Enterprise Solutions", href: "/resources/for-organizations" },
-            { text: "Success Stories", href: "/success-stories" }
-          ]
-        }
-      }
-    },
-    {
-      id: "resources",
-      label: "Resources",
-      type: "mega-dropdown",
-      megaMenu: {
-        title: "Resources",
-        description: "Learn everything you need to create the perfect resume and land your dream job.",
-        items: [
-          {
-            icon: "📖",
-            title: "Resume Writing Guide",
-            description: "Complete resume tutorial",
-            href: "/resources/resume-guide"
-          },
-          {
-            icon: "✍️",
-            title: "Cover Letter Guide",
-            description: "Write compelling letters",
-            href: "/resources/cover-letter-guide"
-          },
-          {
-            icon: "🤖",
-            title: "ATS Guide",
-            description: "Beat tracking systems",
-            href: "/resources/ats-guide"
-          },
-          {
-            icon: "",
-            title: "Keyword Generator",
-            description: "Find the right keywords",
-            href: "/resources/resume-keyword-generator"
-          },
-          {
-            icon: "�",
-            title: "Career Tips",
-            description: "Job search strategies",
-            href: "/resources/career-tips"
-          },
-          {
-            icon: "📝",
-            title: "Blog",
-            description: "Career insights & tips",
-            href: "/blog"
-          }
-        ],
-        featured: {
-          title: "Learning Center",
-          image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=400&fit=crop",
-          links: [
-            { text: "All Guides", href: "/resources" },
-            { text: "Help Center", href: "/help" }
-          ]
-        }
-      }
-    },
-    {
-      id: "company",
-      label: "Company",
-      type: "mega-dropdown",
-      megaMenu: {
-        title: "Company",
-        description: "Learn more about our mission to help job seekers land their dream careers.",
-        items: [
-          {
-            icon: "🏢",
-            title: "About Us",
-            description: "Our mission and vision",
-            href: "/about"
-          },
-          {
-            icon: "⭐",
-            title: "Reviews",
-            description: "What our users say",
-            href: "/reviews"
-          },
-          {
-            icon: "🎉",
-            title: "Success Stories",
-            description: "Real transformations",
-            href: "/success-stories"
-          },
-          {
-            icon: "✉️",
-            title: "Contact",
-            description: "Get in touch with us",
-            href: "/contact"
-          },
-          {
-            icon: "🔒",
-            title: "Privacy Policy",
-            description: "How we protect data",
-            href: "/privacy"
-          },
-          {
-            icon: "️",
-            title: "Security",
-            description: "Your data is safe",
-            href: "/security"
-          }
-        ],
-        featured: {
-          title: "Join Our Team",
-          image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=400&fit=crop",
-          links: [
-            { text: "Careers", href: "/about#careers" },
-            { text: "Culture", href: "/about#culture" }
-          ]
-        }
-      }
-    }
-  ],
-  coverLetter: {
-    label: "Cover Letter",
-    href: "/cover-letter"
-  },
-  cta: {
-    text: "Start Free",
-    href: ENV.EDITOR_URL
-  }
-};
+import { NAVIGATION } from '@/constants/navigation';
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -194,7 +18,7 @@ export function Navigation() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <a href="/" className="flex items-center gap-2.5 no-underline group">
+            <Link href="/" className="flex items-center gap-2.5 no-underline group">
               <Image
                 src="/logo.png"
                 alt="ProfResume Logo"
@@ -203,11 +27,11 @@ export function Navigation() {
                 className="transition-transform group-hover:scale-105"
                 priority
               />
-            </a>
+            </Link>
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-2">
               {/* Mega Menu Items */}
-              {navigation.menuItems.map((menuItem) => (
+              {NAVIGATION.menuItems.map((menuItem) => (
                 <div key={menuItem.id} className="relative group">
                   <button className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5">
                     {menuItem.label}
@@ -233,7 +57,7 @@ export function Navigation() {
 
                           <div className="grid grid-cols-2 gap-4">
                             {menuItem.megaMenu.items.map((item, idx) => (
-                              <a
+                              <Link
                                 key={idx}
                                 href={item.href}
                                 className="group/item p-4 rounded-xl hover:bg-gray-50 transition-all no-underline border border-transparent hover:border-gray-200"
@@ -251,7 +75,7 @@ export function Navigation() {
                                     </div>
                                   </div>
                                 </div>
-                              </a>
+                              </Link>
                             ))}
                           </div>
                         </div>
@@ -260,9 +84,11 @@ export function Navigation() {
                         <div className="w-80 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-8 flex flex-col">
                           {/* Image */}
                           <div className="mb-8 -mx-8 -mt-8">
-                            <img
+                            <Image
                               src={menuItem.megaMenu.featured.image}
                               alt={menuItem.megaMenu.featured.title}
+                              width={320}
+                              height={180}
                               className="w-full h-56 object-cover"
                             />
                           </div>
@@ -277,14 +103,14 @@ export function Navigation() {
                             {/* Links */}
                             <div className="space-y-3">
                               {menuItem.megaMenu.featured.links.map((link, idx) => (
-                                <a
+                                <Link
                                   key={idx}
                                   href={link.href}
                                   className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition-colors no-underline font-medium group/link"
                                 >
                                   <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                                   {link.text}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                           </div>
@@ -296,26 +122,26 @@ export function Navigation() {
               ))}
 
               {/* Cover Letter - Standalone */}
-              <a
-                href={navigation.coverLetter.href}
+              <Link
+                href={NAVIGATION.coverLetter.href}
                 className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors no-underline relative group/cover"
               >
-                {navigation.coverLetter.label}
+                {NAVIGATION.coverLetter.label}
                 <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold rounded">
                   NEW
                 </span>
-              </a>
+              </Link>
 
               {/* CTA Button */}
-              <a
-                href={navigation.cta.href}
+              <Link
+                href={NAVIGATION.cta.href}
                 className="ml-3 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-sm hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 no-underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {navigation.cta.text}
+                {NAVIGATION.cta.text}
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
 
             {/* Mobile Menu Button */}
@@ -336,51 +162,67 @@ export function Navigation() {
           }`}
       >
         <div className="h-full overflow-y-auto pt-20 px-6 pb-6">
-          {/* Product */}
-          <div className="mb-6">
-            <div className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider">Product</div>
-            <div className="space-y-1">
-              <a href="/resume-builder" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Resume Builder</a>
-              <a href="/cover-letter" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline relative inline-flex items-center" onClick={() => setMobileMenuOpen(false)}>
-                Cover Letter
-                <span className="ml-2 px-1.5 py-0.5 bg-green-700 text-white text-[10px] font-bold rounded">NEW</span>
-              </a>
-              <a href="/tailor" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>AI Tailor</a>
-              <a href="/ats-checker" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>ATS Checker</a>
-              <a href="/templates" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Templates</a>
-              <a href="/examples" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Examples</a>
-            </div>
-          </div>
+          {/* Cover Letter - Standalone */}
+          <div className="mb-6 font-bold border-b border-gray-200 pb-5 text-gray-900 mb-3 text-sm uppercase tracking-wider">
+            <Link
+              href={NAVIGATION.coverLetter.href}
+              className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors no-underline relative group/cover"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform">
+                  <DockIcon />
+                </div>
 
-          {/* Resources */}
-          <div className="mb-6">
-            <div className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider">Resources</div>
-            <div className="space-y-1">
-              <a href="/resources/resume-guide" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Resume Guide</a>
-              <a href="/resources/cover-letter-guide" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Cover Letter Guide</a>
-              <a href="/blog" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Blog</a>
-              <a href="/help" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Help Center</a>
-            </div>
-          </div>
+                <div className="relative font-semibold text-gray-900 mb-1 text-[15px] group-hover/item:text-blue-600 transition-colors">
+                  {NAVIGATION.coverLetter.label}
+                  <span className="absolute top-[-25px] right-[-32px] px-1.5 py-0.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold rounded">
+                    NEW
+                  </span>
+                </div>
+              </div>
 
-          {/* Company */}
-          <div className="mb-6">
-            <div className="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider">Company</div>
-            <div className="space-y-1">
-              <a href="/about" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>About Us</a>
-              <a href="/contact" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Contact</a>
-              <a href="/reviews" className="block py-2.5 text-gray-700 hover:text-gray-900 no-underline" onClick={() => setMobileMenuOpen(false)}>Reviews</a>
-            </div>
+            </Link>
+
           </div>
+          {
+            NAVIGATION.menuItems.map((el, idx) => {
+              return <div className="mb-6" key={idx + '_mobile-menu_' + el.id}>
+                <div className="font-bold border-b border-gray-200 pb-5 text-gray-900 mb-3 text-sm uppercase tracking-wider">{el.label}</div>
+                <div className="space-y-1">
+                  {el.megaMenu.items.map((item, index) => (
+                    <Link
+                      key={idx + 'sub_mobile-menu_' + index}
+                      href={item.href}
+                      className="group/item p-4 rounded-xl hover:bg-gray-50 transition-all no-underline border border-transparent hover:border-gray-200"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform">
+                          {item.icon}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-gray-900 mb-1 text-[15px] group-hover/item:text-blue-600 transition-colors">
+                            {item.title}
+                          </div>
+                          <div className="text-xs text-gray-500 leading-snug">
+                            {item.description}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            })
+          }
 
           {/* Mobile CTA */}
-          <a
-            href={navigation.cta.href}
+          <Link
+            href={NAVIGATION.cta.href}
             className="block w-full mt-8 px-5 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-center rounded-xl font-semibold hover:shadow-lg transition-all no-underline"
             onClick={() => setMobileMenuOpen(false)}
           >
-            {navigation.cta.text}
-          </a>
+            {NAVIGATION.cta.text}
+          </Link>
         </div>
       </div>
     </>
