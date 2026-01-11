@@ -134,7 +134,7 @@ export default function FreeResumeBuilderPage() {
                     </div>
 
                     <div className="text-center mb-12">
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Free Resume Builder
                         </h1>
                         <p className="text-2xl text-gray-600 mb-4">

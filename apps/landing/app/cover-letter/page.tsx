@@ -41,7 +41,7 @@ export default function CoverLetterPage() {
                             <FileText className="w-4 h-4" />
                             AI-Powered Writing
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Generate Perfect Cover Letters{' '}
                             <span className="bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
                                 in 2 Minutes

@@ -79,7 +79,7 @@ export default function ATSCheckerMarketingPage() {
                             <Target className="w-4 h-4" />
                             Free AI-Powered ATS Analysis
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Is Your Resume{' '}
                             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                 ATS-Friendly?

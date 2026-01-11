@@ -41,7 +41,7 @@ export default function TailorPage() {
                             <Target className="w-4 h-4" />
                             AI-Powered Tailoring
                         </div>
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Tailor Your Resume to{' '}
                             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                                 Any Job in 30 Seconds

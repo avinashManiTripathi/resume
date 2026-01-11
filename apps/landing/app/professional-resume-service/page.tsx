@@ -68,7 +68,7 @@ export default function ProfessionalResumeServicePage() {
                             Honest Comparison • Expert Analysis
                         </div>
 
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Professional Resume Service vs Resume Builder
                         </h1>
                         <p className="text-2xl text-gray-600 mb-4">

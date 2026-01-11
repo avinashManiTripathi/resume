@@ -126,7 +126,7 @@ export default function BestResumeBuilderPage() {
                             AI-Powered • ATS-Optimized • Trusted by 50,000+
                         </div>
 
-                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
                             Best Resume Builder 2026
                         </h1>
                         <p className="text-2xl text-gray-600 mb-4">

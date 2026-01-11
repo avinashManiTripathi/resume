@@ -43,7 +43,7 @@ export default function ContactClient() {
             {/* Hero Section */}
             <section className="pt-32 pb-16 px-6">
                 <div className="max-w-6xl mx-auto text-center">
-                    <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
+                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
                         Get in
                         <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Touch</span>
                     </h1>

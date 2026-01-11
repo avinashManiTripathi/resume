@@ -28,7 +28,7 @@ export const ResourceHero = ({ title, subtitle, badge, badgeIcon: BadgeIcon }: R
                 <BadgeIcon className="w-4 h-4" />
                 {badge}
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
                 {title}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">

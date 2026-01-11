@@ -158,8 +158,10 @@ export function Navigation() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed inset-0 bg-white z-[999] transform transition-transform duration-300 lg:hidden ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
+        className={`fixed top-0 right-0 h-full w-3/4 bg-white z-[999]
+    transform transition-transform duration-300 lg:hidden
+    ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+  `}
       >
         <div className="h-full overflow-y-auto pt-20 px-6 pb-6">
           {/* Cover Letter - Standalone */}

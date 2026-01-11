@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import { IntroSection } from "@/components/IntroSection";
 import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 import { ENV } from "../../env";
+import { Title } from "@repo/ui/title";
+import { Description } from "@repo/ui/description";
 
 interface Section {
     title: string;
@@ -297,12 +299,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                         <div className="inline-flex px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-6 border border-blue-100">
                             {article.heroBadge}
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
-                            {article.title}
-                        </h1>
-                        <p className="text-xl text-slate-500 leading-relaxed font-medium">
-                            {article.description}
-                        </p>
+                        <Title normalText={article.title}></Title>
+                        <Description description={article.description} />
                     </div>
                 </div>
             </div>
@@ -360,7 +358,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                                     </h2>
 
                                     <div className="pl-0 md:pl-8">
-                                        <div className="text-slate-900 text-[1.125rem] leading-[1.8] whitespace-pre-wrap mb-10 [word-spacing:0.025em]">
+                                        <div className="text-slate-900 leading-[1.8] whitespace-pre-wrap mb-10 [word-spacing:0.025em] text-md text-gray-600">
                                             {renderContent(section.content)}
                                         </div>
 

@@ -109,7 +109,7 @@ export default function HelpClient() {
                         <HelpCircle size={16} />
                         Help Center
                     </div>
-                    <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
+                    <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
                         How Can We
                         <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Help You?</span>
                     </h1>

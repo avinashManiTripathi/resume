@@ -34,7 +34,7 @@ export default async function LandingPage() {
                 Trusted by 50,000+ professionals
               </div>
 
-              <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+              <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
                 Create Your Perfect Resume in{" "}
                 <span className="text-blue-600">
                   Minutes
@@ -1049,7 +1049,7 @@ export default async function LandingPage() {
         {/* Background Pattern */}
 
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
             Ready to land your dream job?
           </h2>
           <p className="text-xl md:text-2xl text-white mb-10">

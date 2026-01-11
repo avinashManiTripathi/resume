@@ -35,7 +35,7 @@ export function IntroSection({ badgeIcon, label, title, description, highlightTe
         <div className="max-w-6xl mx-auto text-center">
             {badgeIcon || label ? <SectionBadge icon={badgeIcon} label={label || ''} /> : null}
             {title && < Title normalText={title} highlightText={highlightText} />}
-            {description && <Description description={description} />}
+            {description && <Description description={description} className="mx-auto" />}
         </div>
     </ section>
 }

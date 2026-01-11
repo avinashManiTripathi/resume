@@ -22,7 +22,7 @@ export const SubscriptionDashboard = ({ onUpgrade }: SubscriptionDashboardProps)
     if (!subscription) {
         return (
             <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-                <div className="text-6xl mb-4">📋</div>
+                <div className="text-5xl mb-4">📋</div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">No Active Subscription</h2>
                 <p className="text-gray-600 mb-6">Subscribe to unlock premium features</p>
                 <button

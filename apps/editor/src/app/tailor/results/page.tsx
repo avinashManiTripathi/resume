@@ -130,13 +130,13 @@ export default function TailorResults() {
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">Match Score</h3>
                             <div className="flex flex-col items-center">
-                                <div className={`text-6xl font-bold ${getScoreColor(analysis.matchScore)} mb-2`}>
+                                <div className={`text-5xl font-bold ${getScoreColor(analysis.matchScore)} mb-2`}>
                                     {analysis.matchScore}%
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
                                     <div
                                         className={`h-3 rounded-full transition-all ${analysis.matchScore >= 80 ? 'bg-green-500' :
-                                                analysis.matchScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                            analysis.matchScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
                                             }`}
                                         style={{ width: `${analysis.matchScore}%` }}
                                     />
@@ -153,13 +153,13 @@ export default function TailorResults() {
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">ATS Compatibility</h3>
                             <div className="flex flex-col items-center">
-                                <div className={`text-6xl font-bold ${getScoreColor(analysis.atsScore)} mb-2`}>
+                                <div className={`text-5xl font-bold ${getScoreColor(analysis.atsScore)} mb-2`}>
                                     {analysis.atsScore}%
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
                                     <div
                                         className={`h-3 rounded-full transition-all ${analysis.atsScore >= 80 ? 'bg-green-500' :
-                                                analysis.atsScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                                            analysis.atsScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
                                             }`}
                                         style={{ width: `${analysis.atsScore}%` }}
                                     />
@@ -251,8 +251,8 @@ export default function TailorResults() {
                                     <div
                                         key={suggestion.id}
                                         className={`border-2 rounded-xl p-4 transition-all ${appliedSuggestions.has(suggestion.id)
-                                                ? 'border-green-500 bg-green-50'
-                                                : 'border-gray-200 hover:border-gray-300'
+                                            ? 'border-green-500 bg-green-50'
+                                            : 'border-gray-200 hover:border-gray-300'
                                             }`}
                                     >
                                         <div className="flex items-start justify-between gap-4">
@@ -305,8 +305,8 @@ export default function TailorResults() {
                                             <button
                                                 onClick={() => applySuggestion(suggestion.id)}
                                                 className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors flex-shrink-0 ${appliedSuggestions.has(suggestion.id)
-                                                        ? 'bg-green-600 text-white hover:bg-green-700'
-                                                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                                                    ? 'bg-green-600 text-white hover:bg-green-700'
+                                                    : 'bg-blue-600 text-white hover:bg-blue-700'
                                                     }`}
                                             >
                                                 {appliedSuggestions.has(suggestion.id) ? 'Applied' : 'Apply'}

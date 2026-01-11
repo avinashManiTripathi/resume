@@ -107,7 +107,7 @@ export default function PricingPage() {
                             <Sparkles size={16} />
                             Simple, Transparent Pricing
                         </div>
-                        <h1 className="text-6xl font-extrabold text-gray-900 mb-6">
+                        <h1 className="text-5xl font-extrabold text-gray-900 mb-6">
                             Choose the Plan That's
                             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Right for You</span>
                         </h1>
@@ -325,7 +325,7 @@ export default function PricingPage() {
 
                                 {/* Price */}
                                 <div className="mb-4">
-                                    <span className="text-6xl font-extrabold text-gray-900">
+                                    <span className="text-5xl font-extrabold text-gray-900">
                                         ${tier.price}
                                     </span>
                                     <span className="text-gray-600 text-xl ml-2">

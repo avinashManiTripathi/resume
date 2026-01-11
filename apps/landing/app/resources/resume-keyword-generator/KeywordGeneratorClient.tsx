@@ -68,7 +68,7 @@ export default function KeywordGeneratorClient() {
                         <Zap className="w-4 h-4" />
                         Free SEO Tool
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
+                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
                         Resume <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-600">Keyword Generator</span>
                     </h1>
                     <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
