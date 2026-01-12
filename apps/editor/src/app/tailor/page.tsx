@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Upload, FileText, Sparkles, ArrowRight, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@repo/ui/button';
+import { Dialog } from '@repo/ui/dialog';
 
 export default function TailorResume() {
     const router = useRouter();
@@ -14,6 +15,17 @@ export default function TailorResume() {
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [dragActive, setDragActive] = useState(false);
+    const [dialog, setDialog] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        type: "info" | "success" | "warning" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        description: "",
+        type: "info"
+    });
 
     // Progress tracking
     const [currentStage, setCurrentStage] = useState(0);
@@ -28,7 +40,12 @@ export default function TailorResume() {
         if (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
             setUploadedFile(file);
         } else {
-            alert('Please upload a PDF or DOCX file');
+            setDialog({
+                isOpen: true,
+                title: "Invalid File Type",
+                description: "Please upload a PDF or DOCX file.",
+                type: "warning"
+            });
         }
     };
 
@@ -54,12 +71,22 @@ export default function TailorResume() {
 
     const handleAnalyze = async () => {
         if (!jobDescription.trim()) {
-            alert('Please enter a job description');
+            setDialog({
+                isOpen: true,
+                title: "Description Required",
+                description: "Please enter a job description to tailor your resume.",
+                type: "warning"
+            });
             return;
         }
 
         if (resumeSource === 'upload' && !uploadedFile) {
-            alert('Please upload a resume file');
+            setDialog({
+                isOpen: true,
+                title: "Resume Required",
+                description: "Please upload a resume file to continue.",
+                type: "warning"
+            });
             return;
         }
 
@@ -78,7 +105,12 @@ export default function TailorResume() {
             } else {
                 // For 'current' resume, we'd need to get the current resume data
                 // For now, show an error
-                alert('Please upload a resume file. Using current resume is coming soon!');
+                setDialog({
+                    isOpen: true,
+                    title: "Coming Soon",
+                    description: "Using your current resume is coming soon! For now, please upload a resume file.",
+                    type: "info"
+                });
                 setIsAnalyzing(false);
                 setCurrentStage(0);
                 return;
@@ -123,7 +155,12 @@ export default function TailorResume() {
             }
         } catch (error: any) {
             console.error('Analysis failed:', error);
-            alert(`Failed to parse resume: ${error.message}`);
+            setDialog({
+                isOpen: true,
+                title: "Analysis Failed",
+                description: `Failed to parse resume: ${error.message}. Please try again.`,
+                type: "error"
+            });
             setCurrentStage(0);
         } finally {
             setIsAnalyzing(false);
@@ -471,6 +508,14 @@ export default function TailorResume() {
                     </div>
                 </div>
             </div>
+
+            <Dialog
+                isOpen={dialog.isOpen}
+                onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))}
+                title={dialog.title}
+                description={dialog.description}
+                type={dialog.type}
+            />
         </div>
     );
 }

@@ -12,9 +12,11 @@ import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
 import SmartImportModal from "../SmartImportModal";
+import { Dialog } from "@repo/ui/dialog";
 import { CloudCheck } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
+import { usePersistence } from "../hooks/usePersistence";
 
 
 function ResumeEditor() {
@@ -26,10 +28,17 @@ function ResumeEditor() {
   const urlTemplateId = searchParams.get('templateId');
   const defaultTemplateId = "6959f1c2de127e0f17295492";
 
+  // Persistence
+  const { saveDocument, getDocument, isLoggedIn } = usePersistence();
+  const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+
   // Undo/Redo history - Use lazy initialization to prevent array creation on every render
   const [history, setHistory] = useState<any[]>(() => [dummyData]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const [resume, setResume] = useState(dummyData);
+  const debouncedResume = useDebounce(resume, 500); // Moved up for better variable ordering
 
   // Initialize PDF generation hook with auto-cancellation
   const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(`${API_BASE}/convert-html-to-pdf`);
@@ -38,6 +47,27 @@ function ResumeEditor() {
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
 
   // Note: Using isPdfGenerating from usePostArrayBuffer hook instead of separate state
+
+  const [schema, setSchema] = useState<FormSchema>(ResumeFormSchema);
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showSmartImport, setShowSmartImport] = useState(false);
+  const [templateId, setTemplateId] = useState(urlTemplateId);
+  const [fontFamily, setFontFamily] = useState('Inter');
+  const [saveDialog, setSaveDialog] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+    type: 'success' | 'info';
+  }>({
+    isOpen: false,
+    title: "",
+    description: "",
+    type: 'info'
+  });
+
 
   // Check subscription on mount - redirect if no active subscription
   useEffect(() => {
@@ -58,6 +88,30 @@ function ResumeEditor() {
     //   router.push('/subscription?returnTo=editor');
     // }
   }, [router, searchParams]);
+
+  // Load existing document if ID is provided
+  useEffect(() => {
+    const id = searchParams.get('id');
+    if (id) {
+      const loadDoc = async () => {
+        const doc = await getDocument(id, 'resume');
+        if (doc) {
+          setResume(doc.data);
+          if (doc.data?.personalInfo?.profileImage) {
+            setProfileImage(doc.data.personalInfo.profileImage);
+          }
+          if (doc.data?.fontFamily) {
+            setFontFamily(doc.data.fontFamily);
+          }
+          setTemplateId(doc.templateId);
+          setHistory([doc.data]);
+          setHistoryIndex(0);
+          setDocId(doc.id);
+        }
+      };
+      loadDoc();
+    }
+  }, [searchParams, getDocument]);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -83,9 +137,13 @@ function ResumeEditor() {
           sessionStorage.removeItem('parsedResumeData');
           const url = new URL(window.location.href);
           url.searchParams.delete('fromTailor');
+          url.searchParams.delete('fromAtsCheck');
           window.history.replaceState({}, '', url.toString());
 
           console.log('Resume data loaded successfully');
+
+          // Trigger an initial save
+          handleAutoSave(parsedData);
         }
       } catch (error) {
         console.error('Failed to load resume data from sessionStorage:', error);
@@ -93,16 +151,60 @@ function ResumeEditor() {
     }
   }, [searchParams]);
 
-  const [schema, setSchema] = useState<FormSchema>(ResumeFormSchema);
-  const [showTemplates, setShowTemplates] = useState(false);
-  const [showMobilePreview, setShowMobilePreview] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [showSmartImport, setShowSmartImport] = useState(false);
-  const [templateId, setTemplateId] = useState(urlTemplateId);
-  const [fontFamily, setFontFamily] = useState('Inter');
+  // Auto-save logic
+  const handleAutoSave = useCallback(async (dataToSave: any) => {
+    if (!dataToSave) return;
+    setIsSaving(true);
+    const title = `${dataToSave.personalInfo?.firstName || 'Untitled'} ${dataToSave.personalInfo?.lastName || 'Resume'}`.trim();
 
-  const debouncedResume = useDebounce(resume, 500);
+    const result = await saveDocument({
+      id: docId || undefined,
+      title,
+      type: 'resume',
+      templateId: templateId || defaultTemplateId,
+      data: { ...dataToSave, fontFamily: fontFamily || 'Inter' }
+    });
+
+    if (result.success && result.id) {
+      if (!docId || docId !== result.id) {
+        setDocId(result.id);
+        const url = new URL(window.location.href);
+        url.searchParams.set('id', result.id);
+        window.history.replaceState({}, '', url.toString());
+
+        if (result.storage === 'local' && !sessionStorage.getItem('persistence_popup_shown')) {
+          setSaveDialog({
+            isOpen: true,
+            title: "Saved Locally",
+            description: "Your resume is being saved to Local Storage. To access it across devices, please sign in.",
+            type: 'info'
+          });
+          sessionStorage.setItem('persistence_popup_shown', 'true');
+        } else if (result.storage === 'cloud' && !sessionStorage.getItem('persistence_popup_shown')) {
+          setSaveDialog({
+            isOpen: true,
+            title: "Saved to Account",
+            description: "Your resume is being saved to your professional account.",
+            type: 'success'
+          });
+          sessionStorage.setItem('persistence_popup_shown', 'true');
+        }
+      }
+      setLastSaved(new Date());
+    }
+    setIsSaving(false);
+  }, [docId, templateId, saveDocument, defaultTemplateId, fontFamily]);
+
+  // Debounced auto-save
+  useEffect(() => {
+    // Save when content changes (debounced) OR when metadata changes (immediately via handleAutoSave recreation)
+    if (debouncedResume !== dummyData || fontFamily !== 'Inter' || templateId !== urlTemplateId) {
+      handleAutoSave(debouncedResume);
+    }
+  }, [debouncedResume, fontFamily, templateId, handleAutoSave]);
+
+
+
 
   // Memoize section labels computation - used in multiple places
   const sectionLabels = useMemo(() => {
@@ -293,6 +395,15 @@ function ResumeEditor() {
 
   // Handle export - Memoized to prevent SettingsSidebar re-renders
   const handleExport = useCallback((format: "pdf" | "doc") => {
+    // Check if user is logged in
+    if (!isLoggedIn) {
+      sessionStorage.setItem('pending_download', format);
+      const isProd = window.location.hostname.endsWith('profresume.com');
+      const authUrl = isProd ? 'https://auth.profresume.com' : 'http://localhost:3001';
+      window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
+      return;
+    }
+
     // Check subscription before allowing download
     if (!canDownload()) {
       // Redirect to subscription page instead of showing modal
@@ -313,7 +424,18 @@ function ResumeEditor() {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
     }
-  }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
+  }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
+
+  // Handle pending download on return from login
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      const pendingFormat = sessionStorage.getItem('pending_download');
+      if (pendingFormat) {
+        sessionStorage.removeItem('pending_download');
+        handleExport(pendingFormat as "pdf" | "doc");
+      }
+    }
+  }, [isLoggedIn, handleExport]);
 
   // Auto-populate form schema with custom sections when data exists
   useEffect(() => {
@@ -465,10 +587,10 @@ function ResumeEditor() {
 
     try {
       const resumeData = {
-        templateId,
-        sectionLabels,  // Use memoized sectionLabels
-        fontFamily,
+        sectionLabels,
         ...debouncedResume as any,
+        templateId,
+        fontFamily,
         order: debouncedSectionOrder
       };
 
@@ -524,24 +646,8 @@ function ResumeEditor() {
 
   // Memoized handlers for ProfileHeader - prevents re-renders
   const handleDownload = useCallback(async () => {
-    const name = userName?.replace(" ", '_')
-    // Check subscription before allowing download
-    if (!canDownload()) {
-      router.push('/subscription?returnTo=editor');
-      return;
-    }
-
-    const resumeData = {
-      templateId,
-      sectionLabels,
-      fontFamily,
-      ...resume,
-      order: sectionOrder
-    };
-
-
-    await downloadPdf(apiUrl, name, resumeData);
-  }, [router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
+    handleExport("pdf");
+  }, [handleExport]);
 
   const handleShare = useCallback(() => {
     setShowShareModal(true);
@@ -580,7 +686,7 @@ function ResumeEditor() {
           <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
 
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
-              {isPdfGenerating ? (
+              {isSaving || isPdfGenerating ? (
                 <>
                   <div className="w-3.5 h-3.5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                   <span className="text-xs font-semibold text-blue-700 leading-none">Saving...</span>
@@ -588,7 +694,9 @@ function ResumeEditor() {
               ) : (
                 <>
                   <CloudCheck size={14} className="text-blue-700 flex-shrink-0" />
-                  <span className="text-xs font-semibold text-blue-700 leading-none">Saved</span>
+                  <span className="text-xs font-semibold text-blue-700 leading-none">
+                    {lastSaved ? `Saved at ${lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'Saved'}
+                  </span>
                 </>
               )}
             </div>
@@ -820,6 +928,16 @@ function ResumeEditor() {
           // Add to history
           addToHistory(data);
         }}
+      />
+
+      {/* Persistence Notification Dialog */}
+      <Dialog
+        isOpen={saveDialog.isOpen}
+        onClose={() => setSaveDialog(prev => ({ ...prev, isOpen: false }))}
+        title={saveDialog.title}
+        description={saveDialog.description}
+        type={saveDialog.type}
+        primaryActionLabel="Got it"
       />
     </div>
   );

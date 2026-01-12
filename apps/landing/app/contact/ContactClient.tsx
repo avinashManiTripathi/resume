@@ -60,7 +60,7 @@ export default function ContactClient() {
                         {
                             icon: <Mail size={32} />,
                             title: "Email Us",
-                            content: "avinashmanitripathi97@email.com",
+                            content: "it@profresume.com",
                             subtext: "We'll respond within 24 hours"
                         },
                         {

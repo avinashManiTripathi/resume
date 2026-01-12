@@ -14,27 +14,101 @@ import {
   UserCircle,
   LogOut,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  Trash2
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getSubscription } from "@repo/utils-client";
 import Image from "next/image";
+import { usePersistence, SavedDocument } from "./hooks/usePersistence";
+import { Dialog } from "@repo/ui/dialog";
 
 export default function DashboardPage() {
   const subscription = getSubscription();
   const [searchQuery, setSearchQuery] = useState("");
+  const { getDocuments, isLoggedIn, user, logout, deleteDocument } = usePersistence();
 
-  // Mock data for resumes
-  const resumes = [
-    { id: "1", title: "Software Engineer Resume", lastModified: "2 hours ago", template: "Modern Professional" },
-    { id: "2", title: "Product Designer CV", lastModified: "Yesterday", template: "Creative Minimal" },
-  ];
+  const [resumes, setResumes] = useState<SavedDocument[]>([]);
+  const [coverLetters, setCoverLetters] = useState<SavedDocument[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data for cover letters
-  const coverLetters = [
-    { id: "1", title: "Google Senior Engineer Cover Letter", lastModified: "5 hours ago", date: "Jan 12, 2026" },
-    { id: "2", title: "Meta Product Lead Application", lastModified: "3 days ago", date: "Jan 09, 2026" },
-  ];
+  // Deletion Dialog State
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    id: string;
+    type: 'resume' | 'cover-letter';
+    title: string;
+  }>({
+    isOpen: false,
+    id: "",
+    type: 'resume',
+    title: ""
+  });
+
+  const fetchDocs = useCallback(async () => {
+    setLoading(true);
+    const { backendDocs, localDocs } = await getDocuments();
+
+    // Convert backend backendDocs (which are raw API responses) to SavedDocument if needed
+    // usePersistence.getDocuments already returns merged lists in some forms, 
+    // but here we need to filter by type.
+
+    const allDocs = [...backendDocs, ...localDocs];
+    setResumes(allDocs.filter(d => d.type === 'resume'));
+    setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
+    setLoading(false);
+  }, [getDocuments]);
+
+  useEffect(() => {
+    fetchDocs();
+  }, [fetchDocs]);
+
+  const formatDateTime = (date: string | Date | undefined) => {
+    if (!date) return "Unknown";
+    const d = new Date(date);
+    return d.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
+  const getTimeAgo = (date: string | Date | undefined) => {
+    if (!date) return "Unknown";
+    const d = new Date(date);
+    const now = new Date();
+    const diff = now.getTime() - d.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours < 1) return "Just now";
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return "Yesterday";
+    if (days < 7) return `${days}d ago`;
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  const handleDelete = async (id: string, type: 'resume' | 'cover-letter', title: string) => {
+    setDeleteDialog({
+      isOpen: true,
+      id,
+      type,
+      title
+    });
+  };
+
+  const confirmDelete = async () => {
+    const { id, type } = deleteDialog;
+    const success = await deleteDocument(id, type);
+    if (success) {
+      fetchDocs();
+      setDeleteDialog(prev => ({ ...prev, isOpen: false }));
+    } else {
+      alert("Failed to delete document. Please try again.");
+    }
+  };
 
   return (
     <div className="h-screen bg-[#F0F4F8] flex text-gray-900 overflow-hidden text-sm">
@@ -72,7 +146,10 @@ export default function DashboardPage() {
         </nav>
 
         <div className="mt-auto pt-6 border-t border-gray-200 px-2">
-          <button className="flex items-center gap-3 text-gray-400 hover:text-red-500 transition-all font-bold text-xs">
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 text-gray-400 hover:text-red-500 transition-all font-bold text-xs w-full text-left"
+          >
             <LogOut size={16} />
             Sign Out
           </button>
@@ -104,11 +181,15 @@ export default function DashboardPage() {
 
             <div className="flex items-center gap-4">
               <div className="flex flex-col items-end">
-                <span className="text-xs font-bold text-gray-900">Avinash Mani</span>
-                <span className="text-[9px] text-blue-500 font-extrabold uppercase tracking-widest">PRO MEMBER</span>
+                <span className="text-xs font-bold text-gray-900">{isLoggedIn ? (user?.name || user?.email) : "Guest User"}</span>
+                <span className="text-[9px] text-blue-500 font-extrabold uppercase tracking-widest">{isLoggedIn ? "PRO MEMBER" : "FREE PLAN"}</span>
               </div>
               <div className="w-9 h-9 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center overflow-hidden hover:bg-gray-100 transition-colors cursor-pointer group">
-                <UserCircle size={24} className="text-gray-300 group-hover:text-blue-500 transition-colors" />
+                {user?.picture ? (
+                  <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <UserCircle size={24} className="text-gray-300 group-hover:text-blue-500 transition-colors" />
+                )}
               </div>
             </div>
           </header>
@@ -153,14 +234,14 @@ export default function DashboardPage() {
               <div className="bg-gray-50 p-6 rounded-3xl flex flex-col justify-between h-40 border border-transparent group hover:bg-white hover:shadow-xl hover:shadow-gray-100/50 hover:border-gray-100 transition-all cursor-pointer">
                 <p className="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-0.5">DOCUMENTS</p>
                 <div>
-                  <h3 className="text-3xl font-black text-gray-900 leading-none">{resumes.length}</h3>
+                  <h3 className="text-3xl font-black text-gray-900 leading-none">{loading ? "..." : resumes.length}</h3>
                   <p className="text-[10px] font-bold text-gray-400 mt-1">Total Resumes</p>
                 </div>
               </div>
               <div className="bg-gray-50 p-6 rounded-3xl flex flex-col justify-between h-40 border border-transparent group hover:bg-white hover:shadow-xl hover:shadow-gray-100/50 hover:border-gray-100 transition-all cursor-pointer">
                 <p className="text-[8px] font-black uppercase tracking-widest text-gray-400 mb-0.5">APPLIED</p>
                 <div>
-                  <h3 className="text-3xl font-black text-gray-900 leading-none">{coverLetters.length}</h3>
+                  <h3 className="text-3xl font-black text-gray-900 leading-none">{loading ? "..." : coverLetters.length}</h3>
                   <p className="text-[10px] font-bold text-gray-400 mt-1">Total Letters</p>
                 </div>
               </div>
@@ -176,21 +257,37 @@ export default function DashboardPage() {
                   </Link>
                 </div>
                 <div className="space-y-3">
-                  {resumes.map(resume => (
-                    <div key={resume.id} className="group flex items-center gap-3 p-3 hover:bg-gray-50/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-gray-100">
-                      <div className="w-11 h-11 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+                  {resumes.map((resume: SavedDocument) => (
+                    <div key={resume.id || resume._id} className="group flex items-center gap-3 p-3 hover:bg-gray-50/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-gray-100">
+                      <div className="w-11 h-11 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
                         <FileText size={20} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 truncate text-xs">{resume.title}</h4>
-                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{resume.lastModified} • {resume.template}</p>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-gray-900 truncate text-xs">{resume.title || "Untitled Resume"}</h4>
+                          {(resume._id || resume.id)?.startsWith('doc_') ? (
+                            <span className="text-[8px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-md font-black italic">LOCAL</span>
+                          ) : (
+                            <span className="text-[8px] px-1.5 py-0.5 bg-blue-50 text-blue-500 rounded-md font-black italic">CLOUD</span>
+                          )}
+                        </div>
+                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5" title={formatDateTime(resume.lastModified)}>
+                          {getTimeAgo(resume.lastModified)}
+                        </p>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link href={`/editor?id=${resume.id}`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all">
+                        <Link href={`/editor?id=${resume._id || resume.id}`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all" title="Open Editor">
                           <ExternalLink size={16} />
                         </Link>
-                        <button className="p-1.5 text-gray-400 hover:text-gray-900 hover:bg-white rounded-lg transition-all">
-                          <Settings size={16} />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(resume._id || resume.id, 'resume', resume.title);
+                          }}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-white rounded-lg transition-all"
+                          title="Delete Resume"
+                        >
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
@@ -210,21 +307,37 @@ export default function DashboardPage() {
                   </Link>
                 </div>
                 <div className="space-y-3">
-                  {coverLetters.map(letter => (
+                  {coverLetters.map((letter: SavedDocument) => (
                     <div key={letter.id} className="group flex items-center gap-3 p-3 hover:bg-gray-50/50 rounded-2xl transition-all cursor-pointer border border-transparent hover:border-gray-100">
-                      <div className="w-11 h-11 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+                      <div className="w-11 h-11 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
                         <Mail size={20} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-bold text-gray-900 truncate text-xs">{letter.title}</h4>
-                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">{letter.lastModified} • {letter.date}</p>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-gray-900 truncate text-xs">{letter.title || "Untitled Letter"}</h4>
+                          {letter.id?.startsWith('doc_') ? (
+                            <span className="text-[8px] px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-md font-black italic">LOCAL</span>
+                          ) : (
+                            <span className="text-[8px] px-1.5 py-0.5 bg-blue-50 text-blue-500 rounded-md font-black italic">CLOUD</span>
+                          )}
+                        </div>
+                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5" title={formatDateTime(letter.lastModified)}>
+                          {getTimeAgo(letter.lastModified)}
+                        </p>
                       </div>
                       <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Link href={`/cover-letter?id=${letter.id}`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all">
+                        <Link href={`/cover-letter/create?id=${letter._id || letter.id}`} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-white rounded-lg transition-all" title="Open Editor">
                           <ExternalLink size={16} />
                         </Link>
-                        <button className="p-1.5 text-gray-400 hover:text-gray-900 hover:bg-white rounded-lg transition-all">
-                          <Settings size={16} />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(letter._id || letter.id, 'cover-letter', letter.title);
+                          }}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-white rounded-lg transition-all"
+                          title="Delete Letter"
+                        >
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
@@ -239,6 +352,18 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Deletion Confirmation Dialog */}
+      <Dialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog(prev => ({ ...prev, isOpen: false }))}
+        title="Delete Document"
+        description={`Are you sure you want to delete "${deleteDialog.title || 'this document'}"? This action cannot be undone.`}
+        type="confirm"
+        primaryActionLabel="Delete"
+        onPrimaryAction={confirmDelete}
+        secondaryActionLabel="Cancel"
+      />
     </div>
   );
 }

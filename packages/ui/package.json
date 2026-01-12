@@ -37,7 +37,8 @@
     "./title": "./src/title.tsx",
     "./section-badge": "./src/section-badge.tsx",
     "./description": "./src/description.tsx",
-    "./select": "./src/select.tsx"
+    "./select": "./src/select.tsx",
+    "./dialog": "./src/dialog.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

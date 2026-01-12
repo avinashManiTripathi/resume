@@ -9,6 +9,8 @@ function CallbackContent() {
 
     useEffect(() => {
         const token = searchParams.get("token");
+        const name = searchParams.get("name");
+        const email = searchParams.get("email");
         const error = searchParams.get("error");
 
         if (error) {
@@ -18,11 +20,23 @@ function CallbackContent() {
         }
 
         if (token) {
-            // Store token in localStorage
+            // Store token in localStorage (of auth domain, though we primarily need it in editor)
             localStorage.setItem("authToken", token);
 
-            // Redirect to editor
-            router.push("/editor");
+            // Determine editor URL based on environment
+            const isProd = window.location.hostname.endsWith('profresume.com');
+            const editorBaseUrl = isProd
+                ? 'https://edit.profresume.com'
+                : 'http://localhost:3002';
+
+            // Construct redirect URL to editor with user info
+            const redirectUrl = new URL(editorBaseUrl);
+            redirectUrl.searchParams.set('token', token);
+            if (name) redirectUrl.searchParams.set('name', name);
+            if (email) redirectUrl.searchParams.set('email', email);
+
+            // Cross-subdomain redirect
+            window.location.href = redirectUrl.toString();
         } else {
             // No token or error, redirect back to signin
             router.push("/signin?error=auth_failed");

@@ -6,6 +6,7 @@ import {
     ArrowLeft, CheckCircle, AlertTriangle, Lightbulb,
     TrendingUp, FileText, Sparkles, Check, X, ChevronDown, ChevronUp
 } from 'lucide-react';
+import { Dialog } from '@repo/ui/dialog';
 
 interface Suggestion {
     id: string;
@@ -34,6 +35,17 @@ export default function TailorResults() {
     const [analysis, setAnalysis] = useState<AnalysisResults | null>(null);
     const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(new Set());
     const [expandedSuggestion, setExpandedSuggestion] = useState<string | null>(null);
+    const [dialog, setDialog] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        type: "info" | "success" | "warning" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        description: "",
+        type: "info"
+    });
 
     useEffect(() => {
         // Load results from sessionStorage
@@ -64,8 +76,13 @@ export default function TailorResults() {
         setAppliedSuggestions(allIds);
 
         // TODO: Actually apply to resume
-        alert('All suggestions applied! Redirecting to editor...');
-        setTimeout(() => router.push('/editor'), 1500);
+        setDialog({
+            isOpen: true,
+            title: "Suggestions Applied",
+            description: "All suggestions have been applied! Redirecting to the editor...",
+            type: "success"
+        });
+        setTimeout(() => router.push('/editor'), 2000);
     };
 
     if (!analysis) {
@@ -319,6 +336,15 @@ export default function TailorResults() {
                     </div>
                 </div>
             </div>
+
+            <Dialog
+                isOpen={dialog.isOpen}
+                onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))}
+                title={dialog.title}
+                description={dialog.description}
+                type={dialog.type}
+                primaryActionLabel="Got it"
+            />
         </div>
     );
 }

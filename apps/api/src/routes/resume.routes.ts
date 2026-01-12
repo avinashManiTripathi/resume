@@ -3,6 +3,9 @@ import multer from 'multer';
 import * as pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import { resumeExtractionService } from '../services/resume-extraction.service';
+import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
+import { Resume } from '../models';
+import mongoose from 'mongoose';
 
 const router = Router();
 
@@ -103,6 +106,153 @@ router.post('/extract', upload.single('file'), async (req: Request, res: Respons
         res.status(500).json({
             success: false,
             message: error.message || 'Failed to extract resume data. Please try again.'
+        });
+    }
+});
+
+/**
+ * GET /api/resume/
+ * Get all resumes for the authenticated user
+ */
+router.get('/', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+
+        const resumes = await Resume.find({ userId })
+            .select('title template updatedAt createdAt')
+            .sort({ updatedAt: -1 });
+
+        res.json({
+            success: true,
+            data: resumes
+        });
+    } catch (error: any) {
+        console.error('Error fetching resumes:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch resumes'
+        });
+    }
+});
+
+/**
+ * GET /api/resume/:id
+ * Get a specific resume
+ */
+router.get('/:id', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid resume ID' });
+        }
+
+        const resume = await Resume.findOne({ _id: id, userId });
+
+        if (!resume) {
+            return res.status(404).json({ success: false, message: 'Resume not found' });
+        }
+
+        res.json({
+            success: true,
+            data: resume
+        });
+    } catch (error: any) {
+        console.error('Error fetching resume:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch resume'
+        });
+    }
+});
+
+/**
+ * POST /api/resume/
+ * Save or update a resume
+ */
+router.post('/', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const { id, title, template, data } = req.body;
+
+        if (!title || !template || !data) {
+            return res.status(400).json({
+                success: false,
+                message: 'Title, template, and data are required'
+            });
+        }
+
+        let resume;
+
+        if (id && mongoose.Types.ObjectId.isValid(id)) {
+            // Update existing
+            resume = await Resume.findOneAndUpdate(
+                { _id: id, userId },
+                { title, template, data },
+                { new: true }
+            );
+
+            if (!resume) {
+                return res.status(404).json({ success: false, message: 'Resume not found or unauthorized' });
+            }
+        } else {
+            // Create new
+            resume = new Resume({
+                userId,
+                title,
+                template,
+                data
+            });
+            await resume.save();
+        }
+
+        res.json({
+            success: true,
+            data: resume,
+            message: 'Resume saved successfully'
+        });
+    } catch (error: any) {
+        console.error('Error saving resume:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to save resume'
+        });
+    }
+});
+
+/**
+ * DELETE /api/resume/:id
+ * Delete a resume
+ */
+router.delete('/:id', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ success: false, message: 'Invalid resume ID' });
+        }
+
+        const result = await Resume.deleteOne({ _id: id, userId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Resume not found or unauthorized' });
+        }
+
+        res.json({
+            success: true,
+            message: 'Resume deleted successfully'
+        });
+    } catch (error: any) {
+        console.error('Error deleting resume:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete resume'
         });
     }
 });

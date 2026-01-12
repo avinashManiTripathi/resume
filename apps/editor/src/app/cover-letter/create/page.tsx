@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Download, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Download, Loader2, Eye, CloudCheck } from "lucide-react";
+import { usePersistence } from "../../hooks/usePersistence";
+import { useDebounce } from "@repo/utils-client";
+import { Dialog } from "@repo/ui/dialog";
 
 interface Template {
     id: string;
@@ -25,13 +28,30 @@ interface FormData {
 function CoverLetterCreateForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const templateId = searchParams.get("templateId");
+    const templateIdParam = searchParams.get("templateId");
 
     const [template, setTemplate] = useState<Template | null>(null);
     const [loading, setLoading] = useState(true);
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [format, setFormat] = useState<"pdf" | "docx">("pdf");
+
+    // Persistence
+    const { saveDocument, getDocument, isLoggedIn } = usePersistence();
+    const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
+    const [isSaving, setIsSaving] = useState(false);
+    const [lastSaved, setLastSaved] = useState<Date | null>(null);
+    const [dialog, setDialog] = useState<{
+        isOpen: boolean;
+        title: string;
+        description: string;
+        type: "info" | "success" | "warning" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        description: "",
+        type: "info"
+    });
 
     const [formData, setFormData] = useState<FormData>({
         fullName: "",
@@ -44,21 +64,15 @@ function CoverLetterCreateForm() {
         customParagraph: "",
     });
 
+    const debouncedFormData = useDebounce(formData, 1000);
     const [skillInput, setSkillInput] = useState("");
 
-    useEffect(() => {
-        if (!templateId) {
-            router.push("/cover-letter/templates");
-            return;
-        }
-        fetchTemplate();
-    }, [templateId]);
-
-    const fetchTemplate = async () => {
+    // Fetch Template Info
+    const fetchTemplate = useCallback(async (id: string) => {
         try {
             setLoading(true);
             const response = await fetch(
-                `https://api.profresume.com/api/cover-letter/templates/${templateId}`
+                `https://api.profresume.com/api/cover-letter/templates/${id}`
             );
             const data = await response.json();
 
@@ -73,7 +87,75 @@ function CoverLetterCreateForm() {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
+
+    // Load existing document or initial template
+    useEffect(() => {
+        const id = searchParams.get('id');
+        if (id) {
+            const loadDoc = async () => {
+                const doc = await getDocument(id, 'cover-letter');
+                if (doc) {
+                    setFormData(doc.data);
+                    setDocId(doc.id);
+                    if (doc.templateId) {
+                        fetchTemplate(doc.templateId);
+                    }
+                }
+            };
+            loadDoc();
+        } else if (templateIdParam) {
+            fetchTemplate(templateIdParam);
+        } else {
+            router.push("/cover-letter/templates");
+        }
+    }, [searchParams, getDocument, templateIdParam, router, fetchTemplate]);
+
+    // Auto-save logic
+    const handleAutoSave = useCallback(async (dataToSave = formData) => {
+        if (!dataToSave.fullName && !dataToSave.jobTitle) return;
+
+        setIsSaving(true);
+        const title = `${dataToSave.fullName || 'Untitled'} Cover Letter`.trim();
+
+        const result = await saveDocument({
+            id: docId || undefined,
+            title,
+            type: 'cover-letter',
+            templateId: template?.id || templateIdParam || "modern",
+            data: dataToSave
+        });
+
+        if (result.success && result.id) {
+            if (!docId || docId !== result.id) {
+                setDocId(result.id);
+                const url = new URL(window.location.href);
+                url.searchParams.set('id', result.id);
+                window.history.replaceState({}, '', url.toString());
+
+                if (!sessionStorage.getItem('cl_persistence_popup_shown')) {
+                    setDialog({
+                        isOpen: true,
+                        title: result.storage === 'local' ? "Saved Locally" : "Saved to Account",
+                        description: result.storage === 'local'
+                            ? "Your cover letter is being saved to Local Storage. Sign in to access it anywhere."
+                            : "Your cover letter is being saved to your professional account.",
+                        type: result.storage === 'local' ? "info" : "success"
+                    });
+                    sessionStorage.setItem('cl_persistence_popup_shown', 'true');
+                }
+            }
+            setLastSaved(new Date());
+        }
+        setIsSaving(false);
+    }, [formData, docId, template, templateIdParam, saveDocument]);
+
+    // Auto-save effect
+    useEffect(() => {
+        if (debouncedFormData.fullName || debouncedFormData.jobTitle) {
+            handleAutoSave(debouncedFormData);
+        }
+    }, [debouncedFormData, handleAutoSave]);
 
     const handleInputChange = (field: keyof FormData, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
@@ -109,7 +191,6 @@ function CoverLetterCreateForm() {
             }
         }
 
-        // Validate email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(formData.email)) {
             setError("Please enter a valid email address");
@@ -132,7 +213,7 @@ function CoverLetterCreateForm() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    templateId,
+                    templateId: template?.id || templateIdParam,
                     userData: formData,
                     format,
                 }),
@@ -143,7 +224,6 @@ function CoverLetterCreateForm() {
                 throw new Error(errorData.message || "Failed to generate cover letter");
             }
 
-            // Get filename from response headers
             const contentDisposition = response.headers.get("Content-Disposition");
             let fileName = `cover-letter-${template?.id}-${Date.now()}.${format}`;
             if (contentDisposition) {
@@ -151,7 +231,6 @@ function CoverLetterCreateForm() {
                 if (match) fileName = match[1];
             }
 
-            // Download file
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -162,8 +241,12 @@ function CoverLetterCreateForm() {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
 
-            // Success message could be shown here
-            alert("Cover letter downloaded successfully!");
+            setDialog({
+                isOpen: true,
+                title: "Download Success",
+                description: "Your cover letter has been generated and downloaded successfully!",
+                type: "success"
+            });
         } catch (err: any) {
             console.error("Error generating cover letter:", err);
             setError(err.message || "Failed to generate cover letter");
@@ -206,13 +289,29 @@ function CoverLetterCreateForm() {
             {/* Header */}
             <div className="bg-white border-b sticky top-0 z-10">
                 <div className="max-w-4xl mx-auto px-4 py-4">
-                    <button
-                        onClick={() => router.push("/cover-letter/templates")}
-                        className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-2 transition"
-                    >
-                        <ArrowLeft size={20} />
-                        <span>Change Template</span>
-                    </button>
+                    <div className="flex justify-between items-start mb-2">
+                        <button
+                            onClick={() => router.push("/cover-letter/templates")}
+                            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
+                        >
+                            <ArrowLeft size={20} />
+                            <span>Change Template</span>
+                        </button>
+
+                        <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
+                            {isSaving ? (
+                                <>
+                                    <Loader2 size={12} className="animate-spin" />
+                                    <span>Saving...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <CloudCheck size={12} />
+                                    <span>{lastSaved ? `Saved at ${lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'Saved'}</span>
+                                </>
+                            )}
+                        </div>
+                    </div>
                     <h1 className="text-2xl font-bold text-gray-900">{template.name}</h1>
                     <p className="text-gray-600 text-sm">{template.description}</p>
                 </div>
@@ -421,14 +520,19 @@ function CoverLetterCreateForm() {
                     </div>
                 </div>
             </div>
-        </div>
+
+            <Dialog
+                isOpen={dialog.isOpen}
+                onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))}
+                title={dialog.title}
+                description={dialog.description}
+                type={dialog.type}
+                primaryActionLabel="Got it"
+            />
+        </div >
     );
 }
 
-/**
- * Cover Letter Create Page
- * Step 2: Fill form and generate cover letter
- */
 export default function CreatePage() {
     return (
         <Suspense fallback={

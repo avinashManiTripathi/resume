@@ -54,11 +54,20 @@ router.get('/google/callback',
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: 'lax',
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
             });
 
-            // Redirect to frontend with success
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
-            res.redirect(`${frontendUrl}/auth/callback?success=true`);
+            // Redirect to frontend with success and user info
+            const frontendUrl = process.env.FRONTEND_URL || 'https://edit.profresume.com';
+
+            const redirectUrl = new URL(frontendUrl);
+            redirectUrl.searchParams.set('success', 'true');
+            redirectUrl.searchParams.set('token', token);
+            redirectUrl.searchParams.set('name', user.name || '');
+            redirectUrl.searchParams.set('email', user.email);
+
+            console.log('Redirecting to:', redirectUrl.toString());
+            res.redirect(redirectUrl.toString());
         } catch (error) {
             console.error('Auth callback error:', error);
             res.redirect(`${process.env.FRONTEND_URL}/signin?error=server_error`);

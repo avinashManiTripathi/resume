@@ -9,7 +9,7 @@ export default function SignInContent() {
 
     const handleGoogleSignIn = () => {
         // Redirect to backend Google OAuth endpoint
-        window.location.href = `https://api.profresume.com/auth/google`;
+        window.location.href = `https://api.profresume.com/api/auth/google`;
     };
 
     useEffect(() => {
