@@ -7,7 +7,7 @@ export const ENV = {
     AUTH_URL: getEnv('AUTH_URL') || 'https://auth.profresume.com',
     EDITOR_URL: getEnv('EDITOR_URL') || 'https://edit.profresume.com',
     BASE_URL: getEnv('BASE_URL') || 'https://profresume.com',
-    SUPPORT_EMAIL: getEnv('SUPPORT_EMAIL') || 'support@profresume.com',
+    SUPPORT_EMAIL: getEnv('SUPPORT_EMAIL') || 'it@profresume.com',
     ACCESSIBILITY_EMAIL: getEnv('ACCESSIBILITY_EMAIL') || 'accessibility@profresume.com',
     LEGAL_EMAIL: getEnv('LEGAL_EMAIL') || 'legal@profresume.com',
     PRIVACY_EMAIL: getEnv('PRIVACY_EMAIL') || 'privacy@profresume.com',

@@ -84,11 +84,11 @@ export default function TemplatesPage() {
             <div className="bg-white border-b">
                 <div className="max-w-6xl mx-auto px-4 py-6">
                     <button
-                        onClick={() => router.push("/editor")}
+                        onClick={() => router.push("/")}
                         className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition"
                     >
                         <ArrowLeft size={20} />
-                        <span>Back to Editor</span>
+                        <span>Go Back </span>
                     </button>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose a Cover Letter Template</h1>
                     <p className="text-gray-600">Select a professional template to get started</p>

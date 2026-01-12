@@ -7,7 +7,6 @@ import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
 import { ProductSchema } from "@/components/ProductSchema";
 import { HowItWorks } from "@/components/HowItWorks";
-import { WhyChooseUs } from "@/components/WhyChooseUs";
 
 export const metadata: Metadata = {
   alternates: {
@@ -46,7 +45,7 @@ export default async function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link target="_blank" href={ENV.EDITOR_URL} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <Link target="_blank" href={ENV.EDITOR_URL + "/editor"} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Resume Free
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -336,7 +335,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href={ENV.EDITOR_URL}
+                href={ENV.EDITOR_URL + "/editor"}
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Start Writing with AI
@@ -792,9 +791,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* Why Choose Us - SEO Comparison Section */}
-      <WhyChooseUs />
-
       {/* Success Stories Section with Real Image */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
@@ -1043,30 +1039,6 @@ export default async function LandingPage() {
 
 
 
-
-      {/* Final CTA */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-blue-700 text-white relative overflow-hidden">
-        {/* Background Pattern */}
-
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-            Ready to land your dream job?
-          </h2>
-          <p className="text-xl md:text-2xl text-white mb-10">
-            Join 50,000+ professionals who transformed their careers
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={ENV.EDITOR_URL}
-              className="bg-white text-blue-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all shadow-2xl flex items-center justify-center gap-3 group"
-            >
-              Create Your Resume Now
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-          <p className="text-white mt-6 text-sm">No credit card required • Free forever</p>
-        </div>
-      </section>
     </div>
   );
 }

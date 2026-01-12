@@ -292,18 +292,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 ]}
             />
 
-            {/* Simple Minimal Hero */}
-            <div className="bg-slate-50 border-b border-slate-100 py-16 md:py-24">
-                <div className="container mx-auto px-4 max-w-6xl">
-                    <div className="max-w-3xl">
-                        <div className="inline-flex px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-widest mb-6 border border-blue-100">
-                            {article.heroBadge}
-                        </div>
-                        <Title normalText={article.title}></Title>
-                        <Description description={article.description} />
-                    </div>
-                </div>
-            </div>
+
+            <IntroSection
+                title={article.title}
+                description={article.description}
+                label={article.heroBadge}
+                sectionClassName="bg-slate-50 border-b border-slate-100 py-16 md:py-24"
+            />
+
 
             <div className="container mx-auto px-4 max-w-6xl mt-12 md:mt-20">
                 <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16">

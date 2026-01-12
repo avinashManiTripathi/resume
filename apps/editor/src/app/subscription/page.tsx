@@ -116,11 +116,11 @@ function SubscriptionContent() {
             <div className="min-h-screen bg-gray-50 py-12 px-4">
                 <div className="max-w-6xl mx-auto">
                     <button
-                        onClick={() => router.push('/editor')}
+                        onClick={() => router.push('/')}
                         className="group mb-8 flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-all"
                     >
                         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                        Back to Editor
+                        Go Back
                     </button>
 
                     <div className="mb-12">
