@@ -41,7 +41,7 @@ const SettingsSidebar = ({ onExport, onTemplateChange, onSmartImport, fontFamily
     ], []);
 
     return (
-        <div className="w-20 bg-white border-l border-blue-100 rounded-lg flex flex-col items-center py-6 gap-4 overflow-visible shadow-sm">
+        <div className="w-20  h-full bg-white border-l border-blue-100 rounded-lg flex flex-col items-center py-6 gap-4 overflow-visible shadow-sm">
 
 
             {/* AI Smart Import */}
