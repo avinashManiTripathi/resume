@@ -130,7 +130,7 @@ export function HowItWorks() {
                     {/* CTA */}
                     <div className="text-center">
                         <Link
-                            href={ENV.EDITOR_URL}
+                            href={ENV.EDITOR_URL + "/editor"}
                             target="_blank"
                             className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl group"
                         >

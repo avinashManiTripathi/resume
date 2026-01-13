@@ -265,12 +265,12 @@ export default function DashboardPage() {
 
         <main className="px-12 py-6 max-w-[1400px] mx-auto w-full">
           {/* Immersive Welcome Area */}
-          <div className="mb-10">
-            <div className="flex items-center gap-3 mb-2">
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-2">
               <span className="bg-indigo-50 text-indigo-600 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Welcome Back</span>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-gray-100 to-transparent"></div>
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
             </div>
-            <h1 className="text-[32px] font-black text-gray-900 leading-[1.2] tracking-tight">
+            <h1 className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
               Design your future, <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-500">{isLoggedIn ? user?.name : "Explorer"}</span>
             </h1>
@@ -302,89 +302,105 @@ export default function DashboardPage() {
             {activeGoal === "Resume Building" ? (
               <>
                 {/* Unique Health/Progress Card */}
-                <div className="xl:col-span-1 bg-white rounded-[3rem] p-10 border border-slate-200/60 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.04)] relative overflow-hidden group">
+                <div className="xl:col-span-1 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
                   <div className="relative z-10 h-full flex flex-col">
-                    <div className="flex justify-between items-start mb-8">
-                      <h3 className="text-lg font-black text-slate-900">Career Pulse</h3>
-                      <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
-                        <BarChart3 size={20} />
+                    <div className="flex justify-between items-start mb-6">
+                      <h3 className="text-base font-black text-slate-900">Career Pulse</h3>
+                      <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+                        <BarChart3 size={16} />
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center flex-1 my-6 relative">
+                    <div className="flex flex-col items-center justify-center flex-1 my-4 relative">
                       {/* Radial Progress Visual */}
-                      <div className="w-48 h-48 rounded-full border-[12px] border-slate-50 flex items-center justify-center relative">
-                        <svg className="absolute inset-0 w-full h-full -rotate-90">
+                      <div className="w-44 h-44 rounded-full border-[8px] border-slate-50 flex items-center justify-center relative group-hover:scale-105 transition-transform">
+                        <svg className="absolute inset-0 w-full h-full -rotate-90" style={{ overflow: 'visible' }}>
+                          <defs>
+                            <linearGradient id="careerPulseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style={{ stopColor: '#6366f1', stopOpacity: 1 }} />
+                              <stop offset="50%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
+                              <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
+                            </linearGradient>
+                            <filter id="glow">
+                              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                              <feMerge>
+                                <feMergeNode in="coloredBlur" />
+                                <feMergeNode in="SourceGraphic" />
+                              </feMerge>
+                            </filter>
+                          </defs>
                           <circle
-                            cx="50%" cy="50%" r="88"
+                            cx="50%"
+                            cy="50%"
+                            r="42%"
                             fill="none"
-                            stroke="currentColor"
+                            stroke="url(#careerPulseGradient)"
                             strokeWidth="12"
-                            className="text-indigo-600"
-                            strokeDasharray="552"
-                            strokeDashoffset="469"
+                            strokeDasharray="264"
+                            strokeDashoffset="224"
                             strokeLinecap="round"
+                            filter="url(#glow)"
                           />
                         </svg>
-                        <div className="text-center">
-                          <span className="text-4xl font-black text-slate-900">15%</span>
-                          <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Ready</p>
+                        <div className="text-center relative z-10">
+                          <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 drop-shadow-sm">15%</span>
+                          <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mt-1">Ready</p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100/50 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <FileText size={16} className="text-indigo-500" />
-                          <span className="text-[13px] font-bold">Resume Quality</span>
+                    <div className="space-y-3">
+                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between hover:border-indigo-200 transition-colors">
+                        <div className="flex items-center gap-2.5">
+                          <FileText size={14} className="text-indigo-500" />
+                          <span className="text-xs font-bold text-slate-700">Resume Quality</span>
                         </div>
-                        <span className="text-[13px] font-black text-emerald-500">Optimum</span>
+                        <span className="text-xs font-black text-emerald-600">Optimum</span>
                       </div>
-                      <div className="p-4 rounded-2xl bg-white border border-slate-100 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Target size={16} className="text-amber-500" />
-                          <span className="text-[13px] font-bold">Market Reach</span>
+                      <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between hover:border-amber-200 transition-colors">
+                        <div className="flex items-center gap-2.5">
+                          <Target size={14} className="text-amber-500" />
+                          <span className="text-xs font-bold text-slate-700">Market Reach</span>
                         </div>
-                        <span className="text-[13px] font-black text-slate-300">Inactive</span>
+                        <span className="text-xs font-black text-slate-400">Inactive</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Premium Smart Insight Card */}
-                <div className="xl:col-span-2 bg-indigo-950 rounded-[2.5rem] p-10 relative overflow-hidden group border border-indigo-900 shadow-2xl">
-                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-500/10 to-transparent opacity-50"></div>
+                <div className="xl:col-span-2 bg-gradient-to-br from-indigo-900 to-indigo-950 rounded-2xl p-8 relative overflow-hidden group border border-indigo-800 shadow-lg">
+                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-400/10 to-transparent opacity-50"></div>
 
                   <div className="relative z-10 flex flex-col h-full">
-                    <div className="flex items-center gap-2 mb-6 animate-pulse">
+                    <div className="flex items-center gap-2 mb-5 animate-pulse">
                       <div className="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
                       <span className="text-[9px] font-black text-indigo-300 uppercase tracking-widest leading-none">AI Insight Engine</span>
                     </div>
 
-                    <h2 className="text-[28px] font-black text-white leading-[1.1] tracking-tight mb-4 max-w-lg">
+                    <h2 className="text-2xl font-black text-white leading-tight tracking-tight mb-3 max-w-lg">
                       Level up your profile <br />
                       to reach <span className="text-indigo-400">95% score</span>
                     </h2>
 
-                    <p className="text-gray-400 text-sm font-medium leading-relaxed max-w-sm mb-8">
-                      Our algorithm detected missing industry keywords. Adding them could increase your recruiter visibility by 3.4x.
+                    <p className="text-indigo-200/70 text-sm font-medium leading-relaxed max-w-sm mb-6">
+                      Our algorithm detected missing industry keywords. Adding them could increase visibility by 3.4x.
                     </p>
 
-                    <div className="grid grid-cols-2 gap-4 mt-auto">
-                      <div className="p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-lg hover:bg-white/10 transition-all cursor-pointer">
-                        <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
-                          <Plus size={16} />
+                    <div className="grid grid-cols-2 gap-3 mt-auto">
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-lg hover:bg-white/10 transition-all cursor-pointer group/card">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
+                          <Plus size={14} />
                         </div>
-                        <p className="text-[12px] font-extrabold text-white mb-0.5">Add Accomplishments</p>
-                        <span className="text-[10px] font-bold text-indigo-400">+35% Exposure</span>
+                        <p className="text-xs font-extrabold text-white mb-0.5">Add Accomplishments</p>
+                        <span className="text-[9px] font-bold text-indigo-400">+35% Exposure</span>
                       </div>
-                      <div className="p-5 rounded-2xl bg-indigo-600 text-white shadow-xl shadow-indigo-950/40 hover:bg-indigo-500 transition-all cursor-pointer">
-                        <div className="w-8 h-8 rounded-xl bg-white/10 text-white flex items-center justify-center mb-3">
-                          <Zap size={16} fill="white" />
+                      <div className="p-4 rounded-xl bg-indigo-600 text-white shadow-lg hover:bg-indigo-500 transition-all cursor-pointer group/card">
+                        <div className="w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
+                          <Zap size={14} fill="white" />
                         </div>
-                        <p className="text-[12px] font-extrabold mb-0.5">Boost with AI</p>
-                        <span className="text-[10px] font-bold text-indigo-200 tracking-wide">Optimize Metadata</span>
+                        <p className="text-xs font-extrabold mb-0.5">Boost with AI</p>
+                        <span className="text-[9px] font-bold text-indigo-200 tracking-wide">Optimize Metadata</span>
                       </div>
                     </div>
                   </div>
@@ -396,55 +412,55 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Dashboard Launchpad */}
-                <div className="col-span-full mt-12 mb-12">
-                  <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Quick Launchpad</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="col-span-full mt-10 mb-12">
+                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-5">Quick Launchpad</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <Link
                       href="/editor"
-                      className="group p-6 bg-indigo-600 rounded-[2rem] flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-xl shadow-indigo-200"
+                      className="group p-5 bg-indigo-600 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-lg shadow-indigo-200/50"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-white">
-                          <Plus size={24} strokeWidth={3} />
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:bg-white/30 transition-colors">
+                          <Plus size={20} strokeWidth={2.5} />
                         </div>
                         <div>
                           <p className="text-white font-black text-sm tracking-tight">Create Resume</p>
                           <p className="text-indigo-100 text-[10px] font-bold uppercase tracking-wider">Start from scratch</p>
                         </div>
                       </div>
-                      <ChevronRight className="text-white/40 group-hover:translate-x-1 transition-transform" />
+                      <ChevronRight className="text-white/40 group-hover:translate-x-1 transition-transform" size={18} />
                     </Link>
 
                     <Link
                       href="/cover-letter"
-                      className="group p-6 bg-white border border-gray-200 rounded-[2rem] flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-sm hover:shadow-xl hover:shadow-gray-200/50"
+                      className="group p-5 bg-white border border-slate-200 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all hover:shadow-lg hover:border-indigo-200"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-900 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                          <Mail size={24} />
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-700 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                          <Mail size={20} />
                         </div>
                         <div>
-                          <p className="text-gray-900 font-black text-sm tracking-tight">Cover Letter</p>
-                          <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Perfect match</p>
+                          <p className="text-slate-900 font-black text-sm tracking-tight">Cover Letter</p>
+                          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Perfect match</p>
                         </div>
                       </div>
-                      <ChevronRight className="text-gray-200 group-hover:text-indigo-300 group-hover:translate-x-1 transition-all" />
+                      <ChevronRight className="text-slate-300 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all" size={18} />
                     </Link>
 
                     <Link
                       href="/tailor"
-                      className="group p-6 bg-white border border-gray-200 rounded-[2rem] flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-sm hover:shadow-xl hover:shadow-gray-200/50"
+                      className="group p-5 bg-white border border-slate-200 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all hover:shadow-lg hover:border-amber-200"
                     >
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-900 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">
-                          <Zap size={24} className="fill-amber-500 text-amber-500" />
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-700 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">
+                          <Zap size={20} className="fill-amber-500 text-amber-500" />
                         </div>
                         <div>
-                          <p className="text-gray-900 font-black text-sm tracking-tight">Tailor Resume</p>
-                          <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Optimize with AI</p>
+                          <p className="text-slate-900 font-black text-sm tracking-tight">Tailor Resume</p>
+                          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Optimize with AI</p>
                         </div>
                       </div>
-                      <ChevronRight className="text-gray-200 group-hover:text-amber-300 group-hover:translate-x-1 transition-all" />
+                      <ChevronRight className="text-slate-300 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" size={18} />
                     </Link>
                   </div>
                 </div>
@@ -464,7 +480,7 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {resumes.slice(0, 3).map((resume: SavedDocument) => (
-                      <div key={resume.id || resume._id} className="group bg-white p-8 rounded-[2.5rem] border border-slate-200/60 hover:border-indigo-400 hover:shadow-2xl hover:shadow-indigo-500/5 transition-all duration-500 flex flex-col h-64 relative overflow-hidden">
+                      <div key={resume.id || resume._id} className="group bg-white p-8 rounded-xl border border-slate-200/60 hover:border-indigo-400 hover:shadow-2xl hover:shadow-indigo-500/5 transition-all duration-500 flex flex-col h-64 relative overflow-hidden">
                         <div className="flex justify-between items-start mb-6">
                           <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
                             <FileText size={24} />
@@ -487,7 +503,7 @@ export default function DashboardPage() {
                         </div>
                         <Link
                           href={`/editor?id=${resume._id || resume.id}`}
-                          className="mt-6 py-3 px-6 bg-slate-50 text-slate-900 rounded-2xl font-black text-[12px] uppercase tracking-widest text-center group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm"
+                          className="mt-6 py-3 px-6 bg-slate-50 text-slate-900 rounded-xl font-black text-[12px] uppercase tracking-widest text-center group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm"
                         >
                           Edit Project
                         </Link>
@@ -495,7 +511,7 @@ export default function DashboardPage() {
                     ))}
 
                     {resumes.length === 0 && !loading && (
-                      <Link href="/editor" className="border-2 border-dashed border-slate-200 rounded-[2.5rem] p-12 flex flex-col items-center justify-center gap-4 text-slate-300 hover:bg-white hover:border-indigo-500 hover:text-indigo-500 transition-all duration-500 group h-64 bg-slate-50/50">
+                      <Link href="/editor" className="border-2 border-dashed border-slate-200 rounded-xl p-12 flex flex-col items-center justify-center gap-4 text-slate-300 hover:bg-white hover:border-indigo-500 hover:text-indigo-500 transition-all duration-500 group h-64 bg-slate-50/50">
                         <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                           <Plus size={32} />
                         </div>

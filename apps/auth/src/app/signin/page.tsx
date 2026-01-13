@@ -5,8 +5,9 @@ import { FileText, Sparkles, Shield, Zap } from "lucide-react";
 import GoogleSignInButton from "../../components/GoogleSignInButton";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import SignInContent from "./SignInContent";
 
-function SignInContent() {
+function SignInContenst() {
     const searchParams = useSearchParams();
     const [error, setError] = useState<string | null>(null);
 

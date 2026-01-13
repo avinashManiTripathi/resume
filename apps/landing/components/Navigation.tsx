@@ -7,16 +7,19 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 import { NAVIGATION } from '@/constants/navigation';
+import { Button } from '@repo/ui/button';
+import { useRouter } from 'next/navigation';
 
 export function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const router = useRouter();
 
     return (
         <>
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-[1000]">
                 <div className="max-w-7xl mx-auto px-6">
-                    <div className="flex justify-between items-center h-16">
+                    <div className="flex justify-between items-center h-[72px]">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
                             <Image
@@ -35,18 +38,21 @@ export function Navigation() {
                                 <div key={menuItem.id} className="relative group">
                                     <button className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5">
                                         {menuItem.label}
-                                        <svg className="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </button>
 
-                                    {/* Distbit-Style Mega Dropdown */}
-                                    <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                                    {/* Mega Dropdown with Smooth Animations */}
+                                    <div className="absolute mt-[6px] left-1/2 -translate-x-1/2 top-full pt-3 pointer-events-none
+                                        opacity-0 invisible -translate-y-3 scale-95
+                                        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto
+                                        transition-all duration-300 ease-out">
                                         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden w-[920px]">
                                             <div className="flex">
                                                 {/* Left: Products Grid */}
                                                 <div className="flex-1 p-10">
-                                                    <div className="mb-6">
+                                                    <div className="mb-6 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 delay-75">
                                                         <h3 className="text-2xl font-bold text-gray-900 mb-2">
                                                             {menuItem.megaMenu.title}
                                                         </h3>
@@ -60,10 +66,15 @@ export function Navigation() {
                                                             <Link
                                                                 key={idx}
                                                                 href={item.href}
-                                                                className="group/item p-4 rounded-xl hover:bg-gray-50 transition-all no-underline border border-transparent hover:border-gray-200"
+                                                                className="group/item p-4 rounded-xl hover:bg-gray-50 transition-all no-underline border border-transparent hover:border-gray-200
+                                                                    opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
+                                                                style={{
+                                                                    transitionDelay: `${100 + idx * 40}ms`,
+                                                                    transitionDuration: '400ms'
+                                                                }}
                                                             >
                                                                 <div className="flex items-start gap-3">
-                                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform">
+                                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200">
                                                                         {item.icon}
                                                                     </div>
                                                                     <div className="flex-1 min-w-0">
@@ -81,15 +92,16 @@ export function Navigation() {
                                                 </div>
 
                                                 {/* Right: Featured Panel */}
-                                                <div className="w-80 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-8 flex flex-col">
+                                                <div className="w-80 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-8 flex flex-col
+                                                    opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 delay-100">
                                                     {/* Image */}
-                                                    <div className="mb-8 -mx-8 -mt-8">
+                                                    <div className="mb-8 -mx-8 -mt-8 overflow-hidden">
                                                         <Image
                                                             src={menuItem.megaMenu.featured.image}
                                                             alt={menuItem.megaMenu.featured.title}
                                                             width={320}
                                                             height={180}
-                                                            className="w-full h-56 object-cover"
+                                                            className="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                                                         />
                                                     </div>
 
@@ -127,7 +139,7 @@ export function Navigation() {
                                 className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors no-underline relative group/cover"
                             >
                                 {NAVIGATION.coverLetter.label}
-                                <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold rounded">
+                                <span className="absolute -top-[10px] -right-1 px-1.5 py-0.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold rounded">
                                     NEW
                                 </span>
                             </Link>
@@ -140,21 +152,18 @@ export function Navigation() {
                                 rel="noopener noreferrer"
                             >
                                 {NAVIGATION.aiInterview.label}
-                                <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded">
+                                <span className="absolute -top-[10px] -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded">
                                     AI
                                 </span>
                             </Link>
 
                             {/* CTA Button */}
-                            <Link
-                                href={NAVIGATION.cta.href}
-                                className="ml-3 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-sm hover:shadow-lg hover:scale-105 transition-all flex items-center gap-2 no-underline"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
+
+
+                            <div className='border border-gray-200 rounded-md w-[1px] h-[40px] ml-[10px] mr-[10px]' />
+                            <Button className='h-[40px]' onClick={() => router.push(NAVIGATION.cta.href)}>
                                 {NAVIGATION.cta.text}
-                                <ArrowRight className="w-4 h-4" />
-                            </Link>
+                            </Button>
                         </div>
 
                         {/* Mobile Menu Button */}

@@ -3,10 +3,12 @@
 import { Mic, MicOff, Send, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@repo/ui/button";
 import Link from "next/link";
-import router from "next/router";
 import { ENV } from "@/app/env";
+import { URLS } from "@/constants/urls";
+import { useRouter } from "next/navigation";
 
 export function VoiceDemo() {
+    const router = useRouter();
     return (
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             {/* Left: Content */}
@@ -60,7 +62,7 @@ export function VoiceDemo() {
                 </div>
 
                 <Link
-                    href={`${ENV.EDITOR_URL}/editor`}
+                    href={`${URLS.EDITOR}?voice=true`}
                     className="inline-flex items-center justify-center gap-3 sm:gap-6
              px-6 py-4 sm:p-5
              border-2 rounded-xl font-semibold
@@ -150,7 +152,7 @@ export function VoiceDemo() {
                     </div>
 
                     <div className="flex gap-3 justify-end">
-                        <Button variant="primary" onClick={() => router.push(`${ENV.EDITOR_URL}/editor`)}>
+                        <Button variant="primary" onClick={() => router.push(`${URLS.EDITOR}?voice=true`)}>
                             <Send className="w-5 h-5" strokeWidth={2} />
                             Generate with AI
                         </Button>

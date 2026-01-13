@@ -1,4 +1,5 @@
 import { ENV } from "@/app/env";
+import { URLS } from "./urls";
 
 export const NAVIGATION = {
     logo: { text: "Prof", accent: "Resume" },
@@ -162,61 +163,7 @@ export const NAVIGATION = {
                 }
             }
         },
-        {
-            id: "company",
-            label: "Company",
-            type: "mega-dropdown",
-            megaMenu: {
-                title: "Company",
-                description: "Learn more about our mission to help job seekers land their dream careers.",
-                items: [
-                    {
-                        icon: "🏢",
-                        title: "About Us",
-                        description: "Our mission and vision",
-                        href: "/about"
-                    },
-                    {
-                        icon: "⭐",
-                        title: "Reviews",
-                        description: "What our users say",
-                        href: "/reviews"
-                    },
-                    {
-                        icon: "🎉",
-                        title: "Success Stories",
-                        description: "Real transformations",
-                        href: "/success-stories"
-                    },
-                    {
-                        icon: "✉️",
-                        title: "Contact",
-                        description: "Get in touch with us",
-                        href: "/contact"
-                    },
-                    {
-                        icon: "🔒",
-                        title: "Privacy Policy",
-                        description: "How we protect data",
-                        href: "/privacy"
-                    },
-                    {
-                        icon: "🛡️",
-                        title: "Security",
-                        description: "Your data is safe",
-                        href: "/security"
-                    }
-                ],
-                featured: {
-                    title: "Join Our Team",
-                    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=400&fit=crop",
-                    links: [
-                        { text: "Careers", href: "/about#careers" },
-                        { text: "Culture", href: "/about#culture" }
-                    ]
-                }
-            }
-        }
+
     ],
     coverLetter: {
         label: "Cover Letter",
@@ -224,11 +171,11 @@ export const NAVIGATION = {
     },
     aiInterview: {
         label: "AI Interview",
-        href: ENV.INTERVIEW_URL,
+        href: URLS.AI_INTERVIEW,
         isExternal: true
     },
     cta: {
-        text: "Start Free",
-        href: ENV.EDITOR_URL
+        text: "Get Started",
+        href: URLS.EDITOR_DASHBOARD
     }
 };

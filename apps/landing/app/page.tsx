@@ -7,6 +7,7 @@ import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
 import { ProductSchema } from "@/components/ProductSchema";
 import { HowItWorks } from "@/components/HowItWorks";
+import { URLS } from "@/constants/urls";
 
 export const metadata: Metadata = {
   alternates: {
@@ -45,7 +46,7 @@ export default async function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Link target="_blank" href={ENV.EDITOR_URL + "/editor"} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <Link target="_blank" href={URLS.EDITOR} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                   Create Free Resume
                   <ArrowRight className="w-5 h-5" />
                 </Link>
@@ -57,7 +58,7 @@ export default async function LandingPage() {
               {/* ATS Checker Button */}
               <div className="mb-12">
                 <Link
-                  href={ENV.EDITOR_URL + "/ats-check"}
+                  href={URLS.EDITOR_ATS_CHECKER}
                   target="_blank"
                   className="inline-flex items-center gap-3 px-6 py-4 bg-white border-2 border-blue-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all group"
                 >
@@ -290,7 +291,8 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="/tailor"
+                href={URLS.EDITOR_TAILOR}
+                target="_blank"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Try Resume Tailoring
@@ -336,7 +338,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href={ENV.EDITOR_URL + "/editor"}
+                href={URLS.EDITOR + "?text=true"}
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Start Writing with AI
@@ -504,7 +506,8 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href={`${ENV.EDITOR_URL}/cover-letter`}
+                href={URLS.EDITOR_COVER_LETTER}
+                target="_blank"
                 className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
                 Create Cover Letter
@@ -747,7 +750,7 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href={ENV.EDITOR_URL + "/ats-check"}
+                href={URLS.EDITOR_ATS_CHECKER}
                 target="_blank"
                 className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >

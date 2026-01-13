@@ -54,6 +54,7 @@ function ResumeEditor() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
+  const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
   const [fontFamily, setFontFamily] = useState('Inter');
   const [saveDialog, setSaveDialog] = useState<{
@@ -68,11 +69,18 @@ function ResumeEditor() {
     type: 'info'
   });
 
-
   // Check subscription on mount - redirect if no active subscription
   useEffect(() => {
     const subscription = getSubscription();
     const fromSubscription = searchParams.get('fromSubscription');
+
+    const voice = searchParams.get('voice');
+    const text = searchParams.get('text');
+    if (voice === 'true' || text == 'true') {
+      setShowSmartImport(true);
+      setMode(text === 'true' ? 'text' : 'voice');
+    }
+
 
     // Skip check if user just came from subscription page
     if (fromSubscription === 'true') {
@@ -921,6 +929,7 @@ function ResumeEditor() {
       {/* Smart Import Modal */}
       <SmartImportModal
         isOpen={showSmartImport}
+        mode={mode}
         onClose={() => setShowSmartImport(false)}
         onApply={(data) => {
           // Apply extracted data to resume

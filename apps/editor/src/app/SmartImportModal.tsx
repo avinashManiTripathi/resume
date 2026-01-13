@@ -8,10 +8,11 @@ interface SmartImportModalProps {
     isOpen: boolean;
     onClose: () => void;
     onApply: (data: any) => void;
+    mode?: 'voice' | 'text'
 }
 
-export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImportModalProps) {
-    const [inputMode, setInputMode] = useState<'voice' | 'text'>('voice');
+export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onApply }: SmartImportModalProps) {
+    const [inputMode, setInputMode] = useState<'voice' | 'text'>(mode);
     const [isRecording, setIsRecording] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
@@ -25,6 +26,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
     const maxTime = 300; // 5 minutes max
 
     useEffect(() => {
+        setInputMode(mode);
         // Initialize Web Speech API
         if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
             const SpeechRecognition = (window as any).webkitSpeechRecognition;

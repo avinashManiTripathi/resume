@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Check, FileText, Sparkles, Zap, Clock, Brain, Target, Download } from 'lucide-react';
 import { ENV } from "@/app/env";
+import { URLS } from '@/constants/urls';
 
 export const metadata: Metadata = {
     title: 'AI Cover Letter Generator - Create Professional Cover Letters in 2 Minutes | ProfResume',
@@ -53,14 +54,16 @@ export default function CoverLetterPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
-                                href={`${ENV.EDITOR_URL}/cover-letter`}
+                                href={URLS.EDITOR_COVER_LETTER}
+                                target="_blank"
                                 className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center justify-center gap-3 hover:bg-green-700 shadow-lg hover:shadow-xl transition-all group"
                             >
                                 Create Cover Letter Free
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <Link
-                                href="#templates"
+                                href={URLS.EDITOR_COVER_LETTER}
+                                target="_blank"
                                 className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition-all inline-flex items-center justify-center"
                             >
                                 View Templates
