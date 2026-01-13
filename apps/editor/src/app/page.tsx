@@ -41,6 +41,7 @@ import { usePersistence, SavedDocument } from "./hooks/usePersistence";
 import { Dialog } from "@repo/ui/dialog";
 import { ComingSoon } from "../components/ComingSoon";
 import { useRouter } from "next/navigation";
+import { Button } from "@repo/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -539,12 +540,8 @@ export default function DashboardPage() {
                   <p className="text-slate-500 font-medium mb-10 max-w-lg leading-relaxed">
                     Experience our world-class AI Robotic Interviewer. Paste any Job Description and get a realistic 1-hour interview simulation with technical questions and coding rounds.
                   </p>
-                  <button
-                    onClick={() => window.location.href = 'http://localhost:3005'}
-                    className="px-10 py-4 bg-indigo-600 text-white rounded-[2rem] font-black text-lg flex items-center gap-3 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 active:scale-95"
-                  >
-                    START AI INTERVIEW <ChevronRight size={24} />
-                  </button>
+                  <Button variant="primary" onClick={() => window.location.href = 'https://interview.profresume.com'}>START AI INTERVIEW <ChevronRight size={24} /></Button>
+
                 </div>
               </div>
             ) : (

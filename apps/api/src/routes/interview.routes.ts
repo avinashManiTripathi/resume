@@ -7,12 +7,13 @@ const router = Router();
 
 /**
  * START Interview
+ * PUBLIC ENDPOINT - No auth required for testing
  */
-router.post('/start', verifyToken, async (req: any, res: Response) => {
+router.post('/start', async (req: any, res: Response) => {
     try {
-        const authReq = req as AuthRequest;
-        const { jobDescription } = authReq.body;
-        const userId = authReq.user?.userId;
+        const { jobDescription } = req.body;
+        // Try to get userId from auth if available, otherwise use 'guest'
+        const userId = req.user?.userId || 'guest';
 
         if (!jobDescription) {
             return res.status(400).json({ success: false, message: 'Job Description is required' });
@@ -51,11 +52,11 @@ router.post('/start', verifyToken, async (req: any, res: Response) => {
 
 /**
  * POST Answer and get next question
+ * PUBLIC ENDPOINT - No auth required for testing
  */
-router.post('/answer', verifyToken, async (req: any, res: Response) => {
+router.post('/answer', async (req: any, res: Response) => {
     try {
-        const authReq = req as AuthRequest;
-        const { sessionId, answer } = authReq.body;
+        const { sessionId, answer } = req.body;
         const session = await InterviewSession.findById(sessionId);
 
         if (!session || session.status === 'completed') {
@@ -143,8 +144,9 @@ router.post('/answer', verifyToken, async (req: any, res: Response) => {
 
 /**
  * GET Session Status
+ * PUBLIC ENDPOINT - No auth required for testing
  */
-router.get('/:id', verifyToken, async (req: any, res: Response) => {
+router.get('/:id', async (req: any, res: Response) => {
     try {
         const session = await InterviewSession.findById(req.params.id);
         res.json({ success: true, data: session });

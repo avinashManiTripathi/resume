@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IInterviewSession extends Document {
-    userId: mongoose.Types.ObjectId;
+    userId: mongoose.Types.ObjectId | string;
     jobDescription: string;
     jdInfo: any;
     status: 'active' | 'paused' | 'completed';
@@ -19,7 +19,7 @@ export interface IInterviewSession extends Document {
 }
 
 const InterviewSessionSchema: Schema = new Schema({
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.Mixed, required: false }, // Allow both ObjectId and String for guest users
     jobDescription: { type: String, required: true },
     jdInfo: { type: Object },
     status: { type: String, enum: ['active', 'paused', 'completed'], default: 'active' },

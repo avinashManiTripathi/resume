@@ -402,7 +402,10 @@ function ResumeEditor() {
   }, []);
 
   // Handle export - Memoized to prevent SettingsSidebar re-renders
-  const handleExport = useCallback((format: "pdf" | "doc") => {
+  const handleExport = useCallback(async (format: "pdf" | "doc") => {
+    const userName = resume?.personalInfo?.firstName + "_" + resume?.personalInfo?.lastName + "_" + resume?.personalInfo?.jobTitle;
+    const fileName = userName.trim().replace(/\s+/g, "_");
+
     // Check if user is logged in
     if (!isLoggedIn) {
       sessionStorage.setItem('pending_download', format);
@@ -423,14 +426,14 @@ function ResumeEditor() {
       const resumeData = {
         templateId,
         sectionLabels,
-        fontFamily,
         ...resume,
+        fontFamily,
         order: sectionOrder
       };
-      downloadPdf(apiUrl, "resume", resumeData);
+      downloadPdf(apiUrl, fileName, resumeData);
     } else {
       const content = mainRef.current?.innerHTML || "";
-      exportToDoc(content, `${resume?.personalInfo?.firstName}_Resume.doc`);
+      exportToDoc(content, `${fileName}.doc`);
     }
   }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 

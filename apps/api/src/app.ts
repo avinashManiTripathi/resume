@@ -62,6 +62,7 @@ export class App {
             'https://edit.profresume.com',
             'https://auth.profresume.com',
             'https://admin.profresume.com',
+            'https://interview.profresume.com',
             'http://localhost:3000',
             'http://localhost:3001',
             'http://localhost:3002',

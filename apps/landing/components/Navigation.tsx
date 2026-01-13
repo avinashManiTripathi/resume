@@ -18,7 +18,7 @@ export function Navigation() {
         <>
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-[1000]">
-                <div className="max-w-7xl mx-auto px-6">
+                <div className="px-6 lg:px-0 max-w-7xl mx-auto">
                     <div className="flex justify-between items-center h-[72px]">
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
@@ -36,7 +36,7 @@ export function Navigation() {
                             {/* Mega Menu Items */}
                             {NAVIGATION.menuItems.map((menuItem) => (
                                 <div key={menuItem.id} className="relative group">
-                                    <button className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5">
+                                    <button className="px-4 py-5 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5">
                                         {menuItem.label}
                                         <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -44,7 +44,7 @@ export function Navigation() {
                                     </button>
 
                                     {/* Mega Dropdown with Smooth Animations */}
-                                    <div className="absolute mt-[6px] left-1/2 -translate-x-1/2 top-full pt-3 pointer-events-none
+                                    <div className="absolute mt-[-8px] left-1/2 -translate-x-1/2 top-full pt-3 pointer-events-none
                                         opacity-0 invisible -translate-y-3 scale-95
                                         group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto
                                         transition-all duration-300 ease-out">

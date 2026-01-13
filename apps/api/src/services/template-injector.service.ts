@@ -812,6 +812,29 @@ export class TemplateInjectorService {
         const dom = new JSDOM(html);
         const document = dom.window.document;
 
+        // Update document title with user's name and job title
+        if (data.personalInfo) {
+            const { firstName, lastName, jobTitle } = data.personalInfo;
+            const titleParts = [
+                firstName,
+                lastName,
+                jobTitle
+            ].filter(Boolean);
+
+            if (titleParts.length > 0) {
+                const newTitle = `${titleParts.join(' ')} - Resume`;
+                const titleElement = document.querySelector('title');
+                if (titleElement) {
+                    titleElement.textContent = newTitle;
+                } else {
+                    // Create title element if it doesn't exist
+                    const newTitleEl = document.createElement('title');
+                    newTitleEl.textContent = newTitle;
+                    document.head.appendChild(newTitleEl);
+                }
+            }
+        }
+
         // Inject personal information (always first)
         this.injectPersonalInfo(dom, data.personalInfo);
 
