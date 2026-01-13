@@ -19,27 +19,37 @@ router.post('/start', async (req: any, res: Response) => {
             return res.status(400).json({ success: false, message: 'Job Description is required' });
         }
 
-        // Analyze JD
+        // 1. Analyze JD
         const jdInfo = await interviewService.analyzeJD(jobDescription);
 
-        // Create Session
+        // 2. Generate ALL interview questions upfront (BATCH MODE)
+        console.log('📝 Generating all questions in batch mode...');
+        const allQuestions = await interviewService.generateAllQuestions(jdInfo);
+        console.log(`✅ Generated ${allQuestions.length} questions total`);
+
+        // 3. Create Session with pre-generated questions
         const session = new InterviewSession({
             userId,
             jobDescription,
             jdInfo,
             status: 'active',
             currentPhase: 'intro',
+            currentQuestionIndex: 0,
+            allQuestions,  // Store all questions
             history: []
         });
 
-        // Generate first question (ALWAYS the fixed introduction question)
-        const firstQuestion = interviewService.getIntroductionQuestion();
-
+        // 4. Start with first pre-generated question
+        const firstQuestion = allQuestions[0];
         session.history.push({
             role: 'interviewer',
             content: firstQuestion.question,
-            metadata: { context: firstQuestion.context, expectedPoints: firstQuestion.expectedPoints }
+            metadata: {
+                type: firstQuestion.type,
+                expectedPoints: firstQuestion.expectedPoints
+            }
         });
+        session.currentQuestionIndex = 1;  // Move to next question
 
         await session.save();
 
@@ -73,66 +83,90 @@ router.post('/answer', async (req: any, res: Response) => {
             });
         }
 
-        // 1. Evaluate current answer
+        // 1. Store answer without evaluation (batch mode)
         const lastQuestion = lastMessage;
-        const evaluation = await interviewService.evaluateAnswer(
-            lastQuestion.content,
-            answer,
-            lastQuestion.metadata?.expectedPoints || []
-        );
-
         session.history.push({
             role: 'candidate',
             content: answer,
-            evaluation
+            metadata: {
+                questionIndex: (session.currentQuestionIndex || 1) - 1,
+                expectedPoints: lastQuestion.metadata?.expectedPoints || []
+            }
         });
 
-        // 2. Decide next phase or question
-        // Updated logic: variable question count based on isDeveloper flag
-        const count = session.history.filter(h => h.role === 'candidate').length;
-        const isDeveloper = session.jdInfo?.isDeveloper || false;
+        // 2. Check if we have more questions
+        const totalQuestions = session.allQuestions?.length || 0;
+        const nextIndex = session.currentQuestionIndex || 0;
 
-        // Phase progression logic:
-        // Questions 1-2: intro
-        // Questions 3-8: technical
-        // Questions 9-13: coding (ONLY if isDeveloper)
-        // Questions 14-15 (or 9-10 if not developer): behavioral
+        if (nextIndex >= totalQuestions) {
+            // Interview complete - BATCH EVALUATE ALL ANSWERS
+            console.log('🎯 Interview complete! Batch evaluating all answers...');
 
-        if (count === 2) session.currentPhase = 'technical';
-
-        if (isDeveloper) {
-            // Developer path: includes coding round
-            if (count === 8) session.currentPhase = 'coding';
-            if (count === 13) session.currentPhase = 'behavioral';
-            if (count >= 15) {
-                session.status = 'completed';
-                session.finalReport = await interviewService.generateFinalReport(session.jdInfo, session.history);
-                await session.save();
-                return res.json({ success: true, data: session, finished: true });
+            // Extract Q&A pairs for batch evaluation
+            const qaPairs = [];
+            for (let i = 0; i < session.history.length; i++) {
+                const msg = session.history[i];
+                if (msg.role === 'candidate') {
+                    const prevQuestion = session.history[i - 1];
+                    if (prevQuestion && prevQuestion.role === 'interviewer') {
+                        qaPairs.push({
+                            question: prevQuestion.content,
+                            answer: msg.content,
+                            expectedPoints: msg.metadata?.expectedPoints || []
+                        });
+                    }
+                }
             }
-        } else {
-            // Non-developer path: skip coding, go straight to behavioral
-            if (count === 8) session.currentPhase = 'behavioral';
-            if (count >= 10) {
-                session.status = 'completed';
-                session.finalReport = await interviewService.generateFinalReport(session.jdInfo, session.history);
-                await session.save();
-                return res.json({ success: true, data: session, finished: true });
+
+            // Batch evaluate all answers at once
+            const evaluations = await interviewService.batchEvaluateAnswers(qaPairs);
+
+            // Attach evaluations to candidate answers
+            let evalIdx = 0;
+            for (let i = 0; i < session.history.length; i++) {
+                if (session.history[i].role === 'candidate') {
+                    session.history[i].evaluation = evaluations[evalIdx++];
+                }
             }
+
+            // Generate final report
+            session.status = 'completed';
+            session.finalReport = await interviewService.generateFinalReport(
+                session.jdInfo,
+                session.history
+            );
+            await session.save();
+
+            console.log('✅ Interview completed with batch evaluation!');
+            return res.json({ success: true, data: session, finished: true });
         }
 
-        // 3. Generate Next Question
-        const nextQ = await interviewService.generateQuestion(
-            session.jdInfo,
-            session.history.map(h => ({ role: h.role, content: h.content })),
-            session.currentPhase as any
-        );
+        // 3. Get next pre-generated question (NO AI CALL!)
+        if (!session.allQuestions) {
+            return res.status(500).json({ success: false, message: 'No questions in session' });
+        }
+        const nextQ = session.allQuestions[nextIndex];
+        if (!nextQ) {
+            return res.status(500).json({ success: false, message: 'Question not found' });
+        }
+        session.currentQuestionIndex = nextIndex + 1;
+
+        // Update phase based on question type (with type safety)
+        if (nextQ.type) {
+            session.currentPhase = nextQ.type as any;
+        }
 
         session.history.push({
             role: 'interviewer',
             content: nextQ.question,
-            metadata: { context: nextQ.context, expectedPoints: nextQ.expectedPoints }
+            metadata: {
+                type: nextQ.type,
+                expectedPoints: nextQ.expectedPoints
+            }
         });
+
+        console.log(`📝 Serving pre-generated question ${nextIndex + 1}/${totalQuestions}`);
+
 
         await session.save();
         res.json({ success: true, data: session });

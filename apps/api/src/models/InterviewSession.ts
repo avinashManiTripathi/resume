@@ -6,6 +6,15 @@ export interface IInterviewSession extends Document {
     jdInfo: any;
     status: 'active' | 'paused' | 'completed';
     currentPhase: 'intro' | 'technical' | 'coding' | 'behavioral' | 'feedback';
+
+    // Batch processing fields
+    allQuestions?: {
+        question: string;
+        type: string;
+        expectedPoints: string[];
+    }[];
+    currentQuestionIndex?: number;
+
     history: {
         role: 'interviewer' | 'candidate';
         content: string;
@@ -24,6 +33,15 @@ const InterviewSessionSchema: Schema = new Schema({
     jdInfo: { type: Object },
     status: { type: String, enum: ['active', 'paused', 'completed'], default: 'active' },
     currentPhase: { type: String, enum: ['intro', 'technical', 'coding', 'behavioral', 'feedback'], default: 'intro' },
+
+    // Batch processing fields
+    allQuestions: [{
+        question: { type: String },
+        type: { type: String },
+        expectedPoints: [{ type: String }]
+    }],
+    currentQuestionIndex: { type: Number, default: 0 },
+
     history: [{
         role: { type: String, enum: ['interviewer', 'candidate'] },
         content: { type: String },
