@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function InterviewLandingPage() {
     const [jd, setJd] = useState('');
@@ -73,12 +74,14 @@ export default function InterviewLandingPage() {
             </div>
 
             <nav className="relative max-w-7xl mx-auto px-6 py-6 flex justify-between items-center z-10">
-                <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-                        <Cpu className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="text-xl font-bold tracking-tight">Prof<span className="text-blue-600">Interview</span></span>
-                </div>
+                <Image
+                    src="/logo.png"
+                    alt="ProfResume Logo"
+                    width={158}   // w-15 → 60px
+                    height={36}  // h-9 → 36px
+                    className="transition-transform group-hover:scale-105"
+                    priority
+                />
                 <div className="hidden md:flex items-center gap-6">
                     <div className="px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />

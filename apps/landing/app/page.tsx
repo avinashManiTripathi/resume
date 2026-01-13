@@ -46,7 +46,7 @@ export default async function LandingPage() {
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link target="_blank" href={ENV.EDITOR_URL + "/editor"} className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg  transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
-                  Create Resume Free
+                  Create Free Resume
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link href="#how-it-works" className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-lg font-semibold hover:border-gray-400 transition-all flex items-center justify-center gap-2">
@@ -57,7 +57,8 @@ export default async function LandingPage() {
               {/* ATS Checker Button */}
               <div className="mb-12">
                 <Link
-                  href="/ats-checker"
+                  href={ENV.EDITOR_URL + "/ats-check"}
+                  target="_blank"
                   className="inline-flex items-center gap-3 px-6 py-4 bg-white border-2 border-blue-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all group"
                 >
                   <Shield className="w-5 h-5 text-blue-600" />
@@ -746,10 +747,11 @@ export default async function LandingPage() {
                 ))}
               </ul>
               <Link
-                href="/ats-checker"
+                href={ENV.EDITOR_URL + "/ats-check"}
+                target="_blank"
                 className="bg-blue-600 text-white font-semibold hover:bg-blue-700 px-8 py-4 rounded-lg inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
               >
-                Check ATS Score Free
+                Check Free ATS Score
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
@@ -959,85 +961,6 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* How It Works - Visual Process with Images */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-              Your resume ready in 3 simple steps
-            </h2>
-            <p className="text-xl text-gray-600">
-              From start to download in under 10 minutes
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Choose your template",
-                description: "Select from our ATS-friendly templates designed by recruiters",
-                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=600&auto=format&fit=crop&q=80"
-              },
-              {
-                step: "02",
-                title: "Fill in your details",
-                description: "Our AI helps you write professional content as you type",
-                image: "https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?w=600&auto=format&fit=crop&q=80"
-              },
-              {
-                step: "03",
-                title: "Download & apply",
-                description: "Get your polished resume as PDF and start applying to jobs",
-                image: "https://media.istockphoto.com/id/2246787039/photo/laptop-file-download-interface-with-digital-overlay.webp?a=1&b=1&s=612x612&w=0&k=20&c=AbvWL8P787RKg5Oa2z6X8wX9XvX2Lajx4G1nemLRkrY="
-              }
-            ].map((item, index) => (
-              <div key={index} className="relative group">
-                <div className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-gray-200 group-hover:border-blue-500 group-hover:shadow-2xl transition-all">
-                  {/* Image */}
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      className="object-cover transform group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute top-4 left-4 w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg z-10">
-                      {item.step}
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                  </div>
-                </div>
-
-                {/* Connector Arrow */}
-                {index < 2 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 z-10 transform -translate-y-1/2">
-                    <ArrowRight className="w-8 h-8 text-blue-600" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Link
-              href={ENV.EDITOR_URL + "/editor"}
-              className="bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold inline-flex items-center gap-3 hover:shadow-2xl transition-all group"
-            >
-              Get Started Now - It's Free
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-
 
     </div>
   );

@@ -222,6 +222,11 @@ export const NAVIGATION = {
         label: "Cover Letter",
         href: "/cover-letter"
     },
+    aiInterview: {
+        label: "AI Interview",
+        href: ENV.INTERVIEW_URL,
+        isExternal: true
+    },
     cta: {
         text: "Start Free",
         href: ENV.EDITOR_URL

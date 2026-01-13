@@ -132,6 +132,19 @@ export function Navigation() {
                                 </span>
                             </Link>
 
+                            {/* AI Interview - Standalone */}
+                            <Link
+                                href={NAVIGATION.aiInterview.href}
+                                className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors no-underline relative group/ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {NAVIGATION.aiInterview.label}
+                                <span className="absolute -top-1 -right-1 px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded">
+                                    AI
+                                </span>
+                            </Link>
+
                             {/* CTA Button */}
                             <Link
                                 href={NAVIGATION.cta.href}
@@ -179,6 +192,31 @@ export function Navigation() {
                                     {NAVIGATION.coverLetter.label}
                                     <span className="absolute top-[-25px] right-[-32px] px-1.5 py-0.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-[10px] font-bold rounded">
                                         NEW
+                                    </span>
+                                </div>
+                            </div>
+
+                        </Link>
+
+                    </div>
+
+                    {/* AI Interview - Standalone */}
+                    <div className="mb-6 font-bold border-b border-gray-200 pb-5 text-gray-900 mb-3 text-sm uppercase tracking-wider">
+                        <Link
+                            href={NAVIGATION.aiInterview.href}
+                            className="px-4 py-2 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors no-underline relative group/ai"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform">
+                                    🤖
+                                </div>
+
+                                <div className="relative font-semibold text-gray-900 mb-1 text-[15px] group-hover/item:text-purple-600 transition-colors">
+                                    {NAVIGATION.aiInterview.label}
+                                    <span className="absolute top-[-25px] right-[-32px] px-1.5 py-0.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-[10px] font-bold rounded">
+                                        AI
                                     </span>
                                 </div>
                             </div>
