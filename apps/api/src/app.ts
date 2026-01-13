@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import { config } from './config';
+import dotenv from 'dotenv';
+import { initAI } from './services/ai-analysis.service';
+import { initAI as initInterviewAI } from './services/interview.service';
 import { database } from './config/database';
 import pdfRoutes from './routes/pdf.routes';
 import tailorRoutes from './routes/tailor.routes';
@@ -16,9 +19,13 @@ import templateRoutes from './routes/template.routes';
 import resumeRoutes from './routes/resume.routes';
 import landingRoutes from './routes/landing.routes';
 import coverLetterRoutes from './routes/cover-letter.routes';
+import interviewRoutes from './routes/interview.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
+
+// Load environment variables from .env file
+dotenv.config();
 
 export class App {
     public app: Application;
@@ -57,7 +64,8 @@ export class App {
             'https://admin.profresume.com',
             'http://localhost:3000',
             'http://localhost:3001',
-            'http://localhost:3002'
+            'http://localhost:3002',
+            'http://localhost:3005'
         ];
 
         this.app.use(cors({
@@ -79,6 +87,11 @@ export class App {
 
         // Cookie parser
         this.app.use(cookieParser());
+
+        if (process.env.GENAI_API_KEY) {
+            initAI(process.env.GENAI_API_KEY);
+            initInterviewAI(process.env.GENAI_API_KEY);
+        }
 
         // Session
         this.app.use(session({
@@ -155,6 +168,9 @@ export class App {
 
         // Cover letter routes
         this.app.use('/api/cover-letter', coverLetterRoutes);
+
+        // Interview routes
+        this.app.use('/api/interview', interviewRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

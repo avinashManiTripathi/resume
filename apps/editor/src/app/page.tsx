@@ -131,6 +131,7 @@ export default function DashboardPage() {
     { icon: CheckCheck, label: "ATS Cheker" },
     { icon: DockIcon, label: "Resume Builder" },
     { icon: BarChart3, label: "Market Insights" },
+    { icon: Mic2, label: "AI Interview", isNew: true, href: "http://localhost:3005" },
     { icon: Share2, label: "Outreach" },
 
 
@@ -202,9 +203,10 @@ export default function DashboardPage() {
           <div>
             <p className="px-3 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Power Tools</p>
             <div className="space-y-0.5">
-              {toolsNav.map((item, idx) => (
+              {toolsNav.map((item: any, idx) => (
                 <button
                   key={idx}
+                  onClick={() => item.href && (item.href.startsWith('http') ? window.location.href = item.href : router.push(item.href))}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-gray-500 hover:bg-gray-50 font-semibold group"
                 >
                   <div className={`p-1 rounded-lg transition-colors ${item.isNew ? "bg-amber-50 text-amber-600" : "bg-gray-100 text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600"}`}>
@@ -513,11 +515,21 @@ export default function DashboardPage() {
               </div>
             ) : activeGoal === "Interview Prep" ? (
               <div className="col-span-full">
-                <ComingSoon
-                  title="Interview Coach"
-                  icon={Mic2}
-                  description="Master your interviews with our AI coach. Practice with real-time feedback on your answers, body language (voice only for now), and industry-specific questions."
-                />
+                <div className="bg-white rounded-[3rem] p-12 border border-slate-200/60 shadow-xl flex flex-col items-center text-center max-w-4xl mx-auto">
+                  <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-8">
+                    <Mic2 size={40} />
+                  </div>
+                  <h2 className="text-3xl font-black mb-4">Master Your Next Interview</h2>
+                  <p className="text-slate-500 font-medium mb-10 max-w-lg leading-relaxed">
+                    Experience our world-class AI Robotic Interviewer. Paste any Job Description and get a realistic 1-hour interview simulation with technical questions and coding rounds.
+                  </p>
+                  <button
+                    onClick={() => window.location.href = 'http://localhost:3005'}
+                    className="px-10 py-4 bg-indigo-600 text-white rounded-[2rem] font-black text-lg flex items-center gap-3 hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 active:scale-95"
+                  >
+                    START AI INTERVIEW <ChevronRight size={24} />
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="col-span-full">
