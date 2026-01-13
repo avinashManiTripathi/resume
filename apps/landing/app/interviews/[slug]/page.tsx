@@ -4,6 +4,8 @@ import fs from "fs/promises";
 import { IntroSection } from "@/components/IntroSection";
 import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 import { ENV } from "../../env";
+import { ArticleSchema } from "@/components/ArticleSchema";
+import { FAQSchema } from "@/components/FAQSchema";
 import { Title } from "@repo/ui/title";
 import { Description } from "@repo/ui/description";
 
@@ -145,7 +147,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         "coding interview prep",
         "software engineering interview",
         `${tech} interview q&a 2026`,
-        `${tech} interview questions for ${level.toLowerCase() === 'fresher' ? 'freshers' : level.toLowerCase() + ' developers'}`,
+        `${tech} interview questions for ${level.toLowerCase() === 'fresher' ? 'freshers' : level.toLowerCase() + (level ? ' developers' : 'developers')}`,
+        `${tech} technical questions and answers`,
+        `top 50 ${tech} interview questions`,
         "coding questions",
         "technical interview",
         "ProfResume"
@@ -208,80 +212,44 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         "coding questions",
         "ProfResume"
     ].filter(Boolean).join(", ");
-
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "TechArticle",
-        "headline": article.title,
-        "description": article.description,
-        "image": ogImage,
-        "proficiencyLevel": article.heroBadge,
-        "articleSection": "Technical Interview Preparation",
-        "keywords": keywords,
-        "author": {
-            "@type": "Organization",
-            "name": "ProfResume",
-            "url": ENV.BASE_URL,
-            "logo": {
-                "@type": "ImageObject",
-                "url": `${ENV.BASE_URL}/logo.png`
-            }
-        },
-        "publisher": {
-            "@type": "Organization",
-            "name": "ProfResume",
-            "logo": {
-                "@type": "ImageObject",
-                "url": `${ENV.BASE_URL}/logo.png`
-            }
-        },
-        "datePublished": "2026-01-11", // Consistent with expansion date
-        "dateModified": new Date().toISOString().split('T')[0],
-        "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": `${ENV.BASE_URL}/interviews/${slug}`
-        }
-    };
-
-    const faqLd = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": article.sections
-            .filter(section => section.content.includes("**Q")) // Only include actual Q&A sections
-            .map(section => {
-                const qaMatch = section.content.match(/\*\*Q\d+:(.*?)\*\*\n([\s\S]*?)(?=\n\n\*\*Q|$)/);
-                if (qaMatch) {
-                    return {
-                        "@type": "Question",
-                        "name": qaMatch[1].trim(),
-                        "acceptedAnswer": {
-                            "@type": "Answer",
-                            "text": qaMatch[2].trim().replace(/\*\*/g, '')
-                        }
-                    };
+    // Generate FAQ Schema from ALL sections
+    const allQuestions: any[] = [];
+    article.sections.forEach(section => {
+        // Regex to find all **QN: Question**\nAnswer patterns
+        const qaRegex = /\*\*Q\d+:\s*(.*?)\*\*\n([\s\S]*?)(?=\n\n\*\*Q|$)/g;
+        let match;
+        while ((match = qaRegex.exec(section.content)) !== null) {
+            allQuestions.push({
+                "@type": "Question",
+                "name": match[1].trim(),
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": match[2].trim().replace(/\*\*/g, '')
                 }
-                // Fallback for sections that don't match the Q&A pattern exactly but are still informative
-                return {
-                    "@type": "Question",
-                    "name": section.title,
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": section.content.replace(/\*\*/g, '')
-                    }
-                };
-            })
-    };
+            });
+        }
+    });
 
     return (
         <article className="min-h-screen bg-white">
             {/* Structured Data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            <ArticleSchema
+                title={article.title}
+                description={article.description}
+                url={`${ENV.BASE_URL}/interviews/${slug}`}
+                datePublished="2026-01-11"
+                dateModified={new Date().toISOString().split('T')[0]}
+                author="ProfResume Team"
+                image={ogImage}
             />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+            <FAQSchema
+                faqs={allQuestions.length > 0 ? allQuestions.map(q => ({
+                    question: q.name,
+                    answer: q.acceptedAnswer.text
+                })) : article.sections.map(section => ({
+                    question: section.title,
+                    answer: section.content.replace(/\*\*/g, '')
+                }))}
             />
 
             <BreadcrumbSchema
@@ -377,12 +345,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             ))}
                         </div>
 
-                        {/* Explore More Section */}
-                        <div className="container mx-auto px-4 mt-24">
+                        {/* Explore More & Navigation */}
+                        <div className="container mx-auto px-4 mt-24 mb-20 text-center">
+                            <div className="flex justify-center gap-6 mb-16">
+                                <a
+                                    href="/interviews"
+                                    className="text-blue-600 font-semibold flex items-center gap-2 hover:underline"
+                                >
+                                    ← Back to All Interview Guides
+                                </a>
+                            </div>
+
                             <div className="bg-blue-50 rounded-3xl p-10 md:p-16 text-center max-w-4xl mx-auto">
-                                <h2 className="text-3xl font-bold text-slate-900 mb-6">Need a professional resume?</h2>
+                                <h2 className="text-3xl font-bold text-slate-900 mb-6">Want to Ace Your {tech} Interview?</h2>
                                 <p className="text-slate-600 mb-10 text-lg">
-                                    Our AI-powered builder helps you create a high-quality resume that matches these interview standards.
+                                    Our AI-powered resume builder helps you create a high-quality resume that matches these professional {tech} standards and passes all ATS checks.
                                 </p>
                                 <div className="flex flex-wrap justify-center gap-4">
                                     <a

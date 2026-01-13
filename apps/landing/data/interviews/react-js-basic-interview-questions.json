@@ -1,0 +1,38 @@
+{
+    "slug": "react-js-basic-interview-questions",
+    "title": "51 Top React JS Basic Interview Questions for Beginners (2026)",
+    "description": "Start from zero. Over 50 basic React JS interview questions covering the most important concepts for beginners, from JSX to the component lifecycle.",
+    "heroBadge": "React 101: 50+ Q&A",
+    "sections": [
+        {
+            "title": "Introduction: Laying the Foundation",
+            "content": "Every expert was once a beginner. To master React, you must first understand its basic building blocks. This guide provides over 50 essential questions to help you build a rock-solid foundation in **React JS**.",
+            "image": "/images/interviews/react-main.png"
+        },
+        {
+            "title": "1. What is React? (Q1-Q10)",
+            "content": "**Q1: Who developed React?**\nReact was developed by Jordan Walke, a software engineer at Meta (Facebook).\n\n**Q2: When was React released?**\nIt was first deployed on Facebook's News Feed in 2011 and open-sourced in 2013.\n\n**Q3: What is the main goal of React?**\nTo provide high speed, simplicity, and scalability in building user interfaces.\n\n**Q4: Is React a programming language?**\nNo, it's a JavaScript library.\n\n**Q5: What is the 'declarative' nature of React?**\nYou describe *what* the UI should look like for various states, and React updates the DOM to match it.\n\n**Q6: What is a Single Page Application (SPA)?**\nAn application that loads a single HTML page and dynamically updates it as the user interacts with the app.\n\n**Q7: How does React fit into the MVC architecture?**\nReact is primarily the 'V' (View) in Model-View-Controller.\n\n**Q8: What is 'Learn Once, Write Anywhere'?**\nA React philosophy meaning you can use the same concepts for web (React), mobile (React Native), and VR.\n\n**Q9: What is the NPM package for React?**\nThe two main packages are `react` and `react-dom`.\n\n**Q10: What is the current version of React?**\nAs of 2026, React 19 is the latest stable release (v-next might be out depending on the exact date)."
+        },
+        {
+            "title": "2. JSX & Elements (Q11-Q20)",
+            "content": "**Q11: What is JSX syntax?**\nA syntax extension that looks like HTML but is actually JavaScript.\n\n**Q12: Why do we use JSX?**\nIt makes writing component templates easier and more readable.\n\n**Q13: Is JSX mandatory?**\nNo, but it's highly recommended. You can use `React.createElement` instead.\n\n**Q14: What is a React Element?**\nThe smallest building block of React. It's a plain object describing what you want to see on the screen.\n\n**Q15: Difference between Element and Component?**\nA component is a function/class that returns elements. An element is what the component produces.\n\n**Q16: How do you embed expressions in JSX?**\nBy wrapping the JavaScript expression in curly braces `{}`.\n\n**Q17: Why use className instead of class?**\n`class` is a reserved keyword in JavaScript.\n\n**Q18: Why use htmlFor instead of for?**\n`for` is a reserved keyword in JavaScript (used in loops).\n\n**Q19: Can you write comments in JSX?**\nYes, using `/* comment */` inside curly braces.\n\n**Q20: What is 'Transpilation' in React?**\nConverting JSX/Modern JS into older JS that browsers can understand, usually done by Babel."
+        },
+        {
+            "title": "3. Components & Data (Q21-Q30)",
+            "content": "**Q21: What are functional components?**\nJavaScript functions that take props and return React elements.\n\n**Q22: What are class components?**\nES6 classes that extend `React.Component` and have a `render()` method.\n\n**Q23: When to use functional components?**\nAlmost always. Modern React development focuses exclusively on functions with Hooks.\n\n**Q24: What are props?**\nInputs to a component passed by the parent.\n\n**Q25: What is state?**\nAn object that holds mutable data specific to a component.\n\n**Q26: Can props change?**\nNo, they are read-only (immutable).\n\n**Q27: How to change state?**\nUsing `setState()` in classes or the hook updater in functional components.\n\n**Q28: What is component composition?**\nBuilding complex components by combining simpler ones.\n\n**Q29: What is 'Props Drilling'?**\nPassing data deeply through many component layers.\n\n**Q30: What is a Parent component?**\nA component that contains other components (Children) in its JSX."
+        },
+        {
+            "title": "4. Rendering & Lists (Q31-Q40)",
+            "content": "**Q31: How to render a list of items?**\nUsing the JavaScript `map()` method.\n\n**Q32: Why are keys important in lists?**\nThey help React identify which items have changed or moved for efficient updates.\n\n**Q33: Can you use Math.random() as a key?**\nNo, keys must be stable across renders. Random keys will cause components to unmount/remount every time.\n\n**Q34: What is conditional rendering?**\nDisplaying elements only if certain conditions are met.\n\n**Q35: What is the tertiary operator?**\n`condition ? true : false`. Used for simple if-else in JSX.\n\n**Q36: What is the logical && operator?**\n`condition && <Element />`. Used to render something only if a condition is true.\n\n**Q37: What is 'null' rendering?**\nReturning `null` from a component to prevent it from displaying anything.\n\n**Q38: What is the root DOM node?**\nThe HTML element (usually `<div id=\"root\">`) where the entire React app is mounted.\n\n**Q39: What is React.Fragment?**\nA component that groups children without adding a wrapper div to the DOM.\n\n**Q40: What is the shorthand for React.Fragment?**\nEmpty tags: `<> ... </>`."
+        },
+        {
+            "title": "5. Events & Style (Q41-Q50)",
+            "content": "**Q41: How do you name events in React?**\nUsing camelCase, like `onClick` or `onKeyDown`.\n\n**Q42: How to prevent default event behavior?**\nBy explicitly calling `e.preventDefault()`.\n\n**Q43: What is a Synthetic Event?**\nReact's cross-browser wrapper around the browser's native event.\n\n**Q44: How to apply inline styles?**\nUsing an object with camelCase properties: `<div style={{ color: 'red' }}>`.\n\n**Q45: What are CSS Modules?**\nA way to scope CSS locally to a component automatically.\n\n**Q46: What is 'props.children'?**\nA special prop that represents whatever is nested inside the component tags.\n\n**Q47: Can you have multiple components in one file?**\nYes, but it's best practice to keep one major component per file.\n\n**Q48: What is 'Export Default'?**\nExporting one main thing from a file.\n\n**Q49: What is 'Named Export'?**\nExporting multiple things from a file using their names.\n\n**Q50: What is a Ref?**\nA way to access the underlying DOM node directly when needed.\n\n**Q51: Is React only for the web?**\nNo, React Native allows building mobile apps for iOS and Android."
+        },
+        {
+            "title": "Summary",
+            "content": "These **51 basic questions** cover the essential vocabulary of a React developer. Understanding these is the first step toward becoming a professional engineer.",
+            "image": "/images/interviews/react-main.png"
+        }
+    ]
+}

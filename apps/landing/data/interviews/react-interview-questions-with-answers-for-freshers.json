@@ -1,0 +1,38 @@
+{
+    "slug": "react-interview-questions-with-answers-for-freshers",
+    "title": "React Interview Q&A Mega Bank: 50+ Questions for Freshers (2026)",
+    "description": "Don't just learn definitions—learn the answers that get you hired. Over 50 React interview questions with detailed, professional answers for freshers.",
+    "heroBadge": "QA Bank: 50+ Expert Answers",
+    "sections": [
+        {
+            "title": "Introduction: Mastering the Q&A",
+            "content": "In a competitive market like 2026, freshers need to provide concise, accurate, and insightful answers. This bank provides over **50 detailed Q&As** curated from actual interviews at top tech companies.",
+            "image": "/images/interviews/react-main.png"
+        },
+        {
+            "title": "1. Core Logic & Architecture (Q1-Q10)",
+            "content": "**Q1: What is the Virtual DOM?**\nAnswer: An in-memory representation of the Real DOM. React uses it to diff changes and update the UI efficiently without reloading the whole page.\n\n**Q2: Explain JSX.**\nAnswer: An HTML-like syntax used in React to describe UI components. It compiles to regular JavaScript objects.\n\n**Q3: What is a Component?**\nAnswer: An independent, reusable piece of code that defines a part of the user interface.\n\n**Q4: Functional vs Class Components?**\nAnswer: Functional components are simpler, use Hooks, and are the modern standard. Class components are legacy and use lifecycle methods.\n\n**Q5: What are Props?**\nAnswer: Read-only inputs passed from a parent to a child to transfer data.\n\n**Q6: What is State?**\nAnswer: Internal data managed by a component that can change over time and triggers re-renders.\n\n**Q7: Difference between State and Props?**\nAnswer: Props are passed in (external), while State is self-contained (internal).\n\n**Q8: What is Prop Drilling?**\nAnswer: Passing props through middle components that don't need them just to reach a distant child.\n\n**Q9: How to avoid Prop Drilling?**\nAnswer: Use Context API or state management like Redux/Zustand.\n\n**Q10: What is create-react-app?**\nAnswer: A legacy tool suite to start a React project. Most developers now use Vite."
+        },
+        {
+            "title": "2. Modern React Hooks (Q11-Q20)",
+            "content": "**Q11: What is useState?**\nAnswer: A hook that adds state to functional components.\n\n**Q12: What is useEffect?**\nAnswer: A hook for side-effects like data fetching or DOM updates.\n\n**Q13: How to run an effect only on mount?**\nAnswer: Pass an empty array `[]` as the second argument.\n\n**Q14: What is the cleanup function in useEffect?**\nAnswer: A function returned by the effect that runs before unmounting or re-running to clear resources.\n\n**Q15: What is useRef?**\nAnswer: A hook that persists a mutable value across renders without causing re-renders.\n\n**Q16: What is useContext?**\nAnswer: A hook to consume data from a React Context easily.\n\n**Q17: Rules of Hooks?**\nAnswer: Call them at the top level and only from React functions.\n\n**Q18: What is useMemo?**\nAnswer: Memoizes a calculated value to save CPU time.\n\n**Q19: What is useCallback?**\nAnswer: Memoizes a function instance to prevent unnecessary re-renders of children.\n\n**Q20: What is useReducer?**\nAnswer: A powerful state hook for complex logic, similar to Redux."
+        },
+        {
+            "title": "3. Rendering & Lifecycle (Q21-Q30)",
+            "content": "**Q21: What is Conditional Rendering?**\nAnswer: Rendering different elements based on a logic state (e.g., loading spinners).\n\n**Q22: Why use keys in lists?**\nAnswer: To help React track item identity for efficient re-rendering.\n\n**Q23: What is React.Fragment?**\nAnswer: A wrapper that doesn't add an extra node to the DOM.\n\n**Q24: What is Mounting?**\nAnswer: The phase where a component is first inserted into the DOM.\n\n**Q25: What is Unmounting?**\nAnswer: The phase where a component is removed from the DOM.\n\n**Q26: What is Reconciliation?**\nAnswer: The diffing process that updates the DOM.\n\n**Q27: How to force a re-render?**\nAnswer: By updating state or props (or using a dummy state update).\n\n**Q28: What are Higher-Order Components?**\nAnswer: Functions that enhance components with shared logic.\n\n**Q29: Are components classes in functional React?**\nAnswer: No, they are standard JavaScript functions.\n\n**Q30: What is the 'Strict Mode'?**\nAnswer: A tool for highlighting potential problems in an application."
+        },
+        {
+            "title": "4. Advanced Fundamentals (Q31-Q40)",
+            "content": "**Q31: What is Hydration?**\nAnswer: The process of attaching event listeners to static HTML rendered by the server.\n\n**Q32: Difference between Library and Framework?**\nAnswer: A library (like React) gives you tools; a framework (like Angular) gives you a blueprint.\n\n**Q33: Can you return an array from a component?**\nAnswer: Yes, React can render arrays of elements directly.\n\n**Q34: What is 'Lifting State Up'?**\nAnswer: Moving shared state to a common parent for synchronization.\n\n**Q35: What is a Controlled Input?**\nAnswer: An input whose value is driven by React state.\n\n**Q36: What is an Uncontrolled Input?**\nAnswer: An input that gets its value directly from the DOM (via refs).\n\n**Q37: What is Portals?**\nAnswer: A way to render components outside their parent DOM hierarchy (e.g., Modals).\n\n**Q38: What is Error Boundary?**\nAnswer: A component that catches errors and prevents the entire app from crashing.\n\n**Q39: What is code splitting?**\nAnswer: Loading only the code needed for the current page to speed up the app.\n\n**Q40: What is lazy() function?**\nAnswer: A built-in function to load components dynamically."
+        },
+        {
+            "title": "5. Mixed Interview Questions (Q41-Q50+)",
+            "content": "**Q41: What is a Synthetic Event?**\nAnswer: A React object that wraps native browser events for cross-browser support.\n\n**Q42: What is 'className'?**\nAnswer: The React attribute for CSS classes (due to 'class' being reserved).\n\n**Q43: What is Prop Types?**\nAnswer: A library for runtime type-checking of component props (legacy but common).\n\n**Q44: What is React Router?**\nAnswer: The standard library for handling navigation in React SPAs.\n\n**Q45: What is Redux?**\nAnswer: A state management container for large-scale JS apps.\n\n**Q46: Is React SEO friendly?**\nAnswer: Yes, especially when used with frameworks like Next.js that support SSR.\n\n**Q47: What is SSR (Server Side Rendering)?**\nAnswer: Rendering components to HTML on the server before sending to the client.\n\n**Q48: What is CSR (Client Side Rendering)?**\nAnswer: Rendering everything in the browser (standard React behavior).\n\n**Q49: What is React Native?**\nAnswer: A framework for building mobile apps using React.\n\n**Q50: Can we have multiple states in one component?**\nAnswer: Yes, by calling `useState` multiple times.\n\n**Q51: How do you optimize a search input?**\nAnswer: By using debouncing or throttling to limit API calls."
+        },
+        {
+            "title": "Summary",
+            "content": "Landing a job is about **clarity**. Practice these answers aloud until they feel natural. You're now ready to tackle any fresher React technical round.",
+            "image": "/images/interviews/react-main.png"
+        }
+    ]
+}

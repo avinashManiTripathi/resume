@@ -19,6 +19,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'pricing',
         'examples',
         'resume-builder',
+        'ats-checker',
+        'tailor',
+        'cover-letter',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
@@ -103,7 +106,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'integrations',
         'use-cases',
         'vs',
-        'ats-checker',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
@@ -158,7 +160,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     url: `${baseUrl}/interviews/${data.slug}`,
                     lastModified: currentDate,
                     changeFrequency: 'weekly' as const,
-                    priority: 0.85,
+                    priority: 0.9,
                 })
             }
 
