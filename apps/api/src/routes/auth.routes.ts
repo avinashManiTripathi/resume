@@ -6,22 +6,6 @@ import { User as UserType } from '../types/user.types';
 
 const router = Router();
 
-/**
- * Get cookie configuration for cross-subdomain authentication
- * - Uses .profresume.com domain to work across all subdomains
- * - SameSite=none for HTTPS cross-site contexts (auth → editor redirects)
- * - HttpOnly to prevent XSS attacks
- * - Secure flag for HTTPS-only transmission
- */
-const getCookieOptions = () => ({
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: (process.env.NODE_ENV === 'production' ? 'none' : 'lax') as 'none' | 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
-    path: '/',
-});
-
 // Get Google OAuth URL
 router.get('/google/url', (req: Request, res: Response) => {
     try {
@@ -64,15 +48,23 @@ router.get('/google/callback',
             // Generate JWT token
             const token = generateToken(user.id, user.email);
 
-            // Set token in HTTP-only cookie with cross-subdomain support
-            res.cookie('token', token, getCookieOptions());
+            // Set token in HTTP-only cookie
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
+            });
 
-            // Redirect to frontend with success (NO token in URL for security)
+            // Redirect to frontend with success and user info
             const frontendUrl = process.env.FRONTEND_URL || 'https://edit.profresume.com';
 
             const redirectUrl = new URL(frontendUrl);
             redirectUrl.searchParams.set('success', 'true');
-            // User info is available via /api/auth/user endpoint using the cookie
+            redirectUrl.searchParams.set('token', token);
+            redirectUrl.searchParams.set('name', user.name || '');
+            redirectUrl.searchParams.set('email', user.email);
 
             console.log('Redirecting to:', redirectUrl.toString());
             res.redirect(redirectUrl.toString());
@@ -124,12 +116,7 @@ router.get('/user', verifyToken, async (req: Request, res: Response) => {
 
 // Logout
 router.post('/logout', (req: Request, res: Response) => {
-    // Clear cookie with same domain and path options used when setting it
-    // This is critical for cross-subdomain cookie deletion
-    res.clearCookie('token', {
-        domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
-        path: '/',
-    });
+    res.clearCookie('token');
     res.json({ success: true, message: 'Logged out successfully' });
 });
 

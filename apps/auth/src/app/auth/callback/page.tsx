@@ -8,7 +8,9 @@ function CallbackContent() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
-        const success = searchParams.get("success");
+        const token = searchParams.get("token");
+        const name = searchParams.get("name");
+        const email = searchParams.get("email");
         const error = searchParams.get("error");
 
         if (error) {
@@ -17,10 +19,9 @@ function CallbackContent() {
             return;
         }
 
-        if (success === "true") {
-            // Authentication successful!
-            // The backend has set an HttpOnly cookie with the JWT token
-            // This cookie is automatically sent with all API requests to *.profresume.com
+        if (token) {
+            // Store token in localStorage (of auth domain, though we primarily need it in editor)
+            localStorage.setItem("authToken", token);
 
             // Determine editor URL based on environment
             const isProd = window.location.hostname.endsWith('profresume.com');
@@ -28,11 +29,16 @@ function CallbackContent() {
                 ? 'https://edit.profresume.com'
                 : 'http://localhost:3002';
 
-            // Redirect to editor - the cookie will be available there
-            // User info can be fetched via /api/auth/user endpoint
-            window.location.href = editorBaseUrl;
+            // Construct redirect URL to editor with user info
+            const redirectUrl = new URL(editorBaseUrl);
+            redirectUrl.searchParams.set('token', token);
+            if (name) redirectUrl.searchParams.set('name', name);
+            if (email) redirectUrl.searchParams.set('email', email);
+
+            // Cross-subdomain redirect
+            window.location.href = redirectUrl.toString();
         } else {
-            // No success parameter, redirect back to signin
+            // No token or error, redirect back to signin
             router.push("/signin?error=auth_failed");
         }
     }, [router, searchParams]);
