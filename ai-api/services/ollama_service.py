@@ -122,6 +122,9 @@ class OllamaService:
             return qa_pairs
             
         except json.JSONDecodeError as e:
+            # Log the error with full content for debugging
+            print(f"❌ JSON Parse Error: {str(e)}")
+            print(f"📄 Full Response Content:\n{content}")
             raise ValueError(f"Failed to parse JSON response: {str(e)}. Content preview: {content[:500]}")
 
     

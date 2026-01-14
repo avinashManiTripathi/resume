@@ -187,6 +187,9 @@ Evaluation Points:
 
 Generate the complete interview question set NOW.`;
 
+
+    console.log({ prompt })
+
     try {
         // Instead of complex parsing, use multiple simpler prompts
         const questions: any[] = [];
@@ -239,20 +242,29 @@ Focus on: Architecture, Performance, Debugging, Trade-offs, Real-world scenarios
 
             const categoryPrompt = `${category.prompt}
 
-List ${category.count} questions, one per line, starting each with "Q: "
-Then for each question, provide 3 evaluation points starting with "- "
+IMPORTANT: Return your response as a valid JSON array with this exact structure:
+[
+  {
+    "question": "Your question text here",
+    "answer": "Brief guidance on what to evaluate: point 1, point 2, point 3"
+  }
+]
 
-Example format:
-Q: How would you optimize a React app's performance?
-- Performance profiling tools
-- Optimization techniques
-- Measurement and validation`;
+Generate exactly ${category.count} questions in this JSON format.`;
 
             try {
-                const qaResult = await generateQA(categoryPrompt, 1);
-                const response = qaResult[0]?.answer || '';
-                const parsedQuestions = parseQuestions(response, category.name);
-                questions.push(...parsedQuestions);
+                const qaResult = await generateQA(categoryPrompt, category.count);
+                // qaResult is already an array of {question, answer} pairs
+                for (const pair of qaResult) {
+                    // Extract evaluation points from the answer if it contains list items
+                    const expectedPoints = extractEvaluationPoints(pair.answer);
+
+                    questions.push({
+                        question: pair.question,
+                        type: category.name,
+                        expectedPoints
+                    });
+                }
             } catch (error) {
                 console.log(`⚠️ Failed to generate ${category.name} questions, using fallback`);
             }
@@ -313,6 +325,38 @@ Provide the evaluation as structured information for all ${questionAnswerPairs.l
 
 // ============= Helper Parsing Functions =============
 
+
+// Helper function to extract evaluation points from answer text
+function extractEvaluationPoints(answer: string): string[] {
+    const points: string[] = [];
+
+    // Try to extract bullet points or numbered lists
+    const lines = answer.split('\n');
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('-') || trimmed.startsWith('•') || trimmed.match(/^\d+\./)) {
+            const point = trimmed.replace(/^[-•\d.]\s*/, '').trim();
+            if (point.length > 5 && point.length < 100) {
+                points.push(point);
+            }
+        }
+    }
+
+    // If no bullet points found, try to split by commas or semicolons
+    if (points.length === 0) {
+        const parts = answer.split(/[,;]/).map(p => p.trim()).filter(p => p.length > 5 && p.length < 100);
+        if (parts.length >= 2) {
+            points.push(...parts.slice(0, 3));
+        }
+    }
+
+    // Default fallback
+    if (points.length === 0) {
+        return ['Clear explanation', 'Relevant examples', 'Best practices'];
+    }
+
+    return points.slice(0, 3);
+}
 
 // Simpler parser for line-by-line question format
 function parseQuestions(text: string, type: string): any[] {

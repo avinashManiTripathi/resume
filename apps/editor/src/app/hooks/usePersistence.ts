@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from 'react';
+import { ENV } from '../env';
 
 const LOCAL_STORAGE_KEY = 'profresume_saved_documents';
 const API_BASE = "https://api.profresume.com";
@@ -242,6 +243,7 @@ export function usePersistence() {
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.profresume.com";
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             localStorage.removeItem("authToken");
+            window.location.href = ENV.AUTH_URL;
             setIsLoggedIn(false);
             setUser(null);
         } catch (error) {

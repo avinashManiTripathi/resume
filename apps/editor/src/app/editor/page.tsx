@@ -17,6 +17,7 @@ import { CloudCheck } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
+import { ENV } from "../env";
 
 
 function ResumeEditor() {
@@ -413,9 +414,8 @@ function ResumeEditor() {
       window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
     }
-
     // Check subscription before allowing download
-    if (!canDownload()) {
+    if (!canDownload() || ENV.BY_PASS_SUBSCRIPTION === 'false') {
       // Redirect to subscription page instead of showing modal
       router.push('/subscription?returnTo=editor');
       return;

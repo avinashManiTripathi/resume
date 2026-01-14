@@ -12,6 +12,8 @@ const router = Router();
 router.post('/start', async (req: any, res: Response) => {
     try {
         const { jobDescription } = req.body;
+        console.log('Job Description:', jobDescription);
+
         // Try to get userId from auth if available, otherwise use 'guest'
         const userId = req.user?.userId || 'guest';
 

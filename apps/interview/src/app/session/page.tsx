@@ -7,6 +7,7 @@ import {
     PhoneOff, ChevronLeft, Circle, Square, Sparkles, Clock, Tag, Users,
     CheckCircle2, Loader2, Mic2
 } from 'lucide-react';
+import { sessionConfig, aiSettings, type SidebarConfig } from '../../config/session.constants';
 
 // Animated Avatar Component with realistic facial animations
 function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; size?: 'small' | 'large' }) {
@@ -96,6 +97,9 @@ function SessionContent() {
     const [activeTab, setActiveTab] = useState<'questions' | 'timeline' | 'highlights'>('questions');
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
+    // Sidebar configuration from constants
+    const [sidebarConfig, setSidebarConfig] = useState<SidebarConfig>(sessionConfig.sidebar);
+
     // Media state
     const [isMicOn, setIsMicOn] = useState(true);
     const [isCameraOn, setIsCameraOn] = useState(true);
@@ -139,27 +143,61 @@ function SessionContent() {
         }
     ]);
 
-    // Text-to-speech function with speaking state
+    // Text-to-speech function with auto voice control (using constants)
     const speak = (text: string) => {
         if (typeof window !== 'undefined' && window.speechSynthesis) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            utterance.volume = 1.0;
+            utterance.rate = aiSettings.speechRate;
+            utterance.pitch = aiSettings.speechPitch;
+            utterance.volume = aiSettings.speechVolume;
 
-            // Set speaking state when starting
+            // Set speaking state and AUTO-PAUSE voice input when starting
             utterance.onstart = () => {
                 setIsSpeaking(true);
+
+                // Auto-pause voice input to avoid feedback
+                if (isListening && recognitionRef.current) {
+                    try {
+                        recognitionRef.current.stop();
+                        console.log('🎤 Voice input auto-paused (system speaking)');
+                    } catch (err) {
+                        console.error('Failed to auto-pause voice input:', err);
+                    }
+                }
             };
 
-            // Clear speaking state when done
+            // Clear speaking state and AUTO-RESUME voice input when done
             utterance.onend = () => {
                 setIsSpeaking(false);
+
+                // Auto-resume voice input after configured delay
+                if (recognitionRef.current && !isListening) {
+                    setTimeout(() => {
+                        try {
+                            recognitionRef.current.start();
+                            setIsListening(true);
+                            console.log('🎤 Voice input auto-resumed (system finished speaking)');
+                        } catch (err) {
+                            console.log('Voice input already active');
+                        }
+                    }, aiSettings.voiceResumeDelay);
+                }
             };
 
             utterance.onerror = () => {
                 setIsSpeaking(false);
+                // Also try to resume on error
+                if (recognitionRef.current && !isListening) {
+                    setTimeout(() => {
+                        try {
+                            recognitionRef.current.start();
+                            setIsListening(true);
+                        } catch (err) {
+                            console.log('Could not auto-resume after error');
+                        }
+                    }, aiSettings.voiceResumeDelay);
+                }
             };
 
             window.speechSynthesis.speak(utterance);
@@ -735,8 +773,8 @@ function SessionContent() {
                             <button
                                 onClick={toggleVoiceRecognition}
                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${isListening
-                                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
-                                        : 'bg-blue-50 hover:bg-blue-100 text-blue-700'
+                                    ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
+                                    : 'bg-blue-50 hover:bg-blue-100 text-blue-700'
                                     }`}
                                 title={isListening ? 'Stop voice input' : 'Start voice input'}
                             >
@@ -755,8 +793,8 @@ function SessionContent() {
                                 }}
                                 placeholder={isListening ? "Listening to your voice... speak now" : "Type your response here... (Ctrl+Enter to submit)"}
                                 className={`w-full h-32 bg-slate-50 border rounded-xl p-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 resize-none ${isListening
-                                        ? 'border-red-300 ring-2 ring-red-200 bg-red-50/30'
-                                        : 'border-slate-200 focus:ring-blue-500'
+                                    ? 'border-red-300 ring-2 ring-red-200 bg-red-50/30'
+                                    : 'border-slate-200 focus:ring-blue-500'
                                     }`}
                             />
                             {isListening && (

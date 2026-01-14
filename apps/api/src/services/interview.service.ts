@@ -18,27 +18,20 @@ export const initAI = (apikey: string) => {
  * Generate all interview questions upfront in one batch call
  */
 export const generateAllQuestions = async (jdInfo: any): Promise<any[]> => {
-    // Try Ollama first if enabled
-    if (USE_OLLAMA) {
-        try {
-            console.log('🤖 Generating ALL interview questions with Ollama AI (batch mode)...');
-            const ollamaHealthy = await OllamaAI.checkOllamaHealth();
-            if (ollamaHealthy) {
-                const questions = await OllamaBatch.generateAllQuestionsWithOllama(jdInfo);
-                console.log(`✅ Generated ${questions.length} questions successfully with Ollama`);
-                return questions;
-            } else {
-                console.log('⚠️ Ollama not available, falling back to Gemini');
-            }
-        } catch (error: any) {
-            console.error('Ollama Batch Question Generation Error:', error.message);
-            console.log('🔄 Falling back to Gemini AI...');
-        }
-    }
+    try {
+        console.log(`🤖 Generating interview questions with ${process.env.AI_PROVIDER || 'deepseek'}...`);
 
-    // Fallback: Generate questions using Gemini or use mock
-    console.log('📝 Using fallback question generation');
-    return generateFallbackQuestions(jdInfo);
+        // Use new provider-based service
+        const AIInterviewService = await import('./ai-interview.service');
+        const questions = await AIInterviewService.generateInterviewQuestions(jdInfo, 20);
+
+        console.log(`✅ Generated ${questions.length} questions successfully`);
+        return questions;
+    } catch (error: any) {
+        console.error('AI Question Generation Error:', error.message);
+        console.log('📝 Using fallback question generation');
+        return generateFallbackQuestions(jdInfo);
+    }
 };
 
 /**

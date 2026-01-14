@@ -23,7 +23,29 @@ export default function SignInContent() {
     }, [searchParams]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative overflow-hidden flex items-center">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative overflow-hidden">
+            {/* Navbar Header - Fixed at Top */}
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 px-6 py-4">
+                <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <Image
+                            src="/logo.png"
+                            alt="ProfResume"
+                            height={40}
+                            width={140}
+                            priority
+                            className="cursor-pointer"
+                            onClick={() => window.location.href = '/'}
+                        />
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm text-slate-600 hidden sm:block">
+                            New to ProfResume?
+                        </span>
+                    </div>
+                </div>
+            </header>
+
             {/* Subtle Background Pattern */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
 
@@ -31,79 +53,68 @@ export default function SignInContent() {
             <div className="absolute top-0 right-0 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl"></div>
 
-            <div className="relative z-10 container mx-auto px-4 py-6">
-                {/* Logo */}
-                <div className="text-center mb-6">
-                    <Image
-                        src="/logo.png"
-                        alt="ProfResume"
-                        height={40}
-                        priority
-                        className="mx-auto"
-                    />
-                </div>
+            {/* Main Content - Padding for fixed navbar */}
+            <div className="relative z-10 container mx-auto px-4 pt-24 pb-12">
+                {/* Main Content Container */}
+                <div className="max-w-7xl mx-auto">
+                    {/* Two Column Layout: Headline Left, Form Right */}
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Left Side: Headline & Info */}
+                        <div className="space-y-8">
+                            {/* Headline Section */}
+                            <div>
+                                <div className="inline-block px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full mb-4">
+                                    <span className="text-sm font-bold text-purple-700">✨ Your Future Starts Here</span>
+                                </div>
+                                <h1 className="text-2xl sm:text-5xl lg:text-2xl font-black text-gray-900 mb-6 leading-tight">
+                                    Transform Your Career <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">Land Your Dream Job</span>
+                                </h1>
+                                <p className="text-xl text-gray-600 leading-relaxed mb-8">
+                                    Join thousands who've revolutionized their careers with AI-powered resumes that get noticed by top companies.
+                                </p>
+                            </div>
 
-                {/* Main Content - Centered */}
-                <div className="max-w-6xl mx-auto">
-                    {/* Headline Section */}
-                    <div className="text-center mb-12 max-w-3xl mx-auto">
-                        <div className="inline-block px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full mb-4">
-                            <span className="text-sm font-bold text-purple-700">✨ Your Future Starts Here</span>
-                        </div>
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
-                            Transform Your Career
-                            <span className="block bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
-                                Land Your Dream Job
-                            </span>
-                        </h1>
-                        <p className="text-xl text-gray-600 leading-relaxed">
-                            Join thousands who've revolutionized their careers with AI-powered resumes that get noticed by top companies.
-                        </p>
-                    </div>
-
-                    <div className="grid lg:grid-cols-2 gap-8 items-start max-w-5xl mx-auto">
-
-                        {/* Left: Future Benefits */}
-                        <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-gray-700 text-center lg:text-left">What Awaits You:</h3>
-                            {[
-                                {
-                                    icon: TrendingUp,
-                                    title: "3x More Interview Calls",
-                                    desc: "Stand out with ATS-optimized resumes",
-                                    color: "from-blue-500 to-cyan-500"
-                                },
-                                {
-                                    icon: Award,
-                                    title: "Professional Excellence",
-                                    desc: "AI-powered content that impresses recruiters",
-                                    color: "from-purple-500 to-pink-500"
-                                },
-                                {
-                                    icon: Briefcase,
-                                    title: "Your Next Opportunity",
-                                    desc: "Get hired by Fortune 500 companies",
-                                    color: "from-green-500 to-emerald-500"
-                                }
-                            ].map((benefit, idx) => (
-                                <div
-                                    key={idx}
-                                    className="flex items-start gap-4 p-5 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 hover:shadow-lg hover:border-purple-200 transition-all duration-300 group"
-                                >
-                                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${benefit.color} p-0.5 flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                                        <div className="w-full h-full rounded-xl bg-white flex items-center justify-center">
-                                            <benefit.icon className="w-6 h-6 text-gray-700" />
+                            {/* Benefits */}
+                            <div className="space-y-4">
+                                {[
+                                    {
+                                        icon: TrendingUp,
+                                        title: "3x More Interview Calls",
+                                        desc: "Stand out with ATS-optimized resumes",
+                                        color: "from-blue-500 to-cyan-500"
+                                    },
+                                    {
+                                        icon: Award,
+                                        title: "Professional Excellence",
+                                        desc: "AI-powered content that impresses recruiters",
+                                        color: "from-purple-500 to-pink-500"
+                                    },
+                                    {
+                                        icon: Briefcase,
+                                        title: "Your Next Opportunity",
+                                        desc: "Get hired by Fortune 500 companies",
+                                        color: "from-green-500 to-emerald-500"
+                                    }
+                                ].map((benefit, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="flex items-start gap-4 p-5 rounded-2xl bg-white/80 backdrop-blur border border-gray-200 hover:shadow-lg hover:border-purple-200 transition-all duration-300 group"
+                                    >
+                                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${benefit.color} p-0.5 flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                                            <div className="w-full h-full rounded-xl bg-white flex items-center justify-center">
+                                                <benefit.icon className="w-6 h-6 text-gray-700" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h4 className="font-bold text-gray-900 mb-1">{benefit.title}</h4>
+                                            <p className="text-sm text-gray-600">{benefit.desc}</p>
                                         </div>
                                     </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-gray-900 mb-1">{benefit.title}</h4>
-                                        <p className="text-sm text-gray-600">{benefit.desc}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Right: Sign In Card */}
+                        {/* Right Side: Sign In Form */}
                         <div>
                             <div className="relative group">
                                 <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
@@ -226,7 +237,7 @@ export default function SignInContent() {
                         <p className="text-sm font-bold text-gray-900">— Sarah Chen, Software Engineer at Google</p>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

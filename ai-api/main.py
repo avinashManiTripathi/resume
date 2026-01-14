@@ -122,6 +122,11 @@ async def generate_qa(request: GenerateRequest):
         )
         
     except Exception as e:
+        # Log the full error for debugging
+        import traceback
+        print(f"❌ Error generating Q&A: {str(e)}")
+        print(f"📋 Traceback:\n{traceback.format_exc()}")
+        
         raise HTTPException(
             status_code=500,
             detail=f"Failed to generate Q&A: {str(e)}"
