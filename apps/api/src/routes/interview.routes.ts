@@ -1,9 +1,13 @@
 import { Router, Response } from 'express';
-import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
+import { verifyToken, AuthRequest, optionalAuth } from '../middleware/auth.middleware';
 import { InterviewSession } from '../models';
 import * as interviewService from '../services/interview.service';
 
 const router = Router();
+
+// Apply optional authentication to all routes
+// This allows routes to work for both authenticated users and guests
+router.use(optionalAuth);
 
 /**
  * START Interview
@@ -19,6 +23,22 @@ router.post('/start', async (req: any, res: Response) => {
 
         if (!jobDescription) {
             return res.status(400).json({ success: false, message: 'Job Description is required' });
+        }
+
+        // Check daily limit
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        const todayCount = await InterviewSession.countDocuments({
+            userId,
+            createdAt: { $gte: todayStart }
+        });
+
+        if (todayCount >= 1) {
+            return res.status(429).json({
+                success: false,
+                message: 'You have reached your daily interview limit. You can start one interview per day.'
+            });
         }
 
         // 1. Analyze JD
@@ -179,8 +199,63 @@ router.post('/answer', async (req: any, res: Response) => {
 });
 
 /**
+ * GET User Sessions
+ * Fetch all interview sessions for the logged-in user
+ * IMPORTANT: Must come BEFORE /:id route
+ */
+router.get('/sessions', async (req: any, res: Response) => {
+    try {
+        const userId = req.user?.userId || 'guest';
+
+        const sessions = await InterviewSession.find({ userId })
+            .sort({ createdAt: -1 }) // Most recent first
+            .limit(20) // Limit to 20 most recent sessions
+            .select('-history -allQuestions'); // Exclude large fields
+
+        res.json({ success: true, data: sessions });
+    } catch (error: any) {
+        console.error('Fetch Sessions Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+/**
+ * GET Can Start Interview
+ * Check if user can start a new interview (daily limit check)
+ * IMPORTANT: Must come BEFORE /:id route
+ */
+router.get('/can-start', async (req: any, res: Response) => {
+    try {
+        const userId = req.user?.userId || 'guest';
+
+        // Get today's start (midnight local time)
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        // Count sessions created today
+        const todayCount = await InterviewSession.countDocuments({
+            userId,
+            createdAt: { $gte: todayStart }
+        });
+
+        const canStart = todayCount === 0; // Allow only 1 interview per day
+
+        res.json({
+            success: true,
+            canStart,
+            todayCount,
+            message: canStart ? 'You can start a new interview' : 'Daily interview limit reached'
+        });
+    } catch (error: any) {
+        console.error('Check Daily Limit Error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+/**
  * GET Session Status
  * PUBLIC ENDPOINT - No auth required for testing
+ * IMPORTANT: This route must come AFTER specific routes like /sessions and /can-start
  */
 router.get('/:id', async (req: any, res: Response) => {
     try {

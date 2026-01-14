@@ -31,6 +31,40 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
+/**
+ * Optional authentication middleware
+ * Parses JWT token if present but doesn't block the request if missing
+ * Useful for routes that work for both authenticated and guest users
+ */
+export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthRequest;
+
+        // Get token from Authorization header or cookie
+        const authHeader = authReq.headers.authorization;
+        const token = authHeader?.startsWith('Bearer ')
+            ? authHeader.substring(7)
+            : authReq.cookies?.token;
+
+        if (token) {
+            // Verify token if present
+            try {
+                const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+                authReq.user = decoded;
+            } catch (error) {
+                // Token is invalid, continue as guest
+                console.log('Invalid token, continuing as guest');
+            }
+        }
+
+        // Continue regardless of token presence
+        next();
+    } catch (error) {
+        // Continue even if there's an error
+        next();
+    }
+};
+
 export const generateToken = (userId: string, email: string): string => {
     const payload: JWTPayload = {
         userId,
