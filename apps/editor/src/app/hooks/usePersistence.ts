@@ -24,31 +24,14 @@ export function usePersistence() {
     // Initial check for auth status
     useEffect(() => {
         const checkAuth = async () => {
-            // Capture token from URL if present (from auth app redirect)
-            if (typeof window !== 'undefined') {
-                const params = new URLSearchParams(window.location.search);
-                const tokenFromUrl = params.get('token');
-
-                if (tokenFromUrl) {
-                    const isProd = window.location.hostname.endsWith('profresume.com');
-                    const domain = isProd ? '; domain=.profresume.com' : '';
-                    const secure = isProd ? '; secure' : '';
-                    document.cookie = `token=${tokenFromUrl}; path=/; max-age=${7 * 24 * 60 * 60}${domain}${secure}; samesite=lax`;
-                    localStorage.setItem("authToken", tokenFromUrl);
-
-                    // Remove token from URL for security
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete("token");
-                    url.searchParams.delete("name");
-                    url.searchParams.delete("email");
-                    window.history.replaceState({}, '', url.pathname + url.search);
-                }
-            }
+            // Note: The backend sets an HttpOnly cookie with domain=.profresume.com
+            // This cookie is automatically included in all API requests via credentials: 'include'
+            // No need to manually handle tokens from URL or set cookies here
 
             try {
                 const response = await fetch(`${API_BASE}/api/auth/user`, {
                     headers: { 'Accept': 'application/json' },
-                    credentials: 'include'
+                    credentials: 'include' // Automatically sends HttpOnly cookies
                 });
 
                 if (response.ok) {
@@ -236,18 +219,18 @@ export function usePersistence() {
 
     const logout = useCallback(async () => {
         try {
+            // Server-side logout clears the HttpOnly cookie with proper domain/path
             await fetch(`${API_BASE}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.profresume.com";
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-            localStorage.removeItem("authToken");
+
+            // Redirect to auth app
             window.location.href = ENV.AUTH_URL;
-            setIsLoggedIn(false);
-            setUser(null);
         } catch (error) {
             console.error('Logout failed:', error);
+            // Even if API call fails, redirect to auth app
+            window.location.href = ENV.AUTH_URL;
         }
     }, []);
 
