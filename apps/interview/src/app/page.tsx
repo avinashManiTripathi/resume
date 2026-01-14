@@ -4,16 +4,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
+import InterviewTypeDropdown from '../components/InterviewTypeDropdown';
+import { INTERVIEW_TYPES, DEFAULT_INTERVIEW_TYPE, InterviewType } from '../config/interview-types.constants';
 
 export default function InterviewLandingPage() {
     const [jd, setJd] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [stream, setStream] = useState<MediaStream | null>(null);
+    const [selectedInterviewType, setSelectedInterviewType] = useState<InterviewType>(DEFAULT_INTERVIEW_TYPE);
     const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
 
     const startInterview = async () => {
-        if (!jd.trim()) return alert('Please paste a Job Description first.');
+        // Validate based on interview type
+        if (selectedInterviewType.requiresJD && !jd.trim()) {
+            return alert('Please paste a Job Description first.');
+        }
+
         setIsLoading(true);
         try {
             const response = await fetch('https://api.profresume.com/api/interview/start', {
@@ -22,7 +29,12 @@ export default function InterviewLandingPage() {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ jobDescription: jd }),
+                body: JSON.stringify({
+                    jobDescription: jd,
+                    interviewType: selectedInterviewType.id,
+                    interviewLevel: selectedInterviewType.level,
+                    technology: selectedInterviewType.technology
+                }),
             });
 
             const result = await response.json();
@@ -109,19 +121,42 @@ export default function InterviewLandingPage() {
                         </p>
 
                         <div className="space-y-6">
+                            {/* Interview Type Dropdown */}
                             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl shadow-slate-200/50">
-                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Job Description / Requirements</label>
-                                <textarea
-                                    className="w-full h-64 bg-slate-50 border border-slate-100 rounded-xl p-5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-blue-500/50 transition-all resize-none text-sm leading-relaxed"
-                                    placeholder="Paste the job requirements here... We'll tailor the technical questions specifically for this role."
-                                    value={jd}
-                                    onChange={(e) => setJd(e.target.value)}
+                                <InterviewTypeDropdown
+                                    options={INTERVIEW_TYPES}
+                                    selectedType={selectedInterviewType}
+                                    onSelect={setSelectedInterviewType}
                                 />
                             </div>
 
+                            {/* Job Description Textarea - Conditionally shown */}
+                            {selectedInterviewType.requiresJD ? (
+                                <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl shadow-slate-200/50">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Job Description / Requirements</label>
+                                    <textarea
+                                        className="w-full h-64 bg-slate-50 border border-slate-100 rounded-xl p-5 text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-blue-500/50 transition-all resize-none text-sm leading-relaxed"
+                                        placeholder="Paste the job requirements here... We'll tailor the technical questions specifically for this role."
+                                        value={jd}
+                                        onChange={(e) => setJd(e.target.value)}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 border-dashed rounded-2xl p-6 text-center">
+                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-500 rounded-xl mb-3">
+                                        <CheckCircle className="w-6 h-6 text-white" />
+                                    </div>
+                                    <h4 className="font-bold text-slate-900 mb-2">Interview Type Selected</h4>
+                                    <p className="text-sm text-slate-600">
+                                        You've chosen <span className="font-semibold text-blue-600">{selectedInterviewType.label}</span>.
+                                        <br />Click below to start your AI-powered interview session!
+                                    </p>
+                                </div>
+                            )}
+
                             <button
                                 onClick={startInterview}
-                                disabled={isLoading || !jd.trim()}
+                                disabled={isLoading || (selectedInterviewType.requiresJD && !jd.trim())}
                                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-5 rounded-2xl transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 text-lg active:scale-[0.98]"
                             >
                                 {isLoading ? 'Initializing AI...' : 'Start Session Now'}
