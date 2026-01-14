@@ -5,7 +5,7 @@ import * as OllamaBatch from "./ollama-ai-batch.service";
 
 
 let ai: any;
-const USE_OLLAMA = true // process.env.USE_OLLAMA === 'true';
+const USE_OLLAMA = false // process.env.USE_OLLAMA === 'true';
 
 export const initAI = (apikey: string) => {
     if (!ai) {
@@ -142,28 +142,9 @@ const retryWithBackoff = async <T>(
  * Analyze Job Description to extract key requirements
  */
 export const analyzeJD = async (jobDescription: string): Promise<any> => {
-    // Try Ollama first if enabled
-    if (USE_OLLAMA) {
-        try {
-            console.log('🤖 Attempting JD analysis with Ollama AI...');
-            const ollamaHealthy = await OllamaAI.checkOllamaHealth();
-            if (ollamaHealthy) {
-                const result = await OllamaAI.analyzeJDWithOllama(jobDescription);
-                console.log('✅ JD analyzed successfully with Ollama');
-                return result;
-            } else {
-                console.log('⚠️ Ollama not available, falling back to Gemini');
-            }
-        } catch (error: any) {
-            console.error('Ollama JD Analysis Error:', error.message);
-            console.log('🔄 Falling back to Gemini AI...');
-        }
-    }
 
-    // Fallback to Gemini AI
-    return retryWithBackoff(async () => {
-        try {
-            const prompt = `Analyze this Job Description and return JSON with the following fields:
+    try {
+        const prompt = `Analyze this Job Description and return JSON with the following fields:
 {
   "skills": ["string"],
   "techStack": ["string"],
@@ -178,27 +159,26 @@ Set isDeveloper to false for non-coding roles like Product Manager, Designer, Ma
 
 JD: ${jobDescription.slice(0, 1000)}`;
 
-            const response = await Promise.race([
-                ai.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: prompt,
-                }),
-                new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('Timeout')), 20000)
-                )
-            ]);
+        const response = await Promise.race([
+            ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: prompt,
+            }),
+            new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Timeout')), 20000)
+            )
+        ]);
 
-            const text = (response as any).text.trim();
-            const cleaned = text.replace(/^```json\n/, '').replace(/\n```$/, '').replace(/^```/, '').replace(/```$/, '');
-            console.log('✅ JD analyzed successfully with Gemini');
-            return JSON.parse(cleaned);
-        } catch (error: any) {
-            console.error('Gemini JD Analysis Error:', error.message);
-            console.log('🔄 Using mock JD analysis data for testing');
-            // Return mock data as fallback
-            return MOCK_JD_ANALYSIS;
-        }
-    });
+        const text = (response as any).text.trim();
+        const cleaned = text.replace(/^```json\n/, '').replace(/\n```$/, '').replace(/^```/, '').replace(/```$/, '');
+        console.log('✅ JD analyzed successfully with Gemini');
+        return JSON.parse(cleaned);
+    } catch (error: any) {
+        console.error('Gemini JD Analysis Error:', error.message);
+        console.log('🔄 Using mock JD analysis data for testing');
+        // Return mock data as fallback
+        return MOCK_JD_ANALYSIS;
+    }
 };
 
 /**

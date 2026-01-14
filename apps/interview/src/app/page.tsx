@@ -20,6 +20,32 @@ export default function InterviewLandingPage() {
         if (selectedInterviewType.requiresJD && !jd.trim()) {
             return alert('Please paste a Job Description first.');
         }
+        let modifiedJd = ''
+
+        if (!jd) {
+
+            modifiedJd = `Act as a professional technical recruiter. Generate a clear, concise, and industry-ready job description for a Junior React Developer role.
+
+Interview Type: ${selectedInterviewType.id}
+Interview Level: ${selectedInterviewType.level}
+Technology: ${selectedInterviewType.technology}
+
+The job description should include:
+
+A short role summary
+
+Key responsibilities
+
+Required skills and basic qualifications
+
+Nice-to-have skills
+
+Ideal candidate traits
+
+Keep the language simple, beginner-friendly, and suitable for candidates with 0–2 years of experience.
+Output the JD in a well-structured, professional format.`
+
+        }
 
         setIsLoading(true);
         try {
@@ -30,7 +56,7 @@ export default function InterviewLandingPage() {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    jobDescription: jd,
+                    jobDescription: modifiedJd ? modifiedJd : jd,
                     interviewType: selectedInterviewType.id,
                     interviewLevel: selectedInterviewType.level,
                     technology: selectedInterviewType.technology

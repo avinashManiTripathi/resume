@@ -43,7 +43,6 @@ router.post('/start', async (req: any, res: Response) => {
 
         // 1. Analyze JD
         const jdInfo = await interviewService.analyzeJD(jobDescription);
-
         // 2. Generate ALL interview questions upfront (BATCH MODE)
         console.log('📝 Generating all questions in batch mode...');
         const allQuestions = await interviewService.generateAllQuestions(jdInfo);

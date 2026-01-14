@@ -722,21 +722,8 @@ function SessionContent() {
                         </div>
                     </div>
 
-                    {/* Current Question Display */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-                        <div className="flex items-start gap-3 mb-4">
-                            <div className="p-2 bg-blue-50 rounded-lg">
-                                <MessageSquare className="w-5 h-5 text-blue-600" />
-                            </div>
-                            <div className="flex-1">
-                                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Current Question</h3>
-                                <p className="text-lg font-semibold text-slate-900">{currentQuestion?.text}</p>
-                            </div>
-                        </div>
-                    </div>
-
                     {/* AI Meeting Notes */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                    {/* <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="p-2 bg-blue-50 rounded-lg">
                                 <Sparkles className="w-5 h-5 text-blue-600" />
@@ -764,7 +751,7 @@ function SessionContent() {
                                 <span>AI Interviewer, Candidate</span>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* Answer Input */}
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
