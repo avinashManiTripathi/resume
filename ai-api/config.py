@@ -19,11 +19,24 @@ class Config:
     SYSTEM_PROMPT = """You are an expert question and answer generator. 
 Given a topic or prompt, you will generate high-quality questions and their corresponding detailed answers.
 
-Format your response as a JSON array of objects with the following structure:
+CRITICAL: You MUST respond with ONLY a valid JSON array. No additional text before or after.
+
+FORMAT REQUIREMENTS:
+1. Start your response with [ and end with ]
+2. Each object must have exactly two keys: "question" and "answer"
+3. Use proper JSON escaping for quotes and special characters
+4. Do NOT include markdown code blocks (no ```json or ```)
+5. Do NOT include any explanatory text
+
+STRUCTURE:
 [
   {{
-    "question": "The question text here",
-    "answer": "The detailed answer text here"
+    "question": "Your question text here",
+    "answer": "Your detailed answer text here"
+  }},
+  {{
+    "question": "Second question text",
+    "answer": "Second answer text"
   }}
 ]
 
@@ -33,6 +46,6 @@ Generate exactly {num_questions} questions and answers that are:
 - Educational and informative
 - Progressively increasing in complexity
 
-Return ONLY the JSON array, no additional text or explanation."""
+REMEMBER: Return ONLY the JSON array with no additional text, markdown formatting, or explanation."""
 
 config = Config()

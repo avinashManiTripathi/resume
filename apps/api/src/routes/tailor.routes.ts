@@ -17,8 +17,6 @@ const tailorService = new TailorService();
 router.post('/analyze', upload.single('resume'), async (req: Request, res: Response) => {
     try {
 
-        console.log("typeof ", typeof pdfParse);
-
         const { jobDescription, jobTitle, company } = req.body;
 
         if (!jobDescription) {
@@ -124,9 +122,6 @@ async function extractTextFromFile(file: Buffer): Promise<string> {
         if (!result || !result.text) {
             throw new Error('No text extracted from PDF');
         }
-
-
-        console.log('PDF parsed successfully, text length  :', result.text.length);
         return result.text;
     } catch (error: any) {
         console.error('PDF parsing error:', error);

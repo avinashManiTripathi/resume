@@ -82,71 +82,192 @@ export const generateAllQuestionsWithOllama = async (
     const techStack = jdInfo.techStack || [];
     const skills = jdInfo.skills || [];
     const coreTopics = jdInfo.coreTopics || [];
+    const experienceYears = jdInfo.experienceYears || 3;
+    const isExperienced = experienceYears >= 4;
+    const isDeveloper = jdInfo.isDeveloper || false;
 
-    const prompt = `You are conducting a comprehensive technical interview for the role: ${jdInfo.role}
+    const prompt = `You are conducting a comprehensive technical interview for: ${jdInfo.role}
+Experience Required: ${jdInfo.experienceLevel} (${experienceYears}+ years)
 
-CRITICAL REQUIREMENTS - READ CAREFULLY:
-Required Technical Skills: ${techStack.join(', ')}
+CRITICAL RULES - EXPERIENCE-APPROPRIATE QUESTIONS:
+${isExperienced ? `
+🔴 FOR ${experienceYears}+ YEARS EXPERIENCE - ASK DEEP QUESTIONS:
+- System architecture and design decisions
+- Performance optimization and scalability
+- Real-world debugging and problem-solving scenarios
+- Trade-offs and design patterns
+- Production challenges and solutions
+- Code review and mentoring approaches
+
+❌ NEVER ASK THESE FOR EXPERIENCED CANDIDATES:
+- "What is [basic concept]?" (e.g., "What is React?")
+- Basic definition questions
+- Textbook theory without application
+- Simple "how to" questions
+- Generic HR questions in technical phase
+` : `
+🟡 FOR ENTRY/JUNIOR LEVEL:
+- Fundamental concepts with examples
+- Best practices and common patterns
+- Basic problem-solving
+- Learning approach and growth mindset
+`}
+
+TECHNICAL STACK TO COVER: ${techStack.join(', ')}
 Additional Skills: ${skills.join(', ')}
 Core Topics: ${coreTopics.join(', ')}
-Experience Level: ${jdInfo.experienceLevel}
 
 QUESTION DISTRIBUTION (Total: 20-25 questions):
-1. Introduction Phase (2-3 questions):
-   - Background and experience
-   - Career motivation
-   - Why this role
 
-2. Technical Phase - FOCUS ON JD REQUIREMENTS (12-15 questions):
-   IMPORTANT: Ask specific questions about EACH technology in the tech stack!
-   For EACH of these technologies: ${techStack.slice(0, 8).join(', ')}
-   - Ask about concepts, best practices, and real-world usage
-   - Cover at least 2-3 questions per major technology
-   - Example topics: architecture, optimization, debugging, testing
+1. Introduction Phase (2-3 questions):
+   - Background and relevant experience
+   - Career motivation and goals
+   - Why this specific role
+   ${isExperienced ? '- Most challenging project or technical leadership experience' : ''}
+
+2. Technical Phase - DEEP DIVE (12-15 questions):
+   ${isExperienced ? `
+   For ${experienceYears}+ years experience, ask:
    
-3. ${jdInfo.isDeveloper ? 'Coding/Algorithm Phase (3-4 questions):\n   - Algorithm design\n   - Code implementation\n   - Problem-solving approach\n   - System design' : 'Domain Expertise (3-4 questions):\n   - Role-specific scenarios\n   - Decision-making\n   - Problem-solving'}
+   GOOD Examples:
+   ✅ "Describe a situation where you had to optimize a React application's performance. What tools did you use to identify bottlenecks, and what specific optimizations did you implement?"
+   ✅ "How would you architect a microservices system for [domain]? Discuss service boundaries, data consistency, and communication patterns."
+   ✅ "Walk me through how you would debug a memory leak in a Node.js production application."
+   
+   BAD Examples (NEVER use these):
+   ❌ "What is Docker?" 
+   ❌ "Explain what REST API is"
+   ❌ "What are the features of React?"
+   
+   For EACH technology in: ${techStack.slice(0, 8).join(', ')}
+   - Real-world scenarios and challenges
+   - Architecture and scalability considerations  
+   - Performance optimization strategies
+   - Debugging complex issues
+   - Design patterns and trade-offs
+   ` : `
+   For each technology, focus on:
+   - Core concepts with practical examples
+   - Common use cases and best practices
+   - Basic troubleshooting
+   `}
+
+3. ${jdInfo.isDeveloper ? `System Design & Problem-Solving (3-4 questions):
+   ${isExperienced ? `
+   - Design scalable systems (mention specific scale: millions of users, high throughput)
+   - Database design and optimization
+   - Caching strategies and trade-offs
+   - API design best practices
+   ` : `
+   - Basic algorithm problems
+   - Code organization
+   - Simple system design
+   `}` : 'Domain Expertise (3-4 questions)'}
 
 4. Behavioral Phase (3-4 questions):
-   - Teamwork and collaboration
-   - Handling conflicts
+   - ${isExperienced ? 'Technical leadership and mentoring' : 'Teamwork and collaboration'}
+   - Handling conflicts or difficult situations
    - Learning from failures
-   - Leadership or initiative
+   - ${isExperienced ? 'Cross-team collaboration and stakeholder management' : 'Initiative and learning approach'}
 
-STRICT RULES:
+MANDATORY REQUIREMENTS:
 1. Generate EXACTLY 20-25 questions
-2. EVERY major technology from the tech stack MUST be covered
-3. Questions must be specific to the JD requirements
-4. Vary difficulty from basic to advanced
-5. Include practical scenario-based questions
+2. Match question difficulty to ${experienceYears}+ years experience
+3. NO basic definition questions for experienced candidates
+4. Focus on SCENARIOS, TRADE-OFFS, and REAL-WORLD PROBLEMS
+5. Every major technology MUST be covered with depth
 
 FORMAT each question as:
-- Clear, specific question text
-- Question type (intro/technical/coding/behavioral)
-- 3 key evaluation points
+Question: [Your question text]
+Type: [intro/technical/coding/behavioral]
+Evaluation Points:
+- [Point 1]
+- [Point 2]
+- [Point 3]
 
-Example good technical question:
-"Explain how React's Virtual DOM works and why it improves performance. How would you optimize a React component that's re-rendering too frequently?"
-
-Generate the complete interview question set now.`;
+Generate the complete interview question set NOW.`;
 
     try {
-        const qaResult = await generateQA(prompt, 1);
-        const response = qaResult[0]?.answer || '';
+        // Instead of complex parsing, use multiple simpler prompts
+        const questions: any[] = [];
 
-        // Parse the questions from the response
-        const questions = parseAllQuestions(response, jdInfo.isDeveloper);
+        // Generate questions in batches by category for better control
+        const categories = [
+            {
+                name: 'intro',
+                count: 3,
+                prompt: isExperienced
+                    ? `Generate 3 introduction questions for a ${jdInfo.role} with ${experienceYears}+ years experience. Focus on: technical leadership, challenging projects, and career progression.`
+                    : `Generate 3 introduction questions for a ${jdInfo.role}. Focus on: background, motivation, and recent work.`
+            },
+            {
+                name: 'technical',
+                count: isExperienced ? 12 : 10,
+                prompt: isExperienced
+                    ? `Generate ${12} DEEP technical questions for a senior ${jdInfo.role} with ${experienceYears}+ years experience in: ${techStack.slice(0, 6).join(', ')}.
 
-        console.log(`📊 Parsed ${questions.length} questions from AI response`);
-        console.log(`📊 Parsed ${JSON.stringify(questions)} questions from AI response`);
+CRITICAL - Ask ONLY scenario-based, advanced questions:
+- "How would you optimize React rendering performance in a large application?"
+- "Explain your approach to state management in a complex React application"
+- "Describe debugging a production memory leak in a React/Node.js app"
+- "How would you architect a scalable microservices system?"
+- "Walk through your strategy for migrating from REST to GraphQL"
 
-        // Ensure we have at least 20 questions
-        if (questions.length < 20) {
-            console.log(`⚠️ Only ${questions} questions generated, adding fallback questions`);
-            const fallbackQuestions = generateFallbackQuestions(jdInfo.isDeveloper);
-            questions.push(...fallbackQuestions.slice(questions.length));
+NEVER ask basic questions like "What is React?" or "Explain hooks"
+
+Focus on: Architecture, Performance, Debugging, Trade-offs, Real-world scenarios`
+                    : `Generate ${10} technical questions about: ${techStack.join(', ')}. Mix fundamental concepts with practical applications.`
+            },
+            {
+                name: 'coding',
+                count: isDeveloper ? 4 : 0,
+                prompt: isExperienced
+                    ? `Generate 4 advanced system design and problem-solving questions for ${experienceYears}+ years experience. Focus on: scalability, distributed systems, architecture decisions, production debugging.`
+                    : `Generate 4 coding and algorithm questions. Focus on: problem-solving approach, code quality, basic algorithms.`
+            },
+            {
+                name: 'behavioral',
+                count: 4,
+                prompt: isExperienced
+                    ? `Generate 4 behavioral questions for a senior developer. Focus on: technical leadership, mentoring, cross-team collaboration, handling complex technical debt.`
+                    : `Generate 4 behavioral questions. Focus on: teamwork, learning, handling challenges, time management.`
+            }
+        ];
+
+        for (const category of categories) {
+            if (category.count === 0) continue;
+
+            const categoryPrompt = `${category.prompt}
+
+List ${category.count} questions, one per line, starting each with "Q: "
+Then for each question, provide 3 evaluation points starting with "- "
+
+Example format:
+Q: How would you optimize a React app's performance?
+- Performance profiling tools
+- Optimization techniques
+- Measurement and validation`;
+
+            try {
+                const qaResult = await generateQA(categoryPrompt, 1);
+                const response = qaResult[0]?.answer || '';
+                const parsedQuestions = parseQuestions(response, category.name);
+                questions.push(...parsedQuestions);
+            } catch (error) {
+                console.log(`⚠️ Failed to generate ${category.name} questions, using fallback`);
+            }
         }
 
-        return questions.slice(0, 25); // Cap at 25 questions
+        // If we got enough questions, use them
+        if (questions.length >= 15) {
+            console.log(`📊 Successfully generated ${questions.length} questions from AI`);
+            return questions.slice(0, 25);
+        }
+
+        // Otherwise fall back to enhanced fallback
+        console.log(`⚠️ Only ${questions.length} questions generated, using fallback`);
+        return generateEnhancedFallbackQuestions(jdInfo);
+
     } catch (error) {
         throw new Error(`Failed to generate batch questions: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
@@ -191,6 +312,54 @@ Provide the evaluation as structured information for all ${questionAnswerPairs.l
 };
 
 // ============= Helper Parsing Functions =============
+
+
+// Simpler parser for line-by-line question format
+function parseQuestions(text: string, type: string): any[] {
+    const questions: any[] = [];
+    const lines = text.split('\n');
+
+    let currentQuestion: string | null = null;
+    let expectedPoints: string[] = [];
+
+    for (const line of lines) {
+        const trimmed = line.trim();
+
+        // Check for question line
+        if (trimmed.startsWith('Q:') || (trimmed.match(/^\d+\./) && trimmed.includes('?'))) {
+            // Save previous question if exists
+            if (currentQuestion) {
+                questions.push({
+                    question: currentQuestion,
+                    type,
+                    expectedPoints: expectedPoints.length > 0 ? expectedPoints : ['Clear explanation', 'Relevant examples', 'Best practices']
+                });
+            }
+
+            // Start new question
+            currentQuestion = trimmed.replace(/^(Q:|Question \d+:|^\d+\.)\s*/i, '').trim();
+            expectedPoints = [];
+        }
+        // Check for evaluation points
+        else if (trimmed.startsWith('-') || trimmed.startsWith('•')) {
+            const point = trimmed.replace(/^[-•]\s*/, '').trim();
+            if (point.length > 3 && point.length < 100) {
+                expectedPoints.push(point);
+            }
+        }
+    }
+
+    // Save last question
+    if (currentQuestion) {
+        questions.push({
+            question: currentQuestion,
+            type,
+            expectedPoints: expectedPoints.length > 0 ? expectedPoints : ['Clear explanation', 'Relevant examples', 'Best practices']
+        });
+    }
+
+    return questions;
+}
 
 function parseAllQuestions(text: string, isDeveloper: boolean): any[] {
     const questions: any[] = [];
@@ -304,6 +473,8 @@ function generateEnhancedFallbackQuestions(jdInfo: any): any[] {
     const isDeveloper = jdInfo?.isDeveloper || false;
     const techStack = jdInfo?.techStack || ['JavaScript', 'React', 'Node.js'];
     const role = jdInfo?.role || 'Software Developer';
+    const experienceYears = jdInfo?.experienceYears || 3;
+    const isExperienced = experienceYears >= 4;
 
     const questions: any[] = [];
 
@@ -320,79 +491,133 @@ function generateEnhancedFallbackQuestions(jdInfo: any): any[] {
             expectedPoints: ["Role alignment", "Skills match", "Career goals"]
         },
         {
-            question: "Walk me through your most recent project or responsibility.",
+            question: isExperienced
+                ? `Describe your most challenging technical project and the leadership role you played in it.`
+                : "Walk me through your most recent project or responsibility.",
             type: "intro",
-            expectedPoints: ["Project scope", "Your role", "Impact achieved"]
+            expectedPoints: isExperienced
+                ? ["Technical complexity", "Leadership approach", "Impact and outcomes"]
+                : ["Project scope", "Your role", "Impact achieved"]
         }
     );
 
-    // 2. Technical Questions (12-15 questions) - Cover each tech in stack
-    techStack.slice(0, 8).forEach((tech: string, idx: number) => {
+    // 2. Technical Questions (12-15 questions) - Depth based on experience
+    if (isExperienced) {
+        // Senior-level deep technical questions
+        techStack.slice(0, 6).forEach((tech: string) => {
+            questions.push(
+                {
+                    question: `Describe a production issue you encountered with ${tech}. How did you identify the root cause and what was your solution?`,
+                    type: "technical",
+                    expectedPoints: ["Problem diagnosis", "Solution approach", "Prevention strategies"]
+                },
+                {
+                    question: `How would you architect a scalable system using ${tech}? Discuss your design decisions and trade-offs.`,
+                    type: "technical",
+                    expectedPoints: ["Architecture patterns", "Scalability strategies", "Trade-off analysis"]
+                }
+            );
+        });
+
         questions.push(
             {
-                question: `Explain your experience with ${tech}. What projects have you used it in?`,
+                question: "Explain your approach to optimizing application performance. What tools and techniques do you use?",
                 type: "technical",
-                expectedPoints: [`${tech} fundamentals`, "Practical experience", "Project examples"]
+                expectedPoints: ["Profiling tools", "Optimization strategies", "Measurement and validation"]
             },
             {
-                question: `What are some best practices or common pitfalls when working with ${tech}?`,
+                question: "Walk me through how you would conduct a code review for a critical pull request. What are your key criteria?",
                 type: "technical",
-                expectedPoints: ["Best practices", "Common issues", "Solutions"]
+                expectedPoints: ["Code quality factors", "Security considerations", "Team collaboration"]
             }
         );
-    });
+    } else {
+        // Junior-level fundamental questions
+        techStack.slice(0, 8).forEach((tech: string) => {
+            questions.push(
+                {
+                    question: `Explain your experience with ${tech}. What projects have you used it in?`,
+                    type: "technical",
+                    expectedPoints: [`${tech} fundamentals`, "Practical experience", "Project examples"]
+                },
+                {
+                    question: `What are some best practices or common pitfalls when working with ${tech}?`,
+                    type: "technical",
+                    expectedPoints: ["Best practices", "Common issues", "Solutions"]
+                }
+            );
+        });
 
-    // Add general technical questions
-    questions.push(
-        {
-            question: "How do you approach performance optimization in web applications?",
-            type: "technical",
-            expectedPoints: ["Profiling methods", "Optimization techniques", "Measurement"]
-        },
-        {
-            question: "Explain your approach to writing testable and maintainable code.",
-            type: "technical",
-            expectedPoints: ["Code organization", "Testing strategy", "Documentation"]
-        },
-        {
-            question: "How do you stay current with new technologies and best practices?",
-            type: "technical",
-            expectedPoints: ["Learning methods", "Resources", "Application to work"]
-        }
-    );
+        questions.push(
+            {
+                question: "How do you approach debugging when encountering an error you haven't seen before?",
+                type: "technical",
+                expectedPoints: ["Systematic approach", "Research methods", "Problem-solving"]
+            },
+            {
+                question: "Explain your approach to writing clean and maintainable code.",
+                type: "technical",
+                expectedPoints: ["Code organization", "Naming conventions", "Documentation"]
+            }
+        );
+    }
 
     // 3. Coding/Algorithm Questions (3-4 questions) if developer
     if (isDeveloper) {
-        questions.push(
-            {
-                question: "Describe how you would debug a production issue that only occurs intermittently.",
-                type: "coding",
-                expectedPoints: ["Systematic approach", "Tools and logging", "Root cause analysis"]
-            },
-            {
-                question: "Explain your process for code review. What do you look for?",
-                type: "coding",
-                expectedPoints: ["Code quality factors", "Best practices", "Team collaboration"]
-            },
-            {
-                question: "How would you design a system to handle high traffic and ensure scalability?",
-                type: "coding",
-                expectedPoints: ["Architecture decisions", "Scaling strategies", "Trade-offs"]
-            }
-        );
+        if (isExperienced) {
+            questions.push(
+                {
+                    question: "Design a distributed caching system that can serve millions of requests per second. What considerations would you make?",
+                    type: "coding",
+                    expectedPoints: ["Cache strategy", "Consistency models", "Scalability approach"]
+                },
+                {
+                    question: "How would you debug and fix a memory leak in a production application without taking it offline?",
+                    type: "coding",
+                    expectedPoints: ["Diagnostic approach", "Tools and monitoring", "Safe deployment strategy"]
+                },
+                {
+                    question: "Describe your process for migrating a monolithic application to microservices. What challenges would you anticipate?",
+                    type: "coding",
+                    expectedPoints: ["Migration strategy", "Service boundaries", "Risk mitigation"]
+                }
+            );
+        } else {
+            questions.push(
+                {
+                    question: "Describe how you would debug a production issue that only occurs intermittently.",
+                    type: "coding",
+                    expectedPoints: ["Systematic approach", "Tools and logging", "Root cause analysis"]
+                },
+                {
+                    question: "Explain your process for code review. What do you look for?",
+                    type: "coding",
+                    expectedPoints: ["Code quality factors", "Best practices", "Team collaboration"]
+                },
+                {
+                    question: "How would you design a simple REST API for a todo application?",
+                    type: "coding",
+                    expectedPoints: ["API design", "HTTP methods", "Data modeling"]
+                }
+            );
+        }
     }
 
     // 4. Behavioral Questions (3-4 questions)
     questions.push(
         {
-            question: "Tell me about a time when you had to learn a new technology quickly for a project.",
+            question: isExperienced
+                ? "Tell me about a time when you had to mentor a junior developer or lead a technical initiative. What was your approach?"
+                : "Tell me about a time when you had to learn a new technology quickly for a project.",
             type: "behavioral",
-            expectedPoints: ["Learning approach", "Challenges faced", "Outcome"]
+            expectedPoints: isExperienced
+                ? ["Mentoring approach", "Communication strategy", "Outcome"]
+                : ["Learning approach", "Challenges faced", "Outcome"]
         },
         {
-            question: "Describe a situation where you disagreed with a teammate. How did you handle it?",
+            question: "Describe a situation where you disagreed with a teammate about a technical decision. How did you handle it?",
             type: "behavioral",
-            expectedPoints: ["Conflict description", "Resolution approach", "Result"]
+            expectedPoints: ["Situation description", "Resolution approach", "Result"]
         },
         {
             question: "Tell me about a project that failed or didn't meet expectations. What did you learn?",
@@ -400,9 +625,13 @@ function generateEnhancedFallbackQuestions(jdInfo: any): any[] {
             expectedPoints: ["Situation", "Response", "Lessons learned"]
         },
         {
-            question: "How do you prioritize tasks when working on multiple projects with tight deadlines?",
+            question: isExperienced
+                ? "How do you balance technical debt with feature delivery when managing multiple stakeholders?"
+                : "How do you prioritize tasks when working on multiple projects with tight deadlines?",
             type: "behavioral",
-            expectedPoints: ["Prioritization method", "Communication", "Time management"]
+            expectedPoints: isExperienced
+                ? ["Stakeholder management", "Technical vs business trade-offs", "Communication"]
+                : ["Prioritization method", "Communication", "Time management"]
         }
     );
 

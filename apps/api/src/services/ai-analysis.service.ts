@@ -11,7 +11,6 @@ let ai: any
  * @param apikey - Google GenAI API key
  */
 export const initAI = (apikey: string) => {
-  console.log({ apikey })
   if (!ai) {
     ai = new GoogleGenAI({ apiKey: apikey });
   }
@@ -32,7 +31,6 @@ export const parseResumeWithAI = async (
   jobTitle?: string,
   company?: string
 ): Promise<any> => {
-  console.log({ key: process.env.GENAI_API_KEY })
   try {
     const prompt = `You are an expert resume parser and ATS optimization specialist. Your task is to:
 
@@ -267,7 +265,6 @@ Return ONLY the JSON object, nothing else.`;
  */
 export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
 
-  console.log({ key: process.env.GENAI_API_KEY })
   const prompt = `
 You are an expert ATS (Applicant Tracking System) analyzer and career coach. Perform a STRICT and COMPREHENSIVE analysis of the following resume.
 

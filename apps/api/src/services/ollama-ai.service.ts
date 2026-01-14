@@ -52,27 +52,36 @@ const generateQA = async (prompt: string, numQuestions: number = 1): Promise<any
  */
 export const analyzeJDWithOllama = async (jobDescription: string): Promise<any> => {
     const prompt = `Analyze this Job Description and extract the following information in a structured format:
-- List of required skills
-- Technology stack mentioned
-- Experience level required
-- Core topics/domains
-- Job role/title
-- Whether this is a developer/coding role
+
+EXTRACT:
+1. Required technical skills (list all mentioned)
+2. Technology stack and tools
+3. Experience level required (look for: years of experience, seniority level like Junior/Mid/Senior/Lead)
+4. Core technical domains and topics
+5. Job role/title
+6. Whether this is a developer/coding role
+7. Required skill depth (basic knowledge vs expert level)
 
 Job Description:
 ${jobDescription.slice(0, 1500)}
 
-Provide a comprehensive analysis focusing on technical requirements and skills.`;
+Provide a comprehensive analysis with specific details about:
+- How many years of experience are expected
+- The seniority level (Entry/Junior/Mid/Senior/Lead)
+- Depth of technical knowledge expected (e.g., "must have deep expertise in React" vs "familiarity with React")`;
 
     const qaResult = await generateQA(prompt, 1);
     const analysisText = qaResult[0]?.answer || '';
 
     // Parse the AI response to extract structured data
-    // This is a simplified extraction - the AI will provide detailed analysis
+    const experienceYears = extractExperienceYears(analysisText, jobDescription);
+    const experienceLevel = extractExperienceLevel(analysisText);
+
     const analysis = {
         skills: extractList(analysisText, ['skills', 'required skills', 'must have']),
         techStack: extractList(analysisText, ['technology', 'tech stack', 'technologies', 'tools']),
-        experienceLevel: extractExperienceLevel(analysisText),
+        experienceLevel,
+        experienceYears,
         coreTopics: extractList(analysisText, ['topics', 'domains', 'areas', 'focus']),
         role: extractRole(jobDescription),
         isDeveloper: checkIfDeveloper(analysisText, jobDescription)
@@ -235,6 +244,29 @@ function extractList(text: string, keywords: string[]): string[] {
     }
 
     return items.length > 0 ? items : ['JavaScript', 'React', 'Node.js'];
+}
+
+function extractExperienceYears(text: string, jd: string): number {
+    const combined = text + ' ' + jd;
+
+    // Look for explicit years patterns
+    const patterns = [
+        /(\d+)\+?\s*years?\s+of\s+experience/i,
+        /(\d+)\+?\s*years?\s+experience/i,
+        /experience[:\s]+(\d+)\+?\s*years?/i,
+        /minimum\s+(\d+)\s+years?/i,
+        /at least\s+(\d+)\s+years?/i
+    ];
+
+    for (const pattern of patterns) {
+        const match = combined.match(pattern);
+        if (match) {
+            const years = parseInt(match[1]);
+            if (years >= 0 && years <= 20) return years;
+        }
+    }
+
+    return 3; // default to mid-level
 }
 
 function extractExperienceLevel(text: string): string {

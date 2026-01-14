@@ -166,8 +166,6 @@ const templates = [
 
 export async function seedTemplates() {
   try {
-    console.log('🌱 Seeding templates...');
-
     // Clear existing templates (optional)
     // await Template.deleteMany({});
 

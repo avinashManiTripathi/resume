@@ -132,7 +132,6 @@ function ResumeEditor() {
         if (storedData) {
           const parsedData = JSON.parse(storedData);
 
-          console.log('Loading resume data from sessionStorage:', parsedData);
 
           // Update resume state with parsed data
           setResume(parsedData);
@@ -720,7 +719,6 @@ function ResumeEditor() {
               selectedTemplateId={templateId || ''}
               onBack={() => setShowTemplates(false)}
               onSelectTemplate={(template) => {
-                console.log('Selected template:', template);
                 setTemplateId(template._id);
                 // Don't close template selector - user must click back button
               }}
