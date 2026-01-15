@@ -142,25 +142,18 @@ Output the JD in a well-structured, professional format.`
                         <div className="relative" style={{
                             zIndex: 9999
                         }}>
-                            <button
+                            <div
                                 onClick={() => setShowUserDropdown(!showUserDropdown)}
                                 onBlur={() => setTimeout(() => setShowUserDropdown(false), 200)}
-                                className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200 bg-white hover:shadow-md transition-all group"
-                            >
-                                <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
-                                    {user.picture ? (
-                                        <img src={user.picture} alt={user.name || 'User'} className="w-full h-full object-cover" />
-                                    ) : (
-                                        (user.name?.[0] || user.email?.[0] || 'U').toUpperCase()
-                                    )}
-                                </div>
-                                <span className="text-sm font-semibold text-slate-700 hidden lg:block">
-                                    {user.name || user.email?.split('@')[0] || 'User'}
-                                </span>
-                                <ChevronDown
-                                    className={`w-4 h-4 text-slate-400 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`}
-                                />
-                            </button>
+                                className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-tr from-indigo-500 to-purple-500 ring-2 ring-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+                                {user?.picture ? (
+                                    <img src={user.picture} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                    (user?.name?.[0] || 'G')
+                                )}
+                            </div>
+
+
 
                             {/* Dropdown Menu */}
                             {showUserDropdown && (
