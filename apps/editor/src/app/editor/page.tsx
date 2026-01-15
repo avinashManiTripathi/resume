@@ -13,11 +13,12 @@ import { downloadPdf } from "@repo/utils-client";
 import ShareModal from "../ShareModal";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck } from "lucide-react";
+import { CloudCheck, FileText } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
 import { ENV } from "../env";
+import { StepLoader } from '@repo/ui/step-loader';
 
 
 function ResumeEditor() {
@@ -58,6 +59,8 @@ function ResumeEditor() {
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
   const [fontFamily, setFontFamily] = useState('Inter');
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [saveDialog, setSaveDialog] = useState<{
     isOpen: boolean;
     title: string;
@@ -69,6 +72,22 @@ function ResumeEditor() {
     description: "",
     type: 'info'
   });
+
+  const loadingSteps = [
+    "Initializing Editor...",
+    "Loading Templates...",
+    "Preparing Workspace..."
+  ];
+
+  // Auto-progress loading steps
+  useEffect(() => {
+    if (isLoading && loadingStep < loadingSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setLoadingStep(prev => prev + 1);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, loadingStep, loadingSteps.length]);
 
   // Check subscription on mount - redirect if no active subscription
   useEffect(() => {
@@ -663,8 +682,38 @@ function ResumeEditor() {
     setShowShareModal(true);
   }, []);
 
+  // Hide loading when editor is fully initialized
+  useEffect(() => {
+    // Check if initial loading is complete
+    if (isLoading && !isPdfGenerating && resume && loadingStep >= loadingSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 500); // Small delay to ensure smooth transition
+      return () => clearTimeout(timer);
+    }
+  }, [isPdfGenerating, resume, loadingStep, loadingSteps.length, isLoading]);
+
   return (
     <div className="flex flex-col h-screen w-full bg-slate-50">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-4">
+                <FileText className="w-8 h-8 text-indigo-600 animate-pulse" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Initializing Editor</h2>
+              <p className="text-sm text-slate-500">Please wait while we prepare everything</p>
+            </div>
+            <StepLoader
+              steps={loadingSteps}
+              currentStep={loadingStep}
+              size="md"
+            />
+          </div>
+        </div>
+      )}
       {/* Header */}
       <ProfileHeader
         name={userName + "'s Resume"}

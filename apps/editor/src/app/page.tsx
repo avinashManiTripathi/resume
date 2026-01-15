@@ -32,9 +32,11 @@ import {
   Bell,
   Command,
   DockIcon,
-  CheckCheck
+  CheckCheck,
+  LayoutGrid
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import { StepLoader } from '@repo/ui/step-loader';
 import { getSubscription } from "@repo/utils-client";
 import Image from "next/image";
 import { usePersistence, SavedDocument } from "./hooks/usePersistence";
@@ -52,6 +54,7 @@ export default function DashboardPage() {
   const [resumes, setResumes] = useState<SavedDocument[]>([]);
   const [coverLetters, setCoverLetters] = useState<SavedDocument[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState(0);
   const [activeGoal, setActiveGoal] = useState("Resume Building");
 
   // Deletion Dialog State
@@ -67,14 +70,47 @@ export default function DashboardPage() {
     title: ""
   });
 
+  const loadingSteps = [
+    "Loading your workspace...",
+    "Fetching documents...",
+    "Setting up dashboard..."
+  ];
+
+  // Auto-progress loading steps
+  useEffect(() => {
+    if (loading && loadingStep < loadingSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setLoadingStep(prev => prev + 1);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, loadingStep, loadingSteps.length]);
+
   const fetchDocs = useCallback(async () => {
     setLoading(true);
     const { backendDocs, localDocs } = await getDocuments();
     const allDocs = [...backendDocs, ...localDocs];
     setResumes(allDocs.filter(d => d.type === 'resume'));
     setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
+
+    // Wait for all steps to complete before hiding loading
+    const waitForSteps = () => {
+      return new Promise<void>((resolve) => {
+        const checkSteps = () => {
+          if (loadingStep >= loadingSteps.length - 1) {
+            // Add small delay after last step for smooth UX
+            setTimeout(() => resolve(), 500);
+          } else {
+            setTimeout(checkSteps, 100);
+          }
+        };
+        checkSteps();
+      });
+    };
+
+    await waitForSteps();
     setLoading(false);
-  }, [getDocuments]);
+  }, [getDocuments, loadingStep, loadingSteps.length]);
 
   useEffect(() => {
     fetchDocs();
@@ -140,6 +176,25 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans selection:bg-indigo-100 selection:text-indigo-900">
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-4">
+                <LayoutGrid className="w-8 h-8 text-indigo-600 animate-pulse" />
+              </div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Loading Dashboard</h2>
+              <p className="text-sm text-slate-500">Please wait while we prepare your workspace</p>
+            </div>
+            <StepLoader
+              steps={loadingSteps}
+              currentStep={loadingStep}
+              size="md"
+            />
+          </div>
+        </div>
+      )}
       {/* Sidebar - Refined Minimalist */}
       <aside className="w-72 h-full border-r border-slate-200/60 flex flex-col py-8 px-5 flex-shrink-0 bg-white/50 backdrop-blur-3xl">
         <div className="mb-10 px-3">

@@ -269,11 +269,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             />
 
 
-            <div className="container mx-auto px-4 max-w-6xl mt-12 md:mt-20">
-                <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-16">
-                    {/* Sticky Sidebar */}
-                    <aside className="hidden lg:block">
-                        <div className="sticky top-24 space-y-10">
+            <div className="container mx-auto px-4 max-w-7xl mt-12 md:mt-20">
+                <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr_250px] gap-4">
+                    {/* Left Sidebar - Table of Contents */}
+                    <aside className="hidden lg:block sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+                        <div className="space-y-10 pb-4">
                             <div>
                                 <h2 className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">
                                     Table of Contents
@@ -378,6 +378,106 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                             </div>
                         </div>
                     </div>
+
+                    {/* Right Sidebar - Similar Articles */}
+                    <aside className="hidden lg:block sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto">
+                        <div className="space-y-6 pb-4">
+                            <div>
+                                <h2 className="text-xs font-bold text-slate-600 uppercase tracking-widest mb-6 border-b border-slate-100 pb-2">
+                                    Similar Articles
+                                </h2>
+                                <div className="space-y-3">
+                                    {/* Article 1 */}
+                                    <a
+                                        href={slug.includes('react') && slug.includes('senior') ? '/interviews/react-junior-interview-questions' :
+                                            slug.includes('react') && slug.includes('junior') ? '/interviews/react-senior-interview-questions' :
+                                                slug.includes('react') ? '/interviews/react-junior-interview-questions' :
+                                                    slug.includes('angular') && slug.includes('senior') ? '/interviews/angular-junior-interview-questions' :
+                                                        slug.includes('angular') && slug.includes('junior') ? '/interviews/angular-senior-interview-questions' :
+                                                            slug.includes('angular') ? '/interviews/angular-junior-interview-questions' :
+                                                                slug.includes('node') && slug.includes('senior') ? '/interviews/node-junior-interview-questions' :
+                                                                    slug.includes('node') && slug.includes('junior') ? '/interviews/node-senior-interview-questions' :
+                                                                        slug.includes('node') ? '/interviews/node-junior-interview-questions' :
+                                                                            slug.includes('python') && slug.includes('senior') ? '/interviews/python-junior-interview-questions' :
+                                                                                slug.includes('python') && slug.includes('junior') ? '/interviews/python-senior-interview-questions' :
+                                                                                    '/interviews/react-interview-questions-for-freshers'}
+                                        className="block group py-2"
+                                    >
+                                        <h3 className="font-semibold text-sm text-slate-700 group-hover:text-blue-600 transition-colors line-clamp-2 flex items-start gap-2">
+                                            <span className="text-blue-600 mt-0.5">→</span>
+                                            {slug.includes('react') && slug.includes('senior') ? 'React Junior Interview Questions' :
+                                                slug.includes('react') && slug.includes('junior') ? 'React Senior Interview Questions' :
+                                                    slug.includes('react') ? 'React Junior Interview Questions' :
+                                                        slug.includes('angular') && slug.includes('senior') ? 'Angular Junior Interview Questions' :
+                                                            slug.includes('angular') && slug.includes('junior') ? 'Angular Senior Interview Questions' :
+                                                                slug.includes('angular') ? 'Angular Junior Interview Questions' :
+                                                                    slug.includes('node') && slug.includes('senior') ? 'Node.js Junior Interview Questions' :
+                                                                        slug.includes('node') && slug.includes('junior') ? 'Node.js Senior Interview Questions' :
+                                                                            slug.includes('node') ? 'Node.js Junior Interview Questions' :
+                                                                                slug.includes('python') && slug.includes('senior') ? 'Python Junior Interview Questions' :
+                                                                                    slug.includes('python') && slug.includes('junior') ? 'Python Senior Interview Questions' :
+                                                                                        'React Interview Questions for Freshers'}
+                                        </h3>
+                                    </a>
+
+                                    {/* Article 2 */}
+                                    <a
+                                        href={slug.includes('react') ? '/interviews/react-hooks-interview-questions-for-freshers' :
+                                            slug.includes('angular') ? '/interviews/angular-interview-question-for-fresher' :
+                                                slug.includes('node') ? '/interviews/node-interview-questions-for-freshers' :
+                                                    slug.includes('python') ? '/interviews/python-interview-questions-for-freshers' :
+                                                        '/interviews/technical-interview-questions'}
+                                        className="block group py-2"
+                                    >
+                                        <h3 className="font-semibold text-sm text-slate-700 group-hover:text-blue-600 transition-colors line-clamp-2 flex items-start gap-2">
+                                            <span className="text-blue-600 mt-0.5">→</span>
+                                            {slug.includes('react') ? 'React Hooks Interview Questions' :
+                                                slug.includes('angular') ? 'Angular Fresher Interview Questions' :
+                                                    slug.includes('node') ? 'Node.js Fresher Interview Questions' :
+                                                        slug.includes('python') ? 'Python Fresher Interview Questions' :
+                                                            'Technical Interview Questions'}
+                                        </h3>
+                                    </a>
+
+                                    {/* Article 3 */}
+                                    <a
+                                        href="/interviews/common-interview-questions"
+                                        className="block group py-2"
+                                    >
+                                        <h3 className="font-semibold text-sm text-slate-700 group-hover:text-blue-600 transition-colors line-clamp-2 flex items-start gap-2">
+                                            <span className="text-blue-600 mt-0.5">→</span>
+                                            Common Interview Questions
+                                        </h3>
+                                    </a>
+
+                                    {/* Article 4 - Mock Interview Practice */}
+                                    <a
+                                        href="/interviews/mock-interview-practice"
+                                        className="block group py-2"
+                                    >
+                                        <h3 className="font-semibold text-sm text-slate-700 group-hover:text-blue-600 transition-colors line-clamp-2 flex items-start gap-2">
+                                            <span className="text-blue-600 mt-0.5">→</span>
+                                            Mock Interview Practice
+                                        </h3>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* CTA Box */}
+                            <div className="mt-8 p-6 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl text-white">
+                                <h3 className="font-bold text-lg mb-3">Ready to Build Your Resume?</h3>
+                                <p className="text-sm text-blue-100 mb-4">
+                                    Create a professional resume that stands out to recruiters.
+                                </p>
+                                <a
+                                    href={ENV.EDITOR_URL}
+                                    className="block w-full py-3 bg-white text-blue-600 font-bold text-sm rounded-lg hover:bg-blue-50 transition-colors text-center"
+                                >
+                                    Start for Free →
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </article>

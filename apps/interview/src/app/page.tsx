@@ -7,16 +7,34 @@ import Image from 'next/image';
 import InterviewTypeDropdown from '../components/InterviewTypeDropdown';
 import { INTERVIEW_TYPES, DEFAULT_INTERVIEW_TYPE, InterviewType } from '../config/interview-types.constants';
 import { useAuth } from '../hooks/useAuth';
+import { StepLoader } from '@repo/ui/step-loader';
 
 export default function InterviewLandingPage() {
     const [jd, setJd] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingStep, setLoadingStep] = useState(0);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [selectedInterviewType, setSelectedInterviewType] = useState<InterviewType>(DEFAULT_INTERVIEW_TYPE);
     const [showUserDropdown, setShowUserDropdown] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
     const { user, isLoggedIn, logout } = useAuth();
+
+    const loadingSteps = [
+        "Initializing AI Engine...",
+        "Loading your profile...",
+        "Preparing interview session..."
+    ];
+
+    // Auto-progress loading steps
+    useEffect(() => {
+        if (isLoading && loadingStep < loadingSteps.length - 1) {
+            const timer = setTimeout(() => {
+                setLoadingStep(prev => prev + 1);
+            }, 800);
+            return () => clearTimeout(timer);
+        }
+    }, [isLoading, loadingStep, loadingSteps.length]);
 
     const startInterview = async () => {
         // Validate based on interview type
@@ -51,6 +69,7 @@ Output the JD in a well-structured, professional format.`
         }
 
         setIsLoading(true);
+        setLoadingStep(0);
         try {
             const response = await fetch('https://api.profresume.com/api/interview/start', {
                 method: 'POST',
@@ -76,12 +95,14 @@ Output the JD in a well-structured, professional format.`
                 } else {
                     alert(result.message || 'Failed to start interview. Please try again.');
                     setIsLoading(false);
+                    setLoadingStep(0);
                 }
             }
         } catch (err) {
             console.error('Start Interview Error:', err);
             alert('Failed to connect to the server. Please ensure the backend is running.');
             setIsLoading(false);
+            setLoadingStep(0);
         }
     };
 
@@ -107,6 +128,25 @@ Output the JD in a well-structured, professional format.`
 
     return (
         <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-500/20">
+            {/* Loading Overlay */}
+            {isLoading && (
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+                    <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
+                        <div className="text-center mb-8">
+                            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
+                                <Binary className="w-8 h-8 text-blue-600 animate-pulse" />
+                            </div>
+                            <h2 className="text-2xl font-bold text-slate-900 mb-2">Starting Interview</h2>
+                            <p className="text-sm text-slate-500">Please wait while we prepare everything</p>
+                        </div>
+                        <StepLoader
+                            steps={loadingSteps}
+                            currentStep={loadingStep}
+                            size="md"
+                        />
+                    </div>
+                </div>
+            )}
             {/* Background Grid - Landing Style */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden h-full w-full">
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30" />
