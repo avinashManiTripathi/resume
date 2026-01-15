@@ -26,7 +26,7 @@ export function middleware(request: NextRequest) {
     if (!token) {
         const authUrl = new URL('https://auth.profresume.com');
         // Add current URL as redirect parameter
-        authUrl.searchParams.set('redirect', request.url);
+        authUrl.searchParams.set('redirect', "https://interview.profresume.com");
         return NextResponse.redirect(authUrl);
     }
 

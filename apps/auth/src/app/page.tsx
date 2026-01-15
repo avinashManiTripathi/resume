@@ -7,9 +7,9 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/signin");
+    const currentparams = encodeURIComponent(window.location.search);
+    router.push(`/signin?${currentparams}`);
   }, [router]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
       <div className="text-center">

@@ -9,8 +9,9 @@ export const configurePassport = () => {
                 clientID: process.env.GOOGLE_CLIENT_ID || '',
                 clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
                 callbackURL: process.env.GOOGLE_CALLBACK_URL || 'https://api.profresume.com/api/auth/google/callback',
+                passReqToCallback: true, // Enable request passthrough to access state
             },
-            async (accessToken, refreshToken, profile, done) => {
+            async (req: any, accessToken: string, refreshToken: string, profile: any, done: any) => {
                 try {
                     const email = profile.emails?.[0]?.value;
                     if (!email) {
@@ -38,12 +39,16 @@ export const configurePassport = () => {
                     }
 
                     // Return user object compatible with JWT
+                    // Preserve state parameter from the request
+                    const state = req.query?.state || req.session?.state;
+
                     return done(null, {
                         id: user._id.toString(),
                         email: user.email,
                         name: user.name,
                         picture: user.picture,
                         googleId: user.googleId,
+                        state: state, // Pass state through
                     });
                 } catch (error) {
                     console.error('❌ Passport authentication error:', error);

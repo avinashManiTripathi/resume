@@ -11,7 +11,9 @@ export default function SignInContent() {
 
     const handleGoogleSignIn = () => {
         setIsLoading(true);
-        window.location.href = `https://api.profresume.com/api/auth/google`;
+        // Get the state parameter correctly - remove the leading ? if present
+        const stateParam = searchParams.toString();
+        window.location.href = `https://api.profresume.com/api/auth/google${stateParam ? `?state=${encodeURIComponent(stateParam)}` : ''}`;
     };
 
     useEffect(() => {

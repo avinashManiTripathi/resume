@@ -2,18 +2,21 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle } from 'lucide-react';
+import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import InterviewTypeDropdown from '../components/InterviewTypeDropdown';
 import { INTERVIEW_TYPES, DEFAULT_INTERVIEW_TYPE, InterviewType } from '../config/interview-types.constants';
+import { useAuth } from '../hooks/useAuth';
 
 export default function InterviewLandingPage() {
     const [jd, setJd] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [selectedInterviewType, setSelectedInterviewType] = useState<InterviewType>(DEFAULT_INTERVIEW_TYPE);
+    const [showUserDropdown, setShowUserDropdown] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
+    const { user, isLoggedIn, logout } = useAuth();
 
     const startInterview = async () => {
         // Validate based on interview type
@@ -111,20 +114,95 @@ Output the JD in a well-structured, professional format.`
                 <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/5 blur-[130px] rounded-full" />
             </div>
 
-            <nav className="relative max-w-7xl mx-auto px-6 py-6 flex justify-between items-center z-10">
-                <Image
-                    src="/logo.png"
-                    alt="ProfResume Logo"
-                    width={158}   // w-15 → 60px
-                    height={36}  // h-9 → 36px
-                    className="transition-transform group-hover:scale-105"
-                    priority
-                />
+            <nav className="relative max-w-7xl mx-auto px-6 py-6 flex justify-between items-center z-[100]">
+                <div className="flex items-center gap-8">
+                    <Image
+                        src="/logo.png"
+                        alt="ProfResume Logo"
+                        width={158}   // w-15 → 60px
+                        height={36}  // h-9 → 36px
+                        className="transition-transform group-hover:scale-105"
+                        priority
+                    />
+                    {isLoggedIn && user && (
+                        <div className="hidden md:flex items-center gap-2 text-slate-600">
+                            <span className="text-sm font-semibold">Welcome back,</span>
+                            <span className="text-sm font-bold text-blue-600">{user.name || user.email?.split('@')[0] || 'User'}</span>
+                        </div>
+                    )}
+                </div>
                 <div className="hidden md:flex items-center gap-6">
                     <div className="px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
                         AI Neural Engine v2.0
                     </div>
+
+                    {/* User Avatar with Dropdown */}
+                    {isLoggedIn && user && (
+                        <div className="relative" style={{
+                            zIndex: 9999
+                        }}>
+                            <button
+                                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                                onBlur={() => setTimeout(() => setShowUserDropdown(false), 200)}
+                                className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200 bg-white hover:shadow-md transition-all group"
+                            >
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
+                                    {user.picture ? (
+                                        <img src={user.picture} alt={user.name || 'User'} className="w-full h-full object-cover" />
+                                    ) : (
+                                        (user.name?.[0] || user.email?.[0] || 'U').toUpperCase()
+                                    )}
+                                </div>
+                                <span className="text-sm font-semibold text-slate-700 hidden lg:block">
+                                    {user.name || user.email?.split('@')[0] || 'User'}
+                                </span>
+                                <ChevronDown
+                                    className={`w-4 h-4 text-slate-400 transition-transform ${showUserDropdown ? 'rotate-180' : ''}`}
+                                />
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {showUserDropdown && (
+                                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-2 " style={{ zIndex: 9999 }}>
+                                    <div className="px-4 py-3 border-b border-slate-100">
+                                        <p className="text-sm font-bold text-slate-900">{user.name || 'User'}</p>
+                                        <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                                    </div>
+
+                                    <div className="py-1">
+                                        <a
+                                            href="https://edit.profresume.com"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                                        >
+                                            <User className="w-4 h-4" />
+                                            <span>Profile</span>
+                                        </a>
+                                        <a
+                                            href="https://edit.profresume.com"
+                                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                                        >
+                                            <Settings className="w-4 h-4" />
+                                            <span>Settings</span>
+                                        </a>
+                                    </div>
+
+                                    <div className="border-t border-slate-100 py-1">
+                                        <button
+                                            onClick={() => {
+                                                setShowUserDropdown(false);
+                                                logout();
+                                            }}
+                                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-rose-600 hover:bg-rose-50 transition-colors w-full"
+                                        >
+                                            <LogOut className="w-4 h-4" />
+                                            <span>Logout</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </nav>
 

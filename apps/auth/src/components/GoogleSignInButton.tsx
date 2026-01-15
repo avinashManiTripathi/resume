@@ -11,7 +11,7 @@ export default function GoogleSignInButton() {
             setIsLoading(true);
 
             // Call backend to get Google OAuth URL
-            const response = await fetch(`${API_URL}/api/auth/google/url`);
+            const response = await fetch(`${API_URL}/api/auth/google/url?state=${JSON.stringify(window.location.search)}`);
             const data = await response.json();
 
             if (data.url) {
