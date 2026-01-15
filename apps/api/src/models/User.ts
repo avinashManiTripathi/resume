@@ -5,6 +5,7 @@ export interface IUser extends Document {
     email: string;
     name: string;
     picture?: string;
+    role: 'user' | 'admin';
     subscription?: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -32,6 +33,11 @@ const UserSchema: Schema = new Schema(
         },
         picture: {
             type: String,
+        },
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user',
         },
         subscription: {
             type: Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     PenSquare,
     Save,
@@ -16,7 +16,7 @@ import { StatCard } from "@/components/StatCard";
 import RichTextEditor from "@/components/RichTextEditor";
 
 interface BlogPost {
-    id: string;
+    _id: string;
     title: string;
     slug: string;
     category: string;
@@ -25,48 +25,53 @@ interface BlogPost {
     author: string;
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
+
 export default function BlogPage() {
     const [isCreating, setIsCreating] = useState(false);
+    const [editingBlog, setEditingBlog] = useState<string | null>(null);
+    const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [savingLoading, setSavingLoading] = useState(false);
+    const [selectedRelatedArticles, setSelectedRelatedArticles] = useState<string[]>([]);
+
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
+        description: "",
+        heroBadge: "",
         category: "",
         tags: "",
         content: "",
         featuredImage: "",
+        relatedArticles: "",
         publishDate: new Date().toISOString().split("T")[0],
     });
 
-    // Mock data for existing blogs
-    const blogPosts: BlogPost[] = [
-        {
-            id: "1",
-            title: "10 Tips for Writing the Perfect Resume",
-            slug: "10-tips-perfect-resume",
-            category: "Resume Tips",
-            status: "published",
-            publishDate: "2024-01-10",
-            author: "Admin",
-        },
-        {
-            id: "2",
-            title: "How to Ace Your Next Interview",
-            slug: "ace-your-interview",
-            category: "Interview Prep",
-            status: "published",
-            publishDate: "2024-01-08",
-            author: "Admin",
-        },
-        {
-            id: "3",
-            title: "Understanding ATS Systems",
-            slug: "understanding-ats-systems",
-            category: "Career Advice",
-            status: "draft",
-            publishDate: "2024-01-15",
-            author: "Admin",
-        },
-    ];
+    // Fetch blogs from API
+    useEffect(() => {
+        fetchBlogs();
+    }, []);
+
+    const fetchBlogs = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_BASE}/api/blog`, {
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setBlogPosts(data);
+            } else {
+                console.error('Failed to fetch blogs');
+            }
+        } catch (error) {
+            console.error('Error fetching blogs:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -88,17 +93,104 @@ export default function BlogPage() {
         setFormData((prev) => ({ ...prev, content }));
     };
 
-    const handleSaveDraft = () => {
-        console.log("Saving draft:", formData);
-        alert("Blog post saved as draft!");
-        setIsCreating(false);
+    const saveBlog = async (status: 'draft' | 'published') => {
+        setSavingLoading(true);
+        try {
+            const url = editingBlog
+                ? `${API_BASE}/api/blog/${editingBlog}`
+                : `${API_BASE}/api/blog`;
+            const method = editingBlog ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    ...formData,
+                    tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+                    relatedArticles: selectedRelatedArticles,
+                    status,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert(`Blog post ${status === 'draft' ? 'saved as draft' : 'published'} successfully!`);
+                setIsCreating(false);
+                setEditingBlog(null);
+                // Reset form
+                setFormData({
+                    title: "",
+                    slug: "",
+                    description: "",
+                    heroBadge: "",
+                    category: "",
+                    tags: "",
+                    content: "",
+                    featuredImage: "",
+                    relatedArticles: "",
+                    publishDate: new Date().toISOString().split("T")[0],
+                });
+                // Refresh blog list
+                fetchBlogs();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error || 'Failed to save blog post'}`);
+            }
+        } catch (error) {
+            console.error('Error saving blog:', error);
+            alert('Failed to save blog post. Please try again.');
+        } finally {
+            setSavingLoading(false);
+        }
     };
 
-    const handlePublish = () => {
-        console.log("Publishing:", formData);
-        alert("Blog post published successfully!");
-        setIsCreating(false);
+    const handleEdit = (blog: BlogPost) => {
+        setEditingBlog(blog._id);
+        setFormData({
+            title: blog.title,
+            slug: blog.slug,
+            description: (blog as any).description || '',
+            heroBadge: (blog as any).heroBadge || '',
+            category: blog.category,
+            tags: (blog as any).tags?.join(', ') || '',
+            content: (blog as any).content || '',
+            featuredImage: (blog as any).featuredImage || '',
+            relatedArticles: '',
+            publishDate: blog.publishDate,
+        });
+        setSelectedRelatedArticles((blog as any).relatedArticles?.map((item: any) => typeof item === 'string' ? item : item._id || item) || []);
+        setIsCreating(true);
     };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this blog post?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/api/blog/${id}`, {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                alert('Blog post deleted successfully!');
+                fetchBlogs();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error || 'Failed to delete blog post'}`);
+            }
+        } catch (error) {
+            console.error('Error deleting blog:', error);
+            alert('Failed to delete blog post. Please try again.');
+        }
+    };
+
+    const handleSaveDraft = () => saveBlog('draft');
+    const handlePublish = () => saveBlog('published');
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
@@ -204,6 +296,43 @@ export default function BlogPage() {
                             />
                         </div>
 
+                        {/* Description */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Description *
+                            </label>
+                            <textarea
+                                name="description"
+                                value={formData.description}
+                                onChange={handleInputChange}
+                                placeholder="Brief description of the blog post (shown in previews)"
+                                rows={3}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                                required
+                            />
+                            <p className="text-sm text-gray-500 mt-1">
+                                A short summary that will appear in blog listings and search results
+                            </p>
+                        </div>
+
+                        {/* Hero Badge */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Hero Badge
+                            </label>
+                            <input
+                                type="text"
+                                name="heroBadge"
+                                value={formData.heroBadge}
+                                onChange={handleInputChange}
+                                placeholder="e.g., Featured, New, Trending"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
+                            <p className="text-sm text-gray-500 mt-1">
+                                Optional badge to display on the blog post (e.g., "Featured", "New")
+                            </p>
+                        </div>
+
                         {/* Category and Tags */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -238,6 +367,31 @@ export default function BlogPage() {
                                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                 />
                             </div>
+                        </div>
+
+                        {/* Related Articles */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                <Tag className="w-4 h-4 inline mr-2" />
+                                Related Articles
+                            </label>
+                            <select
+                                multiple
+                                value={selectedRelatedArticles}
+                                onChange={(e) => {
+                                    const selected = Array.from(e.target.selectedOptions, option => option.value);
+                                    setSelectedRelatedArticles(selected);
+                                }}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                size={Math.min(blogPosts.filter(p => p._id !== editingBlog).length, 6)}
+                            >
+                                {blogPosts.filter(post => post._id !== editingBlog).map(post => (
+                                    <option key={post._id} value={post._id}>{post.title}</option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-gray-500 mt-1">
+                                Hold Ctrl/Cmd to select multiple. Selected: {selectedRelatedArticles.length}
+                            </p>
                         </div>
 
                         {/* Featured Image URL */}
@@ -336,7 +490,7 @@ export default function BlogPage() {
                             <tbody>
                                 {blogPosts.map((post) => (
                                     <tr
-                                        key={post.id}
+                                        key={post._id}
                                         className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                                     >
                                         <td className="py-4 px-4">
@@ -368,10 +522,14 @@ export default function BlogPage() {
                                                 <button className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
                                                     <Eye className="w-4 h-4" />
                                                 </button>
-                                                <button className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
+                                                <button
+                                                    onClick={() => handleEdit(post)}
+                                                    className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors">
                                                     <Edit className="w-4 h-4" />
                                                 </button>
-                                                <button className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                                                <button
+                                                    onClick={() => handleDelete(post._id)}
+                                                    className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
                                             </div>

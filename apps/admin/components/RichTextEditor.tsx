@@ -15,6 +15,7 @@ import {
     Quote,
     Eye,
     EyeOff,
+    BoxSelect,
 } from "lucide-react";
 
 interface RichTextEditorProps {
@@ -73,21 +74,136 @@ export default function RichTextEditor({
         }
     };
 
+    const wrapInSection = () => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) {
+            alert("Please select content to wrap in a section");
+            return;
+        }
+
+        const sectionId = prompt("Enter section ID (e.g., introduction, features):");
+        if (!sectionId) {
+            return;
+        }
+
+        // Validate ID (alphanumeric and hyphens only)
+        const validId = sectionId.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+
+        const range = selection.getRangeAt(0);
+        const selectedContent = range.extractContents();
+
+        // Create section element
+        const section = document.createElement('section');
+        section.id = validId;
+        section.className = 'blog-section';
+        section.appendChild(selectedContent);
+
+        // Insert the section
+        range.insertNode(section);
+
+        // Clear selection
+        selection.removeAllRanges();
+
+        updateContent();
+        editorRef.current?.focus();
+    };
+
+    const convertToHeading = (tag: string) => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+
+        const range = selection.getRangeAt(0);
+
+        // Get the parent element
+        let element = range.commonAncestorContainer as HTMLElement;
+        if (element.nodeType === Node.TEXT_NODE) {
+            element = element.parentElement as HTMLElement;
+        }
+
+        // Find the block-level element to convert
+        while (element && element !== editorRef.current &&
+            !['P', 'DIV', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(element.tagName)) {
+            element = element.parentElement as HTMLElement;
+        }
+
+        if (element && element !== editorRef.current) {
+            // Create new heading element
+            const newHeading = document.createElement(tag);
+            newHeading.innerHTML = element.innerHTML;
+
+            // Copy any attributes except style
+            Array.from(element.attributes).forEach(attr => {
+                if (attr.name !== 'style') {
+                    newHeading.setAttribute(attr.name, attr.value);
+                }
+            });
+
+            // Replace the element
+            element.replaceWith(newHeading);
+
+            // Restore selection
+            const newRange = document.createRange();
+            newRange.selectNodeContents(newHeading);
+            selection.removeAllRanges();
+            selection.addRange(newRange);
+
+            updateContent();
+        } else {
+            // Fallback to standard formatBlock
+            executeCommand('formatBlock', `<${tag}>`);
+        }
+    };
+
     const handlePaste = (e: React.ClipboardEvent) => {
         e.preventDefault();
 
-        // Try to get HTML first (preserves formatting)
         const html = e.clipboardData.getData("text/html");
+        const text = e.clipboardData.getData("text/plain");
+
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+
+        let fragment = document.createDocumentFragment();
 
         if (html) {
-            // Insert HTML with formatting preserved
-            document.execCommand("insertHTML", false, html);
+            // Normal websites
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+
+            doc.querySelectorAll("meta, script, style").forEach(el => el.remove());
+
+            Array.from(doc.body.childNodes).forEach(node => {
+                fragment.appendChild(node);
+            });
         } else {
-            // Fallback to plain text if no HTML available
-            const text = e.clipboardData.getData("text/plain");
-            document.execCommand("insertText", false, text);
+            // ChatGPT fallback formatting
+            const formattedHtml = text
+                .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+                .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+                .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+                .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+                .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+                .replace(/```([\s\S]*?)```/gim, "<pre><code>$1</code></pre>")
+                .replace(/`(.*?)`/gim, "<code>$1</code>")
+                .replace(/\n{2,}/g, "</p><p>")
+                .replace(/\n/g, "<br/>");
+
+            const container = document.createElement("div");
+            container.innerHTML = `<p>${formattedHtml}</p>`;
+            Array.from(container.childNodes).forEach(n => fragment.appendChild(n));
         }
+
+        range.insertNode(fragment);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        updateContent();
     };
+
 
     const toolbarButtons = [
         {
@@ -110,15 +226,15 @@ export default function RichTextEditor({
         },
         {
             icon: Heading1,
-            command: "formatBlock",
-            value: "<h2>",
-            title: "Heading 1",
+            command: "heading",
+            value: "h1",
+            title: "Heading H1 (Large)",
         },
         {
             icon: Heading2,
-            command: "formatBlock",
-            value: "<h3>",
-            title: "Heading 2",
+            command: "heading",
+            value: "h2",
+            title: "Heading H2 (Medium)",
         },
         { icon: List, command: "insertUnorderedList", title: "Bullet List" },
         { icon: ListOrdered, command: "insertOrderedList", title: "Numbered List" },
@@ -136,7 +252,13 @@ export default function RichTextEditor({
                         <button
                             key={idx}
                             type="button"
-                            onClick={() => executeCommand(btn.command, btn.value)}
+                            onClick={() => {
+                                if (btn.command === 'heading' && btn.value) {
+                                    convertToHeading(btn.value);
+                                } else {
+                                    executeCommand(btn.command, btn.value);
+                                }
+                            }}
                             className={`p-2 rounded-lg transition-colors ${btn.isActive
                                 ? "bg-blue-100 text-blue-600"
                                 : "text-gray-600 hover:bg-gray-200"
@@ -166,6 +288,17 @@ export default function RichTextEditor({
                     title="Insert Image"
                 >
                     <ImageIcon className="w-4 h-4" />
+                </button>
+
+                <div className="w-[1px] h-6 bg-gray-300 mx-1" />
+
+                <button
+                    type="button"
+                    onClick={wrapInSection}
+                    className="p-2 rounded-lg text-purple-600 hover:bg-purple-100 transition-colors"
+                    title="Wrap in Section (for TOC)"
+                >
+                    <BoxSelect className="w-4 h-4" />
                 </button>
 
                 <div className="ml-auto flex items-center gap-2">
@@ -329,6 +462,67 @@ export default function RichTextEditor({
         /* Div spacing */
         [contenteditable] div {
           margin: 0.5rem 0;
+        }
+
+        /* Section styles */
+        [contenteditable] section {
+          margin: 2rem 0;
+          padding: 1.5rem;
+          border-left: 3px solid #8b5cf6;
+          background: #faf5ff;
+          border-radius: 0.5rem;
+          position: relative;
+        }
+
+        [contenteditable] section::before {
+          content: "Section: " attr(id);
+          display: block;
+          font-size: 0.75rem;
+          color: #8b5cf6;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 0.75rem;
+        }
+
+        /* Ensure headings inside sections maintain their styles */
+        [contenteditable] section h1,
+        [contenteditable] section h2,
+        [contenteditable] section h3,
+        [contenteditable] section h4 {
+          all: revert;
+          font-size: inherit;
+          font-weight: inherit;
+          margin: inherit;
+          color: inherit;
+        }
+
+        [contenteditable] section h1 {
+          font-size: 2.25rem;
+          font-weight: 700;
+          margin: 1.5rem 0 1rem;
+          color: #111827;
+        }
+
+        [contenteditable] section h2 {
+          font-size: 1.875rem;
+          font-weight: 700;
+          margin: 1.5rem 0 1rem;
+          color: #1f2937;
+        }
+
+        [contenteditable] section h3 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin: 1.25rem 0 0.75rem;
+          color: #374151;
+        }
+
+        [contenteditable] section h4 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 1rem 0 0.5rem;
+          color: #374151;
         }
 
         [contenteditable]:focus {

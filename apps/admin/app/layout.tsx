@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AdminSidebar } from "@/components/AdminSidebar";
+import { AdminAuthProvider } from "@/components/AdminAuthProvider";
 import { primaryFont } from "@repo/fonts";
 
 export const metadata: Metadata = {
@@ -30,14 +31,16 @@ export default function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className={`${primaryFont.variable} antialiased bg-gray-50 min-h-screen`}>
-        <div className="flex min-h-screen">
-          <AdminSidebar />
-          <main className="flex-1 w-full md:ml-64 overflow-x-hidden">
-            <div className="container mx-auto p-4 md:p-6 lg:p-8">
-              {children}
-            </div>
-          </main>
-        </div>
+        <AdminAuthProvider>
+          <div className="flex min-h-screen">
+            <AdminSidebar />
+            <main className="flex-1 w-full md:ml-64 overflow-x-hidden">
+              <div className="container mx-auto p-4 md:p-6 lg:p-8">
+                {children}
+              </div>
+            </main>
+          </div>
+        </AdminAuthProvider>
       </body>
     </html>
   );

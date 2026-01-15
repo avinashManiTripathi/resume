@@ -46,7 +46,7 @@ router.get('/google', (req: Request, res: Response, next) => {
 // Google OAuth callback
 router.get('/google/callback',
     passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/signin?error=auth_failed` }),
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
         try {
             const user = req.user as UserType & { state?: string };
 
@@ -59,16 +59,34 @@ router.get('/google/callback',
                 return res.redirect(`${process.env.FRONTEND_URL}/signin?error=no_user`);
             }
 
-            // Generate JWT token
-            const token = generateToken(user.id, user.email);
+            // CRITICAL: Fetch full user from MongoDB to get role field
+            const dbUser = await User.findById(user.id);
+
+            if (!dbUser) {
+                return res.redirect(`${process.env.FRONTEND_URL}/signin?error=user_not_found`);
+            }
+
+            console.log('DB User:', { id: dbUser._id, email: dbUser.email, role: dbUser.role });
+
+            // Generate JWT token with role from database
+            const token = generateToken(dbUser._id.toString(), dbUser.email, dbUser.role);
 
             // Set token in HTTP-only cookie
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'lax',
+                sameSite: 'lax',  // 'lax' works for localhost and production
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
+                // In development, don't set domain (allows localhost)
+                // In production, set to .profresume.com for cross-subdomain cookies
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
+            });
+
+            console.log('Token cookie set:', {
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : 'localhost',
+                httpOnly: true,
+                sameSite: 'lax',
+                secure: process.env.NODE_ENV === 'production'
             });
 
             // Parse redirect URL from state parameter
@@ -152,6 +170,49 @@ router.get('/user', verifyToken, async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error fetching user:', error);
         res.status(500).json({ error: 'Failed to fetch user' });
+    }
+});
+
+// Verify admin status (for admin panel access control)
+router.get('/verify-admin', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+
+        console.log({ userId })
+
+        if (!userId) {
+            return res.status(401).json({ isAdmin: false, error: 'Unauthorized' });
+        }
+
+        // Fetch user from database to get current role
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ isAdmin: false, error: 'User not found' });
+        }
+
+        // Check if user has admin role
+        if (user.role !== 'admin') {
+            return res.status(403).json({
+                isAdmin: false,
+                error: 'Access denied. Admin role required.'
+            });
+        }
+
+        // User is admin
+        res.json({
+            isAdmin: true,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
+            }
+        });
+    } catch (error) {
+        console.error('Error verifying admin:', error);
+        res.status(500).json({ isAdmin: false, error: 'Failed to verify admin status' });
     }
 });
 

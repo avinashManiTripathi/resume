@@ -20,6 +20,7 @@ import resumeRoutes from './routes/resume.routes';
 import landingRoutes from './routes/landing.routes';
 import coverLetterRoutes from './routes/cover-letter.routes';
 import interviewRoutes from './routes/interview.routes';
+import blogRoutes from './routes/blog.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -35,7 +36,7 @@ export class App {
         this.initializeDatabase();
         this.initializeMiddlewares();
         this.initializePassport();
-        this.initializeRoutes();
+        this.initializeRoutes(); // Now async but we don't need to await in constructor
         this.initializeErrorHandling();
     }
 
@@ -163,6 +164,9 @@ export class App {
 
         // Resume extraction routes
         this.app.use('/api/resume', resumeRoutes);
+
+        // Blog routes
+        this.app.use('/api/blog', blogRoutes);
 
         // Landing page routes
         this.app.use('/api/landing', landingRoutes);

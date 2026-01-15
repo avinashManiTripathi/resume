@@ -65,13 +65,52 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-export const generateToken = (userId: string, email: string): string => {
+export const generateToken = (userId: string, email: string, role: 'user' | 'admin' = 'user'): string => {
     const payload: JWTPayload = {
         userId,
         email,
+        role
     };
 
     return jwt.sign(payload, JWT_SECRET, {
         expiresIn: '7d', // Token expires in 7 days
     });
+};
+
+/**
+ * Middleware to verify user has admin role
+ * Checks role from database, not just JWT (for security)
+ */
+export const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        // Dynamically import User model to avoid circular dependency
+        const { User } = await import('../models');
+
+        // Fetch user from database to get current role
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (user.role !== 'admin') {
+            return res.status(403).json({
+                error: 'Access denied. Admin role required.',
+                message: 'You do not have permission to perform this action.'
+            });
+        }
+
+        // User is admin, continue
+        next();
+    } catch (error) {
+        console.error('Admin verification error:', error);
+        return res.status(500).json({ error: 'Failed to verify admin status' });
+    }
 };
