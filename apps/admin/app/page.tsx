@@ -9,6 +9,8 @@ import {
   FileText,
   Clock,
   CheckCircle2,
+  PenSquare,
+  Mic2,
 } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 
@@ -137,6 +139,80 @@ export default function AdminDashboard() {
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-green-500" />
                 Preview and test templates
+              </li>
+            </ul>
+          </Link>
+        </div>
+      </div>
+
+      {/* More Quick Actions */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Content & Analytics</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link
+            href="/blog"
+            className="card-premium hover-lift p-8 group cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <PenSquare className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  Publish Blog
+                </h3>
+                <p className="text-gray-600">
+                  Create and manage blog content
+                </p>
+              </div>
+              <ArrowRight className="w-6 h-6 text-green-600 group-hover:translate-x-2 transition-transform duration-300" />
+            </div>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Write and edit blog posts
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Manage categories and tags
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Schedule and publish content
+              </li>
+            </ul>
+          </Link>
+
+          <Link
+            href="/interviews"
+            className="card-premium hover-lift p-8 group cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <Mic2 className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  Interview Data
+                </h3>
+                <p className="text-gray-600">
+                  View interview analytics
+                </p>
+              </div>
+              <ArrowRight className="w-6 h-6 text-orange-600 group-hover:translate-x-2 transition-transform duration-300" />
+            </div>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                View all interview sessions
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Export data and reports
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Track performance metrics
               </li>
             </ul>
           </Link>

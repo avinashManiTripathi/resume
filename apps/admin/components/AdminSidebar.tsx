@@ -11,6 +11,8 @@ import {
   BarChart3,
   Menu,
   X,
+  PenSquare,
+  Mic2,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -23,6 +25,8 @@ export function AdminSidebar() {
     { href: "/", label: "Dashboard", icon: Home },
     { href: "/users", label: "Users", icon: Users },
     { href: "/templates", label: "Templates", icon: LayoutTemplate },
+    { href: "/blog", label: "Publish Blog", icon: PenSquare },
+    { href: "/interviews", label: "Interviews", icon: Mic2 },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
     { href: "/settings", label: "Settings", icon: Settings },
   ];
