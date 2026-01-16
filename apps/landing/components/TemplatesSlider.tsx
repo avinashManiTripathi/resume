@@ -82,32 +82,34 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                     <Link
                         key={template._id}
                         href={`${ENV.EDITOR_URL}/editor?template=${template._id}`}
-                        className="flex-shrink-0 w-80 group p-[8px] bg-white  overflow-hidden border-2 border-gray-200 hover:border-blue-600 transition-all hover:shadow-2xl"
+                        className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 hover:border-blue-600 transition-all hover:shadow-2xl relative"
                     >
-                        <div className="bg-white  aspect-[8.5/11] relative overflow-hidden">
-                            {template.thumbnail ? (
-                                <Image
-                                    src={ENV.API_URL + template.thumbnail}
-                                    alt={template.name}
-                                    width={320}
-                                    height={415}
-                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
-                                />
-                            ) : (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-3/4 h-5/6 bg-white rounded-lg shadow-lg p-4">
-                                        <div className="space-y-2">
-                                            <div className="h-3 bg-gray-800 rounded w-2/3"></div>
-                                            <div className="h-2 bg-gray-400 rounded w-1/2"></div>
-                                            <div className="mt-4 space-y-1">
-                                                <div className="h-2 bg-gray-300 rounded"></div>
-                                                <div className="h-2 bg-gray-300 rounded w-5/6"></div>
+                        <div className="relative pt-6 px-3 pb-3">
+                            <div className="bg-white aspect-[8.5/11] relative overflow-hidden">
+                                {template.thumbnail ? (
+                                    <Image
+                                        src={ENV.API_URL + template.thumbnail}
+                                        alt={template.name}
+                                        width={320}
+                                        height={415}
+                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-3/4 h-5/6 bg-white rounded-lg shadow-lg p-4">
+                                            <div className="space-y-2">
+                                                <div className="h-3 bg-gray-800 rounded w-2/3"></div>
+                                                <div className="h-2 bg-gray-400 rounded w-1/2"></div>
+                                                <div className="mt-4 space-y-1">
+                                                    <div className="h-2 bg-gray-300 rounded"></div>
+                                                    <div className="h-2 bg-gray-300 rounded w-5/6"></div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                            <div className="absolute inset-0 bg-black/40  opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+                                )}
+                            </div>
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
                                 <div className="bg-white text-blue-600 font-bold px-6 py-2.5 rounded-full shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                     Use Template
                                 </div>

@@ -24,7 +24,7 @@ export default async function LandingPage() {
       {/* Product Schema for SEO - Star Ratings in Google */}
       <ProductSchema />
       {/* Hero Section */}
-      <section className="pt-12 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 overflow-hidden">
+      <section className="pt-4 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             {/* Left Column */}
