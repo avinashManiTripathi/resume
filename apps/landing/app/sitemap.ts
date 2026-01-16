@@ -127,41 +127,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.3,
     }))
 
-    // Interview Question Articles (dynamic)
+    // Interview Question Articles (dynamic from API)
+    // Note: Interview questions are stored in the Blog model
     let interviewPages: any[] = []
     try {
-        const path = await import('path')
-        const fs = await import('fs/promises')
+        // Fetch interview articles from Blog API (filter by category if needed)
+        const response = await fetch(`${ENV.API_URL}/api/blog?limit=100`, {
+            next: { revalidate: 3600 } // Cache for 1 hour
+        })
 
-        const possiblePaths = [
-            path.join(process.cwd(), "data/interviews"),
-            path.join(process.cwd(), "apps/landing/data/interviews"),
-            path.join(process.cwd(), "../../data/interviews"),
-        ]
+        if (response.ok) {
+            const allBlogs = await response.json()
 
-        let interviewsDir = ""
-        for (const p of possiblePaths) {
-            try {
-                await fs.access(p)
-                interviewsDir = p
-                break
-            } catch {
-                continue
-            }
-        }
+            // Filter for interview-related content (by category or slug pattern)
+            const interviews = allBlogs.filter((blog: any) =>
+                blog.slug && (
+                    blog.slug.includes('interview') ||
+                    blog.category?.toLowerCase().includes('interview') ||
+                    blog.tags?.some((tag: string) => tag.toLowerCase().includes('interview'))
+                )
+            )
 
-        if (interviewsDir) {
-            const files = await fs.readdir(interviewsDir)
-            for (const file of files) {
-                if (!file.endsWith(".json")) continue
-                const content = await fs.readFile(path.join(interviewsDir, file), "utf-8")
-                const data = JSON.parse(content)
-                interviewPages.push({
-                    url: `${baseUrl}/interviews/${data.slug}`,
-                    lastModified: currentDate,
+            console.log({ interviews })
+            // Add individual interview pages
+            if (interviews.length > 0) {
+                interviewPages = interviews.map((interview: any) => ({
+                    url: `${baseUrl}/interviews/${interview.slug}`,
+                    lastModified: interview.updatedAt ? new Date(interview.updatedAt) : currentDate,
                     changeFrequency: 'weekly' as const,
                     priority: 0.9,
-                })
+                }))
             }
 
             // Add the main interviews index page
@@ -171,9 +166,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 changeFrequency: 'weekly' as const,
                 priority: 0.9,
             })
+        } else {
+            console.warn('Failed to fetch blogs for interview sitemap')
+
+            // Fallback: Add at least the main interviews page
+            interviewPages.push({
+                url: `${baseUrl}/interviews`,
+                lastModified: currentDate,
+                changeFrequency: 'weekly' as const,
+                priority: 0.9,
+            })
         }
     } catch (e) {
         console.error("Error generating interview sitemap:", e)
+
+        // Fallback: Add at least the main interviews page
+        interviewPages.push({
+            url: `${baseUrl}/interviews`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly' as const,
+            priority: 0.9,
+        })
     }
 
     return [
