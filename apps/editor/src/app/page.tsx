@@ -181,8 +181,8 @@ export default function DashboardPage() {
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
           <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-4">
-                <LayoutGrid className="w-8 h-8 text-indigo-600 animate-pulse" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
+                <LayoutGrid className="w-8 h-8 text-blue-600 animate-pulse" />
               </div>
               <h2 className="text-2xl font-bold text-slate-900 mb-2">Loading Dashboard</h2>
               <p className="text-sm text-slate-500">Please wait while we prepare your workspace</p>
@@ -214,7 +214,7 @@ export default function DashboardPage() {
         <div className="group relative p-3 rounded-2xl bg-gray-50 border border-gray-100 transition-all hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 mb-6">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-indigo-500 to-purple-500 ring-2 ring-white shadow-md flex items-center justify-center text-white font-bold text-xs">
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-500 to-indigo-600 ring-2 ring-white shadow-md flex items-center justify-center text-white font-bold text-xs">
                 {user?.picture ? (
                   <img src={user.picture} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -242,7 +242,7 @@ export default function DashboardPage() {
                 <button
                   key={idx}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group ${item.active
-                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-100 font-bold"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-100 font-bold"
                     : "text-gray-500 hover:bg-gray-50 font-semibold"
                     }`}
                 >
@@ -265,7 +265,7 @@ export default function DashboardPage() {
                   onClick={() => item.href && (item.href.startsWith('http') ? window.location.href = item.href : router.push(item.href))}
                   className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-gray-500 hover:bg-gray-50 font-semibold group"
                 >
-                  <div className={`p-1 rounded-lg transition-colors ${item.isNew ? "bg-amber-50 text-amber-600" : "bg-gray-100 text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600"}`}>
+                  <div className={`p-1 rounded-lg transition-colors ${item.isNew ? "bg-amber-50 text-amber-600" : "bg-gray-100 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600"}`}>
                     <item.icon size={14} />
                   </div>
                   <span className="text-[13px] flex-1 text-left">{item.label}</span>
@@ -279,7 +279,7 @@ export default function DashboardPage() {
         <div className="mt-auto pt-4 px-2">
 
           <button
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group  bg-indigo-600 text-white shadow-lg shadow-indigo-100 font-bold`}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group  bg-blue-600 text-white shadow-lg shadow-blue-100 font-bold`}
           >
             <Globe />
             <span className="text-[13px] flex-1 text-left">Go to Main Site</span>
@@ -309,8 +309,8 @@ export default function DashboardPage() {
               <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 border-2 border-[#F8FAFC] rounded-full"></span>
             </button>
             <div className="h-6 w-[1px] bg-gray-200 mx-2"></div>
-            <button onClick={() => router.push("/subscription")} className="flex items-center gap-2.5 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-black text-[12px] uppercase tracking-wider shadow-[0_10px_30px_-10px_rgba(79,70,229,0.5)] hover:bg-indigo-700 transition-all active:scale-95">
-              <Sparkles size={16} fill="white" />
+            <button onClick={() => router.push("/subscription")} className="flex items-center gap-2.5 px-6 py-3 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl font-black text-[12px] uppercase tracking-wider shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] hover:scale-[1.02] transition-all active:scale-95">
+              <Sparkles size={16} fill="white" className="animate-pulse" />
               Go Pro
             </button>
             <button onClick={logout} className="p-3 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-2xl transition-all border border-gray-200 group">
@@ -323,12 +323,12 @@ export default function DashboardPage() {
           {/* Immersive Welcome Area */}
           <div className="mb-8">
             <div className="flex items-center gap-2 mb-2">
-              <span className="bg-indigo-50 text-indigo-600 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Welcome Back</span>
+              <span className="bg-blue-50 text-blue-600 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Welcome Back</span>
               <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
             </div>
             <h1 className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
               Design your future, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-500">{isLoggedIn ? user?.name : "Explorer"}</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{isLoggedIn ? user?.name : "Explorer"}</span>
             </h1>
           </div>
 
@@ -347,7 +347,7 @@ export default function DashboardPage() {
                   <goal.icon size={16} strokeWidth={activeGoal === goal.name ? 2.5 : 2} />
                   {goal.name}
                   {activeGoal === goal.name && (
-                    <div className="absolute inset-0 bg-indigo-600 rounded-[1.75rem] -z-10 shadow-lg shadow-indigo-500/20"></div>
+                    <div className="absolute inset-0 bg-blue-600 rounded-[1.75rem] -z-10 shadow-lg shadow-blue-500/20"></div>
                   )}
                 </button>
               ))}
@@ -399,7 +399,7 @@ export default function DashboardPage() {
                           />
                         </svg>
                         <div className="text-center relative z-10">
-                          <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 drop-shadow-sm">15%</span>
+                          <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-br from-blue-500 via-indigo-500 to-indigo-600 drop-shadow-sm">15%</span>
                           <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mt-1">Ready</p>
                         </div>
                       </div>
@@ -425,38 +425,38 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Premium Smart Insight Card */}
-                <div className="xl:col-span-2 bg-gradient-to-br from-indigo-900 to-indigo-950 rounded-2xl p-8 relative overflow-hidden group border border-indigo-800 shadow-lg">
-                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-400/10 to-transparent opacity-50"></div>
+                <div className="xl:col-span-2 bg-gradient-to-br from-slate-900 to-blue-950 rounded-2xl p-8 relative overflow-hidden group border border-slate-800 shadow-lg">
+                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-400/10 to-transparent opacity-50"></div>
 
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex items-center gap-2 mb-5 animate-pulse">
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400"></div>
-                      <span className="text-[9px] font-black text-indigo-300 uppercase tracking-widest leading-none">AI Insight Engine</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
+                      <span className="text-[9px] font-black text-blue-300 uppercase tracking-widest leading-none">AI Insight Engine</span>
                     </div>
 
                     <h2 className="text-2xl font-black text-white leading-tight tracking-tight mb-3 max-w-lg">
                       Level up your profile <br />
-                      to reach <span className="text-indigo-400">95% score</span>
+                      to reach <span className="text-blue-400">95% score</span>
                     </h2>
 
-                    <p className="text-indigo-200/70 text-sm font-medium leading-relaxed max-w-sm mb-6">
+                    <p className="text-blue-200/70 text-sm font-medium leading-relaxed max-w-sm mb-6">
                       Our algorithm detected missing industry keywords. Adding them could increase visibility by 3.4x.
                     </p>
 
                     <div className="grid grid-cols-2 gap-3 mt-auto">
                       <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-lg hover:bg-white/10 transition-all cursor-pointer group/card">
-                        <div className="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
+                        <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
                           <Plus size={14} />
                         </div>
                         <p className="text-xs font-extrabold text-white mb-0.5">Add Accomplishments</p>
-                        <span className="text-[9px] font-bold text-indigo-400">+35% Exposure</span>
+                        <span className="text-[9px] font-bold text-blue-400">+35% Exposure</span>
                       </div>
-                      <div className="p-4 rounded-xl bg-indigo-600 text-white shadow-lg hover:bg-indigo-500 transition-all cursor-pointer group/card">
+                      <div className="p-4 rounded-xl bg-blue-600 text-white shadow-lg hover:bg-blue-500 transition-all cursor-pointer group/card">
                         <div className="w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
                           <Zap size={14} fill="white" />
                         </div>
                         <p className="text-xs font-extrabold mb-0.5">Boost with AI</p>
-                        <span className="text-[9px] font-bold text-indigo-200 tracking-wide">Optimize Metadata</span>
+                        <span className="text-[9px] font-bold text-blue-200 tracking-wide">Optimize Metadata</span>
                       </div>
                     </div>
                   </div>
@@ -473,7 +473,7 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <Link
                       href="/editor"
-                      className="group p-5 bg-indigo-600 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-lg shadow-indigo-200/50"
+                      className="group p-5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-lg shadow-blue-200/50"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:bg-white/30 transition-colors">
@@ -481,7 +481,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <p className="text-white font-black text-sm tracking-tight">Create Resume</p>
-                          <p className="text-indigo-100 text-[10px] font-bold uppercase tracking-wider">Start from scratch</p>
+                          <p className="text-blue-100 text-[10px] font-bold uppercase tracking-wider">Start from scratch</p>
                         </div>
                       </div>
                       <ChevronRight className="text-white/40 group-hover:translate-x-1 transition-transform" size={18} />
@@ -500,7 +500,7 @@ export default function DashboardPage() {
                           <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Perfect match</p>
                         </div>
                       </div>
-                      <ChevronRight className="text-slate-300 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all" size={18} />
+                      <ChevronRight className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" size={18} />
                     </Link>
 
                     <Link
@@ -538,7 +538,7 @@ export default function DashboardPage() {
                     {resumes.slice(0, 3).map((resume: SavedDocument) => (
                       <div key={resume.id || resume._id} className="group bg-white p-8 rounded-xl border border-slate-200/60 hover:border-indigo-400 hover:shadow-2xl hover:shadow-indigo-500/5 transition-all duration-500 flex flex-col h-64 relative overflow-hidden">
                         <div className="flex justify-between items-start mb-6">
-                          <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                          <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
                             <FileText size={24} />
                           </div>
                           <div className="flex gap-1">
@@ -552,7 +552,7 @@ export default function DashboardPage() {
                           <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                             {getTimeAgo(resume.lastModified)}
                             <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                            <span className={resume._id?.startsWith('doc_') ? "" : "text-indigo-500"}>
+                            <span className={resume._id?.startsWith('doc_') ? "" : "text-blue-600"}>
                               {resume._id?.startsWith('doc_') ? "LOCAL SPACE" : "CLOUD SYNC"}
                             </span>
                           </p>
@@ -567,7 +567,7 @@ export default function DashboardPage() {
                     ))}
 
                     {resumes.length === 0 && !loading && (
-                      <Link href="/editor" className="border-2 border-dashed border-slate-200 rounded-xl p-12 flex flex-col items-center justify-center gap-4 text-slate-300 hover:bg-white hover:border-indigo-500 hover:text-indigo-500 transition-all duration-500 group h-64 bg-slate-50/50">
+                      <Link href="/editor" className="border-2 border-dashed border-slate-200 rounded-xl p-12 flex flex-col items-center justify-center gap-4 text-slate-300 hover:bg-white hover:border-blue-500 hover:text-blue-500 transition-all duration-500 group h-64 bg-slate-50/50">
                         <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
                           <Plus size={32} />
                         </div>
@@ -588,7 +588,7 @@ export default function DashboardPage() {
             ) : activeGoal === "Interview Prep" ? (
               <div className="col-span-full">
                 <div className="bg-white rounded-[3rem] p-12 border border-slate-200/60 shadow-xl flex flex-col items-center text-center max-w-4xl mx-auto">
-                  <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center mb-8">
+                  <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8">
                     <Mic2 size={40} />
                   </div>
                   <h2 className="text-3xl font-black mb-4">Master Your Next Interview</h2>
