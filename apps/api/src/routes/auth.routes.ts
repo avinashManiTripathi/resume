@@ -79,11 +79,11 @@ router.get('/google/callback',
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
                 // In development, don't set domain (allows localhost)
                 // In production, set to .profresume.com for cross-subdomain cookies
-                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
             });
 
             console.log('Token cookie set:', {
-                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : 'localhost',
+                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
                 httpOnly: true,
                 sameSite: 'lax',
                 secure: process.env.NODE_ENV === 'production'
@@ -222,14 +222,15 @@ router.post('/logout', (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        domain:
-            process.env.NODE_ENV === 'production'
-                ? '.profresume.com'
-                : '.profresume.com',
+        // CRITICAL: Must match domain setting when cookie was created
+        // In development: undefined (localhost), in production: .profresume.com
+        domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
         path: '/',
-    })
+    });
 
-    res.status(200).json({ message: 'Logged out successfully' })
+    console.log('Logout: Cookie cleared with domain:', process.env.NODE_ENV === 'production' ? '.profresume.com' : 'undefined (localhost)');
+
+    res.status(200).json({ message: 'Logged out successfully' });
 });
 
 export default router;

@@ -16,10 +16,28 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useAdmin } from "@/hooks/useAdmin";
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { user, logout } = useAdmin();
+
+  const handleLogout = async () => {
+    if (confirm('Are you sure you want to logout?')) {
+      await logout();
+    }
+  };
+
+  // Get user initials for avatar
+  const getInitials = (name: string) => {
+    if (!name) return 'AD';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   const navItems = [
     { href: "/", label: "Dashboard", icon: Home },
@@ -108,17 +126,24 @@ export function AdminSidebar() {
         {/* User Profile Section */}
         <div className="p-4 border-t border-gray-100">
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 mb-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-sm">
-              AD
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center font-semibold text-sm text-white">
+              {user ? getInitials(user.name) : 'AD'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">Admin User</p>
-              <p className="text-xs text-gray-500 truncate">admin@example.com</p>
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {user?.name || 'Admin User'}
+              </p>
+              <p className="text-xs text-gray-500 truncate">
+                {user?.email || 'admin@example.com'}
+              </p>
             </div>
           </div>
 
           {/* Logout Button */}
-          <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 w-full group">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 w-full group"
+          >
             <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
             <span>Logout</span>
           </button>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { AdminContext, AdminUser } from '@/hooks/useAdmin';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
 
@@ -9,6 +10,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [isVerifying, setIsVerifying] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
+    const [user, setUser] = useState<AdminUser | null>(null);
 
     useEffect(() => {
         async function verifyAdmin() {
@@ -19,7 +21,8 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
 
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.isAdmin) {
+                    if (data.isAdmin && data.user) {
+                        setUser(data.user);
                         setIsAuthorized(true);
                         setIsVerifying(false);
                         return;
@@ -38,6 +41,33 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         verifyAdmin();
     }, [router]);
 
+    const logout = async () => {
+        try {
+            const response = await fetch(`${API_BASE}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                console.error('Logout failed with status:', response.status);
+            } else {
+                console.log('Logout successful, cookie cleared');
+            }
+
+            // Small delay to ensure cookie clearing completes
+            await new Promise(resolve => setTimeout(resolve, 100));
+        } catch (error) {
+            console.error('Logout error:', error);
+        } finally {
+            // Clear local state
+            setUser(null);
+            setIsAuthorized(false);
+
+            // Redirect to auth page
+            window.location.href = 'https://auth.profresume.com';
+        }
+    };
+
     if (isVerifying) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -53,5 +83,9 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
         return null; // Redirecting...
     }
 
-    return <>{children}</>;
+    return (
+        <AdminContext.Provider value={{ user, logout }}>
+            {children}
+        </AdminContext.Provider>
+    );
 }
