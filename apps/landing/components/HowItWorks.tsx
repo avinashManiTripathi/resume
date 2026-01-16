@@ -75,56 +75,54 @@ export function HowItWorks() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
             />
 
-            <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+            <section id="how-it-works" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
                     {/* Section Header */}
-                    <div className="text-center mb-16">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-6">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
                             <Sparkles className="w-4 h-4" />
                             Simple 3-Step Process
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
                             How Our Free Resume Builder Works
                         </h2>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            Create a professional, ATS-optimized resume in under 5 minutes. No design skills required, no sign-up needed.
+                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                            Create a professional, ATS-optimized resume in under 5 minutes
                         </p>
                     </div>
 
-                    {/* Steps */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                        {steps.map((step, index) => (
-                            <div
-                                key={index}
-                                id={`step-${step.number}`}
-                                className="relative group"
-                            >
-                                {/* Connector Line (hidden on mobile, shown between cards on desktop) */}
-                                {index < steps.length - 1 && (
-                                    <div className="hidden md:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-blue-200 to-transparent -ml-4" />
-                                )}
+                    {/* Horizontal Timeline Steps */}
+                    <div className="relative mb-12">
+                        {/* Connection Line */}
+                        <div className="hidden lg:block absolute top-8 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-200 via-purple-200 to-green-200 mx-auto" style={{ width: 'calc(100% - 200px)', left: '100px' }} />
 
-                                <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border-2 border-gray-200 hover:border-blue-500 hover:shadow-2xl transition-all h-full">
-                                    {/* Step Number Badge */}
-                                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg">
-                                        {step.number}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {steps.map((step, index) => (
+                                <div
+                                    key={index}
+                                    id={`step-${step.number}`}
+                                    className="relative"
+                                >
+                                    {/* Step Number Circle */}
+                                    <div className="relative z-10 w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                                        <span className="text-2xl font-extrabold text-white">{step.number}</span>
                                     </div>
 
-                                    {/* Icon */}
-                                    <div className={`w-16 h-16 bg-${step.color}-100 rounded-2xl flex items-center justify-center text-${step.color}-600 mb-6 group-hover:scale-110 transition-transform`}>
-                                        {step.icon}
+                                    {/* Content Card */}
+                                    <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all">
+                                        <div className={`w-12 h-12 bg-${step.color}-100 rounded-lg flex items-center justify-center text-${step.color}-600 mb-4 mx-auto`}>
+                                            {step.icon}
+                                        </div>
+                                        <h3 className="text-lg font-bold text-gray-900 mb-2 text-center">
+                                            {step.title}
+                                        </h3>
+                                        <p className="text-sm text-gray-600 leading-relaxed text-center">
+                                            {step.description}
+                                        </p>
                                     </div>
-
-                                    {/* Content */}
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">
-                                        {step.title}
-                                    </h3>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        {step.description}
-                                    </p>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
 
                     {/* CTA */}
@@ -132,12 +130,12 @@ export function HowItWorks() {
                         <Link
                             href={ENV.EDITOR_URL + "/editor"}
                             target="_blank"
-                            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl group"
+                            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl group"
                         >
                             Create Your Free Resume Now
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
-                        <p className="text-sm text-gray-600 mt-4">
+                        <p className="text-sm text-gray-600 mt-3">
                             No credit card required • No watermarks • Free forever
                         </p>
                     </div>

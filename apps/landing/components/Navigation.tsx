@@ -1,18 +1,37 @@
 "use client";
 
 import { ENV } from '@/app/env';
-import { Menu, X, ArrowRight, DockIcon } from 'lucide-react';
+import { Menu, X, ArrowRight, DockIcon, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { NAVIGATION } from '@/constants/navigation';
+import { URLS } from '@/constants/urls';
 import { Button } from '@repo/ui/button';
 import { useRouter } from 'next/navigation';
 
 export function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [activeMenu, setActiveMenu] = useState<string | null>(null);
     const router = useRouter();
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setActiveMenu(null);
+            }
+        };
+
+        if (activeMenu) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }
+    }, [activeMenu]);
 
     return (
         <>
@@ -32,99 +51,163 @@ export function Navigation() {
                             />
                         </Link>
                         {/* Desktop Navigation */}
-                        <div className="hidden lg:flex items-center gap-2">
+                        <div ref={menuRef} className="hidden lg:flex items-center gap-2">
                             {/* Mega Menu Items */}
                             {NAVIGATION.menuItems.map((menuItem) => (
-                                <div key={menuItem.id} className="relative group">
-                                    <button className="px-4 py-5 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5">
+                                <div
+                                    key={menuItem.id}
+                                    className="relative group"
+                                    onMouseEnter={() => setActiveMenu(menuItem.id)}
+                                    onMouseLeave={() => setActiveMenu(null)}
+                                >
+                                    <button
+                                        onClick={() => setActiveMenu(activeMenu === menuItem.id ? null : menuItem.id)}
+                                        className="px-4 py-5 text-gray-700 font-medium text-[15px] hover:text-gray-900 transition-colors flex items-center gap-1.5"
+                                    >
                                         {menuItem.label}
-                                        <svg className="w-4 h-4 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg className={`w-4 h-4 transition-transform duration-300 ${activeMenu === menuItem.id ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
                                     </button>
 
-                                    {/* Mega Dropdown with Smooth Animations */}
-                                    <div className="absolute mt-[-8px] left-1/2 -translate-x-1/2 top-full pt-3 pointer-events-none
-                                        opacity-0 invisible -translate-y-3 scale-95
-                                        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto
-                                        transition-all duration-300 ease-out">
-                                        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden w-[920px]">
-                                            <div className="flex">
-                                                {/* Left: Products Grid */}
-                                                <div className="flex-1 p-10">
-                                                    <div className="mb-6 opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 delay-75">
-                                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                    {/* Mega Dropdown - Clean 3-Column Layout */}
+                                    <div className={`fixed left-0 right-0 top-[72px] pt-0 
+                                        ${activeMenu === menuItem.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
+                                        transition-all duration-200 ease-out z-50`}>
+                                        {/* Full-width container */}
+                                        <div className="bg-white border-b border-gray-200">
+                                            <div className="max-w-7xl mx-auto px-16 py-10">
+                                                <div className="grid grid-cols-3 gap-16">
+                                                    {/* Left Column - WHY SEAMLESS */}
+                                                    <div>
+                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
                                                             {menuItem.megaMenu.title}
                                                         </h3>
-                                                        <p className="text-sm text-gray-500 leading-relaxed max-w-md">
-                                                            {menuItem.megaMenu.description}
-                                                        </p>
-                                                    </div>
-
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        {menuItem.megaMenu.items.map((item, idx) => (
-                                                            <Link
-                                                                key={idx}
-                                                                href={item.href}
-                                                                className="group/item p-4 rounded-xl hover:bg-gray-50 transition-all no-underline border border-transparent hover:border-gray-200
-                                                                    opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
-                                                                style={{
-                                                                    transitionDelay: `${100 + idx * 40}ms`,
-                                                                    transitionDuration: '400ms'
-                                                                }}
-                                                            >
-                                                                <div className="flex items-start gap-3">
-                                                                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-xl flex-shrink-0 group-hover/item:scale-110 transition-transform duration-200">
-                                                                        {item.icon}
-                                                                    </div>
-                                                                    <div className="flex-1 min-w-0">
-                                                                        <div className="font-semibold text-gray-900 mb-1 text-[15px] group-hover/item:text-blue-600 transition-colors">
-                                                                            {item.title}
-                                                                        </div>
-                                                                        <div className="text-xs text-gray-500 leading-snug">
-                                                                            {item.description}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </Link>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {/* Right: Featured Panel */}
-                                                <div className="w-80 bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 p-8 flex flex-col
-                                                    opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 delay-100">
-                                                    {/* Image */}
-                                                    <div className="mb-8 -mx-8 -mt-8 overflow-hidden">
-                                                        <Image
-                                                            src={menuItem.megaMenu.featured.image}
-                                                            alt={menuItem.megaMenu.featured.title}
-                                                            width={320}
-                                                            height={180}
-                                                            className="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
-                                                        />
-                                                    </div>
-
-                                                    {/* Content */}
-                                                    <div className="flex-1">
-                                                        {/* Featured Title */}
-                                                        <h4 className="text-xl font-bold text-gray-900 mb-4">
-                                                            {menuItem.megaMenu.featured.title}
-                                                        </h4>
-
-                                                        {/* Links */}
-                                                        <div className="space-y-3">
-                                                            {menuItem.megaMenu.featured.links.map((link, idx) => (
+                                                        <div className="space-y-4">
+                                                            {menuItem.megaMenu.items.slice(0, 4).map((item, idx) => (
                                                                 <Link
                                                                     key={idx}
-                                                                    href={link.href}
-                                                                    className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600 transition-colors no-underline font-medium group/link"
+                                                                    href={item.href}
+                                                                    onClick={() => setActiveMenu(null)}
+                                                                    className="group/item block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
                                                                 >
-                                                                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                                                                    {link.text}
+                                                                    <div className="flex items-start gap-4">
+                                                                        <div className="text-gray-600 text-xl mt-0.5 flex-shrink-0">
+                                                                            {item.icon}
+                                                                        </div>
+                                                                        <div>
+                                                                            <div className="font-semibold text-gray-900 text-sm mb-1.5 group-hover/item:text-purple-600">
+                                                                                {item.title}
+                                                                            </div>
+                                                                            <div className="text-xs text-gray-500 leading-relaxed">
+                                                                                {item.description}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </Link>
                                                             ))}
                                                         </div>
+                                                    </div>
+
+                                                    {/* Middle Column - RESOURCES */}
+                                                    <div>
+                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
+                                                            RESOURCES
+                                                        </h3>
+                                                        <div className="space-y-4">
+                                                            {menuItem.megaMenu.items.slice(4).map((item, idx) => (
+                                                                <Link
+                                                                    key={idx}
+                                                                    href={item.href}
+                                                                    onClick={() => setActiveMenu(null)}
+                                                                    className="group/item block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
+                                                                >
+                                                                    <div className="flex items-start gap-4">
+                                                                        <div className="text-gray-600 text-xl mt-0.5 flex-shrink-0">
+                                                                            {item.icon}
+                                                                        </div>
+                                                                        <div>
+                                                                            <div className="font-semibold text-gray-900 text-sm mb-1.5 group-hover/item:text-purple-600">
+                                                                                {item.title}
+                                                                            </div>
+                                                                            <div className="text-xs text-gray-500 leading-relaxed">
+                                                                                {item.description}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Right Column - EXPLORE */}
+                                                    <div className="bg-purple-50/30 rounded-2xl p-8">
+                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
+                                                            EXPLORE
+                                                        </h3>
+                                                        <div className="space-y-4">
+                                                            {menuItem.megaMenu.featured.links.slice(0, 2).map((link, idx) => (
+                                                                <Link
+                                                                    key={idx}
+                                                                    href={link.href}
+                                                                    onClick={() => setActiveMenu(null)}
+                                                                    className="group/link block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
+                                                                >
+                                                                    <div className="flex items-start gap-4">
+                                                                        <div className="flex items-center gap-3">
+                                                                            <span className="text-sm font-semibold text-gray-400">0{idx + 1}</span>
+                                                                            <div className="w-12 h-12 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
+                                                                                <DockIcon className="w-5 h-5 text-gray-400" />
+                                                                            </div>
+                                                                            <span className="text-sm font-semibold text-gray-400">0{idx + 2}</span>
+                                                                        </div>
+                                                                        <div className="flex-1">
+                                                                            <div className="font-semibold text-gray-900 text-sm mb-2 group-hover/link:text-purple-600">
+                                                                                {link.text}
+                                                                            </div>
+                                                                            <div className="text-xs text-gray-500 leading-relaxed">
+                                                                                Learn about our latest features and updates to help you succeed.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+
+                                                        {/* See All Link */}
+                                                        <Link
+                                                            href="#"
+                                                            onClick={() => setActiveMenu(null)}
+                                                            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 mt-6 no-underline group/all"
+                                                        >
+                                                            See All Product News
+                                                            <ArrowRight className="w-4 h-4 group-hover/all:translate-x-1 transition-transform" />
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Bottom CTA Bar - Full Width Border */}
+                                            <div className="border-t border-gray-200">
+                                                <div className="max-w-7xl mx-auto px-16 py-6">
+                                                    <div className="flex w-full items-center justify-between">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                                                                <Sparkles className="w-5 h-5 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <span className="text-sm font-semibold text-gray-900">Want Free Leads?</span>
+                                                                <span className="text-sm text-gray-500 ml-2">Take Seamless.AI for a Test Drive</span>
+                                                            </div>
+                                                        </div>
+                                                        <Link
+                                                            href={URLS.EDITOR}
+                                                            target="_blank"
+                                                            onClick={() => setActiveMenu(null)}
+                                                            className="px-6 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors no-underline"
+                                                        >
+                                                            Get Started
+                                                        </Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -167,7 +250,7 @@ export function Navigation() {
                         </div>
 
                         {/* Mobile Menu Button */}
-                        <button
+                        < button
                             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                             aria-label="Toggle mobile menu"
                             className="lg:hidden p-2 text-gray-700 hover:text-gray-900"
@@ -176,10 +259,10 @@ export function Navigation() {
                         </button>
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             {/* Mobile Menu */}
-            <div
+            < div
                 className={`fixed top-0 right-0 h-full w-3/4 bg-white z-[999]
     transform transition-transform duration-300 lg:hidden
     ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}
@@ -273,7 +356,7 @@ export function Navigation() {
                         {NAVIGATION.cta.text}
                     </Link>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

@@ -35,8 +35,8 @@ export async function TemplatesSection() {
     const templates = await getTemplates();
 
     return (
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-            <div className="max-w-7xl mx-auto">
+        <section className="py-20 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+            <div className="w-full mx-auto">
                 <div className="text-center mb-16">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 border border-green-300 text-green-700 rounded-full text-sm font-semibold mb-6">
                         <Check className="w-4 h-4" />
