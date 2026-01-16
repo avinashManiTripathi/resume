@@ -24,24 +24,24 @@ export default async function LandingPage() {
       {/* Product Schema for SEO - Star Ratings in Google */}
       <ProductSchema />
       {/* Hero Section */}
-      <section className="pt-8 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-100/50 via-white to-indigo-100/50 overflow-hidden">
+      <section className="pt-12 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             {/* Left Column */}
             <div className="relative z-10">
               {/* Badge */}
-              <div className="inline-flex items-center px-4 py-1.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-bold mb-6">
+              <div className="inline-flex items-center px-4 py-1.5 bg-blue-50/80 text-blue-600 rounded-lg text-sm font-bold mb-4 border border-blue-100/50">
                 #1 Platform for AI Resume Automation
               </div>
 
               {/* Heading */}
-              <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-5">
+              <h1 className="text-3xl md:text-5xl font-black text-gray-900 leading-[1.15] mb-4 tracking-tight">
                 Work smarter with{" "}
                 <span className="text-blue-600">AI resume</span> automation software
               </h1>
 
               {/* Description */}
-              <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed max-w-xl">
+              <p className="text-base md:text-lg text-gray-600 mb-8 leading-relaxed max-w-xl font-medium tracking-tight">
                 Automate your resume writing and job matching to boost your hireability and save time with our AI-powered resume optimization and tracking tool.
               </p>
 
@@ -85,115 +85,149 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* Right Column - Enhanced Floating UI */}
-            <div className="relative h-[450px] lg:h-[500px] flex items-center justify-center">
-              {/* Circular Path - Smaller and tighter */}
-              <div className="absolute w-[400px] h-[400px] lg:w-[450px] lg:h-[450px] border-2 border-dashed border-blue-50 rounded-full animate-[spin_120s_linear_infinite]" />
+            {/* Right Column - Premium Floating UI */}
+            <div className="relative h-[480px] lg:h-[540px] flex items-center justify-center">
+              {/* Animated Background Orbs */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-blue-400/10 rounded-full blur-[100px] animate-pulse" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-indigo-400/10 rounded-full blur-[80px] animate-pulse delay-700" />
 
-              {/* Central Card - Detailed Resume Dashboard (Bottom Layer) */}
-              <div className="absolute z-10 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.06)] p-6 border border-gray-100 w-full max-w-[340px] lg:max-w-[380px]">
-                <div className="flex justify-between items-center mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white">
-                      <FileText className="w-4.5 h-4.5" />
-                    </div>
-                    <div>
-                      <div className="font-bold text-gray-900 text-sm">Resume Analysis</div>
-                      <div className="text-[10px] text-blue-500 font-semibold uppercase tracking-wider">AI Powered</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl font-black text-blue-600">92%</div>
-                    <div className="text-[9px] text-gray-400 font-bold">MATCH SCORE</div>
-                  </div>
-                </div>
+              {/* Central Card - Advanced Resume Dashboard */}
+              <div className="absolute z-20 bg-white rounded-[2.5rem] shadow-[0_40px_80px_-15px_rgba(0,0,0,0.1)] p-8 border border-gray-100 w-full max-w-[360px] lg:max-w-[420px] overflow-hidden group hover:scale-[1.02] transition-all duration-700">
+                {/* Shimmer Effect */}
+                <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-blue-50/30 to-transparent -skew-x-[45deg] animate-shimmer pointer-events-none" />
 
-                <div className="space-y-4">
-                  {[
-                    { label: "Technical Skills", width: "90%", color: "bg-blue-500" },
-                    { label: "Experience Match", width: "85%", color: "bg-green-500" },
-                    { label: "Education Sync", width: "70%", color: "bg-purple-500" }
-                  ].map((item, i) => (
-                    <div key={i}>
-                      <div className="flex justify-between items-center mb-1.5">
-                        <span className="text-xs font-bold text-gray-700">{item.label}</span>
-                        <span className="text-[10px] font-bold text-gray-400">{item.width}</span>
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                        <Brain className="w-6 h-6" />
                       </div>
-                      <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${item.color} rounded-full transition-all duration-1000`}
-                          style={{ width: item.width }}
-                        />
+                      <div>
+                        <div className="font-black text-gray-900 text-base">AI Analysis</div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                          <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Processing Optimization</span>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                    <div className="text-right">
+                      <div className="text-2xl font-black text-blue-600">92%</div>
+                      <div className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Match Score</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {[
+                      { label: "Technical Keyword Sync", width: "94%", color: "from-blue-500 to-indigo-600", icon: <Target className="w-3.5 h-3.5" /> },
+                      { label: "Experience Impact", width: "88%", color: "from-green-500 to-emerald-600", icon: <TrendingUp className="w-3.5 h-3.5" /> },
+                      { label: "Role Alignment", width: "91%", color: "from-purple-500 to-violet-600", icon: <Users className="w-3.5 h-3.5" /> }
+                    ].map((item, i) => (
+                      <div key={i} className="space-y-2">
+                        <div className="flex justify-between items-center group/item">
+                          <div className="flex items-center gap-2">
+                            <div className="text-gray-400 group-hover/item:text-blue-500 transition-colors">{item.icon}</div>
+                            <span className="text-[11px] font-black text-gray-700 uppercase tracking-tight">{item.label}</span>
+                          </div>
+                          <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">{item.width}</span>
+                        </div>
+                        <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100 p-0.5">
+                          <div
+                            className={`h-full bg-gradient-to-r ${item.color} rounded-full transition-all duration-1000 ease-out`}
+                            style={{ width: item.width }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8 pt-6 border-t border-gray-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex -space-x-2">
+                        {[1, 2, 3, 4].map((i) => (
+                          <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gray-100 overflow-hidden ring-4 ring-gray-50/50">
+                            <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-[10px] font-black text-gray-400 uppercase tracking-tighter">
+                        Used by <span className="text-gray-900">10k+ creators</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Sarah Case - Floating Top Left (Highest Layer) */}
-              <div className="absolute z-30 top-10 -left-4 md:-left-8 lg:-left-12 animate-bounce transition-all duration-300">
-                <div className="bg-white rounded-xl shadow-lg p-2.5 border border-gray-100 flex items-center gap-2.5 rotate-[-4deg]">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shadow-inner uppercase">
+              {/* Floating Element - Sarah (Top Left) */}
+              <div className="absolute z-30 top-12 -left-8 lg:-left-16 animate-float-slow">
+                <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-3 border border-white/50 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl overflow-hidden shadow-inner ring-2 ring-white">
                     <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&auto=format&fit=crop" alt="Sarah" className="w-full h-full object-cover" />
                   </div>
                   <div>
-                    <div className="text-[11px] font-black text-gray-900">Sarah M.</div>
-                    <div className="text-[9px] font-bold text-green-500 flex items-center gap-1">
-                      <span className="w-1 h-1 bg-green-500 rounded-full" /> Hired at Google
+                    <div className="text-xs font-black text-gray-900 leading-none mb-1">Sarah Mitchell</div>
+                    <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-50 rounded-full border border-green-100/50">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-[9px] font-black text-green-700 uppercase tracking-tighter">Hired at Google</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* James Case - Floating Bottom Left */}
-              <div className="absolute z-30 bottom-10 -left-6 md:-left-10 lg:-left-14 animate-pulse">
-                <div className="bg-white rounded-xl shadow-lg p-2.5 border border-gray-100 flex items-center gap-2.5 rotate-[6deg]">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden shadow-inner uppercase">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&auto=format&fit=crop" alt="James" className="w-full h-full object-cover" />
+              {/* Floating Element - Job Alert (Top Right) */}
+              <div className="absolute z-30 top-20 -right-4 lg:-right-12 animate-float delay-500">
+                <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-2xl p-4 text-white w-44 hover:rotate-3 transition-transform duration-500">
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <div className="p-1.5 bg-white/20 rounded-lg">
+                      <Bell className="w-4 h-4" />
+                    </div>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-blue-100">Smart Alert</span>
                   </div>
-                  <div>
-                    <div className="text-[11px] font-black text-gray-900">James L.</div>
-                    <div className="text-[9px] font-bold text-blue-500 flex items-center gap-1">
-                      <span className="w-1 h-1 bg-blue-500 rounded-full" /> Hired at Amazon
+                  <div className="text-[13px] font-black leading-tight mb-2">Senior Product Designer at Meta</div>
+                  <div className="flex items-center justify-between text-[9px] font-bold text-blue-200">
+                    <span>98% Match</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Element - Success Metrics (Bottom Right) */}
+              <div className="absolute z-30 bottom-16 -right-8 lg:-right-16 animate-float-slow delay-1000">
+                <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/50 w-[200px]">
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="text-[10px] font-black text-gray-900 uppercase tracking-widest">Success Growth</div>
+                    <div className="p-1 bg-green-50 rounded-lg">
+                      <TrendingUp className="w-3.5 h-3.5 text-green-600" />
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Notification Card - Floating Top Right */}
-              <div className="absolute z-30 top-10 -right-4 md:-right-6 lg:-right-8 bg-blue-600 rounded-xl shadow-xl p-3 text-white w-40 rotate-4 animate-[bounce_4s_infinite]">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <div className="p-1 bg-white/20 rounded-md">
-                    <Bell className="w-3.5 h-3.5" />
+                  <div className="h-16 flex items-end gap-1.5">
+                    {[30, 45, 35, 60, 50, 85, 95].map((h, i) => (
+                      <div key={i} className="flex-1 bg-blue-50 rounded-full relative group h-full overflow-hidden">
+                        <div
+                          className="absolute bottom-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-full transition-all duration-1000 ease-out group-hover:from-indigo-600 group-hover:to-indigo-400"
+                          style={{ height: `${h}%` }}
+                        />
+                      </div>
+                    ))}
                   </div>
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-100">Job Match</span>
-                </div>
-                <div className="text-[12px] font-bold leading-tight">Senior UI/UX Designer at Meta</div>
-                <div className="mt-2 h-1 w-10 bg-white/40 rounded-full" />
-              </div>
-
-              {/* Graph Card - Floating Bottom Right */}
-              <div className="absolute z-20 bottom-8 -right-4 md:-right-8 lg:-right-12 bg-white rounded-2xl shadow-xl p-4 border border-gray-100 w-[180px] md:w-[200px]">
-                <div className="flex justify-between items-center mb-3">
-                  <div className="text-[10px] font-black text-gray-900 uppercase">Hireability growth</div>
-                  <TrendingUp className="w-3.5 h-3.5 text-green-500" />
-                </div>
-                <div className="h-12 flex items-end gap-1">
-                  {[20, 35, 30, 50, 45, 75, 90].map((h, i) => (
-                    <div key={i} className="flex-1 bg-blue-50 rounded-t-sm relative group h-full">
-                      <div
-                        className="absolute bottom-0 w-full bg-blue-600 rounded-t-sm transition-all duration-700"
-                        style={{ height: `${h}%` }}
-                      />
-                    </div>
-                  ))}
+                  <div className="mt-3 flex justify-between items-center">
+                    <div className="text-[11px] font-black text-blue-600">+127% Increase</div>
+                    <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">30 Days</div>
+                  </div>
                 </div>
               </div>
 
-              {/* Decorative Icons (Highest Layer) */}
-              <div className="absolute top-[25%] right-[15%] z-40 w-9 h-9 bg-blue-100 rounded-full border-2 border-white shadow-md flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-blue-600" />
+              {/* Decorative Sparkles */}
+              <div className="absolute top-[20%] left-[10%] z-40 w-10 h-10 bg-white rounded-2xl border border-gray-100 shadow-xl flex items-center justify-center animate-bounce-slow">
+                <Award className="w-5 h-5 text-amber-500" />
               </div>
+              <div className="absolute bottom-[20%] left-[15%] z-40 w-8 h-8 bg-white rounded-xl border border-gray-100 shadow-lg flex items-center justify-center animate-pulse">
+                <Sparkles className="w-4 h-4 text-blue-500" />
+              </div>
+            </div>
+
+            {/* Decorative Icons (Highest Layer) */}
+            <div className="absolute top-[25%] right-[15%] z-40 w-9 h-9 bg-blue-100 rounded-full border-2 border-white shadow-md flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-blue-600" />
             </div>
           </div>
         </div>
@@ -201,7 +235,6 @@ export default async function LandingPage() {
 
       {/* How It Works - SEO Section */}
       <HowItWorks />
-
 
       {/* AI-Powered Resume Tailoring Section */}
       <section className="py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-blue-50">
@@ -521,7 +554,7 @@ export default async function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
 
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
@@ -888,7 +921,7 @@ export default async function LandingPage() {
             </Link>
           </div>
         </div>
-      </section >
-    </div >
+      </section>
+    </div>
   );
 }

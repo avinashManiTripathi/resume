@@ -48,6 +48,20 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(200%) rotate(45deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s infinite linear;
+}
+
 .animate-slide-up {
   animation: slide-up 0.3s ease-out;
 }

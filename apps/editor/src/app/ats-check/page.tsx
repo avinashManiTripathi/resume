@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, Suspense, useCallback } from "react";
-import { Upload, File, FileText, CheckCircle, XCircle, AlertCircle, Loader, TrendingUp, Award, RefreshCw, Sparkles, Download, Target, Shield, ArrowRight, BarChart3, Zap, X } from 'lucide-react';
+import { Upload, File, FileText, CheckCircle, XCircle, AlertCircle, Loader, TrendingUp, Award, RefreshCw, Sparkles, Download, Target, Shield, ArrowRight, BarChart3, Zap, X, Clock, Brain, Bell, Star } from 'lucide-react';
 import { Button } from "@repo/ui/button";
+import { StepLoader } from "@repo/ui/step-loader";
 import { KeywordBanner } from "./KeywordBanner";
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
 
 
 interface ATSResult {
@@ -157,6 +159,7 @@ export default function ATSCheckerPage() {
     const [isDragging, setIsDragging] = useState(false);
     const [progress, setProgress] = useState(0);
     const [analysisStage, setAnalysisStage] = useState('');
+    const [currentStageIndex, setCurrentStageIndex] = useState(0);
     const [result, setResult] = useState<ATSResult | null>(null);
     const [error, setError] = useState<string | null>(null);
 
@@ -216,6 +219,7 @@ export default function ATSCheckerPage() {
                 if (stageIndex < stages.length) {
                     setProgress(stages[stageIndex].progress);
                     setAnalysisStage(stages[stageIndex].message);
+                    setCurrentStageIndex(stageIndex);
                     stageIndex++;
                 } else {
                     clearInterval(stageInterval);
@@ -262,6 +266,7 @@ export default function ATSCheckerPage() {
         setResult(null);
         setProgress(0);
         setAnalysisStage('');
+        setCurrentStageIndex(0);
         setError(null);
     };
 
@@ -284,31 +289,36 @@ export default function ATSCheckerPage() {
     ];
 
     return (
-
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-
-
+        <div className="min-h-screen bg-white">
             {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-4 md:px-8 py-3 md:py-4">
+            <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
-                        <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Target className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
+                            <Target className="w-5 h-5 text-white" />
                         </div>
-                        <div className="min-w-0">
-                            <h1 className="text-lg md:text-2xl font-bold text-gray-900 truncate">ATS Resume Checker</h1>
-                            <p className="text-xs md:text-sm text-gray-500 hidden sm:block">Check your resume's ATS compatibility</p>
+                        <div>
+                            <h1 className="text-lg font-bold text-gray-900 tracking-tight">ATS Checker</h1>
+                            <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">AI Optimization</p>
                         </div>
                     </div>
-                    <button
-                        onClick={() => router.push('/editor')}
-                        className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 min-w-[40px] min-h-[40px]"
-                        aria-label="Close"
-                    >
-                        <X className="w-5 h-5 text-gray-500" />
-                    </button>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => router.push('/editor')}
+                            className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors"
+                        >
+                            Back to Editor
+                        </button>
+                        <button
+                            onClick={() => router.push('/editor')}
+                            className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
+                            aria-label="Close"
+                        >
+                            <X className="w-5 h-5 text-gray-400" />
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </header>
 
             {/* JSON-LD Structured Data */}
             <script
@@ -327,660 +337,506 @@ export default function ATSCheckerPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            {/* Two Column Layout - Upload Always Visible */}
-            <div className="max-w-7xl mx-auto grid lg:grid-cols-5 gap-8 p-4 md:p-8">
-                {/* Left Column - SEO Content & Features (2/5 width) */}
-                <div className="lg:col-span-2">
-                    <div className="lg:sticky lg:top-8 space-y-6 mb-[16px]">
-                        {/* Upload Card - Always Visible */}
-                        {/* Upload Step */}
-                        {currentStep === 'upload' && (
-                            <div
-                                className={`bg-white border-2 rounded-2xl p-12 shadow-lg transition-all ${isDragging ? "border-indigo-500 scale-105 shadow-indigo-200" : "border-gray-200"
-                                    }`}
-                                onDragOver={handleDragOver}
-                                onDragLeave={handleDragLeave}
-                                onDrop={handleDrop}
-                            >
-                                {!file ? (
-                                    <div className="text-center">
-                                        <div className="w-24 h-24 bg-indigo-600 from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                                            <Upload size={48} className="font-bold  text-white" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-3">Upload Your Resume</h3>
-                                        <p className="text-gray-600 mb-6">Drag & drop your resume here, or click to browse</p>
-                                        <input
-                                            type="file"
-                                            id="resume-upload"
-                                            accept=".pdf,.docx"
-                                            onChange={handleFileChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="resume-upload"
-                                            className="flex text-white items-center justify-center mx-auto w-fit gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-3 rounded-xl font-semibold cursor-pointer hover:shadow-lg transition-all"
-                                        >
-                                            <File size={20} />
-                                            Choose File
-                                        </label>
-                                        <p className="text-sm text-gray-500 mt-4">Supports PDF and DOCX (Max 10MB)</p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-6">
-                                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                                            <FileText size={40} className="text-indigo-600" />
-                                            <div className="flex-1">
-                                                <h4 className="font-bold text-gray-900">{file.name}</h4>
-                                                <p className="text-gray-600 text-sm">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-                                            </div>
-                                            <button onClick={() => setFile(null)} className="text-red-600 hover:text-red-700 font-semibold">
-                                                Remove
-                                            </button>
-                                        </div>
 
-
-                                        <Button onClick={analyzeResume}>
-                                            <Sparkles size={20} />
-                                            Analyze with AI
-                                            <ArrowRight size={20} />
-                                        </Button>
-                                        {error && (
-                                            <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
-                                                <XCircle size={20} />
-                                                {error}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Critical ATS Issues Warning - NEW */}
-                        {result && result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
-                            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-6 shadow-lg">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                                        <AlertCircle size={20} className="text-red-600" />
-                                    </div>
-                                    <h3 className="text-lg font-bold text-red-900">Critical ATS Issues</h3>
-                                </div>
-                                <div className="space-y-2">
-                                    {result.detailedAnalysis.atsCompatibility.criticalIssues.map((issue, idx) => (
-                                        <div key={idx} className="flex gap-2 p-3 bg-red-100 border border-red-200 rounded-lg">
-                                            <XCircle size={16} className="text-red-700 flex-shrink-0 mt-0.5" />
-                                            <span className="text-red-900 text-xs font-medium">{issue}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Analyzing Step */}
-                        {currentStep === 'analyzing' && (
-                            <div className="bg-white border-2 border-gray-200 rounded-2xl p-12 shadow-lg">
-                                <div className="relative w-48 h-48 mx-auto mb-8">
-                                    <svg className="w-full h-full -rotate-90">
-                                        <circle cx="96" cy="96" r="88" stroke="#e5e7eb" strokeWidth="8" fill="none" />
-                                        <circle
-                                            cx="96" cy="96" r="88"
-                                            stroke="url(#grad)"
-                                            strokeWidth="8"
-                                            fill="none"
-                                            strokeDasharray={`${2 * Math.PI * 88}`}
-                                            strokeDashoffset={`${2 * Math.PI * 88 * (1 - progress / 100)}`}
-                                            className="transition-all duration-500"
-                                            strokeLinecap="round"
-                                        />
-                                        <defs>
-                                            <linearGradient id="grad">
-                                                <stop offset="0%" stopColor="#6366f1" />
-                                                <stop offset="100%" stopColor="#a855f7" />
-                                            </linearGradient>
-                                        </defs>
-                                    </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-5xl font-black text-gray-900">{progress}%</span>
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Your Resume</h3>
-                                    <p className="text-indigo-600 font-medium">{analysisStage}</p>
-                                </div>
-                            </div>
-                        )}
-
-
-                        <div className="space-y-6">
-                            {/* Stepper */}
-                            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg">
-                                <h3 className="text-xl font-bold text-gray-900 mb-6">Analysis Progress</h3>
-                                <div className="space-y-6">
-                                    {steps.map((step, idx) => (
-                                        <div key={step.id} className="flex items-start gap-4">
-                                            <div className="flex flex-col items-center">
-                                                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all ${step.status === 'complete' ? 'bg-green-500 text-white' :
-                                                    step.status === 'current' ? 'bg-indigo-600 text-white' :
-                                                        'bg-gray-200 text-gray-500'
-                                                    }`}>
-                                                    {step.status === 'complete' ? <CheckCircle size={24} /> : step.id}
+            <main className="flex-1 bg-white">
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader className="animate-spin text-blue-600" /></div>}>
+                    {currentStep !== 'results' ? (
+                        <div className="w-full relative">
+                            {/* Upload Screen - Background when analyzing */}
+                            <div className={`transition-all duration-700 ${currentStep === 'analyzing' ? "blur-md opacity-30 pointer-events-none scale-[0.98]" : ""}`}>
+                                <div className="min-h-[calc(100vh-80px)] w-full border-b border-gray-100">
+                                    <div className="grid lg:grid-cols-2 min-h-[calc(100vh-80px)]">
+                                        {/* Left Column - Interaction */}
+                                        <div className="relative z-10 p-8 md:p-12 lg:p-20 flex flex-col justify-center max-w-4xl mx-auto lg:mx-0 lg:max-w-none">
+                                            <div className="space-y-4 mb-10">
+                                                <div className="flex items-center gap-2 text-blue-600 font-bold text-sm tracking-widest uppercase">
+                                                    <div className="w-8 h-[2px] bg-blue-600" />
+                                                    ATS Optimization
                                                 </div>
-                                                {idx < steps.length - 1 && (
-                                                    <div className={`w-0.5 h-16 mt-2 ${step.status === 'complete' ? 'bg-green-500' : 'bg-gray-200'
-                                                        }`} />
-                                                )}
+                                                <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+                                                    Beat the <span className="text-blue-600">ATS Robots</span>
+                                                </h2>
+                                                <p className="text-gray-600 font-medium leading-relaxed max-w-md text-lg">
+                                                    Upload your resume to receive an instant AI-powered compatibility score, keyword analysis, and actionable suggestions to beat the Applicant Tracking Systems.
+                                                </p>
                                             </div>
-                                            <div className="flex-1 pt-2">
-                                                <h4 className={`font-bold ${step.status === 'current' ? 'text-indigo-600' :
-                                                    step.status === 'complete' ? 'text-green-600' :
-                                                        'text-gray-500'
-                                                    }`}>
-                                                    {step.name}
-                                                </h4>
-                                                {step.status === 'current' && currentStep === 'analyzing' && (
-                                                    <p className="text-sm text-gray-600 mt-1">{analysisStage}</p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
 
-
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-                {/* Right Column - Upload Section (3/5 width, sticky) */}
-                <div className="lg:col-span-3 space-y-8">
-
-
-
-
-                    {/* Quick Stats */}
-                    {currentStep !== 'results' && <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center shadow-lg">
-                            <div className="text-3xl font-bold mb-1">95%</div>
-                            <div className="text-sm opacity-90">Fortune 500 Use ATS</div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white text-center shadow-lg">
-                            <div className="text-3xl font-bold mb-1">75%</div>
-                            <div className="text-sm opacity-90">Resumes Rejected</div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white text-center shadow-lg">
-                            <div className="text-3xl font-bold mb-1">30s</div>
-                            <div className="text-sm opacity-90">Analysis Time</div>
-                        </div>
-                    </div>}
-
-                    {/* Visual Feature Cards */}
-                    {currentStep !== 'results' && <div className="space-y-4">
-                        <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-indigo-300 transition-all shadow-lg">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <Target size={32} className="text-indigo-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">🎯 AI-Powered Analysis</h3>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Our advanced AI simulates how real ATS systems scan your resume. Get instant feedback on keyword optimization, formatting issues, and ATS compatibility scores.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-green-300 transition-all shadow-lg">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <CheckCircle size={32} className="text-green-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">✅ Detailed Recommendations</h3>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Receive specific, actionable suggestions to improve your resume. Fix formatting errors, add missing keywords, and optimize section structure for maximum ATS compatibility.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-6 border-2 border-gray-200 hover:border-blue-300 transition-all shadow-lg">
-                            <div className="flex items-start gap-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <Shield size={32} className="text-blue-600" />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">🔒 100% Private & Secure</h3>
-                                    <p className="text-gray-600 leading-relaxed">
-                                        Your resume is never stored on our servers. All analysis happens in real-time and your data is immediately deleted after providing results. Complete privacy guaranteed.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>}
-
-                    {/* How It Works - Visual Steps */}
-                    {currentStep !== 'results' && <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 border-2 border-gray-200 shadow-lg">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">How It Works</h3>
-                        <div className="space-y-4">
-                            {[
-                                { icon: '📤', title: 'Upload Resume', desc: 'Drag & drop your PDF or Word resume' },
-                                { icon: '🤖', title: 'AI Analysis', desc: 'Our AI scans for ATS compatibility issues' },
-                                { icon: '📊', title: 'Get Score', desc: 'Receive detailed feedback and score (0-100)' },
-                                { icon: '✨', title: 'Improve', desc: 'Apply recommendations and re-check for free' }
-                            ].map((step, idx) => (
-                                <div key={idx} className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
-                                        {idx + 1}
-                                    </div>
-                                    <div className="flex-1 flex items-center gap-3">
-                                        <span className="text-3xl">{step.icon}</span>
-                                        <div>
-                                            <h4 className="font-bold text-gray-900">{step.title}</h4>
-                                            <p className="text-sm text-gray-600">{step.desc}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>}
-
-                    {/* Trust Indicators */}
-                    {currentStep !== 'results' && <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
-                        <div className="text-center mb-6">
-                            <h3 className="text-2xl font-bold mb-2">Trusted by Job Seekers Worldwide</h3>
-                            <p className="opacity-90">Over 50,000 resumes checked this month</p>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 text-center">
-                            <div>
-                                <div className="text-4xl mb-2">⭐</div>
-                                <div className="font-bold text-2xl">4.9/5</div>
-                                <div className="text-sm opacity-80">User Rating</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl mb-2">💼</div>
-                                <div className="font-bold text-2xl">85%</div>
-                                <div className="text-sm opacity-80">Interview Rate</div>
-                            </div>
-                            <div>
-                                <div className="text-4xl mb-2">🚀</div>
-                                <div className="font-bold text-2xl">Free</div>
-                                <div className="text-sm opacity-80">Forever</div>
-                            </div>
-                        </div>
-                    </div>}
-
-
-                    {/* Results Step */}
-                    {currentStep === 'results' && result && (
-                        <div className="space-y-6">
-                            {/* Score Card */}
-                            <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 shadow-lg">
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-6">
-                                        <div className={`text-7xl font-black ${getScoreColor(result.score)}`}>
-                                            {result.score}
-                                            <span className="text-3xl text-gray-400">/100</span>
-                                        </div>
-                                        <div>
-                                            <h2 className="text-2xl font-bold text-gray-900 mb-1">ATS Score</h2>
-                                            <p className="text-gray-600">
-                                                {result.score >= 80 && "🎉 Excellent!"}
-                                                {result.score >= 60 && result.score < 80 && "👍 Good!"}
-                                                {result.score < 60 && "⚠️ Needs work"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <button
-                                        onClick={resetAnalysis}
-                                        className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-xl font-semibold transition-all"
-                                    >
-                                        <RefreshCw size={20} />
-                                        New
-                                    </button>
-                                </div>
-                                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full bg-gradient-to-r ${getScoreGradient(result.score)} transition-all duration-1000`}
-                                        style={{ width: `${result.score}%` }}
-                                    />
-                                </div>
-
-                                {result.fixedData && (
-                                    <div className="mt-8">
-                                        <button
-                                            onClick={handleFixResume}
-                                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-indigo-200 transition-all flex items-center justify-center gap-3 group"
-                                        >
-                                            <Sparkles size={22} className="group-hover:animate-pulse" />
-                                            <span className="text-lg">Fix Your Resume Now</span>
-                                            <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-                                        </button>
-                                        <p className="text-center text-xs text-gray-500 mt-2">
-                                            AI has pre-filled the editor with your resume details
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Detailed Analysis Cards - NEW */}
-                            {result.detailedAnalysis && (
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    {/* Contact Info */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                                    <FileText size={16} className="text-blue-600" />
+                                            <div className="space-y-8">
+                                                {/* Selection Choice */}
+                                                <div className="flex items-center gap-8">
+                                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                                        <div className="w-5 h-5 rounded-full border-2 border-blue-600 flex items-center justify-center">
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                                                        </div>
+                                                        <span className="font-bold text-blue-600">Upload Resume</span>
+                                                    </label>
+                                                    <label className="flex items-center gap-3 cursor-not-allowed opacity-50">
+                                                        <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                                                        <span className="font-bold text-gray-400">Choose Save CV</span>
+                                                    </label>
                                                 </div>
-                                                <h4 className="font-bold text-gray-900 text-sm">Contact Info</h4>
-                                            </div>
-                                            <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.contactInfo.score)}`}>
-                                                {result.detailedAnalysis.contactInfo.score}
-                                            </span>
-                                        </div>
-                                        {result.detailedAnalysis.contactInfo.issues.length > 0 && (
-                                            <ul className="space-y-1">
-                                                {result.detailedAnalysis.contactInfo.issues.slice(0, 2).map((issue, idx) => (
-                                                    <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                        <span className="text-orange-500">•</span>
-                                                        <span>{issue}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
 
-                                    {/* Section Structure */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                                                    <BarChart3 size={16} className="text-purple-600" />
+                                                {/* Upload Zone */}
+                                                <div
+                                                    className={`relative group bg-white border-2 border-dashed rounded-2xl p-8 transition-all duration-300 ${isDragging ? "border-blue-600 bg-blue-50/50 scale-[1.02]" : "border-gray-100 hover:border-blue-200"
+                                                        }`}
+                                                    onDragOver={handleDragOver}
+                                                    onDragLeave={handleDragLeave}
+                                                    onDrop={handleDrop}
+                                                >
+                                                    {!file ? (
+                                                        <div className="text-center space-y-4">
+                                                            <input
+                                                                type="file"
+                                                                id="resume-upload"
+                                                                accept=".pdf,.docx"
+                                                                onChange={handleFileChange}
+                                                                className="hidden"
+                                                            />
+                                                            <label
+                                                                htmlFor="resume-upload"
+                                                                className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 text-white rounded-2xl font-black shadow-xl shadow-blue-200 cursor-pointer hover:bg-blue-700 hover:scale-[1.02] transition-all duration-300 group"
+                                                            >
+                                                                <div className="p-2 bg-white/20 rounded-lg group-hover:rotate-12 transition-transform">
+                                                                    <Upload className="w-5 h-5" />
+                                                                </div>
+                                                                <span>Upload Resume</span>
+                                                            </label>
+                                                            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-4">PDF or DOCX (Max 10MB)</p>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center justify-between gap-4 p-2">
+                                                            <div className="flex items-center gap-3 truncate">
+                                                                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 text-blue-600">
+                                                                    <FileText size={20} />
+                                                                </div>
+                                                                <div className="truncate text-left">
+                                                                    <div className="font-bold text-gray-900 text-sm truncate">{file.name}</div>
+                                                                    <div className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{(file.size / 1024 / 1024).toFixed(2)} MB</div>
+                                                                </div>
+                                                            </div>
+                                                            <button onClick={() => setFile(null)} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg transition-colors">
+                                                                <X size={18} />
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </div>
-                                                <h4 className="font-bold text-gray-900 text-sm">Section Structure</h4>
-                                            </div>
-                                            <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.sectionStructure.score)}`}>
-                                                {result.detailedAnalysis.sectionStructure.score}
-                                            </span>
-                                        </div>
-                                        {result.detailedAnalysis.sectionStructure.issues.length > 0 && (
-                                            <ul className="space-y-1">
-                                                {result.detailedAnalysis.sectionStructure.issues.slice(0, 2).map((issue, idx) => (
-                                                    <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                        <span className="text-orange-500">•</span>
-                                                        <span>{issue}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
 
-                                    {/* Achievements */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                                                    <Award size={16} className="text-green-600" />
-                                                </div>
-                                                <h4 className="font-bold text-gray-900 text-sm">Achievements</h4>
-                                            </div>
-                                            <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.achievements.score)}`}>
-                                                {result.detailedAnalysis.achievements.score}
-                                            </span>
-                                        </div>
-                                        <p className="text-xs text-gray-600 mb-2">
-                                            <span className="font-semibold">{result.detailedAnalysis.achievements.quantifiableCount}</span> quantifiable achievements found
-                                        </p>
-                                        {result.detailedAnalysis.achievements.issues.length > 0 && (
-                                            <ul className="space-y-1">
-                                                {result.detailedAnalysis.achievements.issues.slice(0, 1).map((issue, idx) => (
-                                                    <li key={idx} className="text-xs text-gray-600 flex gap-1">
-                                                        <span className="text-orange-500">•</span>
-                                                        <span>{issue}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
-                                    </div>
+                                                {/* Submit Button */}
+                                                <div className="space-y-4">
+                                                    <Button
+                                                        onClick={analyzeResume}
+                                                        disabled={!file}
+                                                        className="w-full relative overflow-hidden group py-4 md:py-8 rounded-2xl text-xl font-black bg-blue-600 hover:bg-blue-700 text-white shadow-[0_20px_40px_-5px_rgba(37,99,235,0.3)] disabled:opacity-50 disabled:shadow-none transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 border border-blue-400/30"
+                                                    >
+                                                        {/* Shimmer Effect */}
+                                                        <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[45deg] animate-shimmer pointer-events-none mb-0 pb-0" />
 
-                                    {/* ATS Compatibility */}
-                                    <div className="bg-white border-2 border-gray-200 rounded-xl p-5 shadow">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
-                                                    <Target size={16} className="text-indigo-600" />
+                                                        <div className="relative z-10 flex items-center gap-3">
+                                                            <span>Analyze Resume Now</span>
+                                                            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:translate-x-1.5 transition-transform duration-300">
+                                                                <ArrowRight className="w-5 h-5" />
+                                                            </div>
+                                                        </div>
+                                                    </Button>
+
+                                                    <div className="flex items-center gap-4">
+                                                        <label className="flex items-center gap-3 cursor-pointer group px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors">
+                                                            <div className="w-5 h-5 rounded-md border-2 border-gray-300 flex items-center justify-center group-hover:border-blue-400 transition-colors">
+                                                                <div className="w-2.5 h-2.5 rounded-sm bg-blue-600 scale-0 group-hover:scale-100 transition-transform" />
+                                                            </div>
+                                                            <span className="text-sm font-bold text-gray-700">Add a cover letter</span>
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <h4 className="font-bold text-gray-900 text-sm">ATS Compatibility</h4>
                                             </div>
-                                            <span className={`text-xl font-bold ${getScoreColor(result.detailedAnalysis.atsCompatibility.score)}`}>
-                                                {result.detailedAnalysis.atsCompatibility.score}
-                                            </span>
-                                        </div>
-                                        {result.detailedAnalysis.atsCompatibility.criticalIssues.length > 0 && (
-                                            <div className="space-y-1">
-                                                {result.detailedAnalysis.atsCompatibility.criticalIssues.slice(0, 2).map((issue, idx) => (
-                                                    <div key={idx} className="flex gap-1 items-start">
-                                                        <XCircle size={12} className="text-red-600 flex-shrink-0 mt-0.5" />
-                                                        <span className="text-xs text-red-700">{issue}</span>
+                                            {error && (
+                                                <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
+                                                    <XCircle size={18} />
+                                                    {error}
+                                                </div>
+                                            )}
+
+                                            {/* Features Section - Inline for Upload Step */}
+                                            <div className="grid md:grid-cols-3 gap-8 pt-16 border-t border-gray-50">
+                                                {[
+                                                    { icon: <Target className="text-blue-600" size={28} />, title: "Keyword Match", desc: "AI comparison with top job descriptions." },
+                                                    { icon: <BarChart3 className="text-blue-600" size={28} />, title: "Impact Score", desc: "Quantifiable metrics analysis." },
+                                                    { icon: <Award className="text-blue-600" size={28} />, title: "Format Check", desc: "100% ATS-ready layout verify." }
+                                                ].map((f, i) => (
+                                                    <div key={i} className="space-y-3">
+                                                        <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                                                            {f.icon}
+                                                        </div>
+                                                        <h4 className="text-base font-bold text-gray-900">{f.title}</h4>
+                                                        <p className="text-xs text-gray-500 font-medium leading-relaxed">{f.desc}</p>
                                                     </div>
                                                 ))}
                                             </div>
-                                        )}
+                                        </div>
+
+                                        {/* Right Column - Animated Visual Stack */}
+                                        <div className="hidden lg:flex relative h-full bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 items-center justify-center p-12 overflow-hidden border-l border-gray-100">
+                                            {/* Background Decorations */}
+                                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-200/20 rounded-full blur-[80px] -mr-32 -mt-32" />
+                                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-200/10 rounded-full blur-[80px] -ml-32 -mb-32" />
+
+                                            {/* Circular Path */}
+                                            <div className="absolute w-[400px] h-[400px] border-2 border-dashed border-blue-100/50 rounded-full animate-[spin_180s_linear_infinite]" />
+
+                                            {/* Central Visual - Match Score Gauge */}
+                                            <div className="relative z-10 bg-white rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] p-10 border border-gray-100 w-full max-w-[360px] transform hover:scale-[1.02] transition-transform duration-500">
+                                                <div className="flex justify-between items-center mb-8">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                                                            <FileText className="w-5 h-5" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-black text-gray-900 text-sm tracking-tight">ATS Analysis</div>
+                                                            <div className="text-[10px] text-blue-600 font-black uppercase tracking-widest mt-0.5">Live Processing</div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-2xl font-black text-blue-600">89%</div>
+                                                        <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Match</div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-6">
+                                                    {[
+                                                        { label: "Keyword Density", width: "94%", color: "bg-blue-600", delay: "0s" },
+                                                        { label: "Formatting Score", width: "88%", color: "bg-indigo-500", delay: "0.2s" },
+                                                        { label: "Content Quality", width: "76%", color: "bg-purple-500", delay: "0.4s" }
+                                                    ].map((item, i) => (
+                                                        <div key={i} className="space-y-2">
+                                                            <div className="flex justify-between items-center px-1">
+                                                                <span className="text-xs font-bold text-gray-600">{item.label}</span>
+                                                                <span className="text-[10px] font-black text-blue-600">{item.width}</span>
+                                                            </div>
+                                                            <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100">
+                                                                <div
+                                                                    className={`h-full ${item.color} rounded-full transition-all duration-1000 ease-out`}
+                                                                    style={{ width: item.width, transitionDelay: item.delay }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+
+                                                <div className="mt-8 pt-6 border-t border-gray-50 flex items-center justify-between">
+                                                    <div className="flex -space-x-3">
+                                                        {[1, 2, 3].map((i) => (
+                                                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 overflow-hidden ring-4 ring-blue-50/50">
+                                                                <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <span className="text-[10px] font-bold text-gray-400">Join 12k+ applicants</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Sarah Notification - Floating */}
+                                            <div className="absolute z-30 top-16 -left-4 animate-bounce duration-[4000ms]">
+                                                <div className="bg-white rounded-2xl shadow-xl p-3 border border-gray-100 flex items-center gap-3 rotate-[-4deg] scale-90">
+                                                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-inner ring-2 ring-blue-50">
+                                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&auto=format&fit=crop" alt="Sarah" className="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="text-xs font-black text-gray-900">Sarah M.</div>
+                                                        <div className="text-[10px] font-bold text-green-500 flex items-center gap-1.5 mt-0.5">
+                                                            <CheckCircle className="w-3 h-3" /> Hired at Google
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Notification Card - Floating */}
+                                            <div className="absolute z-30 top-24 -right-8 bg-blue-600 rounded-2xl shadow-2xl p-4 text-white w-44 rotate-6 animate-pulse">
+                                                <div className="flex items-center gap-2 mb-2">
+                                                    <div className="p-1.5 bg-white/20 rounded-lg">
+                                                        <Bell className="w-4 h-4" />
+                                                    </div>
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-100">Success!</span>
+                                                </div>
+                                                <div className="text-sm font-bold leading-snug">Resume optimized for Meta HR</div>
+                                                <div className="mt-3 h-1 w-12 bg-white/30 rounded-full" />
+                                            </div>
+
+                                            {/* Decorative Sparkle */}
+                                            <div className="absolute bottom-[20%] right-[10%] z-40 w-12 h-12 bg-white rounded-2xl border border-gray-100 shadow-xl flex items-center justify-center animate-spin-slow">
+                                                <Sparkles className="w-6 h-6 text-blue-600" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Modal Overlay for Analyzing */}
+                            {currentStep === 'analyzing' && (
+                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm animate-in fade-in duration-300">
+                                    <div className="max-w-xl w-full bg-white border border-gray-100 rounded-[3rem] p-10 md:p-14 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.15)] space-y-10 animate-in zoom-in slide-in-from-bottom-4 duration-300">
+                                        <div className="space-y-4 text-center">
+                                            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl shadow-blue-200 animate-bounce">
+                                                <Brain size={32} />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="text-3xl font-black text-gray-900 leading-tight">AI Analysis in Progress</h3>
+                                                <p className="text-gray-500 font-medium">Scanning your resume for maximum compatibility</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-gray-50/50 rounded-3xl p-8 border border-gray-100/50">
+                                            <StepLoader
+                                                steps={[
+                                                    'Extracting text from resume...',
+                                                    'Analyzing content quality...',
+                                                    'Checking ATS compatibility...',
+                                                    'Evaluating keywords...',
+                                                    'Generating insights...'
+                                                ]}
+                                                currentStep={currentStageIndex}
+                                                size="md"
+                                                className="max-w-md mx-auto font-bold"
+                                            />
+                                        </div>
+
+                                        <div className="text-center">
+                                            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest border border-blue-100/50 animate-pulse">
+                                                <Loader className="w-3.5 h-3.5 animate-spin" />
+                                                {progress}% Complete
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    ) : (
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                            {/* Results Header - Premium Dashboard Style */}
+                            <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-8 md:p-14 text-white shadow-2xl shadow-blue-900/20">
+                                {/* Background Decorations */}
+                                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-[80px] -ml-32 -mb-32" />
 
-                            {/* Feedback Cards */}
-                            <div className="grid gap-6">
-                                {/* Strengths */}
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                            <CheckCircle size={20} className="text-green-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Strengths</h3>
-                                    </div>
-                                    <ul className="space-y-2">
-                                        {result.feedback.strengths.map((item, idx) => (
-                                            <li key={idx} className="flex gap-2 text-sm text-gray-700">
-                                                <CheckCircle size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
-                                                <span>{item}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Weaknesses */}
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                                            <XCircle size={20} className="text-red-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Areas to Improve</h3>
-                                    </div>
-                                    <ul className="space-y-2">
-                                        {result.feedback.weaknesses.map((item, idx) => (
-                                            <li key={idx} className="flex gap-2 text-sm text-gray-700">
-                                                <XCircle size={16} className="text-red-600 flex-shrink-0 mt-0.5" />
-                                                <span>{item}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Suggestions */}
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                            <TrendingUp size={20} className="text-indigo-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Suggestions</h3>
-                                    </div>
-                                    <div className="space-y-2">
-                                        {result.feedback.suggestions.map((item, idx) => (
-                                            <div key={idx} className="flex gap-2 p-3 bg-indigo-50 border border-indigo-100 rounded-lg">
-                                                <Zap size={16} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                                <span className="text-gray-700 text-xs">{item}</span>
+                                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+                                    <div className="flex flex-col md:flex-row items-center gap-10">
+                                        {/* Score Gauge */}
+                                        <div className="relative w-44 h-44">
+                                            <svg className="w-full h-full -rotate-90">
+                                                <circle cx="88" cy="88" r="80" stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />
+                                                <circle
+                                                    cx="88" cy="88" r="80"
+                                                    stroke={result?.score && result.score >= 80 ? "#22c55e" : result?.score && result.score >= 60 ? "#f59e0b" : "#ef4444"}
+                                                    strokeWidth="12"
+                                                    fill="none"
+                                                    strokeDasharray={`${2 * Math.PI * 80}`}
+                                                    strokeDashoffset={`${2 * Math.PI * 80 * (1 - (result?.score || 0) / 100)}`}
+                                                    className="transition-all duration-1000 ease-out"
+                                                    strokeLinecap="round"
+                                                />
+                                            </svg>
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                                <span className="text-5xl font-black">{result?.score}</span>
+                                                <span className="text-[11px] font-black text-white/50 uppercase tracking-widest mt-1 text-center leading-tight">ATS<br />Score</span>
                                             </div>
-                                        ))}
+                                        </div>
+
+                                        <div className="space-y-4 text-center md:text-left">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-blue-400">
+                                                <Sparkles size={12} /> Optimization Report
+                                            </div>
+                                            <h2 className="text-3xl md:text-5xl font-black leading-tight">
+                                                CV Analysis <span className="text-blue-500">Result</span>
+                                            </h2>
+                                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                                                {result?.score && result.score >= 80 ? (
+                                                    <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-400 rounded-xl text-sm font-bold border border-green-500/20">
+                                                        <CheckCircle size={18} /> High Compatibility
+                                                    </div>
+                                                ) : result?.score && result.score >= 60 ? (
+                                                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-400 rounded-xl text-sm font-bold border border-amber-500/20">
+                                                        <AlertCircle size={18} /> Moderate Match
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-xl text-sm font-bold border border-red-500/20">
+                                                        <XCircle size={18} /> Critical Fixes Needed
+                                                    </div>
+                                                )}
+                                                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 text-gray-300 rounded-xl text-sm font-bold border border-white/10">
+                                                    <Clock size={16} /> Analysis took 2.4s
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                                        <button
+                                            onClick={resetAnalysis}
+                                            className="h-16 px-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-gray-200 flex items-center justify-center gap-3 shrink-0 group"
+                                        >
+                                            <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
+                                            <span className="font-bold">New Scan</span>
+                                        </button>
+                                        <Button
+                                            onClick={handleFixResume}
+                                            className="h-16 flex-1 lg:flex-none px-10 rounded-2xl font-black text-xl bg-blue-600 hover:bg-blue-700 text-white shadow-2xl shadow-blue-900/40"
+                                        >
+                                            <Zap size={22} className="fill-white" />
+                                            Fix with AI
+                                            <ArrowRight size={22} />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Detailed Breakdown Grid */}
+                            <div className="grid lg:grid-cols-3 gap-8">
+                                <div className="lg:col-span-2 space-y-8">
+                                    {/* Insights Panel */}
+                                    <div className="space-y-8">
+                                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
+                                            <div className="flex items-center gap-3 text-green-600">
+                                                <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
+                                                    <CheckCircle size={20} />
+                                                </div>
+                                                <h3 className="text-xl font-bold">Key Strengths</h3>
+                                            </div>
+                                            <ul className="space-y-4">
+                                                {result?.feedback.strengths.map((s, i) => (
+                                                    <li key={i} className="text-[13px] font-bold text-gray-800 flex gap-3 leading-relaxed">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0" />
+                                                        {s}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6 flex flex-col">
+                                            <div className="flex items-center gap-3 text-red-600 mb-2">
+                                                <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
+                                                    <XCircle size={20} />
+                                                </div>
+                                                <h3 className="text-xl font-bold">Weaknesses</h3>
+                                            </div>
+                                            <div className="grid gap-3 flex-1">
+                                                {result?.feedback.weaknesses.map((w, i) => (
+                                                    <div key={i} className="p-4 bg-red-50/30 rounded-2xl border border-red-100/50 flex items-start gap-3 group hover:border-red-200 transition-all">
+                                                        <div className="w-6 h-6 rounded-lg bg-red-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">
+                                                            !
+                                                        </div>
+                                                        <p className="text-gray-800 text-[13px] font-bold leading-relaxed">{w}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Optimization Strategy */}
+                                    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-50/50 p-10 space-y-8 overflow-hidden relative">
+                                        <div className="absolute top-0 right-0 p-8 opacity-[0.03] rotate-12">
+                                            <Brain size={120} />
+                                        </div>
+                                        <div className="flex items-center gap-3 relative z-10">
+                                            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                                                <TrendingUp size={24} />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-2xl font-black text-gray-900">Optimization Roadmap</h3>
+                                                <p className="text-sm text-gray-400 font-medium">Actionable steps generated by AI</p>
+                                            </div>
+                                        </div>
+                                        <div className="grid gap-4 relative z-10">
+                                            {result?.feedback.suggestions.map((s, i) => (
+                                                <div key={i} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 flex items-start gap-4 group hover:border-blue-200 transition-all">
+                                                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0">
+                                                        0{i + 1}
+                                                    </div>
+                                                    <p className="text-gray-700 font-medium leading-relaxed">{s}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Sidebar - Technical Checks */}
+                                <div className="space-y-8">
+                                    {/* Keyword Analysis */}
+                                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="text-xl font-bold text-gray-900">Keywords</h3>
+                                            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+                                                <Target size={18} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-6">
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between items-center">
+                                                    <div className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Found</div>
+                                                    <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-md border border-green-100">{result?.keywords.found.length}</span>
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {result?.keywords.found.map((k, i) => (
+                                                        <span key={i} className="px-3 py-1 bg-white border border-gray-100 text-gray-600 text-[11px] font-bold rounded-lg shadow-sm">
+                                                            {k}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between items-center">
+                                                    <div className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Missing</div>
+                                                    <span className="text-xs font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-100">{result?.keywords.missing.length}</span>
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {result?.keywords.missing.map((k, i) => (
+                                                        <span key={i} className="px-3 py-1 bg-red-50 border border-red-100 text-red-600 text-[11px] font-bold rounded-lg">
+                                                            {k}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* ATS Formatting */}
+                                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-16 -mt-16 opacity-50" />
+                                        <div className="flex items-center justify-between relative z-10">
+                                            <h3 className="text-xl font-bold text-gray-900">Formatting</h3>
+                                            <div className="text-2xl font-black text-blue-600">{result?.formatting.score}%</div>
+                                        </div>
+                                        {result?.formatting.issues.length ? (
+                                            <ul className="space-y-3 relative z-10">
+                                                {result.formatting.issues.map((issue, i) => (
+                                                    <li key={i} className="text-xs font-bold text-gray-700 flex gap-2">
+                                                        <div className="w-1 h-1 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
+                                                        {issue}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <div className="relative z-10 flex items-center gap-3 p-4 bg-green-50 rounded-2xl border border-green-100">
+                                                <CheckCircle size={18} className="text-green-500" />
+                                                <p className="text-[11px] text-green-700 font-bold leading-tight">
+                                                    Perfect formatting compatibility with modern ATS.
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Pro Tip */}
+                                    <div className="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] text-white space-y-3 shadow-xl shadow-blue-200">
+                                        <Award size={24} className="text-blue-200" />
+                                        <h4 className="font-bold text-lg">Pro Insight</h4>
+                                        <p className="text-xs text-blue-100 font-medium leading-relaxed">
+                                            Resumes with a score over 85% are 3x more likely to clear the initial screening phase.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     )}
-
-
-                    {/* Right Section - Stepper & Info */}
-                    <div className="space-y-6">
-                        {/* Keywords & Formatting (Only show in results) */}
-                        {currentStep === 'results' && result && (
-                            <>
-
-                                {/* ATS Warnings - NEW */}
-                                {result.detailedAnalysis && result.detailedAnalysis.atsCompatibility.warnings.length > 0 && (
-                                    <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                                                <AlertCircle size={20} className="text-orange-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-orange-900">ATS Warnings</h3>
-                                        </div>
-                                        <div className="space-y-2">
-                                            {result.detailedAnalysis.atsCompatibility.warnings.map((warning, idx) => (
-                                                <div key={idx} className="flex gap-2 p-2 bg-orange-100 border border-orange-200 rounded-lg">
-                                                    <AlertCircle size={14} className="text-orange-700 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-orange-900 text-xs">{warning}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                            <Target size={20} className="text-green-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Keywords Found</h3>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {result.keywords.found.map((kw, idx) => (
-                                            <span key={idx} className="px-3 py-1 bg-green-50 border border-green-200 text-green-700 rounded-lg text-xs font-medium">
-                                                {kw}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                                            <AlertCircle size={20} className="text-orange-600" />
-                                        </div>
-                                        <h3 className="text-lg font-bold text-gray-900">Missing Keywords</h3>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2">
-                                        {result.keywords.missing.map((kw, idx) => (
-                                            <span key={idx} className="px-3 py-1 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs font-medium">
-                                                {kw}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                                                <BarChart3 size={20} className="text-purple-600" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-gray-900">Formatting</h3>
-                                        </div>
-                                        <span className={`text-3xl font-bold ${getScoreColor(result.formatting.score)}`}>
-                                            {result.formatting.score}
-                                        </span>
-                                    </div>
-                                    {result.formatting.issues.length > 0 && (
-                                        <div className="space-y-2">
-                                            {result.formatting.issues.map((issue, idx) => (
-                                                <div key={idx} className="flex gap-2 p-2 bg-orange-50 border border-orange-100 rounded-lg">
-                                                    <AlertCircle size={16} className="text-orange-600 flex-shrink-0 mt-0.5" />
-                                                    <span className="text-gray-700 text-xs">{issue}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            </>
-                        )}
-
-                        {/* Info Card (Show when not in results) */}
-                        {currentStep !== 'results' && (
-                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 border-2 border-indigo-100 rounded-2xl p-6 shadow-lg">
-                                <h3 className="text-lg font-bold text-gray-900 mb-4">Comprehensive ATS Analysis</h3>
-                                <ul className="space-y-3">
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Format Compatibility</p>
-                                            <p className="text-sm text-gray-600">Tables, columns, special formatting</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Section Structure</p>
-                                            <p className="text-sm text-gray-600">Standard headers and organization</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Contact Information</p>
-                                            <p className="text-sm text-gray-600">Email, phone, LinkedIn profile</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Keywords & Action Verbs</p>
-                                            <p className="text-sm text-gray-600">Industry-specific terms</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Quantifiable Achievements</p>
-                                            <p className="text-sm text-gray-600">Numbers, metrics, impact</p>
-                                        </div>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <CheckCircle size={20} className="text-indigo-600 flex-shrink-0 mt-0.5" />
-                                        <div>
-                                            <p className="font-semibold text-gray-900">Content Quality</p>
-                                            <p className="text-sm text-gray-600">Clarity, grammar, professionalism</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        )}
-                    </div>
-
-
-
-                </div>
-            </div>
+                </Suspense>
+            </main>
         </div>
     );
 }
