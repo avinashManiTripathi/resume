@@ -99,10 +99,10 @@ class CoverLetterService {
         const sanitizedData = sanitizeUserData(request.userData);
 
         // Validate user data against template (Flat check)
-        const validation = validateUserData(sanitizedData, template);
-        if (!validation.isValid) {
-            throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
-        }
+        // const validation = validateUserData(sanitizedData, template);
+        // if (!validation.isValid) {
+        //     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
+        // }
 
         // Transform to Structured Data
         const structuredData = this.mapToStructuredData(sanitizedData);
@@ -158,10 +158,10 @@ class CoverLetterService {
         const sanitizedData = sanitizeUserData(userData);
 
         // Validate
-        const validation = validateUserData(sanitizedData, template);
-        if (!validation.isValid) {
-            throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
-        }
+        // const validation = validateUserData(sanitizedData, template);
+        // if (!validation.isValid) {
+        //     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
+        // }
 
         // Transform
         const structuredData = this.mapToStructuredData(sanitizedData);
