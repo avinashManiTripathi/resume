@@ -23,7 +23,7 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
     const page = await browser.newPage();
     try {
         // Optimize: Wait for DOMContentLoaded instead of networkidle2 (saves ~500ms)
-        await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+        await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
 
         // Use type assertion to avoid union type conflicts between puppeteer and puppeteer-core
         await (page as any).evaluate(async (data: any) => {
