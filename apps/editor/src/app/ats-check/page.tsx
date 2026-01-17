@@ -613,93 +613,112 @@ export default function ATSCheckerPage() {
                     ) : (
                         <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 space-y-12">
                             {/* Results Header - Premium Dashboard Style */}
-                            <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-8 md:p-14 text-white shadow-2xl shadow-blue-900/20">
-                                {/* Background Decorations */}
-                                <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] -mr-48 -mt-48" />
-                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-600/10 rounded-full blur-[80px] -ml-32 -mb-32" />
+                            {/* Results Header - Premium Dashboard Style */}
+                            {/* Detailed Breakdown Grid - Split Layout */}
+                            <div className="flex flex-col lg:flex-row gap-8">
+                                {/* Left Column - Sticky Score & Actions (30%) */}
+                                <div className="w-full lg:w-[30%] lg:sticky lg:top-24 h-fit space-y-6">
+                                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-6 md:p-8 text-white shadow-2xl shadow-blue-900/20 relative overflow-hidden">
+                                        {/* Background Decorations */}
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[60px] -mr-32 -mt-32" />
+                                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-600/10 rounded-full blur-[50px] -ml-24 -mb-24" />
 
-                                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
-                                    <div className="flex flex-col md:flex-row items-center gap-10">
-                                        {/* Score Gauge */}
-                                        <div className="relative w-44 h-44">
-                                            <svg className="w-full h-full -rotate-90">
-                                                <circle cx="88" cy="88" r="80" stroke="rgba(255,255,255,0.05)" strokeWidth="12" fill="none" />
-                                                <circle
-                                                    cx="88" cy="88" r="80"
-                                                    stroke={result?.score && result.score >= 80 ? "#22c55e" : result?.score && result.score >= 60 ? "#f59e0b" : "#ef4444"}
-                                                    strokeWidth="12"
-                                                    fill="none"
-                                                    strokeDasharray={`${2 * Math.PI * 80}`}
-                                                    strokeDashoffset={`${2 * Math.PI * 80 * (1 - (result?.score || 0) / 100)}`}
-                                                    className="transition-all duration-1000 ease-out"
-                                                    strokeLinecap="round"
-                                                />
-                                            </svg>
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                                <span className="text-5xl font-black">{result?.score}</span>
-                                                <span className="text-[11px] font-black text-white/50 uppercase tracking-widest mt-1 text-center leading-tight">ATS<br />Score</span>
+                                        <div className="relative z-10 flex flex-col items-center text-center space-y-6">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-blue-200">
+                                                <Sparkles size={12} /> Optimization Score
                                             </div>
-                                        </div>
 
-                                        <div className="space-y-4 text-center md:text-left">
-                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-blue-400">
-                                                <Sparkles size={12} /> Optimization Report
-                                            </div>
-                                            <h2 className="text-3xl md:text-5xl font-black leading-tight">
-                                                CV Analysis <span className="text-blue-500">Result</span>
-                                            </h2>
-                                            <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                                                {result?.score && result.score >= 80 ? (
-                                                    <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-400 rounded-xl text-sm font-bold border border-green-500/20">
-                                                        <CheckCircle size={18} /> High Compatibility
-                                                    </div>
-                                                ) : result?.score && result.score >= 60 ? (
-                                                    <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 text-amber-400 rounded-xl text-sm font-bold border border-amber-500/20">
-                                                        <AlertCircle size={18} /> Moderate Match
-                                                    </div>
-                                                ) : (
-                                                    <div className="flex items-center gap-2 px-4 py-2 bg-red-500/10 text-red-400 rounded-xl text-sm font-bold border border-red-500/20">
-                                                        <XCircle size={18} /> Critical Fixes Needed
-                                                    </div>
-                                                )}
-                                                <div className="flex items-center gap-2 px-4 py-2 bg-white/5 text-gray-300 rounded-xl text-sm font-bold border border-white/10">
-                                                    <Clock size={16} /> Analysis took 2.4s
+                                            {/* Score Gauge */}
+                                            <div className="relative w-40 h-40">
+                                                <svg className="w-full h-full -rotate-90">
+                                                    <circle cx="80" cy="80" r="70" stroke="rgba(255,255,255,0.1)" strokeWidth="10" fill="none" />
+                                                    <circle
+                                                        cx="80" cy="80" r="70"
+                                                        stroke={result?.score && result.score >= 80 ? "#22c55e" : result?.score && result.score >= 60 ? "#f59e0b" : "#ef4444"}
+                                                        strokeWidth="10"
+                                                        fill="none"
+                                                        strokeDasharray={`${2 * Math.PI * 70}`}
+                                                        strokeDashoffset={`${2 * Math.PI * 70 * (1 - (result?.score || 0) / 100)}`}
+                                                        className="transition-all duration-1000 ease-out"
+                                                        strokeLinecap="round"
+                                                    />
+                                                </svg>
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                                    <span className="text-4xl font-black">{result?.score}</span>
+                                                    <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">/ 100</span>
                                                 </div>
                                             </div>
+
+                                            <div className="space-y-2">
+                                                <h3 className="text-xl font-black">{result?.score && result.score >= 80 ? "Excellent!" : result?.score && result.score >= 60 ? "Good Start" : "Needs Work"}</h3>
+                                                <p className="text-sm text-blue-100 font-medium">
+                                                    {result?.score && result.score >= 80
+                                                        ? "Your resume is ATS-optimized."
+                                                        : result?.score && result.score >= 60
+                                                            ? "Some improvements needed."
+                                                            : "Critical fixes required."}
+                                                </p>
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div className="w-full space-y-3 pt-2">
+                                                <Button
+                                                    onClick={handleFixResume}
+                                                    className="w-full py-4 rounded-xl font-black text-blue-600 bg-white hover:bg-blue-50 transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2"
+                                                >
+                                                    <Zap size={18} className="fill-blue-600" />
+                                                    <span>Fix with AI</span>
+                                                </Button>
+                                                <button
+                                                    onClick={resetAnalysis}
+                                                    className="w-full py-3 text-sm font-bold text-white/70 hover:text-white transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <RefreshCw size={14} />
+                                                    New Scan
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-                                        <button
-                                            onClick={resetAnalysis}
-                                            className="h-16 px-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all text-gray-200 flex items-center justify-center gap-3 shrink-0 group"
-                                        >
-                                            <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
-                                            <span className="font-bold">New Scan</span>
-                                        </button>
-                                        <Button
-                                            onClick={handleFixResume}
-                                            className="h-16 flex-1 lg:flex-none px-10 rounded-2xl font-black text-xl bg-blue-600 hover:bg-blue-700 text-white shadow-2xl shadow-blue-900/40"
-                                        >
-                                            <Zap size={22} className="fill-white" />
-                                            Fix with AI
-                                            <ArrowRight size={22} />
-                                        </Button>
+                                    {/* Quick Stats */}
+                                    <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm space-y-4">
+                                        <div className="flex items-center justify-between pb-4 border-b border-gray-50">
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Optimization Status</span>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                                                    <CheckCircle size={16} className="text-green-500" /> Strengths
+                                                </div>
+                                                <span className="text-sm font-bold text-gray-900">{result?.feedback.strengths.length || 0}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                                                    <AlertCircle size={16} className="text-amber-500" /> Improvements
+                                                </div>
+                                                <span className="text-sm font-bold text-gray-900">{result?.feedback.suggestions.length || 0}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                                                    <XCircle size={16} className="text-red-500" /> Critical Issues
+                                                </div>
+                                                <span className="text-sm font-bold text-gray-900">{result?.feedback.weaknesses.length || 0}</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Detailed Breakdown Grid */}
-                            <div className="grid lg:grid-cols-3 gap-8">
-                                <div className="lg:col-span-2 space-y-8">
+                                {/* Right Column - Detailed Analysis (70%) */}
+                                <div className="w-full lg:w-[70%] space-y-8">
                                     {/* Insights Panel */}
-                                    <div className="space-y-8">
-                                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
+                                    {/* Insights Panel */}
+                                    <div className="space-y-6">
+                                        <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
                                             <div className="flex items-center gap-3 text-green-600">
                                                 <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
                                                     <CheckCircle size={20} />
                                                 </div>
-                                                <h3 className="text-xl font-bold">Key Strengths</h3>
+                                                <h3 className="text-lg font-bold">Key Strengths</h3>
                                             </div>
                                             <ul className="space-y-4">
                                                 {result?.feedback.strengths.map((s, i) => (
@@ -710,17 +729,17 @@ export default function ATSCheckerPage() {
                                                 ))}
                                             </ul>
                                         </div>
-                                        <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6 flex flex-col">
+                                        <div className="bg-white p-6 md:p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6 flex flex-col">
                                             <div className="flex items-center gap-3 text-red-600 mb-2">
                                                 <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
                                                     <XCircle size={20} />
                                                 </div>
-                                                <h3 className="text-xl font-bold">Weaknesses</h3>
+                                                <h3 className="text-lg font-bold">Weaknesses</h3>
                                             </div>
                                             <div className="grid gap-3 flex-1">
                                                 {result?.feedback.weaknesses.map((w, i) => (
                                                     <div key={i} className="p-4 bg-red-50/30 rounded-2xl border border-red-100/50 flex items-start gap-3 group hover:border-red-200 transition-all">
-                                                        <div className="w-6 h-6 rounded-lg bg-red-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0">
+                                                        <div className="w-5 h-5 rounded-lg bg-red-500 flex items-center justify-center text-white text-[10px] font-black flex-shrink-0 mt-0.5">
                                                             !
                                                         </div>
                                                         <p className="text-gray-800 text-[13px] font-bold leading-relaxed">{w}</p>
@@ -731,7 +750,7 @@ export default function ATSCheckerPage() {
                                     </div>
 
                                     {/* Optimization Strategy */}
-                                    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-50/50 p-10 space-y-8 overflow-hidden relative">
+                                    <div className="bg-white rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-50/50 p-8 md:p-10 space-y-8 overflow-hidden relative">
                                         <div className="absolute top-0 right-0 p-8 opacity-[0.03] rotate-12">
                                             <Brain size={120} />
                                         </div>
@@ -746,8 +765,8 @@ export default function ATSCheckerPage() {
                                         </div>
                                         <div className="grid gap-4 relative z-10">
                                             {result?.feedback.suggestions.map((s, i) => (
-                                                <div key={i} className="p-6 bg-gray-50 rounded-2xl border border-gray-100 flex items-start gap-4 group hover:border-blue-200 transition-all">
-                                                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0">
+                                                <div key={i} className="p-6 bg-gray-50 rounded-2xl border border-gray-100/50 hover:bg-white flex items-start gap-4 group hover:border-blue-200 hover:shadow-lg hover:shadow-blue-50/50 transition-all duration-300">
+                                                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-black flex-shrink-0 group-hover:scale-110 transition-transform">
                                                         0{i + 1}
                                                     </div>
                                                     <p className="text-gray-700 font-medium leading-relaxed">{s}</p>
@@ -755,60 +774,79 @@ export default function ATSCheckerPage() {
                                             ))}
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Sidebar - Technical Checks */}
-                                <div className="space-y-8 sticky top-24 self-start">
                                     {/* Keyword Analysis */}
-                                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
+                                    <div className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-8">
                                         <div className="flex items-center justify-between">
-                                            <h3 className="text-xl font-bold text-gray-900">Keywords</h3>
-                                            <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
-                                                <Target size={18} />
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                                                    <Target size={24} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-2xl font-black text-gray-900">Keyword Analysis</h3>
+                                                    <p className="text-sm text-gray-400 font-medium">ATS Filtering Impact</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="space-y-6">
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between items-center">
-                                                    <div className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Found</div>
-                                                    <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-md border border-green-100">{result?.keywords.found.length}</span>
+                                        <div className="grid md:grid-cols-2 gap-8">
+                                            <div className="space-y-4">
+                                                <div className="flex justify-between items-center pb-2 border-b border-gray-50">
+                                                    <div className="text-xs font-black text-green-600 uppercase tracking-widest flex items-center gap-2">
+                                                        <CheckCircle size={14} /> Found Keywords
+                                                    </div>
+                                                    <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-md border border-green-100">{result?.keywords.found.length} Matches</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {result?.keywords.found.map((k, i) => (
-                                                        <span key={i} className="px-3 py-1 bg-white border border-gray-100 text-gray-600 text-[11px] font-bold rounded-lg shadow-sm">
+                                                        <span key={i} className="px-3 py-1.5 bg-green-50 border border-green-100 text-green-700 text-[11px] font-bold rounded-lg shadow-sm">
                                                             {k}
                                                         </span>
                                                     ))}
+                                                    {result?.keywords.found.length === 0 && (
+                                                        <p className="text-sm text-gray-400 italic">No major keywords detected.</p>
+                                                    )}
                                                 </div>
                                             </div>
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between items-center">
-                                                    <div className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Missing</div>
-                                                    <span className="text-xs font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-100">{result?.keywords.missing.length}</span>
+                                            <div className="space-y-4">
+                                                <div className="flex justify-between items-center pb-2 border-b border-gray-50">
+                                                    <div className="text-xs font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
+                                                        <XCircle size={14} /> Missing Keywords
+                                                    </div>
+                                                    <span className="text-xs font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-100">{result?.keywords.missing.length} Missing</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {result?.keywords.missing.map((k, i) => (
-                                                        <span key={i} className="px-3 py-1 bg-red-50 border border-red-100 text-red-600 text-[11px] font-bold rounded-lg">
+                                                        <span key={i} className="px-3 py-1.5 bg-red-50 border border-red-100 text-red-600 text-[11px] font-bold rounded-lg opacity-70 hover:opacity-100 transition-opacity">
                                                             {k}
                                                         </span>
                                                     ))}
+                                                    {result?.keywords.missing.length === 0 && (
+                                                        <p className="text-sm text-gray-400 italic">Great job! No major keywords missing.</p>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* ATS Formatting */}
+                                    {/* ATS Formatting & Other Checks */}
                                     <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6 relative overflow-hidden">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full blur-3xl -mr-16 -mt-16 opacity-50" />
                                         <div className="flex items-center justify-between relative z-10">
-                                            <h3 className="text-xl font-bold text-gray-900">Formatting</h3>
-                                            <div className="text-2xl font-black text-blue-600">{result?.formatting.score}%</div>
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                                                    <FileText size={20} />
+                                                </div>
+                                                <h3 className="text-xl font-bold text-gray-900">Formatting Check</h3>
+                                            </div>
+                                            <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-black uppercase tracking-widest border border-blue-100">
+                                                Score: {result?.formatting.score}%
+                                            </div>
                                         </div>
                                         {result?.formatting.issues.length ? (
                                             <ul className="space-y-3 relative z-10">
                                                 {result.formatting.issues.map((issue, i) => (
-                                                    <li key={i} className="text-xs font-bold text-gray-700 flex gap-2">
-                                                        <div className="w-1 h-1 rounded-full bg-amber-400 mt-1.5 flex-shrink-0" />
+                                                    <li key={i} className="p-3 bg-gray-50 rounded-xl border border-gray-100 text-sm font-bold text-gray-700 flex gap-3 items-center">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0" />
                                                         {issue}
                                                     </li>
                                                 ))}
@@ -823,14 +861,7 @@ export default function ATSCheckerPage() {
                                         )}
                                     </div>
 
-                                    {/* Pro Tip */}
-                                    <div className="p-6 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] text-white space-y-3 shadow-xl shadow-blue-200">
-                                        <Award size={24} className="text-blue-200" />
-                                        <h4 className="font-bold text-lg">Pro Insight</h4>
-                                        <p className="text-xs text-blue-100 font-medium leading-relaxed">
-                                            Resumes with a score over 85% are 3x more likely to clear the initial screening phase.
-                                        </p>
-                                    </div>
+                                    <KeywordBanner />
                                 </div>
                             </div>
                         </div>
