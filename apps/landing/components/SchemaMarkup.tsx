@@ -26,7 +26,12 @@ export function GlobalSchema() {
         "@type": "Organization",
         "name": "ProfResume",
         "url": baseUrl,
-        "logo": `${baseUrl}/logo.png`,
+        "logo": {
+            "@type": "ImageObject",
+            "url": `${baseUrl}/icon-512.png`,
+            "width": 512,
+            "height": 512
+        },
         "description": "Professional resume building platform trusted by 50,000+ job seekers worldwide",
         "slogan": "Build Your Career with Confidence",
         "foundingDate": "2024",

@@ -93,15 +93,16 @@ export const metadata: Metadata = {
   },
 
   // Icons (Next.js App Router best practice)
+  // Icons (Next.js App Router best practice)
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon-48.png', type: 'image/png', sizes: '48x48' },
-      { url: '/icon-96.png', type: 'image/png', sizes: '96x96' },
-      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: `${baseUrl}/favicon.ico`, sizes: 'any' },
+      { url: `${baseUrl}/icon-48.png`, type: 'image/png', sizes: '48x48' },
+      { url: `${baseUrl}/icon-96.png`, type: 'image/png', sizes: '96x96' },
+      { url: `${baseUrl}/icon-192.png`, type: 'image/png', sizes: '192x192' },
     ],
-    shortcut: '/icon-192.png',
-    apple: '/icon-192.png',
+    shortcut: `${baseUrl}/icon-192.png`,
+    apple: `${baseUrl}/icon-192.png`,
   },
 };
 
