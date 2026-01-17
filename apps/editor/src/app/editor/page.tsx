@@ -693,7 +693,7 @@ function ResumeEditor() {
         {/* Left Section - Form (45%) */}
         <div className={`w-full md:w-[45%] flex flex-col relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/30">
+          <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
             {showTemplates ? (
               <TemplateSelector
                 apiBase={API_BASE || 'https://api.profresume.com'}
