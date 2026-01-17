@@ -532,8 +532,6 @@ function CoverLetterCreateForm() {
                 title={formData.jobTitle || "Job Title"}
                 progress={progress}
                 onDownload={async () => { await handleGenerate(); }}
-                isSaving={isSaving}
-                lastSaved={lastSaved}
                 onTemplateChange={() => setShowTemplates(true)}
                 fontFamily={fontFamily}
                 onFontChange={setFontFamily}
@@ -653,10 +651,7 @@ function CoverLetterCreateForm() {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Custom Paragraph (Optional)</label>
-                                                <textarea value={formData.customParagraph} onChange={(e) => handleInputChange("customParagraph", e.target.value)} rows={4} className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 resize-none text-sm" placeholder="Additionally, I am..." />
-                                            </div>
+
                                         </div>
                                         <div className="h-12" />
                                     </div>

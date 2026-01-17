@@ -678,8 +678,6 @@ function ResumeEditor() {
         fontFamily={fontFamily}
         onFontChange={setFontFamily}
         onTailor={() => router.push('/tailor')}
-        isSaving={isSaving}
-        lastSaved={lastSaved}
       />
 
       {/* Main Content - Split Glass Content */}
@@ -729,6 +727,17 @@ function ResumeEditor() {
                 className="shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 bg-white"
               />
             </div>
+            {/* Overlay when loading */}
+            {(isPdfGenerating) && (
+              <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-3">
+                  <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
+                  <p className="text-sm font-medium text-slate-600 animate-pulse">
+                    {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </div>

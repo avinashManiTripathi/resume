@@ -23,8 +23,6 @@ interface ProfileHeaderProps {
     fontFamily?: string;
     onFontChange?: (font: string) => void;
     onTailor?: () => void;
-    isSaving?: boolean;
-    lastSaved?: Date | null;
     classNameLeft?: string;
 }
 
@@ -44,8 +42,6 @@ export function ProfileHeader({
     fontFamily = "Inter",
     onFontChange,
     onTailor,
-    isSaving,
-    lastSaved,
     classNameLeft = "md:w-[45%]",
 }: ProfileHeaderProps) {
 
@@ -213,13 +209,13 @@ export function ProfileHeader({
                                 )}
                             </div>
 
-                            <button
+                            {onTailor && <button
                                 onClick={onTailor}
                                 className="hidden lg:flex items-center gap-2 px-4 h-10 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/50"
                             >
                                 <Trophy size={16} className="fill-amber-700/20" />
                                 <span className="text-xs font-black uppercase tracking-widest">Tailor AI</span>
-                            </button>
+                            </button>}
                         </div>
 
                         <div className="w-px h-6 bg-gray-100 mx-1"></div>
@@ -246,17 +242,6 @@ export function ProfileHeader({
                         </div>
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
-                        {isSaving ? (
-                            <span className="text-xs md:text-sm text-gray-400 font-medium flex items-center gap-1.5 animate-pulse mr-2">
-                                <Loader2 className="w-3 h-3 md:w-3.5 md:h-3.5 animate-spin" />
-                                Saving...
-                            </span>
-                        ) : lastSaved ? (
-                            <span className="text-xs md:text-sm text-gray-400 font-medium flex items-center gap-1.5 mr-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                Saved
-                            </span>
-                        ) : null}
                         <Button onClick={handleDownload} variant="primary" className="flex-1 md:flex-initial">
                             {isDownloading ? (
                                 <>
