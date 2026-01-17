@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
     if (!token) {
         const authUrl = new URL('https://auth.profresume.com');
         // Add current URL as redirect parameter
-        authUrl.searchParams.set('redirect', "https://edit.profresume.com");
+        authUrl.searchParams.set('redirect', "https://edit.profresume.com" + pathname);
         return NextResponse.redirect(authUrl);
     }
 

@@ -224,7 +224,7 @@ router.post('/logout', (req: Request, res: Response) => {
         sameSite: 'lax',
         // CRITICAL: Must match domain setting when cookie was created
         // In development: undefined (localhost), in production: .profresume.com
-        domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : undefined,
+        domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
         path: '/',
     });
 

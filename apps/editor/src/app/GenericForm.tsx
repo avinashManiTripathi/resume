@@ -249,7 +249,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                         <div className="flex flex-wrap gap-2">
                                             {Object.entries(config.fields).map(([fieldKey, field]) => (
                                                 <div key={fieldKey} className={"mb-4 " + field.className}>
-                                                    <label className="block text-sm font-bold text-gray-700 mb-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 block mb-2">
                                                         {field.label}
                                                     </label>
                                                     {field.description && (
@@ -293,7 +293,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                                         >
                                                             {Object.entries(config.item).map(([fieldKey, field]) => (
                                                                 <div key={fieldKey} className={"mb-3 " + field.className}>
-                                                                    <label className="block text-sm font-bold text-gray-700 mb-1">
+                                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 block mb-2">
                                                                         {field.label}
                                                                     </label>
                                                                     <FieldRenderer

@@ -178,8 +178,8 @@ export default function DashboardPage() {
     <div className="flex h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans selection:bg-indigo-100 selection:text-indigo-900">
       {/* Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white animate-in fade-in duration-300">
+          <div className="bg-white border border-slate-100 rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
             <div className="text-center mb-8">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
                 <LayoutGrid className="w-8 h-8 text-blue-600 animate-pulse" />

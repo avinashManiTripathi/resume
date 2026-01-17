@@ -53,7 +53,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
             {/* Left Arrow */}
             <button
                 onClick={() => scroll('left')}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border-2 border-gray-200 hover:border-blue-600 rounded-full p-3 shadow-lg transition-all opacity-0 group-hover/slider:opacity-100 disabled:opacity-0"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border-2 border-gray-200  rounded-full p-3 shadow-lg transition-all opacity-0 group-hover/slider:opacity-100 disabled:opacity-0"
                 aria-label="Scroll left"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-gray-700">
@@ -64,7 +64,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
             {/* Right Arrow */}
             <button
                 onClick={() => scroll('right')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border-2 border-gray-200 hover:border-blue-600 rounded-full p-3 shadow-lg transition-all opacity-0 group-hover/slider:opacity-100 disabled:opacity-0"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white border-2 border-gray-200  rounded-full p-3 shadow-lg transition-all opacity-0 group-hover/slider:opacity-100 disabled:opacity-0"
                 aria-label="Scroll right"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-gray-700">
@@ -82,7 +82,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                     <Link
                         key={template._id}
                         href={`${ENV.EDITOR_URL}/editor?template=${template._id}`}
-                        className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 hover:border-blue-600 transition-all hover:shadow-2xl relative"
+                        className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 transition-all hover:shadow-2xl relative"
                     >
                         <div className="relative pt-6 px-3 pb-3">
                             <div className="bg-white aspect-[8.5/11] relative overflow-hidden">

@@ -7,13 +7,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "../FieldRenderer";
 import GenericForm from "../GenericForm";
-import SettingsSidebar from "../SettingsSidebar";
 import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
-import ShareModal from "../ShareModal";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck, FileText } from "lucide-react";
+import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2 } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
@@ -36,11 +34,9 @@ function ResumeEditor() {
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
-  // Undo/Redo history - Use lazy initialization to prevent array creation on every render
-  const [history, setHistory] = useState<any[]>(() => [dummyData]);
-  const [historyIndex, setHistoryIndex] = useState(0);
+  // State
   const [resume, setResume] = useState(dummyData);
-  const debouncedResume = useDebounce(resume, 500); // Moved up for better variable ordering
+  const debouncedResume = useDebounce(resume, 500);
 
   // Initialize PDF generation hook with auto-cancellation
   const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(`${API_BASE}/convert-html-to-pdf`);
@@ -54,7 +50,6 @@ function ResumeEditor() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showShareModal, setShowShareModal] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
@@ -132,8 +127,6 @@ function ResumeEditor() {
             setFontFamily(doc.data.fontFamily);
           }
           setTemplateId(doc.templateId);
-          setHistory([doc.data]);
-          setHistoryIndex(0);
           setDocId(doc.id);
         }
       };
@@ -155,10 +148,6 @@ function ResumeEditor() {
 
           // Update resume state with parsed data
           setResume(parsedData);
-
-          // Reset history with new data
-          setHistory([parsedData]);
-          setHistoryIndex(0);
 
           // Clean up sessionStorage and URL parameter
           sessionStorage.removeItem('parsedResumeData');
@@ -250,10 +239,6 @@ function ResumeEditor() {
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Zoom control
-  const [zoomLevel, setZoomLevel] = useState(100);
-  const zoomLevels = [50, 75, 100, 125, 150, 200];
-
   const mainRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
@@ -318,22 +303,6 @@ function ResumeEditor() {
   }, [resume]);
 
 
-  // Add to history - Using functional setState to avoid dependencies
-  const addToHistory = useCallback((newData: any) => {
-    setHistory(prev => {
-      setHistoryIndex(prevIndex => {
-        const newHistory = prev.slice(0, prevIndex + 1);
-        newHistory.push(newData);
-        if (newHistory.length > 50) newHistory.shift();
-        return newHistory.length - 1;
-      });
-      const newHistory = prev.slice(0, prev.length);
-      newHistory.push(newData);
-      if (newHistory.length > 50) newHistory.shift();
-      return newHistory;
-    });
-  }, []);
-
   // Handle section name changes - Memoized to prevent child re-renders
   const handleSectionNameChange = useCallback((sectionKey: string, newLabel: string) => {
     setSchema(prev => ({
@@ -345,42 +314,9 @@ function ResumeEditor() {
     }));
   }, []);
 
-  // Handle resume changes with history - Memoized to prevent GenericForm re-renders
+  // Handle resume changes - Memoized to prevent GenericForm re-renders
   const handleResumeChange = useCallback((newResume: any) => {
     setResume(newResume);
-    addToHistory(newResume);
-  }, [addToHistory]);
-
-  // Undo/Redo functions - Memoized for keyboard shortcuts and toolbar
-  const undo = useCallback(() => {
-    setHistoryIndex(prev => {
-      if (prev > 0) {
-        const newIndex = prev - 1;
-        // Access history through closure - it's stable from useState
-        setHistory(h => {
-          setResume(JSON.parse(JSON.stringify(h[newIndex])));
-          return h; // Return unchanged history
-        });
-        return newIndex;
-      }
-      return prev;
-    });
-  }, []);
-
-  const redo = useCallback(() => {
-    setHistoryIndex(prev => {
-      // Access history length through state
-      setHistory(h => {
-        if (prev < h.length - 1) {
-          const newIndex = prev + 1;
-          setResume(JSON.parse(JSON.stringify(h[newIndex])));
-          // Update historyIndex outside
-          setTimeout(() => setHistoryIndex(newIndex), 0);
-        }
-        return h; // Return unchanged history
-      });
-      return prev;
-    });
   }, []);
 
   // Page navigation - Memoized for ProfileHeader
@@ -391,21 +327,6 @@ function ResumeEditor() {
   const prevPage = useCallback(() => {
     setCurrentPage(prev => prev > 1 ? prev - 1 : prev);
   }, []);
-
-  // Zoom controls - Memoized for ProfileHeader
-  const zoomIn = useCallback(() => {
-    setZoomLevel(prev => {
-      const currentIndex = zoomLevels.indexOf(prev);
-      return currentIndex < zoomLevels.length - 1 ? zoomLevels[currentIndex + 1] : prev;
-    });
-  }, [zoomLevels]);
-
-  const zoomOut = useCallback(() => {
-    setZoomLevel(prev => {
-      const currentIndex = zoomLevels.indexOf(prev);
-      return currentIndex > 0 ? zoomLevels[currentIndex - 1] : prev;
-    });
-  }, [zoomLevels]);
 
   // Handle profile image change - Memoized for ProfileHeader
   const handleProfileImageChange = useCallback((imageUrl: string) => {
@@ -420,7 +341,7 @@ function ResumeEditor() {
     }));
   }, []);
 
-  // Handle export - Memoized to prevent SettingsSidebar re-renders
+  // Handle export
   const handleExport = useCallback(async (format: "pdf" | "doc") => {
     const userName = resume?.personalInfo?.firstName + "_" + resume?.personalInfo?.lastName + "_" + resume?.personalInfo?.jobTitle;
     const fileName = userName.trim().replace(/\s+/g, "_");
@@ -519,10 +440,14 @@ function ResumeEditor() {
   const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
     if (!mainRef.current || !canvasRef.current) return;
 
-    // Skip rendering if container is not visible (e.g., hidden on mobile)
-    const containerWidth = mainRef.current.clientWidth;
-    if (containerWidth === 0) {
-      console.log('Container not visible, skipping PDF render');
+    // Use the inner container for precise dimension tracking
+    const container = canvasRef.current.parentElement;
+    if (!container) return;
+
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+
+    if (containerWidth === 0 || containerHeight === 0) {
       return;
     }
 
@@ -541,8 +466,10 @@ function ResumeEditor() {
     const dpr = window.devicePixelRatio || 1;
     const baseViewport = pdfPage.getViewport({ scale: 1 });
 
-    // Apply zoom level
-    const scale = (containerWidth / baseViewport.width) * (zoomLevel / 100);
+    // Calculate scale to fit width mainly (allow vertical scrolling)
+    const padding = 40; // Horizontal padding
+    const scale = (containerWidth - padding) / baseViewport.width;
+
     const viewport = pdfPage.getViewport({ scale });
 
     const offscreen = offscreenRef.current ?? document.createElement("canvas");
@@ -591,24 +518,16 @@ function ResumeEditor() {
     } else {
       console.warn('Skipping drawImage: offscreen canvas has invalid dimensions');
     }
-  }, [zoomLevel]);
+  }, []);
 
-  // Keyboard shortcuts - Dependencies updated to use memoized callbacks
+  // Keyboard shortcuts - Empty since Undo/Redo removed
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Undo/Redo
-      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault();
-        undo();
-      } else if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
-        e.preventDefault();
-        redo();
-      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [undo, redo]);
+  }, []);
 
   // Render PDF with loading state and auto-cancellation - Memoized
   const renderPdf = useCallback(async (page = currentPage) => {
@@ -678,10 +597,6 @@ function ResumeEditor() {
     handleExport("pdf");
   }, [handleExport]);
 
-  const handleShare = useCallback(() => {
-    setShowShareModal(true);
-  }, []);
-
   // Hide loading when editor is fully initialized
   useEffect(() => {
     // Check if initial loading is complete
@@ -695,22 +610,41 @@ function ResumeEditor() {
 
   return (
     <div className="flex flex-col h-screen w-full bg-slate-50">
-      {/* Loading Overlay */}
+      {/* Neural Analysis Modal (Initial Loading) */}
       {isLoading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-2xl mb-4">
-                <FileText className="w-8 h-8 text-indigo-600 animate-pulse" />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white animate-in fade-in duration-500">
+          <div className="relative max-w-md w-full mx-4">
+            <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
+              {/* Animated Brain Icon */}
+              <div className="flex justify-center mb-10">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
+                  <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
+                    <Brain className="w-12 h-12 text-white" />
+                  </div>
+                </div>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Initializing Editor</h2>
-              <p className="text-sm text-slate-500">Please wait while we prepare everything</p>
+
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Neural Editor</h2>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="flex gap-1">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                    ))}
+                  </div>
+                  <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{loadingSteps[loadingStep]}</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
+                <StepLoader
+                  steps={loadingSteps}
+                  currentStep={loadingStep}
+                  size="md"
+                />
+              </div>
             </div>
-            <StepLoader
-              steps={loadingSteps}
-              currentStep={loadingStep}
-              size="md"
-            />
           </div>
         </div>
       )}
@@ -721,102 +655,67 @@ function ResumeEditor() {
         progress={progress}
         profileImage={profileImage}
         onProfileImageChange={handleProfileImageChange}
-        onShare={handleShare}
         onDownload={handleDownload}
-        onUndo={undo}
-        onRedo={redo}
-        canUndo={historyIndex > 0}
-        canRedo={historyIndex < history.length - 1}
         currentPage={currentPage}
         totalPages={totalPages}
         onPrevPage={prevPage}
         onNextPage={nextPage}
-        zoomLevel={zoomLevel}
-        onZoomIn={zoomIn}
-        onZoomOut={zoomOut}
+        onSmartImport={() => setShowSmartImport(true)}
+        onTemplateChange={() => setShowTemplates(true)}
+        fontFamily={fontFamily}
+        onFontChange={setFontFamily}
+        onTailor={() => router.push('/tailor')}
       />
 
-      {/* Main Content - 3 Column Layout */}
-      <div className="flex flex-1 overflow-hidden gap-2 md:mx-[10px] mx-0">
-        {/* Left Sidebar - Form or Template Selector (40%) - Hidden on mobile when preview is shown */}
-        <aside className={`w-full md:w-[40%] relative md:rounded-lg bg-white md:border-r border-slate-200 overflow-y-auto pb-20 md:pb-0 ${showMobilePreview ? 'hidden md:block' : 'block'}`}>
+      {/* Main Content - Split Glass Content */}
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Background Atmosphere */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+        </div>
 
-          {/* Save Progress Indicator */}
-          <div className="absolute top-4 md:top-6 right-2 md:right-4 flex justify-center pointer-events-none z-10">
+        {/* Left Section - Form (45%) */}
+        <div className={`w-full md:w-[45%] flex flex-col relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-semibold mb-6">
-              {isSaving || isPdfGenerating ? (
-                <>
-                  <div className="w-3.5 h-3.5 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-xs font-semibold text-indigo-700 leading-none">Saving...</span>
-                </>
-              ) : (
-                <>
-                  <CloudCheck size={14} className="text-indigo-700 flex-shrink-0" />
-                  <span className="text-xs font-semibold text-indigo-700 leading-none">
-                    {lastSaved ? `Saved at ${lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'Saved'}
-                  </span>
-                </>
-              )}
-            </div>
+          <div className="flex-1 overflow-y-auto custom-scrollbar bg-slate-50/30">
+            {showTemplates ? (
+              <TemplateSelector
+                apiBase={API_BASE || 'https://api.profresume.com'}
+                selectedTemplateId={templateId || ''}
+                onBack={() => setShowTemplates(false)}
+                onSelectTemplate={(template) => {
+                  setTemplateId(template._id);
+                }}
+              />
+            ) : (
+              <GenericForm
+                schema={schema}
+                data={resume}
+                sectionOrder={sectionOrder}
+                setSectionOrder={setSectionOrder}
+                onChange={handleResumeChange}
+                onSchemaChange={setSchema}
+                onSectionNameChange={handleSectionNameChange}
+              />
+            )}
           </div>
+        </div>
 
+        {/* Right Section - Canvas (55%) */}
+        <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
 
-          {showTemplates ? (
-            <TemplateSelector
-              apiBase={API_BASE || 'https://api.profresume.com'}
-              selectedTemplateId={templateId || ''}
-              onBack={() => setShowTemplates(false)}
-              onSelectTemplate={(template) => {
-                setTemplateId(template._id);
-                // Don't close template selector - user must click back button
-              }}
-            />
-          ) : (
-            <div className="h-full flex flex-col">
-
-              {/* Form */}
-              <div className="flex-1 overflow-y-auto">
-                <GenericForm
-                  schema={schema}
-                  data={resume}
-                  sectionOrder={sectionOrder}
-                  setSectionOrder={setSectionOrder}
-                  onChange={handleResumeChange}
-                  onSchemaChange={setSchema}
-                  onSectionNameChange={handleSectionNameChange}
-                />
-              </div>
-            </div>
-          )}
-        </aside>
-
-        {/* Center Canvas - Preview (60% minus right sidebar) - Hidden on mobile unless preview is shown */}
-        <main ref={mainRef} className={`flex-1 relative md:rounded-lg overflow-y-auto bg-slate-100 ${showMobilePreview ? 'block' : 'md:block'} ${!showMobilePreview ? 'opacity-0 pointer-events-none absolute md:relative md:opacity-100 md:pointer-events-auto' : ''}`}>
-
-
-          <div className="flex justify-center py-4 md:py-0">
-            <div className="bg-white shadow-lg w-full md:w-auto">
+          <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-4">
+            <div className="relative w-full max-w-fit flex justify-center">
               <canvas
                 ref={canvasRef}
                 width={794}
                 height={1123}
-                className="w-full md:max-w-full h-auto"
+                className="shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 bg-white"
               />
             </div>
           </div>
         </main>
-
-        {/* Right Sidebar - Settings - Hidden on mobile */}
-        <aside className="hidden lg:block">
-          <SettingsSidebar
-            onExport={handleExport}
-            onTemplateChange={() => setShowTemplates(true)}
-            onSmartImport={() => setShowSmartImport(true)}
-            fontFamily={fontFamily}
-            onFontChange={setFontFamily}
-          />
-        </aside>
       </div>
 
       {/* Floating Preview Button - Only visible on mobile */}
@@ -969,12 +868,6 @@ function ResumeEditor() {
         </>
       )}
 
-      {/* Share Modal */}
-      <ShareModal
-        isOpen={showShareModal}
-        onClose={() => setShowShareModal(false)}
-        resumeUrl={typeof window !== 'undefined' ? window.location.href : ''}
-      />
 
       {/* Smart Import Modal */}
       <SmartImportModal
@@ -984,8 +877,6 @@ function ResumeEditor() {
         onApply={(data) => {
           // Apply extracted data to resume
           setResume(data);
-          // Add to history
-          addToHistory(data);
         }}
       />
 

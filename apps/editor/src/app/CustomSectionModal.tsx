@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Plus } from "lucide-react";
 import { Button } from "@repo/ui/button";
 import { BaseField } from "./FieldRenderer";
@@ -113,8 +114,14 @@ const SECTION_TEMPLATES: Array<{
 
 export function CustomSectionModal({ isOpen, onClose, onAdd }: CustomSectionModalProps) {
     const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        setMounted(true);
+        return () => setMounted(false);
+    }, []);
+
+    if (!isOpen || !mounted) return null;
 
     const handleAdd = () => {
         if (selectedTemplate) {
@@ -127,38 +134,59 @@ export function CustomSectionModal({ isOpen, onClose, onAdd }: CustomSectionModa
         }
     };
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-300"
+                onClick={onClose}
+            />
+
+            {/* Modal Container */}
+            <div className="relative bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full max-w-xl overflow-hidden transform border border-gray-100 flex flex-col max-h-[85vh] animate-in zoom-in slide-in-from-bottom-4 duration-500">
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-900">Add Custom Section</h2>
+                <div className="px-8 pt-8 pb-4 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-900 tracking-tight">Add Custom Section</h2>
+                        <p className="text-slate-500 text-xs font-medium mt-0.5">Enhance your resume with specialized content</p>
+                    </div>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="p-2 rounded-xl hover:bg-slate-50 text-slate-400 hover:text-slate-600 transition-all border border-transparent hover:border-slate-100"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 overflow-y-auto flex-1">
-                    <p className="text-sm text-gray-600 mb-4">
-                        Choose a section template to add to your resume:
-                    </p>
-                    <div className="grid grid-cols-2 gap-3">
+                <div className="px-8 pb-2 overflow-y-auto flex-1 custom-scrollbar">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3">
                         {SECTION_TEMPLATES.map((template) => (
                             <button
                                 key={template.id}
                                 onClick={() => setSelectedTemplate(template.id)}
-                                className={`p-4 border-2 rounded-lg text-left transition-all hover:border-blue-300 ${selectedTemplate === template.id
-                                    ? "border-blue-500 bg-blue-50"
-                                    : "border-gray-200 bg-white"
+                                className={`p-4 border-2 rounded-2xl text-left transition-all group relative overflow-hidden ${selectedTemplate === template.id
+                                    ? "border-blue-600 bg-blue-50/50 shadow-inner"
+                                    : "border-slate-100 bg-white hover:border-blue-200 hover:bg-slate-50/50"
                                     }`}
                             >
+                                {selectedTemplate === template.id && (
+                                    <div className="absolute top-3 right-3 text-blue-600">
+                                        <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                                            <Plus className="w-3 h-3 text-white rotate-45" />
+                                        </div>
+                                    </div>
+                                )}
                                 <div className="flex items-center gap-3">
-                                    <span className="text-2xl">{template.icon}</span>
-                                    <span className="font-medium text-gray-900">{template.label}</span>
+                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 ${selectedTemplate === template.id ? 'bg-white shadow-md' : 'bg-slate-50'}`}>
+                                        {template.icon}
+                                    </div>
+                                    <div>
+                                        <span className={`block font-bold text-gray-900 text-sm ${selectedTemplate === template.id ? 'text-blue-700' : ''}`}>
+                                            {template.label}
+                                        </span>
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Template</span>
+                                    </div>
                                 </div>
                             </button>
                         ))}
@@ -166,21 +194,27 @@ export function CustomSectionModal({ isOpen, onClose, onAdd }: CustomSectionModa
                 </div>
 
                 {/* Footer */}
-                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3">
-                    <Button onClick={onClose} variant="outline">
+                <div className="px-8 py-6 bg-slate-50/50 border-t border-slate-100 flex items-center justify-end gap-3">
+                    <Button
+                        onClick={onClose}
+                        variant="outline"
+                        className="px-6 py-2.5 rounded-xl border-slate-200 text-slate-500 hover:text-slate-700 font-bold text-sm active:scale-[0.98] transition-all"
+                    >
                         Cancel
                     </Button>
                     <Button
                         onClick={handleAdd}
                         disabled={!selectedTemplate}
                         variant="primary"
+                        className="px-8 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center gap-2 group"
                     >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Section
+                        <Plus className={`w-4 h-4 transition-transform duration-300 ${!selectedTemplate ? 'opacity-50' : 'group-hover:rotate-90'}`} />
+                        <span>Add Section</span>
                     </Button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 

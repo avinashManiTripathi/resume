@@ -291,7 +291,7 @@ export default function ATSCheckerPage() {
     return (
         <div className="min-h-screen bg-white">
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
@@ -338,7 +338,7 @@ export default function ATSCheckerPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
 
-            <main className="flex-1 bg-white">
+            <main className="flex-1 bg-white pt-20">
                 <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><Loader className="animate-spin text-blue-600" /></div>}>
                     {currentStep !== 'results' ? (
                         <div className="w-full relative">
@@ -475,96 +475,96 @@ export default function ATSCheckerPage() {
                                             </div>
                                         </div>
 
-                                        {/* Right Column - Animated Visual Stack */}
-                                        <div className="hidden lg:flex relative h-full bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 items-center justify-center p-12 overflow-hidden border-l border-gray-100">
-                                            {/* Background Decorations */}
-                                            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-200/20 rounded-full blur-[80px] -mr-32 -mt-32" />
-                                            <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-200/10 rounded-full blur-[80px] -ml-32 -mb-32" />
+                                        {/* Right Column - Neural Scanner Hub */}
+                                        <div className="hidden lg:flex sticky top-20 self-start bg-slate-50 items-start justify-center pt-32 p-12 overflow-hidden border-l border-gray-100 min-h-[calc(100vh-80px)]">
+                                            {/* Advanced Background Decorations */}
+                                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#EFF6FF_0%,transparent_50%)]" />
+                                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,#F5F3FF_0%,transparent_50%)]" />
 
-                                            {/* Circular Path */}
-                                            <div className="absolute w-[400px] h-[400px] border-2 border-dashed border-blue-100/50 rounded-full animate-[spin_180s_linear_infinite]" />
+                                            {/* Geometric Grid Pattern */}
+                                            <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#2563EB 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-                                            {/* Central Visual - Match Score Gauge */}
-                                            <div className="relative z-10 bg-white rounded-[2.5rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] p-10 border border-gray-100 w-full max-w-[360px] transform hover:scale-[1.02] transition-transform duration-500">
-                                                <div className="flex justify-between items-center mb-8">
-                                                    <div className="flex items-center gap-4">
-                                                        <div className="w-11 h-11 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200">
-                                                            <FileText className="w-5 h-5" />
+                                            <div className="relative w-full max-w-lg aspect-square">
+                                                {/* Main Scanner Container */}
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    {/* Central Document Card */}
+                                                    <div className="w-[300px] h-[400px] bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 relative overflow-hidden animate-float-slow">
+                                                        {/* Scanning Laser Line */}
+                                                        <div className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent z-20 animate-scan shadow-[0_0_15px_rgba(37,99,235,0.5)]" />
+
+                                                        {/* Abstract Resume Content */}
+                                                        <div className="space-y-6 opacity-40">
+                                                            <div className="flex items-center gap-4">
+                                                                <div className="w-12 h-12 rounded-lg bg-gray-100" />
+                                                                <div className="flex-1 space-y-2">
+                                                                    <div className="h-3 bg-gray-200 rounded w-3/4" />
+                                                                    <div className="h-2 bg-gray-100 rounded w-1/2" />
+                                                                </div>
+                                                            </div>
+                                                            <div className="space-y-3">
+                                                                <div className="h-2 bg-gray-100 rounded w-full" />
+                                                                <div className="h-2 bg-gray-100 rounded w-full" />
+                                                                <div className="h-2 bg-gray-100 rounded w-5/6" />
+                                                            </div>
+                                                            <div className="pt-4 space-y-4">
+                                                                <div className="h-4 bg-gray-100 rounded w-1/3" />
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    <div className="h-8 bg-gray-50 rounded-lg" />
+                                                                    <div className="h-8 bg-gray-50 rounded-lg" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* AI Highlights during scan */}
+                                                        <div className="absolute inset-0 p-6 flex flex-col justify-around pointer-events-none">
+                                                            <div className="w-fit px-3 py-1 bg-green-500/10 text-green-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-green-500/20 translate-x-20 animate-pulse">✓ Perfect Header</div>
+                                                            <div className="w-fit px-3 py-1 bg-blue-500/10 text-blue-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-blue-500/20 -translate-x-4 animate-pulse delay-700">🔍 Skills Detected</div>
+                                                            <div className="w-fit px-3 py-1 bg-amber-500/10 text-amber-600 rounded-lg text-[10px] font-black uppercase tracking-widest border border-amber-500/20 translate-x-12 animate-pulse delay-1000">⚡ Impact Missing</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Floating Metric Chips */}
+                                                <div className="absolute top-10 right-0 animate-float-medium delay-300">
+                                                    <div className="bg-white/80 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-white/50 flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white">
+                                                            <BarChart3 size={20} />
                                                         </div>
                                                         <div>
-                                                            <div className="font-black text-gray-900 text-sm tracking-tight">ATS Analysis</div>
-                                                            <div className="text-[10px] text-blue-600 font-black uppercase tracking-widest mt-0.5">Live Processing</div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-2xl font-black text-blue-600">89%</div>
-                                                        <div className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Match</div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="space-y-6">
-                                                    {[
-                                                        { label: "Keyword Density", width: "94%", color: "bg-blue-600", delay: "0s" },
-                                                        { label: "Formatting Score", width: "88%", color: "bg-indigo-500", delay: "0.2s" },
-                                                        { label: "Content Quality", width: "76%", color: "bg-purple-500", delay: "0.4s" }
-                                                    ].map((item, i) => (
-                                                        <div key={i} className="space-y-2">
-                                                            <div className="flex justify-between items-center px-1">
-                                                                <span className="text-xs font-bold text-gray-600">{item.label}</span>
-                                                                <span className="text-[10px] font-black text-blue-600">{item.width}</span>
-                                                            </div>
-                                                            <div className="h-2 w-full bg-gray-50 rounded-full overflow-hidden border border-gray-100">
-                                                                <div
-                                                                    className={`h-full ${item.color} rounded-full transition-all duration-1000 ease-out`}
-                                                                    style={{ width: item.width, transitionDelay: item.delay }}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-
-                                                <div className="mt-8 pt-6 border-t border-gray-50 flex items-center justify-between">
-                                                    <div className="flex -space-x-3">
-                                                        {[1, 2, 3].map((i) => (
-                                                            <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-100 overflow-hidden ring-4 ring-blue-50/50">
-                                                                <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                    <span className="text-[10px] font-bold text-gray-400">Join 12k+ applicants</span>
-                                                </div>
-                                            </div>
-
-                                            {/* Sarah Notification - Floating */}
-                                            <div className="absolute z-30 top-16 -left-4 animate-bounce duration-[4000ms]">
-                                                <div className="bg-white rounded-2xl shadow-xl p-3 border border-gray-100 flex items-center gap-3 rotate-[-4deg] scale-90">
-                                                    <div className="w-10 h-10 rounded-xl overflow-hidden shadow-inner ring-2 ring-blue-50">
-                                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&auto=format&fit=crop" alt="Sarah" className="w-full h-full object-cover" />
-                                                    </div>
-                                                    <div>
-                                                        <div className="text-xs font-black text-gray-900">Sarah M.</div>
-                                                        <div className="text-[10px] font-bold text-green-500 flex items-center gap-1.5 mt-0.5">
-                                                            <CheckCircle className="w-3 h-3" /> Hired at Google
+                                                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Visibility</p>
+                                                            <p className="text-lg font-black text-gray-900">+340%</p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            {/* Notification Card - Floating */}
-                                            <div className="absolute z-30 top-24 -right-8 bg-blue-600 rounded-2xl shadow-2xl p-4 text-white w-44 rotate-6 animate-pulse">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="p-1.5 bg-white/20 rounded-lg">
-                                                        <Bell className="w-4 h-4" />
+                                                <div className="absolute bottom-16 left-0 animate-float-medium">
+                                                    <div className="bg-white/80 backdrop-blur-xl p-4 rounded-2xl shadow-xl border border-white/50 space-y-3 w-48">
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Company Match</span>
+                                                            <CheckCircle size={14} className="text-green-500" />
+                                                        </div>
+                                                        <div className="flex -space-x-2">
+                                                            {[1, 2, 3, 4].map(i => (
+                                                                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-50 flex items-center justify-center shadow-sm overflow-hidden">
+                                                                    <img src={`https://logo.clearbit.com/${['google.com', 'amazon.com', 'meta.com', 'netflix.com'][i - 1]}`} alt="" className="w-4 h-4 grayscale opacity-70" />
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        <p className="text-[11px] font-bold text-gray-600">Perfect for FAANG roles</p>
                                                     </div>
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-blue-100">Success!</span>
                                                 </div>
-                                                <div className="text-sm font-bold leading-snug">Resume optimized for Meta HR</div>
-                                                <div className="mt-3 h-1 w-12 bg-white/30 rounded-full" />
-                                            </div>
 
-                                            {/* Decorative Sparkle */}
-                                            <div className="absolute bottom-[20%] right-[10%] z-40 w-12 h-12 bg-white rounded-2xl border border-gray-100 shadow-xl flex items-center justify-center animate-spin-slow">
-                                                <Sparkles className="w-6 h-6 text-blue-600" />
+                                                {/* Success Indicator */}
+                                                <div className="absolute bottom-0 right-10 animate-bounce">
+                                                    <div className="bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg shadow-green-200 text-xs font-black flex items-center gap-2">
+                                                        <Shield size={14} />
+                                                        <span>ATS Approved v2.0</span>
+                                                    </div>
+                                                </div>
+
+                                                {/* Orbiting Decorates */}
+                                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[450px] h-[450px] border border-blue-100 rounded-full opacity-50 animate-[spin_60s_linear_infinite]" />
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 bg-blue-400 rounded-full blur-sm animate-pulse" />
                                             </div>
                                         </div>
                                     </div>
@@ -611,7 +611,7 @@ export default function ATSCheckerPage() {
                             )}
                         </div>
                     ) : (
-                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-10 space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 space-y-12">
                             {/* Results Header - Premium Dashboard Style */}
                             <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-8 md:p-14 text-white shadow-2xl shadow-blue-900/20">
                                 {/* Background Decorations */}
@@ -758,7 +758,7 @@ export default function ATSCheckerPage() {
                                 </div>
 
                                 {/* Sidebar - Technical Checks */}
-                                <div className="space-y-8">
+                                <div className="space-y-8 sticky top-24 self-start">
                                     {/* Keyword Analysis */}
                                     <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-blue-50/50 space-y-6">
                                         <div className="flex items-center justify-between">

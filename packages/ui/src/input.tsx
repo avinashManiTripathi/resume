@@ -12,7 +12,7 @@ interface InputProps {
 export const Input = ({ type, placeholder, value, onChange, name, className = '' }: InputProps) => {
 
   return <input
-    className={"w-full h-12 rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-300 focus:outline-none focus:ring-0" + " " + className}
+    className={"w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400" + " " + className}
     type={type}
     name={name}
     placeholder={placeholder}

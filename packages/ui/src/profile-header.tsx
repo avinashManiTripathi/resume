@@ -1,31 +1,28 @@
 "use client";
 
-import { Share2, Download, Undo, Redo, RotateCcw, RotateCw, ZoomIn, ZoomOut, CircleArrowUp, CircleArrowDown, MousePointer, Hand, Undo2, Redo2, PencilLine, Loader2 } from "lucide-react";
+import { Share2, Download, RotateCcw, RotateCw, CircleArrowUp, CircleArrowDown, MousePointer, Hand, PencilLine, Loader2, Sparkles, LayoutGrid, Type, Trophy, ChevronDown } from "lucide-react";
 import { Button } from "./button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface ProfileHeaderProps {
     name: string;
     title: string;
     profileImage?: string;
     progress?: number;
-    onShare?: () => void;
     onDownload?: () => Promise<void>;
-    onUndo?: () => void;
-    onRedo?: () => void;
-    canUndo?: boolean;
-    canRedo?: boolean;
     // Page navigation
     currentPage?: number;
     totalPages?: number;
     onPrevPage?: () => void;
     onNextPage?: () => void;
-    // Zoom controls
-    zoomLevel?: number;
-    onZoomIn?: () => void;
-    onZoomOut?: () => void;
     // Profile image upload
     onProfileImageChange?: (imageUrl: string) => void;
+    // Redesign - Sidebar actions in header
+    onSmartImport?: () => void;
+    onTemplateChange?: () => void;
+    fontFamily?: string;
+    onFontChange?: (font: string) => void;
+    onTailor?: () => void;
 }
 
 export function ProfileHeader({
@@ -33,23 +30,34 @@ export function ProfileHeader({
     title,
     profileImage,
     progress = 20,
-    onShare,
     onDownload,
-    onUndo,
-    onRedo,
-    canUndo = false,
-    canRedo = false,
     currentPage = 1,
     totalPages = 1,
     onPrevPage,
     onNextPage,
-    zoomLevel = 100,
-    onZoomIn,
-    onZoomOut,
     onProfileImageChange,
+    onSmartImport,
+    onTemplateChange,
+    fontFamily = "Inter",
+    onFontChange,
+    onTailor,
 }: ProfileHeaderProps) {
 
     const [isDownloading, setIsDownloading] = useState(false);
+    const [showFontSelector, setShowFontSelector] = useState(false);
+
+    const fonts = useMemo(() => [
+        { name: 'Inter', label: 'Inter' },
+        { name: 'Roboto', label: 'Roboto' },
+        { name: 'Open Sans', label: 'Open Sans' },
+        { name: 'Lato', label: 'Lato' },
+        { name: 'Montserrat', label: 'Montserrat' },
+        { name: 'Poppins', label: 'Poppins' },
+        { name: 'Merriweather', label: 'Merriweather' },
+        { name: 'Playfair Display', label: 'Playfair Display' },
+        { name: 'Georgia', label: 'Georgia' },
+        { name: 'Times New Roman', label: 'Times New Roman' },
+    ], []);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -73,10 +81,10 @@ export function ProfileHeader({
     };
 
     return (
-        <div className="mb-2 mb-0 md:m-[10px]">
-            <div className="flex flex-col md:flex-row items-stretch justify-between gap-2">
+        <div className="mb-2 mb-0">
+            <div className="flex flex-col md:flex-row items-stretch justify-between">
                 {/* Left: Profile Info */}
-                <div className="w-full md:w-[40%] bg-white justify-between rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4">
+                <div className="w-full md:w-[45%] bg-white justify-between rounded-none md:rounded-l-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4 border-r border-slate-200">
                     <div className="flex items-center gap-2 md:gap-4">
                         <div className="relative">
                             <div className="w-10 md:w-14 border-[3px] md:border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-10 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden text-xs md:text-base">
@@ -107,9 +115,6 @@ export function ProfileHeader({
                         </div>
                     </div>
 
-                    <Button variant="outline" onClick={onShare} className="md:hidden">
-                        <Share2 size={18} />
-                    </Button>
                     <Button variant="outline" onClick={handleDownload} className="md:hidden">
                         <Download size={18} />
                     </Button>
@@ -147,86 +152,94 @@ export function ProfileHeader({
                     </div>
                 </div>
 
-                {/* Right: Toolbar - Hidden on mobile except Share/Download */}
-                <div className="hidden md:flex  flex bg-white rounded-none md:rounded-lg px-3 md:px-4 py-2 md:py-3 flex-grow items-center gap-1 justify-between">
-                    {/* Toolbar controls - Hidden on mobile */}
-                    <div className="flex items-center gap-3">
+                {/* Right: Toolbar - Consolidated editing tools */}
+                <div className="hidden md:flex flex-1 bg-white rounded-none md:rounded-r-lg px-4 py-2 items-center gap-1 justify-between shadow-sm border border-gray-100 border-l-0">
+                    <div className="flex items-center gap-1.5 lg:gap-3">
+                        {/* Core Editing Actions */}
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={onSmartImport}
+                                className="p-2 h-10 w-10 flex items-center justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
+                                title="Smart Import (AI)"
+                            >
+                                <Sparkles size={18} />
+                            </button>
+                            <button
+                                onClick={onTemplateChange}
+                                className="p-2 h-10 w-10 flex items-center justify-center hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border border-transparent hover:border-gray-200"
+                                title="Change Template"
+                            >
+                                <LayoutGrid size={18} />
+                            </button>
 
-                        {/* Undo/Redo */}
-                        <button
-                            onClick={onUndo}
-                            disabled={!canUndo}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${canUndo ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Undo (Cmd+Z)"
-                        >
-                            <Undo2 size={20} />
-                        </button>
-                        <button
-                            onClick={onRedo}
-                            disabled={!canRedo}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${canRedo ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Redo (Cmd+Shift+Z)"
-                        >
-                            <Redo2 size={20} />
-                        </button>
+                            {/* Font Selector */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowFontSelector(!showFontSelector)}
+                                    className={`flex items-center gap-2 px-3 h-10 hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border ${showFontSelector ? 'bg-gray-50 border-gray-200' : 'border-transparent hover:border-gray-200'}`}
+                                >
+                                    <Type size={16} />
+                                    <span className="text-xs font-bold truncate max-w-[80px]">{fontFamily}</span>
+                                    <ChevronDown size={14} className={`transition-transform duration-200 ${showFontSelector ? 'rotate-180' : ''}`} />
+                                </button>
 
-                        <div className="w-px h-6 bg-gray-200 mx-1"></div>
+                                {showFontSelector && (
+                                    <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-3 w-56 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <div className="space-y-1 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
+                                            {fonts.map((font) => (
+                                                <button
+                                                    key={font.name}
+                                                    onClick={() => {
+                                                        onFontChange?.(font.name);
+                                                        setShowFontSelector(false);
+                                                    }}
+                                                    className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-all ${fontFamily === font.name
+                                                        ? 'bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-100'
+                                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                                        }`}
+                                                    style={{ fontFamily: font.name }}
+                                                >
+                                                    {font.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
-                        {/* Page Navigation */}
-                        <button
-                            onClick={onPrevPage}
-                            disabled={currentPage <= 1}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${currentPage > 1 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Previous Page (↑)"
-                        >
-                            <CircleArrowUp size={20} />
-                        </button>
-                        <span className="px-3 py-1 text-sm text-gray-700 bg-[#F5F5F5] rounded min-w-[60px] text-center">
-                            {currentPage}/{totalPages}
-                        </span>
-                        <button
-                            onClick={onNextPage}
-                            disabled={currentPage >= totalPages}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${currentPage < totalPages ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Next Page (↓)"
-                        >
-                            <CircleArrowDown size={20} />
-                        </button>
+                            <button
+                                onClick={onTailor}
+                                className="hidden lg:flex items-center gap-2 px-4 h-10 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/50"
+                            >
+                                <Trophy size={16} className="fill-amber-700/20" />
+                                <span className="text-xs font-black uppercase tracking-widest">Tailor AI</span>
+                            </button>
+                        </div>
 
-                        <div className="w-px h-6 bg-gray-200 mx-1"></div>
+                        <div className="w-px h-6 bg-gray-100 mx-1"></div>
 
-                        {/* Zoom Controls */}
-                        <button
-                            onClick={onZoomOut}
-                            disabled={zoomLevel <= 50}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${zoomLevel > 50 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Zoom Out (Cmd+-)"
-                        >
-                            <ZoomOut size={20} />
-                        </button>
-                        <span className="px-3 py-1 text-sm font-medium text-gray-700 min-w-[50px] text-center">
-                            {zoomLevel}%
-                        </span>
-                        <button
-                            onClick={onZoomIn}
-                            disabled={zoomLevel >= 200}
-                            className={`p-2 hover:bg-gray-50 rounded transition-colors ${zoomLevel < 200 ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 cursor-not-allowed'
-                                }`}
-                            title="Zoom In (Cmd++)"
-                        >
-                            <ZoomIn size={20} />
-                        </button>
+                        {/* Viewer Controls */}
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={onPrevPage}
+                                disabled={currentPage <= 1}
+                                className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl transition-all ${currentPage > 1 ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' : 'text-gray-200 cursor-not-allowed'}`}
+                            >
+                                <CircleArrowUp size={18} />
+                            </button>
+                            <div className="px-3 h-8 flex items-center bg-gray-50 border border-gray-100 rounded-lg text-xs font-bold text-gray-500 min-w-[50px] justify-center">
+                                {currentPage}/{totalPages}
+                            </div>
+                            <button
+                                onClick={onNextPage}
+                                disabled={currentPage >= totalPages}
+                                className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl transition-all ${currentPage < totalPages ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' : 'text-gray-200 cursor-not-allowed'}`}
+                            >
+                                <CircleArrowDown size={18} />
+                            </button>
+                        </div>
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
-                        <Button onClick={onShare} variant="outline" className="flex-1 md:flex-initial">
-                            <Share2 className="w-4 h-4 md:mr-2" />
-                            <span >Share</span>
-                        </Button>
                         <Button onClick={handleDownload} variant="primary" className="flex-1 md:flex-initial">
                             {isDownloading ? (
                                 <>
