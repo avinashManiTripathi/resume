@@ -11,41 +11,40 @@
  * @param data - Object containing field values
  * @returns Content with placeholders replaced
  */
+// Helper to access nested properties safely
+function getNestedValue(obj: any, path: string): any {
+    return path.split('.').reduce((prev, curr) => {
+        return prev ? prev[curr] : undefined;
+    }, obj);
+}
+
+/**
+ * Replace placeholders in content with provided data
+ * Handles nested keys like {{personalInfo.fullName}}
+ * 
+ * @param content - Template content with placeholders like {{fieldName}} or {{nested.field}}
+ * @param data - Object containing field values
+ * @returns Content with placeholders replaced
+ */
 export function replacePlaceholders(
     content: string,
     data: Record<string, any>
 ): string {
-    let result = content;
+    if (!content) return '';
 
-    // Replace each placeholder
-    Object.entries(data).forEach(([key, value]) => {
-        const placeholder = `{{${key}}}`;
+    // Regex to find all {{key}} patterns
+    return content.replace(/\{\{([\w\.]+)\}\}/g, (match, key) => {
+        const value = getNestedValue(data, key);
 
         // Handle different value types
-        let replacementValue: string;
-
         if (Array.isArray(value)) {
-            // Format arrays (e.g., skills)
-            replacementValue = formatArray(value);
+            return formatArray(value);
         } else if (value === null || value === undefined) {
-            // Handle null/undefined
-            replacementValue = '';
+            return '';
         } else {
-            // Convert to string and escape
-            replacementValue = escapeContent(String(value));
+            return escapeContent(String(value));
         }
-
-        // Replace all occurrences
-        result = result.split(placeholder).join(replacementValue);
     });
-
-    // Remove any remaining placeholders (optional fields that weren't provided)
-    result = result.replace(/\{\{[^}]+\}\}/g, '');
-
-    // Clean up excessive whitespace
-    result = result.replace(/\n\s*\n\s*\n/g, '\n\n');
-
-    return result.trim();
 }
 
 /**

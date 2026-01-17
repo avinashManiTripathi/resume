@@ -94,10 +94,11 @@ export function useTemplates(options?: {
     apiUrl?: string;
     cacheTTL?: number;
     skipCache?: boolean;
+    endpoint?: string;
 }) {
-    const { apiUrl, cacheTTL, skipCache } = options || {};
+    const { apiUrl, cacheTTL, skipCache, endpoint: customEndpoint } = options || {};
     const baseUrl = apiUrl || process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
-    const endpoint = `${baseUrl}/api/templates`;
+    const endpoint = customEndpoint ? `${baseUrl}${customEndpoint}` : `${baseUrl}/api/templates`;
     const cacheKey = 'templates:all';
 
     // Check cache first

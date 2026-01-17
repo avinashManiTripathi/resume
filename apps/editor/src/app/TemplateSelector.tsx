@@ -8,12 +8,14 @@ interface TemplateSelectorProps {
     onSelectTemplate: (template: Template) => void;
     apiBase: string;
     selectedTemplateId?: string;
+    endpoint?: string;
 }
 
-export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, selectedTemplateId }: TemplateSelectorProps) {
+export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, selectedTemplateId, endpoint }: TemplateSelectorProps) {
     // Use the templates hook with caching
     const { templates, loading, error, refetch } = useTemplates({
         apiUrl: apiBase,
+        endpoint,
     });
 
     return (

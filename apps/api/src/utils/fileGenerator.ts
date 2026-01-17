@@ -48,10 +48,10 @@ export async function generatePDF(htmlContent: string): Promise<Buffer> {
             format: 'A4',
             printBackground: true,
             margin: {
-                top: '20mm',
-                right: '20mm',
-                bottom: '20mm',
-                left: '20mm'
+                top: '48px',
+                right: '48px',
+                bottom: '48px',
+                left: '48px'
             }
         });
 

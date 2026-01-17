@@ -3,7 +3,7 @@
  * Validates user data and requests for cover letter generation
  */
 
-import { CoverLetterUserData, ValidationResult } from '../types/cover-letter.types';
+import { FlatCoverLetterUserData, ValidationResult } from '../types/cover-letter.types';
 import { CoverLetterTemplate } from '../constants/coverLetterTemplates';
 import { sanitizeInput } from './placeholderReplacer';
 
@@ -15,7 +15,7 @@ import { sanitizeInput } from './placeholderReplacer';
  * @returns Validation result with errors if any
  */
 export function validateUserData(
-    userData: CoverLetterUserData,
+    userData: FlatCoverLetterUserData,
     template: CoverLetterTemplate
 ): ValidationResult {
     const errors: string[] = [];
@@ -86,7 +86,7 @@ export function isValidPhone(phone: string): boolean {
  * @param userData - Raw user data
  * @returns Sanitized user data
  */
-export function sanitizeUserData(userData: CoverLetterUserData): CoverLetterUserData {
+export function sanitizeUserData(userData: FlatCoverLetterUserData): FlatCoverLetterUserData {
     return {
         fullName: sanitizeInput(userData.fullName || ''),
         email: sanitizeInput(userData.email || ''),
@@ -95,7 +95,8 @@ export function sanitizeUserData(userData: CoverLetterUserData): CoverLetterUser
         companyName: sanitizeInput(userData.companyName || ''),
         experience: sanitizeInput(userData.experience || ''),
         skills: userData.skills?.map(skill => sanitizeInput(skill)) || [],
-        customParagraph: userData.customParagraph ? sanitizeInput(userData.customParagraph) : undefined
+        customParagraph: userData.customParagraph ? sanitizeInput(userData.customParagraph) : undefined,
+        fontFamily: userData.fontFamily ? sanitizeInput(userData.fontFamily) : undefined
     };
 }
 

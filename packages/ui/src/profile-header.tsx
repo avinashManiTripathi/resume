@@ -25,6 +25,7 @@ interface ProfileHeaderProps {
     onTailor?: () => void;
     isSaving?: boolean;
     lastSaved?: Date | null;
+    classNameLeft?: string;
 }
 
 export function ProfileHeader({
@@ -45,6 +46,7 @@ export function ProfileHeader({
     onTailor,
     isSaving,
     lastSaved,
+    classNameLeft = "md:w-[45%]",
 }: ProfileHeaderProps) {
 
     const [isDownloading, setIsDownloading] = useState(false);
@@ -88,7 +90,7 @@ export function ProfileHeader({
         <div className="mb-2 mb-0">
             <div className="flex flex-col md:flex-row items-stretch justify-between">
                 {/* Left: Profile Info */}
-                <div className="w-full md:w-[45%] bg-white justify-between rounded-none md:rounded-l-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4 border-r border-slate-200">
+                <div className={`w-full ${classNameLeft} shrink-0 bg-white justify-between rounded-none md:rounded-l-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4 border-r border-slate-200`}>
                     <div className="flex items-center gap-2 md:gap-4">
                         <div className="relative">
                             <div className="w-10 md:w-14 border-[3px] md:border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-10 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden text-xs md:text-base">

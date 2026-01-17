@@ -91,6 +91,37 @@ router.post('/preview', async (req: Request, res: Response) => {
 });
 
 /**
+ * POST /api/cover-letter/pdf-preview
+ * Generate PDF buffer for canvas preview
+ */
+router.post('/pdf-preview', async (req: Request, res: Response) => {
+    try {
+        const request: GenerateCoverLetterRequest = req.body;
+
+        // Force PDF format for preview
+        request.format = 'pdf';
+
+        const result = await coverLetterService.generateCoverLetter(request);
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Length': result.buffer.length,
+            'Content-Disposition': `inline; filename="preview.pdf"`,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+        });
+
+        res.send(result.buffer);
+    } catch (error: any) {
+        console.error('PDF preview error:', error);
+        res.status(500).json({
+            error: error.message || 'Failed to generate PDF preview'
+        });
+    }
+});
+
+/**
  * POST /api/cover-letter/generate
  * Generate and download cover letter
  */

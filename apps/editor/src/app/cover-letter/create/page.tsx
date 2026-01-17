@@ -1,19 +1,26 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useCallback, Suspense, useRef, useMemo, useLayoutEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Download, Loader2, Eye, CloudCheck, Sparkles, Brain, Wand2, Type, UserCircle, Briefcase, GraduationCap, ArrowRight, Zap, Target } from "lucide-react";
+import { Loader2, Sparkles, Wand2, UserCircle, Brain, Target, CheckCircle2 } from "lucide-react";
 import { usePersistence } from "../../hooks/usePersistence";
+import { usePostArrayBuffer } from "@repo/hooks/network";
 import { useDebounce } from "@repo/utils-client";
 import { Dialog } from "@repo/ui/dialog";
-import { StepLoader } from "@repo/ui/step-loader";
 import { Button } from "@repo/ui/button";
+import { ProfileHeader } from "@repo/ui/profile-header";
+import { StepLoader } from "@repo/ui/step-loader";
+import { mapFormDataToStructured } from "../../../libs/cover-letter-utils";
+import TemplateSelector from "../../TemplateSelector";
+import SmartImportModal from "../../SmartImportModal";
+import { RichTextEditor } from "@repo/ui/rich-text-editor";
 
 interface Template {
     id: string;
     name: string;
     description: string;
     supportedFields: string[];
+    templateBody?: string;
 }
 
 interface FormData {
@@ -31,16 +38,20 @@ function CoverLetterCreateForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const templateIdParam = searchParams.get("templateId");
+    const API_BASE = "https://api.profresume.com";
 
     const [template, setTemplate] = useState<Template | null>(null);
+    const [showTemplates, setShowTemplates] = useState(false);
     const [loading, setLoading] = useState(true);
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [format, setFormat] = useState<"pdf" | "docx">("pdf");
-    const [progress, setProgress] = useState(0);
+    const [fontFamily, setFontFamily] = useState('Inter');
+    const [showSmartImport, setShowSmartImport] = useState(false);
+    const [smartImportMode, setSmartImportMode] = useState<'voice' | 'text'>('voice');
 
     // Persistence
-    const { saveDocument, getDocument, isLoggedIn } = usePersistence();
+    const { saveDocument, getDocument } = usePersistence();
     const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
     const [isSaving, setIsSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -67,8 +78,33 @@ function CoverLetterCreateForm() {
         customParagraph: "",
     });
 
-    const debouncedFormData = useDebounce(formData, 1000);
+    const [generationStep, setGenerationStep] = useState(0);
+    const generationSteps = [
+        "Analyzing Profile...",
+        "Drafting Content...",
+        "Formatting Document...",
+        "Finalizing PDF...",
+        "Download Complete"
+    ];
+
+    const debouncedFormData = useDebounce(formData, 500); // Faster debounce for preview
     const [skillInput, setSkillInput] = useState("");
+
+
+    // Initialize PDF generation hook for preview
+    const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer('https://api.profresume.com/api/cover-letter/pdf-preview');
+
+    // Canvas refs
+    const mainRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const offscreenRef = useRef<HTMLCanvasElement | null>(null);
+    const renderTaskRef = useRef<any>(null);
+    const requestIdRef = useRef(0);
+    const scaleRef = useRef<number | null>(null);
+    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    // Fetch Template Info
 
     // Fetch Template Info
     const fetchTemplate = useCallback(async (id: string) => {
@@ -92,6 +128,39 @@ function CoverLetterCreateForm() {
         }
     }, []);
 
+    // Calculate progress based on form completion
+    const calculateProgress = () => {
+        let filled = 0;
+        const total = 6; // fullName, email, jobTitle, companyName, experience, phone
+        if (formData.fullName) filled++;
+        if (formData.email) filled++;
+        if (formData.jobTitle) filled++;
+        if (formData.companyName) filled++;
+        if (formData.experience) filled++;
+        if (formData.phone) filled++;
+        return Math.round((filled / total) * 100);
+    };
+
+    const progress = calculateProgress();
+
+    // Loading implementation similar to Resume Editor
+    const [loadingStep, setLoadingStep] = useState(0);
+    const loadingSteps = [
+        "Initializing Editor...",
+        "Loading Templates...",
+        "Preparing Workspace..."
+    ];
+
+    useEffect(() => {
+        if (loading && loadingStep < loadingSteps.length - 1) {
+            const timer = setTimeout(() => {
+                setLoadingStep(prev => prev + 1);
+            }, 800);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, loadingStep, loadingSteps.length]);
+
+
     // Load existing document or initial template
     useEffect(() => {
         const id = searchParams.get('id');
@@ -113,6 +182,162 @@ function CoverLetterCreateForm() {
             router.push("/cover-letter/templates");
         }
     }, [searchParams, getDocument, templateIdParam, router, fetchTemplate]);
+
+    // Live Preview Hydration
+    // Live Preview Logic - Removed Iframe Hydration
+    // Moved to Canvas Rendering logic below
+
+
+    // Canvas PDF Rendering Logic
+
+    const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
+        if (!canvasRef.current) return;
+
+        const container = canvasRef.current.parentElement;
+        if (!container) return;
+
+        const containerWidth = Math.floor(container.clientWidth);
+        if (containerWidth === 0) return;
+
+        const requestId = ++requestIdRef.current;
+        const pdfjsLib = (window as any).pdfjsLib;
+
+        if (!pdfjsLib) return; // Wait for library to load
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+        setTotalPages(pdf.numPages);
+
+        const pdfPage = await pdf.getPage(
+            Math.min(Math.max(page, 1), pdf.numPages)
+        );
+
+        const dpr = window.devicePixelRatio || 1;
+        const baseViewport = pdfPage.getViewport({ scale: 1 });
+
+        const padding = 0; // No padding needed for exact fit
+
+        if (!scaleRef.current) {
+            scaleRef.current = (containerWidth - padding) / baseViewport.width;
+        }
+
+        const viewport = pdfPage.getViewport({
+            scale: scaleRef.current,
+        });
+
+        const offscreen = offscreenRef.current ?? document.createElement("canvas");
+        offscreenRef.current = offscreen;
+
+        const targetWidth = Math.floor(viewport.width * dpr);
+        const targetHeight = Math.floor(viewport.height * dpr);
+
+        if (offscreen.width !== targetWidth || offscreen.height !== targetHeight) {
+            offscreen.width = targetWidth;
+            offscreen.height = targetHeight;
+        }
+
+        const offCtx = offscreen.getContext("2d")!;
+        offCtx.setTransform(1, 0, 0, 1, 0, 0);
+        offCtx.scale(dpr, dpr);
+
+        if (renderTaskRef.current) {
+            renderTaskRef.current.cancel();
+        }
+
+        renderTaskRef.current = pdfPage.render({
+            canvasContext: offCtx,
+            viewport,
+        });
+
+        try {
+            await renderTaskRef.current.promise;
+        } catch (e: any) {
+            if (e?.name === "RenderingCancelledException") return;
+            throw e;
+        }
+
+        if (requestId !== requestIdRef.current) return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext("2d")!;
+
+        if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            canvas.style.width = `${viewport.width}px`;
+            canvas.style.height = `${viewport.height}px`;
+        }
+
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.drawImage(offscreen, 0, 0);
+    }, []);
+
+    // Render PDF with loading state and auto-cancellation
+    const renderPdf = useCallback(async (page = currentPage) => {
+        if (!canvasRef.current || !template) return;
+
+        try {
+            const requestData = {
+                templateId: template.id,
+                userData: { ...debouncedFormData, fontFamily },
+                format: 'pdf'
+            };
+
+            const pdfData = await generatePDF(requestData);
+
+            if (pdfData) {
+                await renderPDFPage(pdfData, page);
+            }
+        } catch (error) {
+            console.error("Error rendering PDF:", error);
+        }
+    }, [currentPage, template, debouncedFormData, fontFamily, generatePDF, renderPDFPage]);
+
+    // Cleanup scale on template change
+    useEffect(() => {
+        scaleRef.current = null;
+    }, [template?.id]);
+
+    // Auto-render PDF when data changes
+    useEffect(() => {
+        renderPdf();
+    }, [renderPdf]);
+
+    // Re-render on window resize
+    useLayoutEffect(() => {
+        const onResize = () => {
+            scaleRef.current = null; // Force recalculation of scale
+            renderPdf();
+        };
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, [renderPdf]);
+
+
+    // Handle Smart Import Apply
+    const handleSmartImportApply = (data: any) => {
+        // Map resume data to cover letter fields
+        const mappedData: Partial<FormData> = {
+            fullName: `${data.personalInfo?.firstName || ''} ${data.personalInfo?.lastName || ''}`.trim(),
+            email: data.personalInfo?.email || '',
+            phone: data.personalInfo?.phone || '',
+            jobTitle: data.personalInfo?.jobTitle || '',
+            experience: data.experience?.[0]?.summary || '',
+            skills: data.skills || [],
+        };
+
+        setFormData(prev => ({ ...prev, ...mappedData }));
+
+        setDialog({
+            isOpen: true,
+            title: "Data Imported",
+            description: "Your cover letter details have been filled from the imported resume data.",
+            type: "success"
+        });
+    };
+
 
     // Auto-save logic
     const handleAutoSave = useCallback(async (dataToSave = formData) => {
@@ -184,7 +409,9 @@ function CoverLetterCreateForm() {
     const validateForm = (): boolean => {
         if (!template) return false;
 
-        const requiredFields: (keyof FormData)[] = ["fullName", "email", "phone", "jobTitle", "companyName", "experience"];
+        const requiredFields: (keyof FormData)[] = ["fullName", "email", "jobTitle"];
+        // Relaxed validation for preview context, but kept strictly for generation
+        // For UI feedback, we can show specific errors
 
         for (const field of requiredFields) {
             const value = formData[field];
@@ -193,28 +420,24 @@ function CoverLetterCreateForm() {
                 return false;
             }
         }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            setError("Please enter a valid email address");
-            return false;
-        }
-
         return true;
     };
+
+
+
+    // ... (rest of the file)
 
     const handleGenerate = async () => {
         if (!validateForm()) return;
 
         try {
             setGenerating(true);
-            setProgress(0);
+            setGenerationStep(0);
             setError(null);
 
-            // Simulation of AI steps for visual feedback
             const interval = setInterval(() => {
-                setProgress(prev => Math.min(prev + 5, 95));
-            }, 200);
+                setGenerationStep(prev => prev < generationSteps.length - 1 ? prev + 1 : prev);
+            }, 800);
 
             const response = await fetch("https://api.profresume.com/api/cover-letter/generate", {
                 method: "POST",
@@ -223,13 +446,13 @@ function CoverLetterCreateForm() {
                 },
                 body: JSON.stringify({
                     templateId: template?.id || templateIdParam,
-                    userData: formData,
+                    userData: { ...formData, fontFamily }, // Pass fontFamily with userData
                     format,
                 }),
             });
 
             clearInterval(interval);
-            setProgress(100);
+            setGenerationStep(generationSteps.length - 1); // Set to "Download Complete" (active)
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -253,30 +476,37 @@ function CoverLetterCreateForm() {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
 
-            setDialog({
-                isOpen: true,
-                title: "Download Success",
-                description: "Your cover letter has been generated using AI and downloaded successfully!",
-                type: "success"
-            });
+            // Mark all as complete (including Download Complete)
+            setGenerationStep(generationSteps.length);
+
+            // Wait for user to see the success state
+            await new Promise(resolve => setTimeout(resolve, 2000));
         } catch (err: any) {
             console.error("Error generating cover letter:", err);
             setError(err.message || "Failed to generate cover letter");
         } finally {
             setGenerating(false);
-            // Keep progress at 100 for a moment or reset
-            setTimeout(() => setProgress(0), 1000);
+            setTimeout(() => setGenerationStep(0), 1000);
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center">
-                <div className="flex flex-col items-center justify-center p-8">
-                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 animate-bounce">
-                        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/50 backdrop-blur-sm animate-in fade-in duration-500">
+                <div className="relative max-w-md w-full mx-4">
+                    <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
+                        <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative mb-8">
+                            <Brain size={32} className="text-blue-600 relative z-10" />
+                            <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
+                        </div>
+                        <div className="text-center mb-8">
+                            <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">AI Editor</h2>
+                            <p className="text-slate-500">Preparing your environment...</p>
+                        </div>
+                        <div className="flex justify-center">
+                            <StepLoader steps={loadingSteps} currentStep={loadingStep} />
+                        </div>
                     </div>
-                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading AI Model...</p>
                 </div>
             </div>
         );
@@ -286,15 +516,7 @@ function CoverLetterCreateForm() {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="max-w-md mx-auto text-center py-20 px-8 bg-red-50 rounded-3xl border border-red-100">
-                    <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl">
-                        ⚠️
-                    </div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-2">Template Not Found</h2>
-                    <p className="text-gray-600 mb-6">{error || "The selected template could not be loaded."}</p>
-                    <button
-                        onClick={() => router.push("/cover-letter/templates")}
-                        className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-200"
-                    >
+                    <button onClick={() => router.push("/cover-letter/templates")} className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-200">
                         Choose Another Template
                     </button>
                 </div>
@@ -303,295 +525,222 @@ function CoverLetterCreateForm() {
     }
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="flex flex-col h-screen w-full bg-slate-50">
             {/* Header */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
-                <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
-                    <div className="flex items-center gap-3 w-full md:w-auto">
-                        <button
-                            onClick={() => router.push("/cover-letter/templates")}
-                            className="w-9 h-9 bg-gray-50 hover:bg-gray-100 rounded-xl flex items-center justify-center transition-colors border border-gray-200"
-                            title="Back to Templates"
-                        >
-                            <ArrowLeft size={16} className="text-gray-600" />
-                        </button>
-                        <div>
-                            <h1 className="text-lg font-bold text-gray-900 tracking-tight">{template.name}</h1>
-                            <div className="flex items-center gap-2">
-                                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">AI Generator</span>
-                                {isSaving && (
-                                    <span className="flex items-center gap-1 text-[10px] text-gray-400 animate-pulse">
-                                        <Loader2 size={8} className="animate-spin" /> Saving
-                                    </span>
-                                )}
-                                {!isSaving && lastSaved && (
-                                    <span className="text-[10px] text-gray-400">Saved</span>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+            <ProfileHeader
+                name={`${formData.fullName || 'Untitled'}'s Cover Letter`}
+                title={formData.jobTitle || "Job Title"}
+                progress={progress}
+                onDownload={async () => { await handleGenerate(); }}
+                isSaving={isSaving}
+                lastSaved={lastSaved}
+                onTemplateChange={() => setShowTemplates(true)}
+                fontFamily={fontFamily}
+                onFontChange={setFontFamily}
+                onSmartImport={() => {
+                    setSmartImportMode('voice');
+                    setShowSmartImport(true);
+                }}
+                // Hide unsupported props
+                currentPage={1}
+                totalPages={1}
+                classNameLeft="md:w-[45%]"
+            />
 
-                    <div className="flex items-center gap-3 w-full md:w-auto">
-                        {/* Format Selection */}
-                        <div className="flex p-1 bg-gray-50 rounded-xl border border-gray-100 h-10">
-                            <button
-                                onClick={() => setFormat("pdf")}
-                                className={`px-3 md:px-4 rounded-lg text-xs font-bold transition-all ${format === 'pdf' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                            >
-                                PDF
-                            </button>
-                            <button
-                                onClick={() => setFormat("docx")}
-                                className={`px-3 md:px-4 rounded-lg text-xs font-bold transition-all ${format === 'docx' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                            >
-                                DOCX
-                            </button>
-                        </div>
+            {/* Smart Import Modal */}
+            <SmartImportModal
+                isOpen={showSmartImport}
+                onClose={() => setShowSmartImport(false)}
+                onApply={handleSmartImportApply}
+                mode={smartImportMode}
+            />
 
-                        {/* Generate Button */}
-                        <Button
-                            onClick={handleGenerate}
-                            disabled={generating}
-                            className="h-10 px-4 md:px-6 rounded-xl text-xs md:text-sm font-black bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:shadow-none transition-all flex items-center justify-center gap-2"
-                        >
-                            {generating ? (
-                                <Loader2 size={16} className="animate-spin" />
-                            ) : (
-                                <Download size={16} />
-                            )}
-                            <span className="hidden md:inline">Generate & Download</span>
-                            <span className="md:hidden">Download</span>
-                        </Button>
-                    </div>
+            {/* Main Content - Split Glass Content */}
+            <div className="flex-1 flex overflow-hidden relative">
+                {/* Background Atmosphere */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
                 </div>
-            </header>
 
-            {/* Split Layout */}
-            <div className="pt-24 md:pt-20 min-h-screen flex flex-col lg:flex-row">
-                {/* Left: AI Form Input */}
-                <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-16 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
-                    <div className="max-w-2xl mx-auto space-y-8">
-                        <div className="space-y-2">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">
-                                <Sparkles size={12} />
-                                <span>Context Injection</span>
-                            </div>
-                            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Provide Context</h2>
-                            <p className="text-gray-500 font-medium">Our AI needs a few details to craft the perfect cover letter for you.</p>
-                        </div>
+                {/* Left: Input Form (45%) */}
+                <div className="w-full md:w-[45%] shrink-0 flex flex-col relative bg-white border-r border-slate-200/60 overflow-hidden">
+                    <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
+                        {showTemplates ? (
+                            <TemplateSelector
+                                apiBase={API_BASE}
+                                endpoint="/api/cover-letter/templates"
+                                selectedTemplateId={template?.id || templateIdParam || ''}
+                                onBack={() => setShowTemplates(false)}
+                                onSelectTemplate={(newTemplate: any) => {
+                                    if (newTemplate._id) {
+                                        const url = new URL(window.location.href);
+                                        url.searchParams.set('templateId', newTemplate._id);
+                                        window.history.replaceState({}, '', url.toString());
+                                        fetchTemplate(newTemplate._id);
+                                        setShowTemplates(false);
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <div className="p-6 md:p-12">
+                                <div className="max-w-2xl mx-auto space-y-8">
+                                    <div className="space-y-2">
+                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">
+                                            <Sparkles size={12} />
+                                            <span>AI Context</span>
+                                        </div>
+                                        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Your Details</h2>
+                                        <p className="text-gray-500 font-medium text-sm">Fill in the details below. The preview on the right updates automatically.</p>
+                                    </div>
 
-                        {error && (
-                            <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
-                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">⚠️</div>
-                                {error}
+                                    {error && (
+                                        <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                                            <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">⚠️</div>
+                                            {error}
+                                        </div>
+                                    )}
+
+                                    <div className="space-y-6">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                <UserCircle size={18} className="text-blue-500" />
+                                                <h3>About You</h3>
+                                            </div>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                                    <input type="text" value={formData.fullName} onChange={(e) => handleInputChange("fullName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="John Doe" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Job Title</label>
+                                                    <input type="text" value={formData.jobTitle} onChange={(e) => handleInputChange("jobTitle", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Software Engineer" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                                                    <input type="email" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="john@example.com" />
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                                                    <input type="tel" value={formData.phone} onChange={(e) => handleInputChange("phone", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="+1 555 000 0000" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                <Target size={18} className="text-blue-500" />
+                                                <h3>Target Role</h3>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Target Company</label>
+                                                <input type="text" value={formData.companyName} onChange={(e) => handleInputChange("companyName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Google, Microsoft..." />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                <Brain size={18} className="text-blue-500" />
+                                                <h3>Experience & Skills</h3>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Summary</label>
+                                                <div className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                                                    <RichTextEditor
+                                                        value={formData.experience}
+                                                        onChange={(value: string) => handleInputChange("experience", value)}
+                                                        placeholder="I have 5 years of experience..."
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Custom Paragraph (Optional)</label>
+                                                <textarea value={formData.customParagraph} onChange={(e) => handleInputChange("customParagraph", e.target.value)} rows={4} className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 resize-none text-sm" placeholder="Additionally, I am..." />
+                                            </div>
+                                        </div>
+                                        <div className="h-12" />
+                                    </div>
+                                </div>
                             </div>
                         )}
-
-                        <div className="space-y-8">
-                            {/* Section: Personal Info */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-gray-900 font-bold">
-                                    <UserCircle size={20} className="text-blue-500" />
-                                    <h3>About You</h3>
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Full Name</label>
-                                        <input
-                                            type="text"
-                                            value={formData.fullName}
-                                            onChange={(e) => handleInputChange("fullName", e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                                            placeholder="John Doe"
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Job Title</label>
-                                        <input
-                                            type="text"
-                                            value={formData.jobTitle}
-                                            onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                                            placeholder="Software Enginner"
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Email</label>
-                                        <input
-                                            type="email"
-                                            value={formData.email}
-                                            onChange={(e) => handleInputChange("email", e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                                            placeholder="john@example.com"
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Phone</label>
-                                        <input
-                                            type="tel"
-                                            value={formData.phone}
-                                            onChange={(e) => handleInputChange("phone", e.target.value)}
-                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                                            placeholder="+1 555 000 0000"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Section: Target Job */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-gray-900 font-bold">
-                                    <Target size={20} className="text-blue-500" />
-                                    <h3>Target Role</h3>
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Target Company</label>
-                                    <input
-                                        type="text"
-                                        value={formData.companyName}
-                                        onChange={(e) => handleInputChange("companyName", e.target.value)}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                                        placeholder="Google, Microsoft, Stripe..."
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Section: Experience & Skills */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-gray-900 font-bold">
-                                    <Brain size={20} className="text-blue-500" />
-                                    <h3>Experience & Skills</h3>
-                                </div>
-                                <div className="space-y-1">
-                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Professional Summary</label>
-                                    <textarea
-                                        value={formData.experience}
-                                        onChange={(e) => handleInputChange("experience", e.target.value)}
-                                        rows={5}
-                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium resize-none"
-                                        placeholder="I have 5 years of experience in..."
-                                    />
-                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-right">Min 50 chars</p>
-                                </div>
-
-                                {template.supportedFields.includes("skills") && (
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Top Skills (Optional)</label>
-                                        <div className="flex gap-2">
-                                            <input
-                                                type="text"
-                                                value={skillInput}
-                                                onChange={(e) => setSkillInput(e.target.value)}
-                                                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSkill())}
-                                                className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                                                placeholder="Add a skill..."
-                                            />
-                                            <button
-                                                onClick={handleAddSkill}
-                                                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl font-bold hover:bg-blue-200 transition"
-                                            >
-                                                Add
-                                            </button>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2 pt-2">
-                                            {formData.skills.map((skill, index) => (
-                                                <span key={index} className="px-3 py-1 bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm">
-                                                    {skill}
-                                                    <button onClick={() => handleRemoveSkill(index)} className="hover:text-red-500 transition-colors">×</button>
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Bottom padding to allow scrolling past sticky bottom if needed (though now we moved it up) */}
-                            <div className="h-12" />
-                        </div>
                     </div>
                 </div>
 
-                {/* Right: AI Visual / Preview Placeholder */}
-                <div className="w-full lg:w-1/2 bg-gray-50 border-l border-gray-200 lg:h-[calc(100vh-80px)] overflow-hidden relative hidden lg:flex items-center justify-center">
-                    {/* Background Grid */}
-                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#2563EB 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+                {/* Right: Real-time Preview */}
+                <div className="flex-1 relative flex flex-col items-center bg-transparent">
+                    <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-8">
+                        <div className="relative w-full max-w-[794px] flex justify-center">
+                            <div className="relative bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 w-full" style={{ aspectRatio: '210/297' }}>
+                                {/* Live Canvas Preview */}
+                                <main ref={mainRef} className="w-full h-full relative">
+                                    <div className="absolute inset-0 flex justify-center bg-white">
+                                        <canvas
+                                            ref={canvasRef}
+                                            className="shadow-sm"
+                                            style={{
+                                                maxWidth: '100%',
+                                                height: 'auto'
+                                            }}
+                                        />
+                                    </div>
 
-                    <div className="relative z-10 text-center space-y-6 max-w-sm">
-                        <div className="w-64 h-[350px] bg-white rounded-xl shadow-2xl mx-auto border border-gray-100 relative overflow-hidden group">
-                            {/* Abstract Document visual */}
-                            <div className="absolute top-0 w-full h-1 bg-blue-600/50" />
-                            <div className="p-6 space-y-4 opacity-30 group-hover:opacity-50 transition-opacity duration-700">
-                                <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto" />
-                                <div className="space-y-2 pt-4">
-                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                    <div className="h-2 bg-gray-100 rounded w-3/4" />
-                                </div>
-                                <div className="space-y-2 pt-8">
-                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                    <div className="h-2 bg-gray-100 rounded w-5/6" />
-                                </div>
+                                    {/* Overlay when loading */}
+                                    {(loading || isPdfGenerating) && (
+                                        <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                                            <div className="flex flex-col items-center gap-3">
+                                                <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
+                                                <p className="text-sm font-medium text-slate-600 animate-pulse">
+                                                    {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
+                                </main>
                             </div>
-
-                            {/* Overlay AI Badge */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-20 h-20 bg-blue-600/10 rounded-full flex items-center justify-center backdrop-blur-sm animate-pulse">
-                                    <Sparkles className="text-blue-600" size={32} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <h3 className="text-xl font-black text-gray-900">AI Preview Mode</h3>
-                            <p className="text-sm text-gray-500 font-medium leading-relaxed">Fill out the details on the left, and our AI will continuously optimize your structure.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Simulating Generation Overlay */}
-            {generating && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-md">
-                    <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
-                        <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
-                            <Wand2 size={32} className="text-blue-600 relative z-10" />
-                            <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-black text-gray-900 mb-2">Crafting your Letter</h3>
-                            <p className="text-gray-500 font-medium">Using AI to align your experience with the job...</p>
-                        </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                            <div
-                                className="h-full bg-blue-600 transition-all duration-300 rounded-full"
-                                style={{ width: `${progress}%` }}
-                            />
+            {
+                generating && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/50 backdrop-blur-sm">
+                        <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
+                            {generationStep === generationSteps.length ? (
+                                <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
+                                    <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-20" />
+                                    <CheckCircle2 size={42} className="text-blue-600 relative z-10 animate-in zoom-in spin-in-12 duration-500" />
+                                </div>
+                            ) : (
+                                <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
+                                    <Wand2 size={32} className="text-blue-600 relative z-10" />
+                                    <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
+                                </div>
+                            )}
+                            <div className="text-center mb-4">
+                                <h3 className="text-2xl font-black text-gray-900 mb-2">
+                                    {generationStep === generationSteps.length ? "Download Complete!" : "Generating Cover Letter"}
+                                </h3>
+                                <p className="text-slate-500 text-sm">
+                                    {generationStep === generationSteps.length ? "Your file is ready." : "Please wait while we create your document..."}
+                                </p>
+                            </div>
+                            <div className="flex justify-center text-left">
+                                <StepLoader steps={generationSteps} currentStep={generationStep} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-            <Dialog
-                isOpen={dialog.isOpen}
-                onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))}
-                title={dialog.title}
-                description={dialog.description}
-                type={dialog.type}
-                primaryActionLabel="Got it"
-            />
-        </div>
+            <Dialog isOpen={dialog.isOpen} onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))} title={dialog.title} description={dialog.description} type={dialog.type} primaryActionLabel="Got it" />
+        </div >
     );
 }
 
 export default function CreatePage() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-        }>
+        <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center"><Loader2 className="animate-spin text-blue-600" /></div>}>
             <CoverLetterCreateForm />
         </Suspense>
     );
