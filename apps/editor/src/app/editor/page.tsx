@@ -436,20 +436,16 @@ function ResumeEditor() {
     }
   }, [resume]);
 
-  // RenderPDFPage - Memoized to prevent re-creation on every render
-  const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
-    if (!mainRef.current || !canvasRef.current) return;
+  const scaleRef = useRef<number | null>(null);
 
-    // Use the inner container for precise dimension tracking
+  const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
+    if (!canvasRef.current) return;
+
     const container = canvasRef.current.parentElement;
     if (!container) return;
 
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
-
-    if (containerWidth === 0 || containerHeight === 0) {
-      return;
-    }
+    const containerWidth = Math.floor(container.clientWidth);
+    if (containerWidth === 0) return;
 
     const requestId = ++requestIdRef.current;
     const pdfjsLib = (window as any).pdfjsLib;
@@ -460,29 +456,46 @@ function ResumeEditor() {
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     setTotalPages(pdf.numPages);
 
-    const safePage = Math.min(Math.max(page, 1), pdf.numPages);
-    const pdfPage = await pdf.getPage(safePage);
+    const pdfPage = await pdf.getPage(
+      Math.min(Math.max(page, 1), pdf.numPages)
+    );
 
     const dpr = window.devicePixelRatio || 1;
     const baseViewport = pdfPage.getViewport({ scale: 1 });
 
-    // Calculate scale to fit width mainly (allow vertical scrolling)
-    const padding = 40; // Horizontal padding
-    const scale = (containerWidth - padding) / baseViewport.width;
+    const padding = 40;
 
-    const viewport = pdfPage.getViewport({ scale });
+    if (!scaleRef.current) {
+      scaleRef.current =
+        (containerWidth - padding) / baseViewport.width;
+    }
 
-    const offscreen = offscreenRef.current ?? document.createElement("canvas");
+    const viewport = pdfPage.getViewport({
+      scale: scaleRef.current,
+    });
+
+    const offscreen =
+      offscreenRef.current ?? document.createElement("canvas");
     offscreenRef.current = offscreen;
 
-    offscreen.width = viewport.width * dpr;
-    offscreen.height = viewport.height * dpr;
+    const targetWidth = Math.floor(viewport.width * dpr);
+    const targetHeight = Math.floor(viewport.height * dpr);
+
+    if (
+      offscreen.width !== targetWidth ||
+      offscreen.height !== targetHeight
+    ) {
+      offscreen.width = targetWidth;
+      offscreen.height = targetHeight;
+    }
 
     const offCtx = offscreen.getContext("2d")!;
     offCtx.setTransform(1, 0, 0, 1, 0, 0);
     offCtx.scale(dpr, dpr);
 
-    if (renderTaskRef.current) renderTaskRef.current.cancel();
+    if (renderTaskRef.current) {
+      renderTaskRef.current.cancel();
+    }
 
     renderTaskRef.current = pdfPage.render({
       canvasContext: offCtx,
@@ -491,34 +504,34 @@ function ResumeEditor() {
 
     try {
       await renderTaskRef.current.promise;
-    } catch (error: any) {
-      // Ignore cancellation errors - they're expected when we cancel old renders
-      if (error.name === 'RenderingCancelledException') {
-        return;
-      }
-      throw error; // Re-throw other errors
+    } catch (e: any) {
+      if (e?.name === "RenderingCancelledException") return;
+      throw e;
     }
 
     if (requestId !== requestIdRef.current) return;
 
-    const canvas = canvasRef.current!;
+    const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d")!;
 
-    canvas.width = offscreen.width;
-    canvas.height = offscreen.height;
-
-    canvas.style.width = `${viewport.width}px`;
-    canvas.style.height = `${viewport.height}px`;
+    if (
+      canvas.width !== targetWidth ||
+      canvas.height !== targetHeight
+    ) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      canvas.style.width = `${viewport.width}px`;
+      canvas.style.height = `${viewport.height}px`;
+    }
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-    // Guard against 0-dimension canvas on mobile
-    if (offscreen.width > 0 && offscreen.height > 0) {
-      ctx.drawImage(offscreen, 0, 0);
-    } else {
-      console.warn('Skipping drawImage: offscreen canvas has invalid dimensions');
-    }
+    ctx.drawImage(offscreen, 0, 0);
   }, []);
+
+  useEffect(() => {
+    scaleRef.current = null;
+  }, [templateId, showMobilePreview]);
+
 
   // Keyboard shortcuts - Empty since Undo/Redo removed
   useEffect(() => {
@@ -665,6 +678,8 @@ function ResumeEditor() {
         fontFamily={fontFamily}
         onFontChange={setFontFamily}
         onTailor={() => router.push('/tailor')}
+        isSaving={isSaving}
+        lastSaved={lastSaved}
       />
 
       {/* Main Content - Split Glass Content */}

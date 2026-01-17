@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, Download, Loader2, Eye, CloudCheck } from "lucide-react";
+import { ArrowLeft, Download, Loader2, Eye, CloudCheck, Sparkles, Brain, Wand2, Type, UserCircle, Briefcase, GraduationCap, ArrowRight, Zap, Target } from "lucide-react";
 import { usePersistence } from "../../hooks/usePersistence";
 import { useDebounce } from "@repo/utils-client";
 import { Dialog } from "@repo/ui/dialog";
+import { StepLoader } from "@repo/ui/step-loader";
+import { Button } from "@repo/ui/button";
 
 interface Template {
     id: string;
@@ -35,6 +37,7 @@ function CoverLetterCreateForm() {
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [format, setFormat] = useState<"pdf" | "docx">("pdf");
+    const [progress, setProgress] = useState(0);
 
     // Persistence
     const { saveDocument, getDocument, isLoggedIn } = usePersistence();
@@ -205,7 +208,13 @@ function CoverLetterCreateForm() {
 
         try {
             setGenerating(true);
+            setProgress(0);
             setError(null);
+
+            // Simulation of AI steps for visual feedback
+            const interval = setInterval(() => {
+                setProgress(prev => Math.min(prev + 5, 95));
+            }, 200);
 
             const response = await fetch("https://api.profresume.com/api/cover-letter/generate", {
                 method: "POST",
@@ -218,6 +227,9 @@ function CoverLetterCreateForm() {
                     format,
                 }),
             });
+
+            clearInterval(interval);
+            setProgress(100);
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -244,7 +256,7 @@ function CoverLetterCreateForm() {
             setDialog({
                 isOpen: true,
                 title: "Download Success",
-                description: "Your cover letter has been generated and downloaded successfully!",
+                description: "Your cover letter has been generated using AI and downloaded successfully!",
                 type: "success"
             });
         } catch (err: any) {
@@ -252,15 +264,19 @@ function CoverLetterCreateForm() {
             setError(err.message || "Failed to generate cover letter");
         } finally {
             setGenerating(false);
+            // Keep progress at 100 for a moment or reset
+            setTimeout(() => setProgress(0), 1000);
         }
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Loading template...</p>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="flex flex-col items-center justify-center p-8">
+                    <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 animate-bounce">
+                        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                    <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading AI Model...</p>
                 </div>
             </div>
         );
@@ -269,13 +285,15 @@ function CoverLetterCreateForm() {
     if (!template) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-                <div className="text-center max-w-md">
-                    <div className="text-red-600 text-5xl mb-4">⚠️</div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Template Not Found</h2>
-                    <p className="text-gray-600 mb-4">{error || "The selected template could not be loaded."}</p>
+                <div className="max-w-md mx-auto text-center py-20 px-8 bg-red-50 rounded-3xl border border-red-100">
+                    <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl">
+                        ⚠️
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Template Not Found</h2>
+                    <p className="text-gray-600 mb-6">{error || "The selected template could not be loaded."}</p>
                     <button
                         onClick={() => router.push("/cover-letter/templates")}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                        className="px-6 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg shadow-red-200"
                     >
                         Choose Another Template
                     </button>
@@ -285,241 +303,275 @@ function CoverLetterCreateForm() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             {/* Header */}
-            <div className="bg-white border-b sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 py-4">
-                    <div className="flex justify-between items-start mb-2">
+            <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
+                <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto gap-4">
+                    <div className="flex items-center gap-3 w-full md:w-auto">
                         <button
                             onClick={() => router.push("/cover-letter/templates")}
-                            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
+                            className="w-9 h-9 bg-gray-50 hover:bg-gray-100 rounded-xl flex items-center justify-center transition-colors border border-gray-200"
+                            title="Back to Templates"
                         >
-                            <ArrowLeft size={20} />
-                            <span>Change Template</span>
+                            <ArrowLeft size={16} className="text-gray-600" />
                         </button>
-
-                        <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
-                            {isSaving ? (
-                                <>
-                                    <Loader2 size={12} className="animate-spin" />
-                                    <span>Saving...</span>
-                                </>
-                            ) : (
-                                <>
-                                    <CloudCheck size={12} />
-                                    <span>{lastSaved ? `Saved at ${lastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : 'Saved'}</span>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <h1 className="text-2xl font-bold text-gray-900">{template.name}</h1>
-                    <p className="text-gray-600 text-sm">{template.description}</p>
-                </div>
-            </div>
-
-            {/* Form */}
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                {error && (
-                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <p className="text-red-800 text-sm">{error}</p>
-                    </div>
-                )}
-
-                <div className="bg-white rounded-lg shadow-sm border p-6 space-y-6">
-                    {/* Personal Information */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Full Name <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.fullName}
-                                    onChange={(e) => handleInputChange("fullName", e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="John Doe"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Email <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={(e) => handleInputChange("email", e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="john@example.com"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Phone <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    value={formData.phone}
-                                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="+1 (555) 123-4567"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Job Information */}
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Job Information</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Job Title <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.jobTitle}
-                                    onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Senior Software Engineer"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Company Name <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.companyName}
-                                    onChange={(e) => handleInputChange("companyName", e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Tech Corp"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Experience */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Professional Experience <span className="text-red-500">*</span>
-                        </label>
-                        <textarea
-                            value={formData.experience}
-                            onChange={(e) => handleInputChange("experience", e.target.value)}
-                            rows={4}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="5 years of experience in full-stack development, specializing in React and Node.js..."
-                        />
-                    </div>
-
-                    {/* Skills (Optional) */}
-                    {template.supportedFields.includes("skills") && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Skills (Optional)
-                            </label>
-                            <div className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={skillInput}
-                                    onChange={(e) => setSkillInput(e.target.value)}
-                                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSkill())}
-                                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Add a skill and press Enter"
-                                />
-                                <button
-                                    onClick={handleAddSkill}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                                >
-                                    Add
-                                </button>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {formData.skills.map((skill, index) => (
-                                    <span
-                                        key={index}
-                                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center gap-2"
-                                    >
-                                        {skill}
-                                        <button
-                                            onClick={() => handleRemoveSkill(index)}
-                                            className="text-blue-600 hover:text-blue-800"
-                                        >
-                                            ×
-                                        </button>
+                            <h1 className="text-lg font-bold text-gray-900 tracking-tight">{template.name}</h1>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">AI Generator</span>
+                                {isSaving && (
+                                    <span className="flex items-center gap-1 text-[10px] text-gray-400 animate-pulse">
+                                        <Loader2 size={8} className="animate-spin" /> Saving
                                     </span>
-                                ))}
+                                )}
+                                {!isSaving && lastSaved && (
+                                    <span className="text-[10px] text-gray-400">Saved</span>
+                                )}
                             </div>
-                        </div>
-                    )}
-
-                    {/* Custom Paragraph (Optional) */}
-                    {template.supportedFields.includes("customParagraph") && (
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Additional Paragraph (Optional)
-                            </label>
-                            <textarea
-                                value={formData.customParagraph}
-                                onChange={(e) => handleInputChange("customParagraph", e.target.value)}
-                                rows={3}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Add any additional information you'd like to include..."
-                            />
-                        </div>
-                    )}
-
-                    {/* Format Selection */}
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Download Format</label>
-                        <div className="flex gap-4">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="radio"
-                                    value="pdf"
-                                    checked={format === "pdf"}
-                                    onChange={(e) => setFormat(e.target.value as "pdf" | "docx")}
-                                    className="w-4 h-4 text-blue-600"
-                                />
-                                <span className="text-gray-700">PDF</span>
-                            </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="radio"
-                                    value="docx"
-                                    checked={format === "docx"}
-                                    onChange={(e) => setFormat(e.target.value as "pdf" | "docx")}
-                                    className="w-4 h-4 text-blue-600"
-                                />
-                                <span className="text-gray-700">DOCX</span>
-                            </label>
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex gap-4 pt-4">
-                        <button
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        {/* Format Selection */}
+                        <div className="flex p-1 bg-gray-50 rounded-xl border border-gray-100 h-10">
+                            <button
+                                onClick={() => setFormat("pdf")}
+                                className={`px-3 md:px-4 rounded-lg text-xs font-bold transition-all ${format === 'pdf' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                PDF
+                            </button>
+                            <button
+                                onClick={() => setFormat("docx")}
+                                className={`px-3 md:px-4 rounded-lg text-xs font-bold transition-all ${format === 'docx' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
+                            >
+                                DOCX
+                            </button>
+                        </div>
+
+                        {/* Generate Button */}
+                        <Button
                             onClick={handleGenerate}
                             disabled={generating}
-                            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="h-10 px-4 md:px-6 rounded-xl text-xs md:text-sm font-black bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:shadow-none transition-all flex items-center justify-center gap-2"
                         >
                             {generating ? (
-                                <>
-                                    <Loader2 size={20} className="animate-spin" />
-                                    <span>Generating...</span>
-                                </>
+                                <Loader2 size={16} className="animate-spin" />
                             ) : (
-                                <>
-                                    <Download size={20} />
-                                    <span>Generate & Download</span>
-                                </>
+                                <Download size={16} />
                             )}
-                        </button>
+                            <span className="hidden md:inline">Generate & Download</span>
+                            <span className="md:hidden">Download</span>
+                        </Button>
+                    </div>
+                </div>
+            </header>
+
+            {/* Split Layout */}
+            <div className="pt-24 md:pt-20 min-h-screen flex flex-col lg:flex-row">
+                {/* Left: AI Form Input */}
+                <div className="w-full lg:w-1/2 p-6 md:p-12 lg:p-16 overflow-y-auto max-h-[calc(100vh-80px)] custom-scrollbar">
+                    <div className="max-w-2xl mx-auto space-y-8">
+                        <div className="space-y-2">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">
+                                <Sparkles size={12} />
+                                <span>Context Injection</span>
+                            </div>
+                            <h2 className="text-4xl font-black text-gray-900 tracking-tight">Provide Context</h2>
+                            <p className="text-gray-500 font-medium">Our AI needs a few details to craft the perfect cover letter for you.</p>
+                        </div>
+
+                        {error && (
+                            <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">⚠️</div>
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="space-y-8">
+                            {/* Section: Personal Info */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-gray-900 font-bold">
+                                    <UserCircle size={20} className="text-blue-500" />
+                                    <h3>About You</h3>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Full Name</label>
+                                        <input
+                                            type="text"
+                                            value={formData.fullName}
+                                            onChange={(e) => handleInputChange("fullName", e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
+                                            placeholder="John Doe"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Job Title</label>
+                                        <input
+                                            type="text"
+                                            value={formData.jobTitle}
+                                            onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
+                                            placeholder="Software Enginner"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Email</label>
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(e) => handleInputChange("email", e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Phone</label>
+                                        <input
+                                            type="tel"
+                                            value={formData.phone}
+                                            onChange={(e) => handleInputChange("phone", e.target.value)}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
+                                            placeholder="+1 555 000 0000"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Section: Target Job */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-gray-900 font-bold">
+                                    <Target size={20} className="text-blue-500" />
+                                    <h3>Target Role</h3>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Target Company</label>
+                                    <input
+                                        type="text"
+                                        value={formData.companyName}
+                                        onChange={(e) => handleInputChange("companyName", e.target.value)}
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
+                                        placeholder="Google, Microsoft, Stripe..."
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Section: Experience & Skills */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-gray-900 font-bold">
+                                    <Brain size={20} className="text-blue-500" />
+                                    <h3>Experience & Skills</h3>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Professional Summary</label>
+                                    <textarea
+                                        value={formData.experience}
+                                        onChange={(e) => handleInputChange("experience", e.target.value)}
+                                        rows={5}
+                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium resize-none"
+                                        placeholder="I have 5 years of experience in..."
+                                    />
+                                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-right">Min 50 chars</p>
+                                </div>
+
+                                {template.supportedFields.includes("skills") && (
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">Top Skills (Optional)</label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                value={skillInput}
+                                                onChange={(e) => setSkillInput(e.target.value)}
+                                                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSkill())}
+                                                className="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                                placeholder="Add a skill..."
+                                            />
+                                            <button
+                                                onClick={handleAddSkill}
+                                                className="px-4 py-2 bg-blue-100 text-blue-700 rounded-xl font-bold hover:bg-blue-200 transition"
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2 pt-2">
+                                            {formData.skills.map((skill, index) => (
+                                                <span key={index} className="px-3 py-1 bg-white border border-gray-200 text-gray-600 rounded-lg text-xs font-bold flex items-center gap-2 shadow-sm">
+                                                    {skill}
+                                                    <button onClick={() => handleRemoveSkill(index)} className="hover:text-red-500 transition-colors">×</button>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Bottom padding to allow scrolling past sticky bottom if needed (though now we moved it up) */}
+                            <div className="h-12" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: AI Visual / Preview Placeholder */}
+                <div className="w-full lg:w-1/2 bg-gray-50 border-l border-gray-200 lg:h-[calc(100vh-80px)] overflow-hidden relative hidden lg:flex items-center justify-center">
+                    {/* Background Grid */}
+                    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#2563EB 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+
+                    <div className="relative z-10 text-center space-y-6 max-w-sm">
+                        <div className="w-64 h-[350px] bg-white rounded-xl shadow-2xl mx-auto border border-gray-100 relative overflow-hidden group">
+                            {/* Abstract Document visual */}
+                            <div className="absolute top-0 w-full h-1 bg-blue-600/50" />
+                            <div className="p-6 space-y-4 opacity-30 group-hover:opacity-50 transition-opacity duration-700">
+                                <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto" />
+                                <div className="space-y-2 pt-4">
+                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                    <div className="h-2 bg-gray-100 rounded w-3/4" />
+                                </div>
+                                <div className="space-y-2 pt-8">
+                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                    <div className="h-2 bg-gray-100 rounded w-5/6" />
+                                </div>
+                            </div>
+
+                            {/* Overlay AI Badge */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-20 h-20 bg-blue-600/10 rounded-full flex items-center justify-center backdrop-blur-sm animate-pulse">
+                                    <Sparkles className="text-blue-600" size={32} />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-black text-gray-900">AI Preview Mode</h3>
+                            <p className="text-sm text-gray-500 font-medium leading-relaxed">Fill out the details on the left, and our AI will continuously optimize your structure.</p>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            {/* Simulating Generation Overlay */}
+            {generating && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/80 backdrop-blur-md">
+                    <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
+                        <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
+                            <Wand2 size={32} className="text-blue-600 relative z-10" />
+                            <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-black text-gray-900 mb-2">Crafting your Letter</h3>
+                            <p className="text-gray-500 font-medium">Using AI to align your experience with the job...</p>
+                        </div>
+                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                            <div
+                                className="h-full bg-blue-600 transition-all duration-300 rounded-full"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <Dialog
                 isOpen={dialog.isOpen}
@@ -529,7 +581,7 @@ function CoverLetterCreateForm() {
                 type={dialog.type}
                 primaryActionLabel="Got it"
             />
-        </div >
+        </div>
     );
 }
 

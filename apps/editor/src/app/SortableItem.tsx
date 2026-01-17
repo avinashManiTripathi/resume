@@ -39,7 +39,7 @@ export function SortableItem({ id, index, label, onRemove, children }: SortableI
         <div
             ref={setNodeRef}
             style={style}
-            className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+            className="p-5 bg-white rounded-[1.5rem] border border-slate-200 shadow-sm transition-all duration-300"
         >
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">

@@ -21,12 +21,20 @@ export function middleware(request: NextRequest) {
 
     // Get the token from cookies
     const token = request.cookies.get('token')?.value || searchParams.get('token');
+    const entries = Array.from(request.nextUrl.searchParams.entries());
 
     // If no token, redirect to auth
     if (!token) {
+        // Add current URL as redirect parameter
+        let str = ''
+        if (entries.length) {
+            for (let i = 0; i < entries.length; i++) {
+                str += `${entries[i][0]}=${entries[i][1]}&`
+            }
+        }
         const authUrl = new URL('https://auth.profresume.com');
         // Add current URL as redirect parameter
-        authUrl.searchParams.set('redirect', "https://interview.profresume.com");
+        authUrl.searchParams.set('redirect', "https://interview.profresume.com" + pathname + (str ? "?" + str : ""));
         return NextResponse.redirect(authUrl);
     }
 

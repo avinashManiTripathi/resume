@@ -23,6 +23,8 @@ interface ProfileHeaderProps {
     fontFamily?: string;
     onFontChange?: (font: string) => void;
     onTailor?: () => void;
+    isSaving?: boolean;
+    lastSaved?: Date | null;
 }
 
 export function ProfileHeader({
@@ -41,6 +43,8 @@ export function ProfileHeader({
     fontFamily = "Inter",
     onFontChange,
     onTailor,
+    isSaving,
+    lastSaved,
 }: ProfileHeaderProps) {
 
     const [isDownloading, setIsDownloading] = useState(false);
@@ -240,6 +244,17 @@ export function ProfileHeader({
                         </div>
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
+                        {isSaving ? (
+                            <span className="text-xs md:text-sm text-gray-400 font-medium flex items-center gap-1.5 animate-pulse mr-2">
+                                <Loader2 className="w-3 h-3 md:w-3.5 md:h-3.5 animate-spin" />
+                                Saving...
+                            </span>
+                        ) : lastSaved ? (
+                            <span className="text-xs md:text-sm text-gray-400 font-medium flex items-center gap-1.5 mr-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                Saved
+                            </span>
+                        ) : null}
                         <Button onClick={handleDownload} variant="primary" className="flex-1 md:flex-initial">
                             {isDownloading ? (
                                 <>

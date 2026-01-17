@@ -1,8 +1,9 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 
-let puppeteerBrowser: any = null;
-const getBrowser = async (): Promise<any> => {
-    if (!puppeteerBrowser) {
+let puppeteerBrowser: Browser | null = null;
+
+const getBrowser = async (): Promise<Browser> => {
+    if (!puppeteerBrowser || !puppeteerBrowser.isConnected()) {
         puppeteerBrowser = await puppeteer.launch({
             headless: true,
             args: [
@@ -21,9 +22,14 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
     let browser = await getBrowser();
     const page = await browser.newPage();
     try {
-        await page.setContent(htmlContent, { waitUntil: 'networkidle2' });
+        // Optimize: Wait for DOMContentLoaded instead of networkidle2 (saves ~500ms)
+        await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
+
         // Use type assertion to avoid union type conflicts between puppeteer and puppeteer-core
-        await (page as any).evaluate((data: any) => {
+        await (page as any).evaluate(async (data: any) => {
+            // Explicitly wait for fonts to load (critical for correct rendering)
+            await document.fonts.ready;
+
             // Import inject logic inline to avoid type conflicts
             const inject = (data: any): void => {
                 /* ---------- PROFILE ---------- */
@@ -71,6 +77,7 @@ export const htmlToPdf = async (htmlContent: string, outputPath: string, jsonDat
 
             inject(data);
         }, jsonData);
+
         const pdfBuffer = await page.pdf({
             format: 'A4',
             printBackground: true,
