@@ -56,6 +56,8 @@ function ResumeEditor() {
   const [fontFamily, setFontFamily] = useState('Inter');
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [downloadingStep, setDownloadingStep] = useState(0);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
   const [saveDialog, setSaveDialog] = useState<{
     isOpen: boolean;
     title: string;
@@ -74,6 +76,12 @@ function ResumeEditor() {
     "Preparing Workspace..."
   ];
 
+  const downloadingSteps = [
+    "Processing Data...",
+    "Generating PDF...",
+    "Finalizing Download..."
+  ];
+
   // Auto-progress loading steps
   useEffect(() => {
     if (isLoading && loadingStep < loadingSteps.length - 1) {
@@ -83,6 +91,16 @@ function ResumeEditor() {
       return () => clearTimeout(timer);
     }
   }, [isLoading, loadingStep, loadingSteps.length]);
+
+  // Auto-progress downloading steps
+  useEffect(() => {
+    if (isDownloadingPdf && downloadingStep < downloadingSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setDownloadingStep(prev => prev + 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [isDownloadingPdf, downloadingStep, downloadingSteps.length]);
 
   // Check subscription on mount - redirect if no active subscription
   useEffect(() => {
@@ -369,7 +387,16 @@ function ResumeEditor() {
         fontFamily,
         order: sectionOrder
       };
-      downloadPdf(apiUrl, fileName, resumeData);
+      setIsDownloadingPdf(true);
+      setDownloadingStep(0);
+      try {
+        await downloadPdf(apiUrl, fileName, resumeData);
+      } finally {
+        // Small delay before closing to show completion
+        setTimeout(() => {
+          setIsDownloadingPdf(false);
+        }, 500);
+      }
     } else {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${fileName}.doc`);
@@ -654,6 +681,50 @@ function ResumeEditor() {
                 <StepLoader
                   steps={loadingSteps}
                   currentStep={loadingStep}
+                  size="md"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Download Loader - similar style to loading screen */}
+      {isDownloadingPdf && (
+        <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[60] flex items-center justify-center animate-in fade-in duration-300">
+          <div className="relative">
+            {/* Background blobs */}
+            <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+            <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
+
+            <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
+              {/* Animated Brain Icon */}
+              <div className="flex justify-center mb-10">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
+                  <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
+                    <Brain className="w-12 h-12 text-white" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Generating Resume</h2>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="flex gap-1">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                    ))}
+                  </div>
+                  <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{downloadingSteps[downloadingStep]}</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
+                <StepLoader
+                  steps={downloadingSteps}
+                  currentStep={downloadingStep}
                   size="md"
                 />
               </div>
