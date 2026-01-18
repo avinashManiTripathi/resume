@@ -724,7 +724,7 @@ function ResumeEditor() {
                 ref={canvasRef}
                 width={794}
                 height={1123}
-                className="shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 bg-white"
+                className="bg-white border-r border-slate-200/60"
               />
             </div>
             {/* Overlay when loading */}

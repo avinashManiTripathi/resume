@@ -665,7 +665,7 @@ function CoverLetterCreateForm() {
                 <div className="flex-1 relative flex flex-col items-center bg-transparent">
                     <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-8">
                         <div className="relative w-full max-w-[794px] flex justify-center">
-                            <div className="relative bg-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-slate-200 w-full" style={{ aspectRatio: '210/297' }}>
+                            <div className="relative bg-white border-r border-slate-200/60 w-full" style={{ aspectRatio: '210/297' }}>
                                 {/* Live Canvas Preview */}
                                 <main ref={mainRef} className="w-full h-full relative">
                                     <div className="absolute inset-0 flex justify-center bg-white">
