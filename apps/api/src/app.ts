@@ -1,4 +1,6 @@
 import express, { Application } from 'express';
+import { createServer, Server as HttpServer } from 'http';
+import { Server as SocketIoServer } from 'socket.io';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -24,19 +26,45 @@ import blogRoutes from './routes/blog.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
+import { setupInterviewSocket } from './sockets/interview.socket';
 
 // Load environment variables from .env file
 dotenv.config();
 
 export class App {
     public app: Application;
+    public httpServer: HttpServer;
+    public io: SocketIoServer;
 
     constructor() {
         this.app = express();
+        this.httpServer = createServer(this.app);
+
+        // Initialize Socket.io with CORS configuration
+        this.io = new SocketIoServer(this.httpServer, {
+            cors: {
+                origin: [
+                    'https://profresume.com',
+                    'https://www.profresume.com',
+                    'https://edit.profresume.com',
+                    'https://auth.profresume.com',
+                    'https://admin.profresume.com',
+                    'https://interview.profresume.com',
+                    'http://localhost:3000',
+                    'http://localhost:3001',
+                    'http://localhost:3002',
+                    'http://localhost:3005'
+                ],
+                methods: ['GET', 'POST'],
+                credentials: true
+            }
+        });
+
         this.initializeDatabase();
         this.initializeMiddlewares();
         this.initializePassport();
-        this.initializeRoutes(); // Now async but we don't need to await in constructor
+        this.initializeRoutes();
+        this.initializeSockets();
         this.initializeErrorHandling();
     }
 
@@ -186,6 +214,13 @@ export class App {
 
 
     /**
+     * Initialize WebSocket handlers
+     */
+    private initializeSockets(): void {
+        setupInterviewSocket(this.io);
+    }
+
+    /**
      * Initialize error handling
      */
     private initializeErrorHandling(): void {
@@ -200,8 +235,9 @@ export class App {
      * Start the server
      */
     public listen(): void {
-        this.app.listen(config.port, () => {
+        this.httpServer.listen(config.port, () => {
             console.log(`🚀 Server running on http://localhost:${config.port}`);
+            console.log(`🔌 WebSockets enabled`);
             console.log(`📝 Environment: ${config.nodeEnv}`);
             console.log(`⏰ Started at: ${new Date().toISOString()}`);
         });

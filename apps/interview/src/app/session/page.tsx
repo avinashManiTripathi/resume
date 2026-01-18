@@ -2,12 +2,16 @@
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { io, Socket } from 'socket.io-client';
 import {
     Mic, MicOff, Video, VideoOff, Monitor, MessageSquare, MoreVertical,
     PhoneOff, ChevronLeft, Circle, Square, Sparkles, Clock, Tag, Users,
-    CheckCircle2, Loader2, Mic2
+    CheckCircle2, Loader2, Mic2, User
 } from 'lucide-react';
 import { sessionConfig, aiSettings, type SidebarConfig } from '../../config/session.constants';
+import InterviewChat from '../../components/InterviewChat';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 // Animated Avatar Component with realistic facial animations
 function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; size?: 'small' | 'large' }) {
@@ -86,6 +90,66 @@ function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; s
     );
 }
 
+// Simple Code Editor Component
+function CodeEditor({ code, onChange, language = 'javascript' }: { code: string; onChange: (code: string) => void; language?: string }) {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    // Basic syntax highlighting (very simple regex based)
+    const highlightCode = (code: string) => {
+        return code
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"(.*?)"/g, '<span class="text-green-400">"$1"</span>')
+            .replace(/'(.*?)'/g, "<span class='text-green-400'>'$1'</span>")
+            .replace(/\b(const|let|var|function|return|if|else|for|while|import|export|default|class|extends|=>)\b/g, '<span class="text-purple-400">$1</span>')
+            .replace(/\b(true|false|null|undefined)\b/g, '<span class="text-blue-400">$1</span>')
+            .replace(/\b(\d+)\b/g, '<span class="text-orange-400">$1</span>')
+            .replace(/(\/\/.*)/g, '<span class="text-gray-500">$1</span>');
+    };
+
+    return (
+        <div className="relative w-full h-full bg-[#1e1e1e] font-mono text-sm group">
+            {/* Line Numbers (fake) */}
+            <div className="absolute left-0 top-0 bottom-0 w-10 bg-[#1e1e1e] border-r border-gray-700 text-gray-500 text-right pr-2 pt-4 select-none">
+                {code.split('\n').map((_, i) => (
+                    <div key={i} className="leading-6">{i + 1}</div>
+                ))}
+            </div>
+
+            {/* Syntax Highlight Overlay */}
+            <pre
+                className="absolute left-10 top-0 right-0 bottom-0 p-4 pointer-events-none leading-6 whitespace-pre-wrap break-all text-white overflow-hidden"
+                dangerouslySetInnerHTML={{ __html: highlightCode(code) + '<br/>' }}
+                aria-hidden="true"
+            />
+
+            {/* Editing Layer */}
+            <textarea
+                ref={textareaRef}
+                value={code}
+                onChange={(e) => onChange(e.target.value)}
+                className="absolute left-10 top-0 right-0 bottom-0 w-[calc(100%-2.5rem)] h-full bg-transparent text-transparent caret-white outline-none resize-none p-4 leading-6 whitespace-pre-wrap break-all z-10"
+                spellCheck={false}
+                onKeyDown={(e) => {
+                    if (e.key === 'Tab') {
+                        e.preventDefault();
+                        const target = e.target as HTMLTextAreaElement;
+                        const start = target.selectionStart;
+                        const end = target.selectionEnd;
+                        const newCode = code.substring(0, start) + '  ' + code.substring(end);
+                        onChange(newCode);
+                        // Cursor position needs to be updated after render (async) - simplified here
+                        setTimeout(() => {
+                            target.selectionStart = target.selectionEnd = start + 2;
+                        }, 0);
+                    }
+                }}
+            />
+        </div>
+    );
+}
+
 function SessionContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('id');
@@ -115,39 +179,119 @@ function SessionContent() {
     const [isListening, setIsListening] = useState(false);
     const recognitionRef = useRef<any>(null);
 
-    // Mock questions - will be replaced by real session data
-    const [questions, setQuestions] = useState([
-        {
-            id: 1,
-            text: "How would you optimize a React app for performance?",
-            context: "Use code splitting, lazy loading, memoization (React.memo, useMemo), and avoid unnecessary re-renders with proper dependency handling in hooks.",
-            completed: false
-        },
-        {
-            id: 2,
-            text: "Describe your experience with Tailwind CSS.",
-            context: "I've used Tailwind in three client projects. I love how it speeds up prototyping and encourages consistent design tokens.",
-            completed: false
-        },
-        {
-            id: 3,
-            text: "Can you explain how you structure components to keep your code clean and maintainable?",
-            context: "Aim for single responsibility, extract reusable logic into custom hooks, use composition over prop drilling, and maintain a clear folder structure.",
-            completed: false
-        },
-        {
-            id: 4,
-            text: "How do you handle API errors on the frontend?",
-            context: "Implement proper error boundaries, show user-friendly error messages, log errors for debugging, and provide retry mechanisms where appropriate.",
-            completed: false
+    // Socket state
+    const socketRef = useRef<Socket | null>(null);
+    const [messages, setMessages] = useState<any[]>([]);
+
+    // Initialize WebSocket connection
+    useEffect(() => {
+        const socket = io(API_URL, {
+            withCredentials: true,
+            transports: ['websocket']
+        });
+
+        socket.on('connect', () => {
+            console.log('✅ Connected to WebSocket backend');
+        });
+
+        // Handle restored history
+        socket.on('history', (historyMessages: any[]) => {
+            console.log('📜 History restored:', historyMessages.length);
+            setMessages(historyMessages);
+
+            // Speak the last message if it was from the AI
+            const lastMessage = historyMessages[historyMessages.length - 1];
+            if (lastMessage && lastMessage.role === 'assistant') {
+                // Small delay to ensure voices are loaded/ready
+                setTimeout(() => {
+                    speak(lastMessage.content);
+                }, 500);
+            }
+        });
+
+        socket.on('message', (data: any) => {
+            setIsLoading(false);
+
+            // Add to chat messages
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                content: data.content,
+                timestamp: data.timestamp || new Date().toISOString()
+            }]);
+
+            // Speak the response
+            if (data.content) {
+                speak(data.content);
+            }
+        });
+
+        socketRef.current = socket;
+
+        // Start interview if session loaded
+        if (session) {
+            socket.emit('start-interview', {
+                name: 'Avinash', // TODO: Get from session/user
+                role: session.jdInfo?.role || 'Developer',
+                sessionId: session._id
+            });
         }
-    ]);
+
+        return () => {
+            socket.disconnect();
+        };
+    }, [session]);
+
+    const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+    const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+
+    // Initialize voice
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.speechSynthesis) {
+            const loadVoices = () => {
+                const voices = window.speechSynthesis.getVoices();
+                setAvailableVoices(voices);
+
+                // Auto-select best voice if not already set
+                if (!voice) {
+                    const preferredVoice = voices.find(v =>
+                        v.name.includes('Natural') || // Edge/Chrome Neural voices
+                        v.name.includes('Samantha') || // macOS Siri-like
+                        v.name.includes('Google US English') || // Chrome
+                        v.name.includes('Microsoft Zira') || // Windows
+                        (v.lang === 'en-US' && v.name.includes('Female'))
+                    );
+                    if (preferredVoice) setVoice(preferredVoice);
+                }
+            };
+
+            loadVoices();
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+
+            return () => {
+                window.speechSynthesis.onvoiceschanged = null;
+            };
+        }
+    }, [voice]);
 
     // Text-to-speech function with auto voice control (using constants)
     const speak = (text: string) => {
         if (typeof window !== 'undefined' && window.speechSynthesis) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
+
+            // Try to set a "Siri-like" voice
+            const voices = window.speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice =>
+                voice.name.includes('Samantha') || // macOS Siri-like
+                voice.name.includes('Google US English') || // Chrome
+                voice.name.includes('Microsoft Zira') || // Windows
+                (voice.lang === 'en-US' && voice.name.includes('Female'))
+            );
+
+            if (preferredVoice) {
+                utterance.voice = preferredVoice;
+            }
+
             utterance.rate = aiSettings.speechRate;
             utterance.pitch = aiSettings.speechPitch;
             utterance.volume = aiSettings.speechVolume;
@@ -285,24 +429,7 @@ function SessionContent() {
                 const result = await response.json();
                 if (result.success) {
                     setSession(result.data);
-
-                    // If session has questions, use them
-                    if (result.data.allQuestions && result.data.allQuestions.length > 0) {
-                        const mappedQuestions = result.data.allQuestions.map((q: any, idx: number) => ({
-                            id: idx + 1,
-                            text: q.question,
-                            context: q.expectedPoints?.join(', ') || '',
-                            completed: idx < (result.data.currentQuestionIndex || 0)
-                        }));
-                        setQuestions(mappedQuestions);
-                        setCurrentQuestionIndex(result.data.currentQuestionIndex || 0);
-
-                        // Speak the current question
-                        const currentQ = mappedQuestions[result.data.currentQuestionIndex || 0];
-                        if (currentQ) {
-                            speak(currentQ.text);
-                        }
-                    }
+                    // Socket will handle the start interview event when session is set
                 }
             } catch (err) {
                 console.error('Fetch Session Error:', err);
@@ -364,11 +491,11 @@ function SessionContent() {
         }
     };
 
+    /* 
     const handleQuestionClick = (index: number) => {
-        setCurrentQuestionIndex(index);
-        // Speak the selected question
-        speak(questions[index].text);
-    };
+        // Legacy: questions no longer locally managed
+    }; 
+    */
 
     const handleEndInterview = () => {
         if (confirm('Are you sure you want to end this interview?')) {
@@ -383,6 +510,14 @@ function SessionContent() {
 
     const submitAnswer = async () => {
         if (!answer.trim() || isLoading) return;
+
+        // Add user message to chat immediately
+        setMessages(prev => [...prev, {
+            role: 'user',
+            content: answer,
+            timestamp: new Date().toISOString()
+        }]);
+
         setIsLoading(true);
 
         // Stop any ongoing speech
@@ -391,46 +526,17 @@ function SessionContent() {
             setIsSpeaking(false);
         }
 
-        try {
-            const response = await fetch('http://localhost:4000/api/interview/answer', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ sessionId, answer }),
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Mark current question as completed
-                const updatedQuestions = [...questions];
-                if (updatedQuestions[currentQuestionIndex]) {
-                    updatedQuestions[currentQuestionIndex].completed = true;
-                }
-                setQuestions(updatedQuestions);
-
-                // Move to next question
-                if (currentQuestionIndex < questions.length - 1) {
-                    const nextIndex = currentQuestionIndex + 1;
-                    setCurrentQuestionIndex(nextIndex);
-                    // Speak the next question
-                    speak(updatedQuestions[nextIndex].text);
-                } else if (result.finished) {
-                    speak("Thank you. Interview completed. Generating your report now.");
-                    setTimeout(() => router.push(`/report/${sessionId}`), 3000);
-                }
-
-                setAnswer('');
-            }
-        } catch (err) {
-            console.error('Submit error:', err);
-            alert('Failed to submit answer. Please try again.');
-        } finally {
-            setIsLoading(false);
+        if (socketRef.current) {
+            socketRef.current.emit('send-message', { content: answer });
         }
+
+        setAnswer('');
     };
 
-    const currentQuestion = questions[currentQuestionIndex];
+    // Simplified for socket-only flow
+    const currentQuestion = messages.length > 0 && messages[messages.length - 1].role === 'assistant'
+        ? { text: messages[messages.length - 1].content }
+        : { text: "Waiting for interviewer..." };
     const jobTitle = session?.jdInfo?.role || 'Software Developer';
     const meetingDate = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
@@ -584,6 +690,37 @@ function SessionContent() {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* Voice Selector */}
+                        <div className="relative group">
+                            <select
+                                className="appearance-none bg-white border border-slate-300 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-slate-700 hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-48 truncate"
+                                value={voice?.name || ''}
+                                onChange={(e) => {
+                                    const selected = availableVoices.find(v => v.name === e.target.value);
+                                    if (selected) {
+                                        setVoice(selected);
+                                        // Test the voice
+                                        const utterance = new SpeechSynthesisUtterance("Hello, I am your AI interviewer.");
+                                        utterance.voice = selected;
+                                        window.speechSynthesis.cancel();
+                                        window.speechSynthesis.speak(utterance);
+                                    }
+                                }}
+                            >
+                                <option value="" disabled>Select Voice</option>
+                                {availableVoices
+                                    .filter(v => v.lang.startsWith('en')) // Filter for English voices
+                                    .map((v) => (
+                                        <option key={v.name} value={v.name}>
+                                            {v.name.replace('Microsoft ', '').replace('Google ', '')}
+                                        </option>
+                                    ))}
+                            </select>
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                                <Mic2 className="w-3 h-3" />
+                            </div>
+                        </div>
+
                         {isRecording ? (
                             <button
                                 onClick={() => setIsRecording(false)}
@@ -815,92 +952,14 @@ function SessionContent() {
                 </div>
 
                 {/* Right Sidebar */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    {/* Tabs */}
-                    <div className="flex border-b border-slate-200">
-                        <button
-                            onClick={() => setActiveTab('questions')}
-                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'questions'
-                                ? 'text-blue-600 border-b-2 border-blue-600'
-                                : 'text-slate-500 hover:text-slate-700'
-                                }`}
-                        >
-                            Question List
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('timeline')}
-                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'timeline'
-                                ? 'text-blue-600 border-b-2 border-blue-600'
-                                : 'text-slate-500 hover:text-slate-700'
-                                }`}
-                        >
-                            Timeline
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('highlights')}
-                            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${activeTab === 'highlights'
-                                ? 'text-blue-600 border-b-2 border-blue-600'
-                                : 'text-slate-500 hover:text-slate-700'
-                                }`}
-                        >
-                            Highlight Clips
-                        </button>
-                    </div>
-
-                    {/* Tab Content */}
-                    <div className="p-4 max-h-[800px] overflow-y-auto custom-scrollbar">
-                        {activeTab === 'questions' && (
-                            <div className="space-y-3">
-                                {questions.map((question, index) => (
-                                    <button
-                                        key={question.id}
-                                        onClick={() => handleQuestionClick(index)}
-                                        className={`question-card w-full text-left p-4 rounded-xl transition-all border ${currentQuestionIndex === index
-                                            ? 'bg-blue-50 border-blue-200'
-                                            : 'bg-white border-slate-200 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        <div className="flex items-start gap-3">
-                                            <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${question.completed
-                                                ? 'bg-green-500 text-white'
-                                                : currentQuestionIndex === index
-                                                    ? 'bg-blue-500 text-white'
-                                                    : 'bg-slate-100 text-slate-500'
-                                                }`}>
-                                                {question.completed ? (
-                                                    <CheckCircle2 className="w-4 h-4" />
-                                                ) : (
-                                                    `0${question.id}`
-                                                )}
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h4 className="text-sm font-semibold text-slate-900 mb-1">
-                                                    {question.text}
-                                                </h4>
-                                                <p className="text-xs text-slate-500 line-clamp-2">
-                                                    {question.context}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-
-                        {activeTab === 'timeline' && (
-                            <div className="text-center py-12 text-slate-500">
-                                <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                                <p className="text-sm">Timeline view coming soon</p>
-                            </div>
-                        )}
-
-                        {activeTab === 'highlights' && (
-                            <div className="text-center py-12 text-slate-500">
-                                <Sparkles className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                                <p className="text-sm">Highlight clips coming soon</p>
-                            </div>
-                        )}
-                    </div>
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-[600px]">
+                    <InterviewChat
+                        messages={messages}
+                        isTyping={isLoading}
+                        inputValue={answer}
+                        setInputValue={setAnswer}
+                        onSendMessage={submitAnswer}
+                    />
                 </div>
             </div>
         </div>

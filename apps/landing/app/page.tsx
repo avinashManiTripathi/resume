@@ -7,6 +7,9 @@ import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
 import { ProductSchema } from "@/components/ProductSchema";
 import { HowItWorks } from "@/components/HowItWorks";
+import { ComparisonSection } from "@/components/ComparisonSection";
+import { HowToGuide } from "@/components/HowToGuide";
+import { FAQSection } from "@/components/FAQSection";
 import { URLS } from "@/constants/urls";
 
 export const metadata: Metadata = {
@@ -846,100 +849,13 @@ export default async function LandingPage() {
       </section>
 
       {/* Why Us Comparison Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Why We Are the Best Free Resume Builder</h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200">
-              <thead>
-                <tr className="bg-gray-900 text-white">
-                  <th className="py-5 px-6 text-left">Feature</th>
-                  <th className="py-5 px-6 text-center text-blue-300 bg-gray-800">ProfResume (AI)</th>
-                  <th className="py-5 px-6 text-center text-gray-400">Canva / Design Tools</th>
-                  <th className="py-5 px-6 text-center text-gray-400">Word / Docs</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                <tr>
-                  <td className="py-5 px-6 font-medium text-gray-900">ATS-Friendly Parsing</td>
-                  <td className="py-5 px-6 text-center text-green-600 font-bold bg-blue-50/10"><Check className="inline w-5 h-5 mr-1" /> 100% Readable</td>
-                  <td className="py-5 px-6 text-center text-red-500"><X className="inline w-5 h-5 mr-1" /> Often Fails</td>
-                  <td className="py-5 px-6 text-center text-yellow-500">Inconsistent</td>
-                </tr>
-                <tr>
-                  <td className="py-5 px-6 font-medium text-gray-900">AI Writing Assistance</td>
-                  <td className="py-5 px-6 text-center text-green-600 font-bold bg-blue-50/10"><Check className="inline w-5 h-5 mr-1" /> Powered by GPT-4</td>
-                  <td className="py-5 px-6 text-center text-red-500"><X className="inline w-5 h-5 mr-1" /> None</td>
-                  <td className="py-5 px-6 text-center text-red-500"><X className="inline w-5 h-5 mr-1" /> None</td>
-                </tr>
-                <tr>
-                  <td className="py-5 px-6 font-medium text-gray-900">Cost</td>
-                  <td className="py-5 px-6 text-center text-green-600 font-bold bg-blue-50/10">100% Free</td>
-                  <td className="py-5 px-6 text-center text-gray-500">Free & Paid</td>
-                  <td className="py-5 px-6 text-center text-gray-500">Paid License</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+      <ComparisonSection />
 
       {/* How to Guide Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">How to Make a Resume for a Job (Step-by-Step)</h2>
-          <p className="text-xl text-gray-600 mb-12">Creating a resume from scratch can be overwhelming. Follow this proven workflow to build a CV that gets interviews in 2026:</p>
-
-          <div className="space-y-8">
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 text-xl shrink-0">1</div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Choose the Right Format</h3>
-                <p className="text-gray-600 leading-relaxed">For 90% of candidates, the <strong>Reverse-Chronological</strong> format is best. It lists your most recent job first. Use our <Link href="/templates" className="text-blue-600 font-semibold hover:underline">Chronological Templates</Link> for this.</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 text-xl shrink-0">2</div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Add Contact Information</h3>
-                <p className="text-gray-600 leading-relaxed">Keep it simple: Name, Phone, Email (professional), and LinkedIn URL. Do not include your full address or photo.</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center font-bold text-blue-600 text-xl shrink-0">3</div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Write a Professional Summary</h3>
-                <p className="text-gray-600 leading-relaxed">Avoid "Objective" statements. Write a 2-3 sentence "Summary" highlighting your years of experience and top achievements. Use our <Link href="/resume-builder" className="text-blue-600 font-semibold hover:underline">AI Writer</Link> to generate this in seconds.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HowToGuide />
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Frequently Asked Questions</h2>
-          <div className="grid md:grid-cols-2 gap-x-12 gap-y-8">
-            <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-2">Is this resume builder truly free?</h4>
-              <p className="text-gray-600 leading-relaxed">Yes. You can build, customize, and download your resume without paying a cent. We support our platform through optional premium features.</p>
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-2">Can I download my resume as a PDF?</h4>
-              <p className="text-gray-600 leading-relaxed">Yes. PDF is the industry standard for resumes to preserve formatting. Our builder exports high-quality, ATS-readable PDFs.</p>
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-2">Is my data safe?</h4>
-              <p className="text-gray-600 leading-relaxed">Absolutely. We use bank-level encryption. We represent "User Privacy First" – we do not sell your data to recruiters unlike other platforms.</p>
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-lg mb-2">Do you have templates for students?</h4>
-              <p className="text-gray-600 leading-relaxed">Yes. We have specific templates for students, interns, and professionals with no experience. Check our <Link href="/resume-builder/fresher" className="text-blue-600 font-semibold hover:underline">Fresher Guide</Link>.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FAQSection />
 
       <script
         type="application/ld+json"
