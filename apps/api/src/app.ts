@@ -23,6 +23,7 @@ import landingRoutes from './routes/landing.routes';
 import coverLetterRoutes from './routes/cover-letter.routes';
 import interviewRoutes from './routes/interview.routes';
 import blogRoutes from './routes/blog.routes';
+import coverLetterTemplateRoutes from './routes/cover-letter-template.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -74,6 +75,21 @@ export class App {
     private async initializeDatabase(): Promise<void> {
         try {
             await database.connect();
+
+            // Temporary migration: Drop the stale 'id_1' index from coverlettertemplates if it exists
+            // This fixes the 'duplicate key error' when creating templates with the new schema (where id is replaced by type)
+            try {
+                const mongoose = require('mongoose');
+                if (mongoose.connection.readyState === 1) {
+                    await mongoose.connection.collection('coverlettertemplates').dropIndex('id_1');
+                    console.log('NOTE: Dropped stale "id_1" index from coverlettertemplates collection.');
+                }
+            } catch (err: any) {
+                // Ignore error if index doesn't exist (code 27)
+                if (err.code !== 27) {
+                    console.log('Note: Attempted to drop id_1 index but failed (usually harmless):', err.message);
+                }
+            }
         } catch (error) {
             console.error('Failed to connect to database:', error);
             // Don't exit process, let app run without database
@@ -204,6 +220,9 @@ export class App {
 
         // Interview routes
         this.app.use('/api/interview', interviewRoutes);
+
+        // Cover letter template routes (Admin)
+        this.app.use('/api/cover-letter-templates', coverLetterTemplateRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

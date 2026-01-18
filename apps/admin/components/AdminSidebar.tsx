@@ -43,6 +43,7 @@ export function AdminSidebar() {
     { href: "/", label: "Dashboard", icon: Home },
     { href: "/users", label: "Users", icon: Users },
     { href: "/templates", label: "Templates", icon: LayoutTemplate },
+    { href: "/cover-letters", label: "Cover Letters", icon: FileText },
     { href: "/blog", label: "Publish Blog", icon: PenSquare },
     { href: "/interviews", label: "Interviews", icon: Mic2 },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
