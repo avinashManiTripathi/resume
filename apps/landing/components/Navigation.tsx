@@ -5,11 +5,12 @@ import { Menu, X, ArrowRight, DockIcon, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import logo from '@/assets/logo.png';
 
 import { NAVIGATION } from '@/constants/navigation';
 import { URLS } from '@/constants/urls';
 import { Button } from '@repo/ui/button';
-import { useRouter } from 'next/navigation';
 
 export function Navigation() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,12 +43,13 @@ export function Navigation() {
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
                             <Image
-                                src="/logo.png"
+                                src={logo}
                                 alt="ProfResume Logo"
                                 width={158}   // w-15 → 60px
                                 height={36}  // h-9 → 36px
                                 className="transition-transform group-hover:scale-105"
                                 priority
+                                placeholder="blur"
                             />
                         </Link>
                         {/* Desktop Navigation */}
@@ -75,7 +77,7 @@ export function Navigation() {
                                         ${activeMenu === menuItem.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
                                         transition-all duration-200 ease-out z-50`}>
                                         {/* Full-width container */}
-                                        <div className="bg-white border-b border-gray-200">
+                                        <div className="bg-white shadow border-b border-gray-200">
                                             <div className="max-w-7xl mx-auto px-16 py-10">
                                                 <div className="grid grid-cols-3 gap-16">
                                                     {/* Left Column - WHY SEAMLESS */}

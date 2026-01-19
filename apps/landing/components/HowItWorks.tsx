@@ -110,7 +110,7 @@ export function HowItWorks() {
 
                                     {/* Content Card */}
                                     <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all">
-                                        <div className={`w-12 h-12 bg-${step.color}-100 rounded-lg flex items-center justify-center text-${step.color}-600 mb-4 mx-auto`}>
+                                        <div className={`w-12 h-12 p-2 bg-${step.color}-100 rounded-lg flex items-center justify-center text-${step.color}-600 mb-4 mx-auto`}>
                                             {step.icon}
                                         </div>
                                         <h3 className="text-lg font-bold text-gray-900 mb-2 text-center">

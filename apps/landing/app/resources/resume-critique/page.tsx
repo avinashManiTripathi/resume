@@ -227,32 +227,36 @@ export default function ResumeCritiquePage() {
                                 goodExample: "Clear evolution from developer → team lead → engineering manager"
                             }
                         ].map((point, index) => (
-                            <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-purple-300 transition-colors">
+                            <div key={index} className="group bg-white border border-slate-100 rounded-3xl p-8 hover:border-blue-100 hover:shadow-xl transition-all duration-300">
                                 <div className="flex items-start gap-4 mb-4">
-                                    <div className="flex-shrink-0">{point.icon}</div>
+                                    <div className="flex-shrink-0 p-2 bg-purple-50 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                                        {point.icon}
+                                    </div>
                                     <div>
-                                        <h3 className="text-xl font-bold text-gray-900 mb-2">{point.title}</h3>
-                                        <p className="text-gray-600 mb-4">{point.description}</p>
+                                        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">{point.title}</h3>
+                                        <p className="text-slate-600 mb-4 leading-relaxed">{point.description}</p>
                                     </div>
                                 </div>
-                                <div className="ml-10">
-                                    <h4 className="font-semibold text-gray-900 mb-2">✓ Checkpoints:</h4>
-                                    <ul className="space-y-1 mb-4">
+                                <div className="ml-0 md:ml-16">
+                                    <h4 className="font-semibold text-slate-900 mb-3 text-sm uppercase tracking-wider">✓ Checkpoints</h4>
+                                    <ul className="space-y-2 mb-6">
                                         {point.checkpoints.map((checkpoint, idx) => (
-                                            <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
-                                                <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
+                                            <li key={idx} className="text-slate-600 flex items-start gap-3 text-sm">
+                                                <div className="mt-0.5 min-w-[16px]">
+                                                    <CheckCircle className="w-4 h-4 text-green-500" />
+                                                </div>
                                                 <span>{checkpoint}</span>
                                             </li>
                                         ))}
                                     </ul>
                                     <div className="grid md:grid-cols-2 gap-4 text-sm">
-                                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                                            <p className="font-semibold text-red-900 mb-1">❌ Bad Example:</p>
-                                            <p className="text-red-700">{point.badExample}</p>
+                                        <div className="bg-red-50/50 border border-red-100 rounded-2xl p-4">
+                                            <p className="font-bold text-red-800 mb-2 text-xs uppercase tracking-wide">❌ Bad Example</p>
+                                            <p className="text-red-700/90 leading-relaxed italic">"{point.badExample}"</p>
                                         </div>
-                                        <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                                            <p className="font-semibold text-green-900 mb-1">✅ Good Example:</p>
-                                            <p className="text-green-700">{point.goodExample}</p>
+                                        <div className="bg-green-50/50 border border-green-100 rounded-2xl p-4">
+                                            <p className="font-bold text-green-800 mb-2 text-xs uppercase tracking-wide">✅ Good Example</p>
+                                            <p className="text-green-700/90 leading-relaxed italic">"{point.goodExample}"</p>
                                         </div>
                                     </div>
                                 </div>

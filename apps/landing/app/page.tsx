@@ -164,7 +164,7 @@ export default async function LandingPage() {
                       <div className="flex -space-x-2">
                         {[1, 2, 3, 4].map((i) => (
                           <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gray-100 overflow-hidden ring-4 ring-gray-50/50">
-                            <img src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" />
+                            <img width={24} height={24} src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" />
                           </div>
                         ))}
                       </div>

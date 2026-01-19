@@ -44,12 +44,12 @@ export const ResourceFeatureGrid = ({ title, features }: { title: string; featur
             <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">{title}</h2>
             <div className="grid md:grid-cols-3 gap-8">
                 {features.map((feature, index) => (
-                    <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all">
-                        <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+                    <div key={index} className="group bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300 h-full">
+                        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                             {feature.icon}
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                        <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                        <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">{feature.title}</h3>
+                        <p className="text-slate-600 leading-relaxed">{feature.description}</p>
                     </div>
                 ))}
             </div>
