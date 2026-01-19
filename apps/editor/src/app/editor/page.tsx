@@ -131,11 +131,11 @@ function ResumeEditor() {
   }, [router, searchParams]);
 
   // Load existing document if ID is provided
+  const urlDocId = searchParams.get('id');
   useEffect(() => {
-    const id = searchParams.get('id');
-    if (id) {
+    if (urlDocId) {
       const loadDoc = async () => {
-        const doc = await getDocument(id, 'resume');
+        const doc = await getDocument(urlDocId, 'resume');
         if (doc) {
           setResume(doc.data);
           if (doc.data?.personalInfo?.profileImage) {
@@ -150,7 +150,7 @@ function ResumeEditor() {
       };
       loadDoc();
     }
-  }, [searchParams, getDocument]);
+  }, [urlDocId, getDocument]);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -237,9 +237,6 @@ function ResumeEditor() {
     }
   }, [debouncedResume, fontFamily, templateId, handleAutoSave]);
 
-
-
-
   // Memoize section labels computation - used in multiple places
   const sectionLabels = useMemo(() => {
     return Object.entries(schema).reduce((acc, [key, config]) => {
@@ -276,7 +273,7 @@ function ResumeEditor() {
       const personalFields = ['firstName', 'lastName', 'email', 'phone', 'jobTitle', 'summary'] as const;
       personalFields.forEach(field => {
         totalFields++;
-        const value = resume.personalInfo?.[field];
+        const value = resume.personalInfo?.[field as keyof typeof resume.personalInfo];
         if (value && typeof value === 'string' && value.trim()) {
           filledFields++;
         }
@@ -769,6 +766,9 @@ function ResumeEditor() {
                 selectedTemplateId={templateId || ''}
                 onBack={() => setShowTemplates(false)}
                 onSelectTemplate={(template) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set('templateId', template._id);
+                  router.replace(`?${params.toString()}`, { scroll: false });
                   setTemplateId(template._id);
                 }}
               />
@@ -790,7 +790,7 @@ function ResumeEditor() {
         <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
 
           <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-4">
-            <div className="relative w-full max-w-fit flex justify-center">
+            <div className="relative w-full flex justify-center">
               <canvas
                 ref={canvasRef}
                 width={794}

@@ -5,7 +5,6 @@ export const dummyData = {
     "firstName": "John",
     "lastName": "Doe",
     "jobTitle": "Senior Software Engineer",
-    "summary": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
     "email": "john.doe@email.com",
     "phone": "+91 6393177038",
     "city": "Maharajganj",
@@ -14,6 +13,9 @@ export const dummyData = {
     "country": "India",
     "linkedin": "https://www.linkedin.com/avinashdev",
     "github": "https://www.github.com/avinashdev"
+  },
+  "summary": {
+    "content": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers."
   },
   "experience": [
     {
@@ -587,6 +589,7 @@ export const dummyData = {
   ],
   "order": [
     "personalInfo",
+    "summary",
     "experience",
     "education",
     "projects",
@@ -619,8 +622,15 @@ export const ResumeFormSchema: FormSchema = {
       pincode: { label: "Pincode", type: "text", className: className },
       country: { label: "Country", type: "text", className: className },
       linkedin: { label: "LinkedIn URL", type: "text", className: className, description: "Your LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)" },
-      github: { label: "GitHub URL", type: "text", className: className, description: "Your GitHub profile URL (e.g., https://github.com/yourname)" },
-      summary: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
+      github: { label: "GitHub URL", type: "text", className: className, description: "Your GitHub profile URL (e.g., https://github.com/yourname)" }
+    }
+  },
+  summary: {
+    label: "Professional Summary",
+    type: "object",
+    isCollapsible: false,
+    fields: {
+      content: { label: "Short Bio", type: "richtext", className: "w-full", description: "Be concise.Write 2-4 shorts and energetic sentences to intreset the recruiter! Mention role,experience and most importantly your biigest achievements best qualities and skills. See Examples for help " }
     }
   },
   experience: {

@@ -81,7 +81,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                 {templates.map((template) => (
                     <Link
                         key={template._id}
-                        href={`${ENV.EDITOR_URL}/editor?template=${template._id}`}
+                        href={`${ENV.EDITOR_URL}/editor?templateId=${template._id}`}
                         className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 transition-all hover:shadow-2xl relative"
                     >
                         <div className="relative pt-6 px-3 pb-3">
