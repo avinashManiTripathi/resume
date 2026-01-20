@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{firstName}} {{lastName}} - Resume</title>
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            background: #fff;
+            color: #000;
+            line-height: 1.4;
+            font-size: 11pt;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 40px 50px;
+            background: #fff;
+            min-height: 1100px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: #000;
+            margin: 0;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+        }
+
+        #full-name {
+            font-size: 24pt;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: capitalize;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            font-size: 10pt;
+            color: #000;
+        }
+
+        .contact-info span {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .contact-info span:not(:last-child)::after {
+            content: "|";
+            margin-left: 8px;
+            margin-right: 3px;
+            color: #000;
+        }
+
+        section {
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 12pt;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        p,
+        .text-muted {
+            font-size: 11pt;
+            color: #000;
+            margin: 0 0 2px 0;
+        }
+
+        .experience-item,
+        .project-item,
+        .education-item {
+            margin-bottom: 10px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            width: 100%;
+        }
+
+        .bold {
+            font-weight: 700;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .location-text {
+            text-align: right;
+        }
+
+        ul {
+            margin: 2px 0 0 0;
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 2px;
+            font-size: 11pt;
+            color: #000;
+        }
+
+        #skills-list {
+            display: inline;
+        }
+
+        /* Group skills by category if possible, otherwise list */
+        .skill-category {
+            font-weight: 700;
+            margin-right: 5px;
+        }
+
+        .skill-item {
+            display: inline;
+        }
+
+        .skill-item:not(:last-child)::after {
+            content: ", ";
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        [data-template] {
+            display: none;
+        }
+
+        .section-content {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main id="resume-root">
+        <header id="section-personalInfo">
+            <h1 id="full-name">{{firstName}} {{lastName}}</h1>
+            <p class="contact-info">
+                <span id="phone">{{phone}}</span>
+                <span id="email">{{email}}</span>
+                <span id="linkedin-link-wrapper"><a id="linkedin-link" href="#"
+                        target="_blank">linkedin.com/in/profile</a></span>
+                <span id="github-link-wrapper"><a id="github-link" href="#"
+                        target="_blank">github.com/profile</a></span>
+                <span id="portfolio-link-wrapper"><a id="portfolio-link" href="#"
+                        target="_blank">notion.so/your-portfolio</a></span>
+            </p>
+        </header>
+
+        <section id="section-summary" style="display:none;">
+            <h2>Summary</h2>
+            <p id="summary-text">{{summary}}</p>
+        </section>
+
+        <section id="section-experience" style="display:none;">
+            <h2>Experience</h2>
+            <div id="experience-list"></div>
+
+            <div class="experience-item item-template" data-template="experience">
+                <div class="row">
+                    <span><span class="bold exp-job-title">{{experience.jobTitle}}</span> at <span
+                            class="bold exp-company">{{experience.company}}</span></span>
+                    <span class="exp-date-range italic"><span class="exp-start-date">{{experience.startDate}}</span> –
+                        <span class="exp-end-date">{{experience.endDate}}</span></span>
+                </div>
+                <!-- Location row if needed, for now mostly hidden in screenshot example but good to have -->
+                <div class="row italic">
+                    <span class="exp-description-header"></span> <!-- Optional sub-header -->
+                    <span class="location-text exp-location"></span>
+                </div>
+                <div class="exp-description"></div>
+            </div>
+        </section>
+
+        <section id="section-education" style="display:none;">
+            <h2>Education</h2>
+            <div id="education-list"></div>
+
+            <div class="education-item item-template" data-template="education">
+                <div class="row">
+                    <span class="bold edu-institution">{{education.institution}}</span>
+                    <span class="edu-location">{{education.location}}</span>
+                    <!-- Assuming location might be in data or defaulting -->
+                </div>
+                <div class="row italic">
+                    <span class="edu-degree">{{education.degree}}</span>
+                    <span class="edu-date-range"><span class="edu-start-date">{{education.startDate}}</span> – <span
+                            class="edu-end-date">{{education.endDate}}</span></span>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-projects" style="display:none;">
+            <h2>Projects</h2>
+            <div id="projects-list"></div>
+
+            <div class="project-item item-template" data-template="projects">
+                <div class="row">
+                    <span class="bold proj-name">{{projects.name}}</span>
+                    <span class="proj-date-range italic"><span class="proj-start-date">{{projects.startDate}}</span> –
+                        <span class="proj-end-date">{{projects.endDate}}</span></span>
+                </div>
+                <ul class="proj-description"></ul>
+            </div>
+        </section>
+
+        <section id="section-skills" style="display:none;">
+            <h2>Skills</h2>
+            <div id="skills-list-container">
+                <p><span class="bold">Technical Skills:</span> <span id="skills-list"></span></p>
+            </div>
+            <!-- Template just for logic ref -->
+            <span class="skill-item item-template" data-template="skills">{{skills.name}}</span>
+        </section>
+
+        <section id="section-languages" style="display:none;">
+            <h2>Languages</h2>
+            <div id="languages-list"></div>
+
+            <div class="language-item item-template" data-template="languages">
+                <span class="bold lang-name">{{language.language}}</span>
+                <span class="italic lang-proficiency"> - {{language.proficiency}}</span>
+            </div>
+        </section>
+
+        <section id="section-certifications" style="display:none;">
+            <h2>Certifications</h2>
+            <div id="certifications-list"></div>
+
+            <div class="certification-item item-template" data-template="certifications">
+                <div class="row">
+                    <span class="bold cert-name">{{certification.name}}</span>
+                    <span class="cert-date">{{certification.date}}</span>
+                </div>
+                <div class="italic cert-issuer">{{certification.issuer}}</div>
+            </div>
+        </section>
+
+        <section id="section-awards" style="display:none;">
+            <h2>Awards & Honors</h2>
+            <div id="awards-list"></div>
+
+            <div class="award-item item-template" data-template="awards">
+                <div class="row">
+                    <span class="bold award-title">{{award.title}}</span>
+                    <span class="award-date">{{award.date}}</span>
+                </div>
+                <div class="italic award-issuer">{{award.issuer}}</div>
+                <div class="award-description">{{award.description}}</div>
+            </div>
+        </section>
+
+        <section id="section-achievements" style="display:none;">
+            <h2>Achievements</h2>
+            <div id="achievements-list"></div>
+
+            <div class="achievement-item item-template" data-template="achievements">
+                <div class="row">
+                    <span class="bold achievement-title">{{achievement.title}}</span>
+                    <span class="achievement-date">{{achievement.date}}</span>
+                </div>
+                <div class="achievement-description">{{achievement.description}}</div>
+            </div>
+        </section>
+
+        <section id="section-publications" style="display:none;">
+            <h2>Publications</h2>
+            <div id="publications-list"></div>
+
+            <div class="publication-item item-template" data-template="publications">
+                <div class="row">
+                    <span class="bold pub-title">{{publication.title}}</span>
+                    <span class="pub-date">{{publication.date}}</span>
+                </div>
+                <div class="italic pub-publisher">{{publication.publisher}}</div>
+                <div class="pub-description">{{publication.description}}</div>
+            </div>
+        </section>
+
+        <section id="section-volunteer" style="display:none;">
+            <h2>Volunteer Experience</h2>
+            <div id="volunteer-list"></div>
+
+            <div class="volunteer-item item-template" data-template="volunteer">
+                <div class="row">
+                    <span><span class="bold vol-role">{{volunteer.role}}</span> at <span
+                            class="bold vol-organization">{{volunteer.organization}}</span></span>
+                    <span class="vol-date-range italic"><span class="vol-start-date">{{volunteer.startDate}}</span> –
+                        <span class="vol-end-date">{{volunteer.endDate}}</span></span>
+                </div>
+                <div class="vol-description">{{volunteer.description}}</div>
+            </div>
+        </section>
+
+        <section id="section-interests" style="display:none;">
+            <h2>Interests</h2>
+            <p id="interests-list">
+                <!-- Comma separated list will be generated here -->
+            </p>
+            <span class="interest-item item-template" data-template="interests">{{interest.name}}</span>
+        </section>
+
+        <section id="section-references" style="display:none;">
+            <h2>References</h2>
+            <div id="references-list"></div>
+
+            <div class="reference-item item-template" data-template="references">
+                <div class="bold ref-name">{{reference.name}}</div>
+                <div><span class="italic ref-job-title">{{reference.jobTitle}}</span> at <span
+                        class="ref-company">{{reference.company}}</span></div>
+                <div>
+                    <span class="ref-email">{{reference.email}}</span> | <span
+                        class="ref-phone">{{reference.phone}}</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other sections can be added similarly -->
+
+    </main>
+
+    <script>
+        window.hydrate = function (data) {
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value || '';
+            };
+
+            const setLink = (id, value, wrapperId) => {
+                const el = document.getElementById(id);
+                const wrapper = document.getElementById(wrapperId);
+                if (el) {
+                    if (value) {
+                        el.href = value;
+                        // Display simple text or cleaned URL
+                        el.textContent = value.replace(/^https?:\/\//, '');
+                        if (wrapper) wrapper.style.display = 'inline-flex';
+                    } else {
+                        if (wrapper) wrapper.style.display = 'none';
+                    }
+                }
+            };
+
+            const toggleSection = (id, show) => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = show ? 'block' : 'none';
+            };
+
+            // Personal Info
+            if (data.personalInfo) {
+                const p = data.personalInfo;
+                document.title = `${p.firstName} ${p.lastName} - Resume`;
+                setText('full-name', `${p.firstName} ${p.lastName}`);
+                setText('job-title', p.jobTitle);
+                setText('email', p.email);
+                setText('phone', p.phone);
+
+                setLink('linkedin-link', p.linkedin, 'linkedin-link-wrapper');
+                setLink('github-link', p.github, 'github-link-wrapper');
+                // Assuming portfolio is not standard field but could be in custom or websites
+                setLink('portfolio-link', p.website || p.portfolio, 'portfolio-link-wrapper');
+
+            }
+            if (data.summary.content) {
+                setText('summary-text', data.summary.content);
+                toggleSection('section-summary', true);
+            }
+
+            const renderList = (listId, items, templateSelector, callback) => {
+                const container = document.getElementById(listId);
+                const template = document.querySelector(templateSelector);
+                const sectionId = listId.replace('-list', '').replace('-container', '');
+
+                if (!container || !template) return;
+
+                // Keep the template, remove others
+                // Actually safer to clear and append
+                container.innerHTML = '';
+
+                if (items && items.length > 0) {
+                    const secEl = document.getElementById('section-' + sectionId);
+                    if (secEl) secEl.style.display = 'block';
+
+                    items.forEach(item => {
+                        const clone = template.cloneNode(true);
+                        clone.classList.remove('item-template');
+                        clone.style.display = 'block';
+                        clone.removeAttribute('data-template');
+
+                        callback(clone, item);
+                        container.appendChild(clone);
+                    });
+                } else {
+                    const secEl = document.getElementById('section-' + sectionId);
+                    if (secEl) secEl.style.display = 'none';
+                }
+            };
+
+            // Experience
+            renderList('experience-list', data.experience, '[data-template="experience"]', (el, item) => {
+                el.querySelector('.exp-company').textContent = item.company || '';
+                el.querySelector('.exp-job-title').textContent = item.jobTitle || '';
+                el.querySelector('.exp-start-date').textContent = item.startDate ? formatDate(item.startDate) : '';
+                el.querySelector('.exp-end-date').textContent = item.endDate ? formatDate(item.endDate) : 'Present';
+
+                // Location if available
+                const locEl = el.querySelector('.exp-location');
+                if (locEl) locEl.textContent = item.location || ''; // Add location to data if it exists
+
+                el.querySelector('.exp-description').innerHTML = item.description || '';
+            });
+
+            // Education
+            renderList('education-list', data.education, '[data-template="education"]', (el, item) => {
+                el.querySelector('.edu-institution').textContent = item.institution || '';
+                el.querySelector('.edu-degree').textContent = item.degree || '';
+                el.querySelector('.edu-start-date').textContent = item.startDate ? formatDate(item.startDate) : '';
+                el.querySelector('.edu-end-date').textContent = item.endDate ? formatDate(item.endDate) : '';
+
+                const locEl = el.querySelector('.edu-location');
+                if (locEl) locEl.textContent = item.city ? `${item.city}, ${item.country || ''}` : '';
+            });
+
+            // Projects
+            renderList('projects-list', data.projects, '[data-template="projects"]', (el, item) => {
+                el.querySelector('.proj-name').textContent = item.name || '';
+                el.querySelector('.proj-start-date').textContent = item.startDate ? formatDate(item.startDate) : '';
+                el.querySelector('.proj-end-date').textContent = item.endDate ? formatDate(item.endDate) : 'Present';
+                el.querySelector('.proj-description').innerHTML = item.description || '';
+            });
+
+            // Skills - Special handling for comma separated list
+            if (data.skills && data.skills.length > 0) {
+                toggleSection('section-skills', true);
+                const skillsContainer = document.getElementById('skills-list');
+                if (skillsContainer) {
+                    skillsContainer.innerHTML = '';
+                    data.skills.forEach((skill, index) => {
+                        const span = document.createElement('span');
+                        span.className = 'skill-item';
+                        span.textContent = skill.name || skill;
+                        skillsContainer.appendChild(span);
+                    });
+                }
+            } else {
+                toggleSection('section-skills', false);
+            }
+
+            // Languages
+            renderList('languages-list', data.languages, '[data-template="languages"]', (el, item) => {
+                el.querySelector('.lang-name').textContent = item.language || item.name || '';
+                el.querySelector('.lang-proficiency').textContent = item.proficiency ? ` - ${item.proficiency}` : '';
+            });
+
+            // Certifications
+            renderList('certifications-list', data.certifications, '[data-template="certifications"]', (el, item) => {
+                el.querySelector('.cert-name').textContent = item.name || '';
+                el.querySelector('.cert-issuer').textContent = item.issuer || '';
+                el.querySelector('.cert-date').textContent = item.date ? formatDate(item.date) : '';
+            });
+
+            // Awards
+            renderList('awards-list', data.awards, '[data-template="awards"]', (el, item) => {
+                el.querySelector('.award-title').textContent = item.title || '';
+                el.querySelector('.award-issuer').textContent = item.issuer || '';
+                el.querySelector('.award-date').textContent = item.date ? formatDate(item.date) : '';
+                el.querySelector('.award-description').textContent = item.description || '';
+            });
+
+            // Achievements
+            renderList('achievements-list', data.achievements, '[data-template="achievements"]', (el, item) => {
+                el.querySelector('.achievement-title').textContent = item.title || '';
+                el.querySelector('.achievement-date').textContent = item.date ? formatDate(item.date) : '';
+                el.querySelector('.achievement-description').textContent = item.description || '';
+            });
+
+            // Publications
+            renderList('publications-list', data.publications, '[data-template="publications"]', (el, item) => {
+                el.querySelector('.pub-title').textContent = item.title || '';
+                el.querySelector('.pub-publisher').textContent = item.publisher || '';
+                el.querySelector('.pub-date').textContent = item.date ? formatDate(item.date) : '';
+                el.querySelector('.pub-description').textContent = item.description || '';
+            });
+
+            // Volunteer
+            renderList('volunteer-list', data.volunteer, '[data-template="volunteer"]', (el, item) => {
+                el.querySelector('.vol-organization').textContent = item.organization || '';
+                el.querySelector('.vol-role').textContent = item.role || '';
+                el.querySelector('.vol-start-date').textContent = item.startDate ? formatDate(item.startDate) : '';
+                el.querySelector('.vol-end-date').textContent = item.endDate ? formatDate(item.endDate) : 'Present';
+                el.querySelector('.vol-description').textContent = item.description || '';
+            });
+
+            // Interests - Comma separated
+            if (data.interests && data.interests.length > 0) {
+                toggleSection('section-interests', true);
+                const interestsContainer = document.getElementById('interests-list');
+                if (interestsContainer) {
+                    // Just map names and join
+                    const names = data.interests.map(i => i.name || i).filter(Boolean).join(', ');
+                    interestsContainer.textContent = names;
+                }
+            } else {
+                toggleSection('section-interests', false);
+            }
+
+            // References
+            renderList('references-list', data.references, '[data-template="references"]', (el, item) => {
+                el.querySelector('.ref-name').textContent = item.name || '';
+                el.querySelector('.ref-job-title').textContent = item.jobTitle || '';
+                el.querySelector('.ref-company').textContent = item.company || '';
+                el.querySelector('.ref-email').textContent = item.email || '';
+                el.querySelector('.ref-phone').textContent = item.phone || '';
+            });
+
+            // Reordering logic
+            if (data.order && Array.isArray(data.order)) {
+                const main = document.getElementById('resume-root');
+                const sections = Array.from(main.children);
+                const orderMap = {};
+                data.order.forEach((key, index) => { orderMap['section-' + key] = index; });
+
+                sections.sort((a, b) => {
+                    if (a.id === 'section-personalInfo') return -1;
+                    if (b.id === 'section-personalInfo') return 1;
+                    return (orderMap[a.id] || 999) - (orderMap[b.id] || 999);
+                });
+                sections.forEach(sec => main.appendChild(sec));
+            }
+        };
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            // Simple logic to format YYYY-MM to Month YYYY or similar
+            // Assuming input is YYYY-MM
+            const date = new Date(dateString + '-01');
+            if (isNaN(date.getTime())) return dateString;
+            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        }
+
+        // Load font
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap'; // System font mostly but fallback
+        // Actually Times New Roman is standard web safe, no link needed usually, but good practice if using specific web font
+    </script>
+</body>
+
+</html>

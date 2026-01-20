@@ -50,6 +50,10 @@ export function ProfileHeader({
         { name: 'Playfair Display', label: 'Playfair Display' },
         { name: 'Georgia', label: 'Georgia' },
         { name: 'Times New Roman', label: 'Times New Roman' },
+        { name: 'Calibri', label: 'Calibri' },
+        { name: 'Arial', label: 'Arial' },
+        { name: 'Helvetica', label: 'Helvetica' },
+        { name: 'Cambria', label: 'Cambria' },
     ], []);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
