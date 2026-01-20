@@ -6,7 +6,7 @@ export const configurePassport = () => {
     // Check if Google OAuth credentials are configured
     const googleClientId = process.env.GOOGLE_CLIENT_ID;
     const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://api.profresume.com/api/auth/google/callback';
+    const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://api.hirecta.com/api/auth/google/callback';
 
     if (!googleClientId || !googleClientSecret) {
         console.warn('⚠️  Google OAuth credentials not configured. Google authentication will not be available.');

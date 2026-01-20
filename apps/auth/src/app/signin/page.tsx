@@ -39,7 +39,7 @@ function SignInContenst() {
                         <div className="flex items-center gap-2 mb-4">
                             <img
                                 src="/logo.png"
-                                alt="ProfResume Logo"
+                                alt="Hirecta Logo"
                                 className="w-15 h-9 transition-transform group-hover:scale-105"
                             />
                         </div>

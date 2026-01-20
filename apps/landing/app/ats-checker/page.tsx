@@ -35,13 +35,13 @@ export const metadata: Metadata = {
                 url: '/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: "ProfResume ATS Checker",
+                alt: "Hirecta ATS Checker",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Free ATS Resume Checker | ProfResume",
+        title: "Free ATS Resume Checker | Hirecta",
         description: "Don't let a robot reject your application. Check your resume's ATS score instantly for free.",
         images: ['/og-image.png'],
     },
@@ -100,7 +100,7 @@ const faqs = [
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume ATS Checker",
+    "name": "Hirecta ATS Checker",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -126,7 +126,7 @@ export default function ATSCheckerMarketingPage() {
                 url={`${ENV.BASE_URL}/ats-checker`}
                 datePublished="2024-11-20"
                 dateModified={new Date().toISOString()}
-                author="ProfResume Career Experts"
+                author="Hirecta Career Experts"
             />
             <GlobalSchema />
             <script

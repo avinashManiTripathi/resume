@@ -11,7 +11,7 @@ import { Suspense } from "react";
 const baseUrl = ENV.BASE_URL;
 
 export const metadata: Metadata = {
-    title: "Free ATS Resume Checker | Test Your Resume for ATS Compatibility | ProfResume",
+    title: "Free ATS Resume Checker | Test Your Resume for ATS Compatibility | Hirecta",
     description: "Upload your resume and get instant AI-powered feedback on ATS compatibility, formatting, keywords, and optimization suggestions. Improve your chances of getting past Applicant Tracking Systems.",
     alternates: {
         canonical: "/ats-checker/check",

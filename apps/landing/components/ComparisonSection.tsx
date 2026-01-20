@@ -41,7 +41,7 @@ export function ComparisonSection() {
                         </div>
                     </div>
 
-                    {/* Main Product - ProfResume */}
+                    {/* Main Product - Hirecta */}
                     <div className="relative transform md:-translate-y-6 scale-105 z-20">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-20" />
                         <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-2xl relative overflow-hidden">
@@ -54,7 +54,7 @@ export function ComparisonSection() {
                                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-2xl mb-4 border border-blue-100">
                                     <Sparkles className="w-8 h-8 text-blue-600" />
                                 </div>
-                                <h3 className="text-2xl font-black text-gray-900 mb-2">ProfResume</h3>
+                                <h3 className="text-2xl font-black text-gray-900 mb-2">Hirecta</h3>
                                 <p className="text-sm text-blue-700 font-bold">The Intelligent Choice</p>
                             </div>
 

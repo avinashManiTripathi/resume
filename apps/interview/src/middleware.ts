@@ -32,9 +32,9 @@ export function middleware(request: NextRequest) {
                 str += `${entries[i][0]}=${entries[i][1]}&`
             }
         }
-        const authUrl = new URL('https://auth.profresume.com');
+        const authUrl = new URL('https://auth.hirecta.com');
         // Add current URL as redirect parameter
-        authUrl.searchParams.set('redirect', "https://interview.profresume.com" + pathname + (str ? "?" + str : ""));
+        authUrl.searchParams.set('redirect', "https://interview.hirecta.com" + pathname + (str ? "?" + str : ""));
         return NextResponse.redirect(authUrl);
     }
 

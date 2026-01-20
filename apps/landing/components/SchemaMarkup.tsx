@@ -7,7 +7,7 @@ export function GlobalSchema() {
     const websiteSchema = {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "ProfResume",
+        "name": "Hirecta",
         "alternateName": "Professional Resume Builder",
         "url": baseUrl,
         "description": "Build beautiful, ATS-friendly resumes with AI-powered tools. Trusted by 50,000+ professionals.",
@@ -24,7 +24,7 @@ export function GlobalSchema() {
     const organizationSchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "ProfResume",
+        "name": "Hirecta",
         "url": baseUrl,
         "logo": {
             "@type": "ImageObject",
@@ -36,11 +36,11 @@ export function GlobalSchema() {
         "slogan": "Build Your Career with Confidence",
         "foundingDate": "2024",
         "sameAs": [
-            "https://twitter.com/profresume",
-            "https://linkedin.com/company/profresume",
-            "https://facebook.com/profresume",
-            "https://instagram.com/profresume",
-            "https://github.com/profresume"
+            "https://twitter.com/hirecta",
+            "https://linkedin.com/company/hirecta",
+            "https://facebook.com/hirecta",
+            "https://instagram.com/hirecta",
+            "https://github.com/hirecta"
         ],
         "contactPoint": {
             "@type": "ContactPoint",
@@ -50,7 +50,7 @@ export function GlobalSchema() {
         },
         "brand": {
             "@type": "Brand",
-            "name": "ProfResume",
+            "name": "Hirecta",
             "logo": `${baseUrl}/logo.png`
         }
     }
@@ -58,7 +58,7 @@ export function GlobalSchema() {
     const softwareAppSchema = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "ProfResume Resume Builder",
+        "name": "Hirecta Resume Builder",
         "applicationCategory": "BusinessApplication",
         "applicationSubCategory": "Resume Builder, Career Development",
         "operatingSystem": "Web",

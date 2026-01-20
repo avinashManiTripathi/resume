@@ -31,7 +31,7 @@ export function HowItWorks() {
     const howToSchema = {
         "@context": "https://schema.org",
         "@type": "HowTo",
-        "name": "How to Create a Professional Resume with ProfResume",
+        "name": "How to Create a Professional Resume with Hirecta",
         "description": "Step-by-step guide to creating an ATS-friendly resume using our free resume builder in under 5 minutes",
         "image": `${ENV.BASE_URL}/how-to-create-resume.png`,
         "totalTime": "PT5M",
@@ -53,7 +53,7 @@ export function HowItWorks() {
         "tool": [
             {
                 "@type": "HowToTool",
-                "name": "ProfResume Online Builder"
+                "name": "Hirecta Online Builder"
             },
             {
                 "@type": "HowToTool",

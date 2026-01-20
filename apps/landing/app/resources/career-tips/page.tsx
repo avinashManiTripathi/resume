@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { IntroSection } from '@/components/IntroSection';
 
 export const metadata: Metadata = {
-    title: 'Career Tips & Job Search Strategy 2026 | ProfResume',
+    title: 'Career Tips & Job Search Strategy 2026 | Hirecta',
     description: 'Expert career advice and job search strategies. Learn how to discover hidden opportunities, improve your networking, and land your dream job faster.',
     alternates: {
         canonical: '/resources/career-tips',

@@ -4,13 +4,13 @@ import Link from "next/link";
 import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
-    title: "Cookie Policy - ProfResume",
+    title: "Cookie Policy - Hirecta",
     description: "Learn about how we use cookies to improve your experience on our resume builder platform.",
     alternates: {
         canonical: "/cookies",
     },
     openGraph: {
-        title: "Cookie Policy - ProfResume",
+        title: "Cookie Policy - Hirecta",
         description: "Learn about how we use cookies to improve your experience on our resume builder platform.",
         url: "/cookies",
         type: "website",

@@ -4,14 +4,14 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-    title: 'Resume Examples - Real Resumes That Landed Interviews | ProfResume',
-    description: 'Explore real resume examples from professionals in tech, marketing, design, and finance that helped them land dream jobs using ProfResume.',
+    title: 'Resume Examples - Real Resumes That Landed Interviews | Hirecta',
+    description: 'Explore real resume examples from professionals in tech, marketing, design, and finance that helped them land dream jobs using Hirecta.',
     alternates: {
         canonical: '/examples',
     },
     openGraph: {
         title: 'Professional Resume Examples - Success Showcases',
-        description: 'See real resumes created with ProfResume that landed positions at top companies. Use them as inspiration for your own.',
+        description: 'See real resumes created with Hirecta that landed positions at top companies. Use them as inspiration for your own.',
         url: '/examples',
         type: 'website',
     },
@@ -55,7 +55,7 @@ export default function ExamplesPage() {
             <section className="pt-32 pb-16 px-4 bg-gradient-to-br from-gray-50 to-gray-100 text-center">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-5xl font-extrabold text-gray-900 mb-6">Resume Examples That Get Results</h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real resumes created with ProfResume that helped professionals land their dream jobs.</p>
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">Real resumes created with Hirecta that helped professionals land their dream jobs.</p>
                 </div>
             </section>
 

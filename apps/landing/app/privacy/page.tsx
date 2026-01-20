@@ -3,13 +3,13 @@ import { Shield, Eye, Lock, Gavel, Bell, Globe, Mail, UserCheck } from "lucide-r
 import { ENV } from "../env";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy - ProfResume",
+    title: "Privacy Policy - Hirecta",
     description: "Learn how we protect your personal information and resume data.",
     alternates: {
         canonical: "/privacy",
     },
     openGraph: {
-        title: "Privacy Policy - ProfResume",
+        title: "Privacy Policy - Hirecta",
         description: "Learn how we protect your personal information and resume data.",
         url: "/privacy",
         type: "website",

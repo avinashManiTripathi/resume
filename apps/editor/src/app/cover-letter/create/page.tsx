@@ -38,7 +38,7 @@ function CoverLetterCreateForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const templateIdParam = searchParams.get("templateId");
-    const API_BASE = "https://api.profresume.com";
+    const API_BASE = "https://api.hirecta.com";
 
     const [template, setTemplate] = useState<Template | null>(null);
     const [showTemplates, setShowTemplates] = useState(false);
@@ -92,7 +92,7 @@ function CoverLetterCreateForm() {
 
 
     // Initialize PDF generation hook for preview
-    const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer('https://api.profresume.com/api/cover-letter/pdf-preview');
+    const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer('https://api.hirecta.com/api/cover-letter/pdf-preview');
 
     // Canvas refs
     const mainRef = useRef<HTMLDivElement>(null);
@@ -111,7 +111,7 @@ function CoverLetterCreateForm() {
         try {
             setLoading(true);
             const response = await fetch(
-                `https://api.profresume.com/api/cover-letter/templates/${id}`
+                `https://api.hirecta.com/api/cover-letter/templates/${id}`
             );
             const data = await response.json();
 
@@ -439,7 +439,7 @@ function CoverLetterCreateForm() {
                 setGenerationStep(prev => prev < generationSteps.length - 1 ? prev + 1 : prev);
             }, 800);
 
-            const response = await fetch("https://api.profresume.com/api/cover-letter/generate", {
+            const response = await fetch("https://api.hirecta.com/api/cover-letter/generate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

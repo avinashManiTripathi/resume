@@ -11,7 +11,7 @@ export const FOOTER = {
     },
 
     brand: {
-        name: "ProfResume",
+        name: "Hirecta",
         logo: "/logo.png",
         description:
             "Build professional, ATS-friendly resumes that get you hired. Join 50,000+ job seekers who landed their dream jobs with our AI-powered resume builder.",

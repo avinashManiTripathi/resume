@@ -1,6 +1,6 @@
 {
-    "name": "ProfResume - Professional Resume Builder",
-    "short_name": "ProfResume",
+    "name": "Hirecta - Professional Resume Builder",
+    "short_name": "Hirecta",
     "description": "Build ATS-friendly resumes in minutes with AI-powered tools",
     "start_url": "/",
     "display": "standalone",

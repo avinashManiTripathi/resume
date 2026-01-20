@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { IntroSection } from '@/components/IntroSection';
 
 export const metadata: Metadata = {
-    title: 'The Ultimate Resume Writing Guide 2026 | ProfResume',
+    title: 'The Ultimate Resume Writing Guide 2026 | Hirecta',
     description: 'Everything you need to know to create a professional, ATS-friendly resume. Comprehensive guide covering formatting, content, and modern best practices.',
     alternates: {
         canonical: '/resources/resume-guide',

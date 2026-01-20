@@ -24,9 +24,9 @@ function CallbackContent() {
             localStorage.setItem("authToken", token);
 
             // Determine editor URL based on environment
-            const isProd = window.location.hostname.endsWith('profresume.com');
+            const isProd = window.location.hostname.endsWith('hirecta.com');
             const editorBaseUrl = isProd
-                ? 'https://edit.profresume.com'
+                ? 'https://edit.hirecta.com'
                 : 'http://localhost:3002';
 
             // Construct redirect URL to editor with user info

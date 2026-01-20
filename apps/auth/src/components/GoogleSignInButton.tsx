@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function GoogleSignInButton() {
     const [isLoading, setIsLoading] = useState(false);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.profresume.com";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.hirecta.com";
 
     const handleSignIn = async () => {
         try {

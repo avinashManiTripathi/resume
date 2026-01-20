@@ -44,7 +44,7 @@ export function FAQSection() {
                         Frequently Asked <span className="text-purple-600">Questions</span>
                     </h2>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Everything you need to know about building your perfect resume with ProfResume.
+                        Everything you need to know about building your perfect resume with Hirecta.
                     </p>
                 </div>
 

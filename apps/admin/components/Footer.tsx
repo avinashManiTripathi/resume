@@ -27,7 +27,7 @@ export function Footer() {
                             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                                 <FileText className="w-6 h-6 text-white" />
                             </div>
-                            <span className="text-2xl font-bold text-white">ProfResume</span>
+                            <span className="text-2xl font-bold text-white">Hirecta</span>
                         </div>
                         <p className="text-sm mb-6 leading-relaxed max-w-md">
                             Build professional, ATS-friendly resumes that get you hired. Join 50,000+ job seekers who landed their dream jobs with our AI-powered resume builder.
@@ -37,8 +37,8 @@ export function Footer() {
                         <div className="space-y-3 text-sm mb-6">
                             <div className="flex items-center gap-3">
                                 <Mail className="w-4 h-4 text-blue-500" />
-                                <a href="mailto:it@profresume.com" className="hover:text-white transition-colors">
-                                    it@profresume.com
+                                <a href="mailto:it@hirecta.com" className="hover:text-white transition-colors">
+                                    it@hirecta.com
                                 </a>
                             </div>
                             <div className="flex items-center gap-3">
@@ -152,7 +152,7 @@ export function Footer() {
                 <div className="border-t border-gray-800 pt-8">
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-sm">
-                            © {new Date().getFullYear()} ProfResume. All rights reserved.
+                            © {new Date().getFullYear()} Hirecta. All rights reserved.
                         </p>
                         <div className="flex flex-wrap gap-6 text-sm">
                             <Link href="/sitemap" className="hover:text-white transition-colors">Sitemap</Link>

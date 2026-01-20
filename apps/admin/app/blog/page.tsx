@@ -25,7 +25,7 @@ interface BlogPost {
     author: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 
 export default function BlogPage() {
     const [isCreating, setIsCreating] = useState(false);

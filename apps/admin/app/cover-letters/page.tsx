@@ -42,7 +42,7 @@ export default function CoverLetterTemplatesPage() {
         templateBody: "",
     });
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
+    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 
     useEffect(() => { fetchTemplates(); }, []);
 

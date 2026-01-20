@@ -31,7 +31,7 @@ export const metadata: Metadata = {
             url: '/og-tailor.jpg',
             width: 1200,
             height: 630,
-            alt: 'ProfResume AI Resume Tailor',
+            alt: 'Hirecta AI Resume Tailor',
         }],
     },
     twitter: {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume AI Tailor",
+    "name": "Hirecta AI Tailor",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -128,7 +128,7 @@ export default function TailorPage() {
                 url={`${ENV.BASE_URL}/tailor`}
                 datePublished="2024-12-01"
                 dateModified={new Date().toISOString()}
-                author="ProfResume AI Team"
+                author="Hirecta AI Team"
             />
             <FAQSchema faqs={faqs} />
             <script
@@ -258,7 +258,7 @@ export default function TailorPage() {
                                         <td className="py-4 px-6 text-yellow-600 font-medium">Medium (Human Error)</td>
                                     </tr>
                                     <tr>
-                                        <td className="py-4 px-6 font-bold text-purple-700">ProfResume AI</td>
+                                        <td className="py-4 px-6 font-bold text-purple-700">Hirecta AI</td>
                                         <td className="py-4 px-6 text-purple-700 font-bold">30 Seconds</td>
                                         <td className="py-4 px-6 text-emerald-600 font-bold">High (Data Driven)</td>
                                     </tr>

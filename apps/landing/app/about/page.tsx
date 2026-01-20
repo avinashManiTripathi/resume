@@ -6,13 +6,13 @@ import { IntroSection } from "@/components/IntroSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'About Us | ProfResume - Our Mission & Team',
-    description: 'Learn about the mission behind ProfResume, the AI-powered resume builder. Meet our team of designers, developers, and career experts dedicated to your success.',
+    title: 'About Us | Hirecta - Our Mission & Team',
+    description: 'Learn about the mission behind Hirecta, the AI-powered resume builder. Meet our team of designers, developers, and career experts dedicated to your success.',
     alternates: {
         canonical: '/about',
     },
     openGraph: {
-        title: 'About Us | ProfResume',
+        title: 'About Us | Hirecta',
         description: 'Building the world\'s most powerful resume builder to help millions of job seekers.',
         url: '/about',
         type: 'website',

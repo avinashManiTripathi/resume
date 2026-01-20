@@ -31,7 +31,7 @@ export default function TemplatesPage() {
     const fetchTemplates = async () => {
         try {
             setLoading(true);
-            const response = await fetch("https://api.profresume.com/api/cover-letter-templates");
+            const response = await fetch("https://api.hirecta.com/api/cover-letter-templates");
             const data = await response.json();
 
             if (data.templates) {

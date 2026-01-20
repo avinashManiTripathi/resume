@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { IntroSection } from '@/components/IntroSection';
 
 export const metadata: Metadata = {
-    title: 'Cover Letter Writing Guide 2026 - Templates & Examples | ProfResume',
+    title: 'Cover Letter Writing Guide 2026 - Templates & Examples | Hirecta',
     description: 'Learn how to write compelling cover letters that get noticed. Templates, examples, and proven strategies for success in every job application.',
     alternates: {
         canonical: '/resources/cover-letter-guide',

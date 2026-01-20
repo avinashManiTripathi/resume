@@ -45,12 +45,12 @@ export class App {
         this.io = new SocketIoServer(this.httpServer, {
             cors: {
                 origin: [
-                    'https://profresume.com',
-                    'https://www.profresume.com',
-                    'https://edit.profresume.com',
-                    'https://auth.profresume.com',
-                    'https://admin.profresume.com',
-                    'https://interview.profresume.com',
+                    'https://hirecta.com',
+                    'https://www.hirecta.com',
+                    'https://edit.hirecta.com',
+                    'https://auth.hirecta.com',
+                    'https://admin.hirecta.com',
+                    'https://interview.hirecta.com',
                     'http://localhost:3000',
                     'http://localhost:3001',
                     'http://localhost:3002',
@@ -102,12 +102,12 @@ export class App {
     private initializeMiddlewares(): void {
         // CORS
         const allowedOrigins = [
-            'https://profresume.com',
-            'https://www.profresume.com',
-            'https://edit.profresume.com',
-            'https://auth.profresume.com',
-            'https://admin.profresume.com',
-            'https://interview.profresume.com',
+            'https://hirecta.com',
+            'https://www.hirecta.com',
+            'https://edit.hirecta.com',
+            'https://auth.hirecta.com',
+            'https://admin.hirecta.com',
+            'https://interview.hirecta.com',
             'http://localhost:3000',
             'http://localhost:3001',
             'http://localhost:3002',
@@ -118,7 +118,7 @@ export class App {
             origin: (origin, callback) => {
                 // Allow requests with no origin (like mobile apps or curl)
                 if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.profresume.com')) {
+                if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.hirecta.com')) {
                     callback(null, true);
                 } else {
                     callback(new Error('Not allowed by CORS'));

@@ -84,14 +84,14 @@ export function AdminSidebar() {
               <div className="w-11 h-11 flex items-center justify-center">
                 <img
                   src="/favicon.ico"
-                  alt="ProfResume Logo"
+                  alt="Hirecta Logo"
                   className="w-9 h-9 transition-transform group-hover:scale-105"
                 />
               </div>
               <div className="absolute -inset-1 gradient-primary rounded-xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-300" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">ProfResume</h1>
+              <h1 className="text-lg font-bold text-gray-900">Hirecta</h1>
               <p className="text-xs text-gray-500">Admin Panel</p>
             </div>
           </Link>

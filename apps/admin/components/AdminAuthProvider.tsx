@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminContext, AdminUser } from '@/hooks/useAdmin';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 
 export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -30,11 +30,11 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
                 }
 
                 // Not admin or not logged in, redirect to auth
-                window.location.href = 'https://auth.profresume.com?redirect=' + encodeURIComponent(window.location.href);
+                window.location.href = 'https://auth.hirecta.com?redirect=' + encodeURIComponent(window.location.href);
             } catch (error) {
                 console.error('Admin verification error:', error);
                 // Redirect to auth on error
-                window.location.href = 'https://auth.profresume.com?redirect=' + encodeURIComponent(window.location.href);
+                window.location.href = 'https://auth.hirecta.com?redirect=' + encodeURIComponent(window.location.href);
             }
         }
 
@@ -64,7 +64,7 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
             setIsAuthorized(false);
 
             // Redirect to auth page
-            window.location.href = 'https://auth.profresume.com';
+            window.location.href = 'https://auth.hirecta.com';
         }
     };
 

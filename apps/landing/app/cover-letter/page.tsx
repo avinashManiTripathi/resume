@@ -32,7 +32,7 @@ export const metadata: Metadata = {
             url: '/og-cover-letter.jpg',
             width: 1200,
             height: 630,
-            alt: 'ProfResume AI Cover Letter Generator',
+            alt: 'Hirecta AI Cover Letter Generator',
         }],
     },
     twitter: {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume AI Cover Letter",
+    "name": "Hirecta AI Cover Letter",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -129,7 +129,7 @@ export default function CoverLetterPage() {
                 url={`${ENV.BASE_URL}/cover-letter`}
                 datePublished="2024-11-25"
                 dateModified={new Date().toISOString()}
-                author="ProfResume Career Experts"
+                author="Hirecta Career Experts"
             />
             <FAQSchema faqs={faqs} />
             <script

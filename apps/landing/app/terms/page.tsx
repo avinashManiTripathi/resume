@@ -3,13 +3,13 @@ import { ENV } from "@/app/env";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Terms of Service - ProfResume",
+    title: "Terms of Service - Hirecta",
     description: "Read our terms of service to understand your rights and responsibilities when using our resume builder.",
     alternates: {
         canonical: "/terms",
     },
     openGraph: {
-        title: "Terms of Service - ProfResume",
+        title: "Terms of Service - Hirecta",
         description: "Read our terms of service to understand your rights and responsibilities.",
         url: "/terms",
         type: "website",
@@ -33,7 +33,7 @@ export default function TermsPage() {
                             1. Acceptance of Terms
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            By accessing and using ProfResume, you accept and agree to be bound by
+                            By accessing and using Hirecta, you accept and agree to be bound by
                             the terms and provision of this agreement.
                         </p>
 
@@ -41,7 +41,7 @@ export default function TermsPage() {
                             2. Use License
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            Permission is granted to use ProfResume for personal, non-commercial
+                            Permission is granted to use Hirecta for personal, non-commercial
                             purposes to create and download resumes.
                         </p>
 
@@ -58,7 +58,7 @@ export default function TermsPage() {
                             4. Content Ownership
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            You retain all rights to the content you create using ProfResume. We do
+                            You retain all rights to the content you create using Hirecta. We do
                             not claim ownership of your resumes or personal information.
                         </p>
 
@@ -66,7 +66,7 @@ export default function TermsPage() {
                             5. Prohibited Uses
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            You may not use ProfResume for any illegal purposes or to violate any
+                            You may not use Hirecta for any illegal purposes or to violate any
                             laws in your jurisdiction.
                         </p>
 
@@ -74,7 +74,7 @@ export default function TermsPage() {
                             6. Limitation of Liability
                         </h2>
                         <p className="text-gray-600 leading-relaxed mb-6">
-                            ProfResume shall not be liable for any indirect, incidental, special,
+                            Hirecta shall not be liable for any indirect, incidental, special,
                             consequential or punitive damages resulting from your use of the
                             service.
                         </p>

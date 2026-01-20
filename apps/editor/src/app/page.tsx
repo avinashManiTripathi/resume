@@ -201,7 +201,7 @@ export default function DashboardPage() {
           <Link href="/" className="inline-block transition-all hover:opacity-80 active:scale-95">
             <Image
               src="/logo.png"
-              alt="ProfResume"
+              alt="Hirecta"
               width={120}
               height={26}
               priority
@@ -595,7 +595,7 @@ export default function DashboardPage() {
                   <p className="text-slate-500 font-medium mb-10 max-w-lg leading-relaxed">
                     Experience our world-class AI Robotic Interviewer. Paste any Job Description and get a realistic 1-hour interview simulation with technical questions and coding rounds.
                   </p>
-                  <Button variant="primary" onClick={() => window.location.href = 'https://interview.profresume.com'}>START AI INTERVIEW <ChevronRight size={24} /></Button>
+                  <Button variant="primary" onClick={() => window.location.href = 'https://interview.hirecta.com'}>START AI INTERVIEW <ChevronRight size={24} /></Button>
 
                 </div>
               </div>

@@ -71,7 +71,7 @@ Output the JD in a well-structured, professional format.`
         setIsLoading(true);
         setLoadingStep(0);
         try {
-            const response = await fetch('https://api.profresume.com/api/interview/start', {
+            const response = await fetch('https://api.hirecta.com/api/interview/start', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -158,7 +158,7 @@ Output the JD in a well-structured, professional format.`
                 <div className="flex items-center gap-8">
                     <Image
                         src="/logo.png"
-                        alt="ProfResume Logo"
+                        alt="Hirecta Logo"
                         width={158}   // w-15 → 60px
                         height={36}  // h-9 → 36px
                         className="transition-transform group-hover:scale-105"
@@ -205,14 +205,14 @@ Output the JD in a well-structured, professional format.`
 
                                     <div className="py-1">
                                         <a
-                                            href="https://edit.profresume.com"
+                                            href="https://edit.hirecta.com"
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                                         >
                                             <User className="w-4 h-4" />
                                             <span>Profile</span>
                                         </a>
                                         <a
-                                            href="https://edit.profresume.com"
+                                            href="https://edit.hirecta.com"
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                                         >
                                             <Settings className="w-4 h-4" />

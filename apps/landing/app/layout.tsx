@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   // Basic Metadata
   title: {
     default: "Free Resume Builder | Create Professional, ATS-Friendly Resumes Online",
-    template: "%s | ProfResume"
+    template: "%s | Hirecta"
   },
   description: "Build beautiful, ATS-optimized resumes with our 100% free resume builder. 20+ professional templates, AI-powered tools, unlimited downloads. No credit card required, no watermarks.",
   keywords: [
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     "best resume builder",
     "professional resume service"
   ],
-  authors: [{ name: "ProfResume Team" }],
-  creator: "ProfResume",
-  publisher: "ProfResume",
+  authors: [{ name: "Hirecta Team" }],
+  creator: "Hirecta",
+  publisher: "Hirecta",
 
   // Open Graph
   openGraph: {
@@ -50,13 +50,13 @@ export const metadata: Metadata = {
     url: baseUrl,
     title: "Professional Resume Builder | Create ATS-Friendly Resumes",
     description: "Build beautiful, ATS-optimized resumes with AI-powered tools. Choose from 20+ templates and download as PDF instantly.",
-    siteName: "ProfResume",
+    siteName: "Hirecta",
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: "ProfResume - Professional Resume Builder",
+        alt: "Hirecta - Professional Resume Builder",
       },
     ],
   },
@@ -64,10 +64,10 @@ export const metadata: Metadata = {
   // Twitter Card
   twitter: {
     card: "summary_large_image",
-    title: "Professional Resume Builder | ProfResume",
+    title: "Professional Resume Builder | Hirecta",
     description: "Build ATS-friendly resumes in minutes. 20+ templates, AI feedback, instant PDF download.",
     images: ['/og-image.png'],
-    creator: "@profresume",
+    creator: "@hirecta",
   },
 
   // Robots

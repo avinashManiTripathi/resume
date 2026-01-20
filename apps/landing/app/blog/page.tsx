@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Career Blog - Resume Tips & Job Search Advice | ProfResume',
+    title: 'Career Blog - Resume Tips & Job Search Advice | Hirecta',
     description: 'Expert advice on resume writing, career growth, and job search strategies. Read our latest articles to land your dream job.',
     alternates: {
         canonical: '/blog',
     },
     openGraph: {
-        title: 'ProfResume Career Blog',
+        title: 'Hirecta Career Blog',
         description: 'Stay ahead in your career with expert tips.',
         url: '/blog',
         type: 'website',

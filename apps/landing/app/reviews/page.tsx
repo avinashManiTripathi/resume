@@ -3,14 +3,14 @@ import { ENV } from "@/app/env";
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'User Reviews - What Professionals Say About ProfResume',
-    description: 'Read reviews from over 50,000 professionals who trust ProfResume to build their careers. See why we are rated 4.9/5 stars.',
+    title: 'User Reviews - What Professionals Say About Hirecta',
+    description: 'Read reviews from over 50,000 professionals who trust Hirecta to build their careers. See why we are rated 4.9/5 stars.',
     alternates: {
         canonical: '/reviews',
     },
     openGraph: {
-        title: 'ProfResume Reviews - Trusted by 50,000+ Professionals',
-        description: 'See why professionals across all industries trust ProfResume for their job search. Real stories, real results.',
+        title: 'Hirecta Reviews - Trusted by 50,000+ Professionals',
+        description: 'See why professionals across all industries trust Hirecta for their job search. Real stories, real results.',
         url: '/reviews',
         type: 'website',
     },
@@ -32,7 +32,7 @@ export default function ReviewsPage() {
             <section className="pt-24 pb-16 px-4 bg-gradient-to-br from-gray-50 to-gray-100 text-center">
                 <div className="max-w-7xl mx-auto">
                     <h1 className="text-5xl font-extrabold text-gray-900 mb-6">What Our Users Say</h1>
-                    <p className="text-xl text-gray-600 mb-8">Join 50,000+ professionals who trust ProfResume</p>
+                    <p className="text-xl text-gray-600 mb-8">Join 50,000+ professionals who trust Hirecta</p>
                     <div className="flex flex-col items-center gap-2">
                         <div className="text-yellow-400 text-3xl">★★★★★</div>
                         <div className="text-gray-500 font-medium text-lg">4.9 out of 5 based on 12,453 reviews</div>

@@ -71,7 +71,7 @@ export default async function LandingPage() {
                   target="_blank"
                   className="bg-blue-600 text-white font-bold px-7 py-3.5 rounded-lg hover:bg-blue-700 transition-all text-center"
                 >
-                  Try ProfResume — Free
+                  Try Hirecta — Free
                 </Link>
                 <Link
                   href={URLS.EDITOR_ATS_CHECKER}
@@ -863,12 +863,12 @@ export default async function LandingPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "ProfResume",
-            "url": "https://profresume.com",
-            "logo": "https://profresume.com/logo.png",
+            "name": "Hirecta",
+            "url": "https://hirecta.com",
+            "logo": "https://hirecta.com/logo.png",
             "sameAs": [
-              "https://twitter.com/profresume",
-              "https://linkedin.com/company/profresume"
+              "https://twitter.com/hirecta",
+              "https://linkedin.com/company/hirecta"
             ]
           })
         }}
@@ -897,7 +897,7 @@ export default async function LandingPage() {
                 <div className="h-48 md:h-auto relative">
                   <Image
                     src={"/images/prateek.png"}
-                    alt="Prateek - Product Designer success story using ProfResume"
+                    alt="Prateek - Product Designer success story using Hirecta"
                     fill
                     className="object-cover"
                   />

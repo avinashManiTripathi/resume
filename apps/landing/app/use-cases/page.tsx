@@ -4,14 +4,14 @@ import { IntroSection } from "@/components/IntroSection";
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Resume Solutions for Every Career Stage | ProfResume',
-  description: 'Whether you are a student, professional, executive, or career changer, ProfResume provides ATS-optimized templates and AI tools to help you succeed.',
+  title: 'Resume Solutions for Every Career Stage | Hirecta',
+  description: 'Whether you are a student, professional, executive, or career changer, Hirecta provides ATS-optimized templates and AI tools to help you succeed.',
   alternates: {
     canonical: '/use-cases',
   },
   openGraph: {
-    title: 'ProfResume Use Cases - Specialized Career Solutions',
-    description: 'Discover how ProfResume helps job seekers at all levels land their dream jobs with specialized features and templates.',
+    title: 'Hirecta Use Cases - Specialized Career Solutions',
+    description: 'Discover how Hirecta helps job seekers at all levels land their dream jobs with specialized features and templates.',
     url: '/use-cases',
     type: 'website',
   },
@@ -79,7 +79,7 @@ export default function UseCasesPage() {
       <IntroSection
         sectionClassName="text-center bg-gradient-to-br from-gray-50 to-gray-100 pt-24 px-8 pb-16"
         title="Resume Builder for Everyone"
-        description="Whether you're a student, professional, or executive, ProfResume has the perfect solution for your career goals."
+        description="Whether you're a student, professional, or executive, Hirecta has the perfect solution for your career goals."
       />
 
       {/* Use Cases Grid */}
@@ -107,8 +107,8 @@ export default function UseCasesPage() {
                 <Link
                   href={ENV.EDITOR_URL}
                   className={`inline-block px-7 py-4 rounded-xl font-bold text-center transition ${item.featured
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'border-2 border-gray-200 text-gray-900 hover:border-blue-500'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'border-2 border-gray-200 text-gray-900 hover:border-blue-500'
                     }`}
                 >
                   {item.cta}
@@ -126,7 +126,7 @@ export default function UseCasesPage() {
             Ready to Create Your Perfect Resume?
           </h2>
           <p className="text-lg md:text-xl opacity-90 mb-10">
-            Join thousands of job seekers who've landed their dream jobs with ProfResume
+            Join thousands of job seekers who've landed their dream jobs with Hirecta
           </p>
           <Link
             href={ENV.EDITOR_URL}

@@ -6,12 +6,12 @@ export function ProductSchema() {
     const schema = {
         "@context": "https://schema.org",
         "@type": "Product",
-        "name": "ProfResume - Free Resume Builder",
+        "name": "Hirecta - Free Resume Builder",
         "image": `${baseUrl}/og-image.png`,
         "description": "Free online resume builder with AI-powered tools, 50+ ATS-friendly templates, and instant PDF/Word export. No credit card required, no watermarks.",
         "brand": {
             "@type": "Brand",
-            "name": "ProfResume"
+            "name": "Hirecta"
         },
         "sku": "PR-FREE-V1",
         "mpn": "PR-FREE-V1",

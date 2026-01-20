@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const productSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume Free Resume Builder",
+    "name": "Hirecta Free Resume Builder",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web Browser",
     "offers": {

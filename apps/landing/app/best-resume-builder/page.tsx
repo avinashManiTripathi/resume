@@ -49,7 +49,7 @@ export default function BestResumeBuilderPage() {
             icon: <Mic className="w-8 h-8" />,
             title: "Voice Input Technology",
             desc: "Speak your work experience naturally and watch it transform into professional resume content. Revolutionary time-saver.",
-            benefit: "Unique to ProfResume"
+            benefit: "Unique to Hirecta"
         },
         {
             icon: <Target className="w-8 h-8" />,
@@ -114,7 +114,7 @@ export default function BestResumeBuilderPage() {
                 url={`${ENV.BASE_URL}/best-resume-builder`}
                 datePublished="2026-01-01"
                 dateModified="2026-01-08"
-                author="ProfResume"
+                author="Hirecta"
             />
 
             {/* Hero Section */}
@@ -303,7 +303,7 @@ export default function BestResumeBuilderPage() {
                     </div>
 
                     <div className="mt-12 text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8">
-                        <h3 className="text-2xl font-bold mb-4">ProfResume Checks All Boxes ✓</h3>
+                        <h3 className="text-2xl font-bold mb-4">Hirecta Checks All Boxes ✓</h3>
                         <p className="text-lg opacity-90 mb-6">
                             Plus unique features like voice input and job description matching that no other builder offers.
                         </p>

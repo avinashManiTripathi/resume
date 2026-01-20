@@ -5,7 +5,7 @@ import { AdminAuthProvider } from "@/components/AdminAuthProvider";
 import { primaryFont } from "@repo/fonts";
 
 export const metadata: Metadata = {
-  title: "ProfResume Admin - Manage Users & Templates",
+  title: "Hirecta Admin - Manage Users & Templates",
   description: "Admin panel for managing users and resume templates",
 
   // Icons (Next.js App Router best practice)

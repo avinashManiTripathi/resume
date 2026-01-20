@@ -6,7 +6,7 @@ import { FAQSchema } from '@/components/FAQSchema';
 import TemplatesPageClient from './TemplatesClient';
 
 export const metadata: Metadata = {
-    title: 'Professional Resume Templates 2026 - Free ATS-Friendly Designs | ProfResume',
+    title: 'Professional Resume Templates 2026 - Free ATS-Friendly Designs | Hirecta',
     description: 'Browse 50+ professional resume templates designed by experts. All templates are ATS-friendly, customizable, and free to use. Choose from modern, creative, and classic designs.',
     keywords: 'resume templates, CV templates, professional resume, ATS resume templates, free resume templates, modern resume, creative resume, resume design',
     alternates: {

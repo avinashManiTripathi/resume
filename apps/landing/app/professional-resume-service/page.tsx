@@ -26,7 +26,7 @@ export default function ProfessionalResumeServicePage() {
         { question: "How much does a professional resume service cost?", answer: "Professional resume writing services typically cost $200-$800 depending on experience level. Entry-level resumes: $200-$400. Mid-career: $400-$600. Executive resumes: $600-$800+. In contrast, resume builders cost $0-$30/month." },
         { question: "Are professional resume services worth it?", answer: "It depends on your budget and needs. Resume builders offer 90% of the value at 5% of the cost. Services make sense if you have a complex career history, executive-level position, or major career gap requiring professional explanation." },
         { question: "How long does a professional resume service take?", answer: "Professional services take 5-10 business days for delivery. Resume builders let you create and download immediately, making them ideal for urgent job applications." },
-        { question: "Can a resume builder match professional quality?", answer: "Yes, modern AI-powered resume builders like ProfResume offer professional-quality content suggestions, ATS optimization, and templates used by thousands of successful job seekers. The key difference is you write it vs. someone writes it for you." },
+        { question: "Can a resume builder match professional quality?", answer: "Yes, modern AI-powered resume builders like Hirecta offer professional-quality content suggestions, ATS optimization, and templates used by thousands of successful job seekers. The key difference is you write it vs. someone writes it for you." },
         { question: "What do professional resume writers do that builders don't?", answer: "Professional writers provide personalized consultations, strategic career positioning, and custom writing for unique situations. Builders provide templates, AI suggestions, and optimization tools for self-directed creation." },
         { question: "Should I hire a resume writer or use a builder?", answer: "Use a builder if: you're on a budget, need resume quickly, have straightforward experience, or want to iterate yourself. Hire a writer if: $500+ budget, executive-level role, career gaps/changes requiring strategic positioning, or you prefer hands-off approach." }
     ];
@@ -83,7 +83,7 @@ export default function ProfessionalResumeServicePage() {
                     <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl p-8 shadow-2xl">
                         <h2 className="text-2xl font-bold mb-4">Our Recommendation</h2>
                         <p className="text-lg mb-4 opacity-90">
-                            For 90% of job seekers, a modern resume builder like ProfResume offers the best value: professional quality at a fraction of the cost, instant delivery, and unlimited revisions.
+                            For 90% of job seekers, a modern resume builder like Hirecta offers the best value: professional quality at a fraction of the cost, instant delivery, and unlimited revisions.
                         </p>
                         <p className="text-base mb-6 opacity-80">
                             Resume services make sense for: executives ($150K+ roles), major career changers, or those with $500+ budgets who prefer hands-off approach.

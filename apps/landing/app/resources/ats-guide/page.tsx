@@ -7,7 +7,7 @@ import { Metadata } from "next";
 import { IntroSection } from "@/components/IntroSection";
 
 export const metadata: Metadata = {
-    title: 'Complete ATS Guide 2026 - Beat Applicant Tracking Systems | ProfResume',
+    title: 'Complete ATS Guide 2026 - Beat Applicant Tracking Systems | Hirecta',
     description: 'Master ATS optimization with our complete guide. Learn how ATS works, formatting best practices, and keyword strategies to get past the initial screening.',
     alternates: {
         canonical: '/resources/ats-guide',

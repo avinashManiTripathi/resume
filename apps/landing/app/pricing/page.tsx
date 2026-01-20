@@ -2,13 +2,13 @@ import { Check, Sparkles, Zap, Crown, Shield, Star } from "lucide-react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Pricing - Choose Your Plan | ProfResume',
+    title: 'Pricing - Choose Your Plan | Hirecta',
     description: 'Affordable pricing for every job seeker. Start free and upgrade to Pro or Premium for advanced AI features and unlimited downloads.',
     alternates: {
         canonical: '/pricing',
     },
     openGraph: {
-        title: 'Simple and Transparent Pricing | ProfResume',
+        title: 'Simple and Transparent Pricing | Hirecta',
         description: 'Choose the right plan for your career. Free, Pro, and Premium options available.',
         url: '/pricing',
         type: 'website',
@@ -126,17 +126,17 @@ export default function PricingPage() {
                                 Transparent Resume Builder Pricing - Free Forever, Upgrade When Ready
                             </h2>
                             <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                                At ProfResume, we believe everyone deserves access to professional resume building tools - regardless of budget. That's why our <strong>Free plan is truly free forever</strong>, with no hidden fees, no watermarks, and no credit card required. Unlike other "free" resume builders that lock essential features behind paywalls, we give you everything you need to create a professional, ATS-friendly resume from day one.
+                                At Hirecta, we believe everyone deserves access to professional resume building tools - regardless of budget. That's why our <strong>Free plan is truly free forever</strong>, with no hidden fees, no watermarks, and no credit card required. Unlike other "free" resume builders that lock essential features behind paywalls, we give you everything you need to create a professional, ATS-friendly resume from day one.
                             </p>
                             <p className="text-lg text-gray-700 leading-relaxed">
-                                Whether you're a job seeker on a tight budget or a professional looking for advanced features, we have a pricing plan that fits your needs. Start free, and upgrade only when you're ready to unlock premium templates, advanced AI features, and priority support. Over <strong>500,000 professionals</strong> trust ProfResume to help them land their dream jobs.
+                                Whether you're a job seeker on a tight budget or a professional looking for advanced features, we have a pricing plan that fits your needs. Start free, and upgrade only when you're ready to unlock premium templates, advanced AI features, and priority support. Over <strong>500,000 professionals</strong> trust Hirecta to help them land their dream jobs.
                             </p>
                         </div>
 
                         {/* Why Our Pricing */}
                         <div className="mb-12">
                             <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                                Why Choose ProfResume's Pricing Model?
+                                Why Choose Hirecta's Pricing Model?
                             </h2>
                             <div className="grid md:grid-cols-2 gap-6 mb-6">
                                 <div className="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-600">
@@ -286,7 +286,7 @@ export default function PricingPage() {
                                 Start Free, Upgrade When Ready
                             </h2>
                             <p className="text-xl mb-6 opacity-95">
-                                Join 500,000+ professionals who trust ProfResume. No credit card required to start.
+                                Join 500,000+ professionals who trust Hirecta. No credit card required to start.
                             </p>
                             <p className="text-lg opacity-90">
                                 <strong>Risk-Free Promise:</strong> 7-day money-back guarantee on all paid plans

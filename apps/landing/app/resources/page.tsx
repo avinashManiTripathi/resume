@@ -18,13 +18,13 @@ import { BreadcrumbSchema } from "@/components/BreadcrumbSchema";
 import { ENV } from "../env";
 
 export const metadata: Metadata = {
-    title: 'Resume Resources & Career Guides | ProfResume',
+    title: 'Resume Resources & Career Guides | Hirecta',
     description: 'Explore our comprehensive collection of resume guides, career tips, and tools. From ATS optimization to cover letter writing, find everything you need to land your dream job.',
     alternates: {
         canonical: '/resources',
     },
     openGraph: {
-        title: 'Resume Resources & Career Guides | ProfResume',
+        title: 'Resume Resources & Career Guides | Hirecta',
         description: 'Expert advice, tools, and guides to help you build the perfect resume and advance your career.',
         url: '/resources',
         type: 'website',

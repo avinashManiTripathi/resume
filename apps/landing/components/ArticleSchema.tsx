@@ -17,7 +17,7 @@ export function ArticleSchema({
     url,
     datePublished = '2024-01-01',
     dateModified = new Date().toISOString(),
-    author = 'ProfResume Team',
+    author = 'Hirecta Team',
     image = `${ENV.BASE_URL}/og-image.png`
 }: ArticleSchemaProps) {
     const baseUrl = ENV.BASE_URL
@@ -35,7 +35,7 @@ export function ArticleSchema({
         },
         "publisher": {
             "@type": "Organization",
-            "name": "ProfResume",
+            "name": "Hirecta",
             "logo": {
                 "@type": "ImageObject",
                 "url": `${baseUrl}/logo.png`

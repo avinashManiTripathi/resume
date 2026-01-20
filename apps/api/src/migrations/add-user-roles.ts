@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/profresume';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/hirecta';
 
 async function migrateUserRoles() {
     try {

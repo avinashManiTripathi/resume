@@ -44,7 +44,7 @@ export function Navigation() {
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
                             <Image
                                 src={logo}
-                                alt="ProfResume Logo"
+                                alt="Hirecta Logo"
                                 width={158}   // w-15 → 60px
                                 height={36}  // h-9 → 36px
                                 className="transition-transform group-hover:scale-105"

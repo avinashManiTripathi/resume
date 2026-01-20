@@ -25,8 +25,8 @@ export function useAuth() {
                 const tokenFromUrl = params.get('token');
 
                 if (tokenFromUrl) {
-                    const isProd = window.location.hostname.endsWith('profresume.com');
-                    const domain = isProd ? '; domain=.profresume.com' : '';
+                    const isProd = window.location.hostname.endsWith('hirecta.com');
+                    const domain = isProd ? '; domain=.hirecta.com' : '';
                     const secure = isProd ? '; secure' : '';
                     document.cookie = `token=${tokenFromUrl}; path=/; max-age=${7 * 24 * 60 * 60}${domain}${secure}; samesite=lax`;
                     localStorage.setItem("authToken", tokenFromUrl);
@@ -68,7 +68,7 @@ export function useAuth() {
                 method: 'POST',
                 credentials: 'include'
             });
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.profresume.com";
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.hirecta.com";
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             localStorage.removeItem("authToken");
             window.location.href = ENV.AUTH_URL;

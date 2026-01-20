@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         canonical: '/resume-builder',
     },
     openGraph: {
-        title: 'Build Your Perfect Resume for Free | ProfResume',
+        title: 'Build Your Perfect Resume for Free | Hirecta',
         description: 'Stop struggling with Word. Create a job-winning, ATS-friendly resume in minutes with our intelligent builder tools.',
         url: '/resume-builder',
         type: 'website',
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
                 url: '/og-image.png',
                 width: 1200,
                 height: 630,
-                alt: "ProfResume Free Resume Builder",
+                alt: "Hirecta Free Resume Builder",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Free Resume Builder 2026 | ProfResume",
+        title: "Free Resume Builder 2026 | Hirecta",
         description: "Create a professional resume in minutes. No hidden fees. Download PDF instantly.",
         images: ['/og-image.png'],
     },
@@ -78,7 +78,7 @@ const howToSchema = {
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume Builder",
+    "name": "Hirecta Builder",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "offers": {

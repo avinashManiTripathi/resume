@@ -60,7 +60,7 @@ export default function ContactClient() {
                         {
                             icon: <Mail size={32} />,
                             title: "Email Us",
-                            content: "it@profresume.com",
+                            content: "it@hirecta.com",
                             subtext: "We'll respond within 24 hours"
                         },
                         {

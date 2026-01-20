@@ -7,7 +7,7 @@ import { ENV } from "@/app/env";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Resume Examples by Industry 2026 - Professional Templates | ProfResume',
+    title: 'Resume Examples by Industry 2026 - Professional Templates | Hirecta',
     description: 'Browse industry-specific resume examples and templates. Tailored formats for tech, healthcare, finance, design, and more to land your dream job.',
     alternates: {
         canonical: '/resources/industry-examples',

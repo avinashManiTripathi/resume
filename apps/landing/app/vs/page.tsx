@@ -4,14 +4,14 @@ import { IntroSection } from "@/components/IntroSection";
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'Why Choose ProfResume? Compare with Other Resume Builders',
-    description: 'See how ProfResume compares to other resume builders. ATS optimization, voice input, unlimited free features, and more.',
+    title: 'Why Choose Hirecta? Compare with Other Resume Builders',
+    description: 'See how Hirecta compares to other resume builders. ATS optimization, voice input, unlimited free features, and more.',
     alternates: {
         canonical: '/vs',
     },
     openGraph: {
-        title: 'ProfResume vs Others - The Comparison',
-        description: 'Compare features, pricing, and results. See why ProfResume is the preferred choice for over 50,000 job seekers.',
+        title: 'Hirecta vs Others - The Comparison',
+        description: 'Compare features, pricing, and results. See why Hirecta is the preferred choice for over 50,000 job seekers.',
         url: '/vs',
         type: 'website',
     },
@@ -19,23 +19,23 @@ export const metadata: Metadata = {
 
 export default function ComparisonPage() {
     const rows = [
-        { feature: "ATS Optimization", ProfResume: true, competitor: "Limited" },
-        { feature: "Free Plan", ProfResume: true, competitor: false },
-        { feature: "Unlimited Resumes (Pro)", ProfResume: true, competitor: "Limited" },
-        { feature: "PDF Export", ProfResume: true, competitor: true },
-        { feature: "DOCX Export", ProfResume: true, competitor: "Paid only" },
-        { feature: "Cover Letter Builder", ProfResume: true, competitor: "Extra cost" },
-        { feature: "Real-time Preview", ProfResume: true, competitor: true },
-        { feature: "Mobile Friendly", ProfResume: true, competitor: "Limited" },
-        { feature: "Customer Support", ProfResume: "24/7", competitor: "Business hours" },
-        { feature: "Price (Pro)", ProfResume: "$9/mo", competitor: "$15–30/mo" },
+        { feature: "ATS Optimization", Hirecta: true, competitor: "Limited" },
+        { feature: "Free Plan", Hirecta: true, competitor: false },
+        { feature: "Unlimited Resumes (Pro)", Hirecta: true, competitor: "Limited" },
+        { feature: "PDF Export", Hirecta: true, competitor: true },
+        { feature: "DOCX Export", Hirecta: true, competitor: "Paid only" },
+        { feature: "Cover Letter Builder", Hirecta: true, competitor: "Extra cost" },
+        { feature: "Real-time Preview", Hirecta: true, competitor: true },
+        { feature: "Mobile Friendly", Hirecta: true, competitor: "Limited" },
+        { feature: "Customer Support", Hirecta: "24/7", competitor: "Business hours" },
+        { feature: "Price (Pro)", Hirecta: "$9/mo", competitor: "$15–30/mo" },
     ];
 
     return (
         <main className="min-h-screen bg-gray-50">
             <IntroSection
                 sectionClassName="text-center bg-gradient-to-br from-gray-50 to-gray-100 pt-24 px-8 pb-16"
-                title="Why Choose ProfResume?"
+                title="Why Choose Hirecta?"
                 description="See how we compare to other resume builders"
             />
 
@@ -46,7 +46,7 @@ export default function ComparisonPage() {
                         {/* Header */}
                         <div className="grid grid-cols-3 bg-gray-50 font-bold text-gray-900 border-b-2 border-gray-200">
                             <div className="px-8 py-6">Feature</div>
-                            <div className="px-8 py-6 text-center text-blue-600">ProfResume</div>
+                            <div className="px-8 py-6 text-center text-blue-600">Hirecta</div>
                             <div className="px-8 py-6 text-center">Others</div>
                         </div>
 
@@ -60,14 +60,14 @@ export default function ComparisonPage() {
                                 </div>
 
                                 <div className="px-8 py-6 bg-blue-50/50 text-center font-bold">
-                                    {typeof row.ProfResume === "boolean" ? (
-                                        row.ProfResume ? (
+                                    {typeof row.Hirecta === "boolean" ? (
+                                        row.Hirecta ? (
                                             <span className="text-emerald-500 text-2xl font-bold">✓</span>
                                         ) : (
                                             <span className="text-red-500 text-2xl font-bold">✗</span>
                                         )
                                     ) : (
-                                        <span className="text-blue-600">{row.ProfResume}</span>
+                                        <span className="text-blue-600">{row.Hirecta}</span>
                                     )}
                                 </div>
 
@@ -95,7 +95,7 @@ export default function ComparisonPage() {
                             href={ENV.EDITOR_URL}
                             className="inline-block bg-white text-blue-600 font-bold text-lg px-10 py-5 rounded-2xl shadow-xl hover:-translate-y-1 hover:shadow-2xl transition-all"
                         >
-                            Try ProfResume Free →
+                            Try Hirecta Free →
                         </Link>
                     </div>
                 </div>

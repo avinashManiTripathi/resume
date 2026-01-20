@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!category) {
         return {
-            title: "Category Not Found | ProfResume Blog",
+            title: "Category Not Found | Hirecta Blog",
         };
     }
 
@@ -54,20 +54,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     );
 
     return {
-        title: `${category.name} - Resume & Career Advice | ProfResume Blog`,
+        title: `${category.name} - Resume & Career Advice | Hirecta Blog`,
         description: `${category.description}. Browse ${categoryPosts.length} expert articles on ${category.name.toLowerCase()} to advance your career.`,
         keywords: category.keywords,
-        authors: [{ name: "ProfResume Team" }],
-        creator: "ProfResume",
-        publisher: "ProfResume",
+        authors: [{ name: "Hirecta Team" }],
+        creator: "Hirecta",
+        publisher: "Hirecta",
         alternates: {
             canonical: `/blog/category/${slug}`,
         },
         openGraph: {
-            title: `${category.name} Articles | ProfResume Blog`,
+            title: `${category.name} Articles | Hirecta Blog`,
             description: category.description,
             url: `/blog/category/${slug}`,
-            siteName: "ProfResume",
+            siteName: "Hirecta",
             locale: "en_US",
             type: "website",
             images: [
@@ -75,7 +75,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
                     url: `/og-image.png`,
                     width: 1200,
                     height: 630,
-                    alt: `ProfResume ${category.name} Blog`,
+                    alt: `Hirecta ${category.name} Blog`,
                 },
             ],
         },
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title: `${category.name} - Resume & Career Advice`,
             description: category.description,
             images: [`/og-image.png`],
-            creator: "@profresume",
+            creator: "@hirecta",
         },
         robots: {
             index: true,
@@ -160,7 +160,7 @@ export default async function CategoryPage({ params }: PageProps) {
         "inLanguage": "en-US",
         "isPartOf": {
             "@type": "WebSite",
-            "name": "ProfResume",
+            "name": "Hirecta",
             "url": baseUrl
         },
         "about": {
@@ -193,7 +193,7 @@ export default async function CategoryPage({ params }: PageProps) {
         },
         "publisher": {
             "@type": "Organization",
-            "name": "ProfResume",
+            "name": "Hirecta",
             "logo": {
                 "@type": "ImageObject",
                 "url": `${baseUrl}/favicon.png`

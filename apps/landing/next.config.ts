@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://api.profresume.com';
+const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 const apiHostname = new URL(apiUrl).hostname;
 
 const nextConfig: NextConfig = {

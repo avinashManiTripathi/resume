@@ -63,7 +63,7 @@ export default function InterviewReportPage() {
                 <button onClick={() => router.push('/')} className="transition-transform hover:scale-105">
                     <Image
                         src="/logo.png"
-                        alt="ProfResume Logo"
+                        alt="Hirecta Logo"
                         width={158}
                         height={36}
                         priority

@@ -13,7 +13,7 @@ export default function SignInContent() {
         setIsLoading(true);
         // Get the state parameter correctly - remove the leading ? if present
         const stateParam = searchParams.toString();
-        window.location.href = `https://api.profresume.com/api/auth/google${stateParam ? `?state=${encodeURIComponent(stateParam)}` : ''}`;
+        window.location.href = `https://api.hirecta.com/api/auth/google${stateParam ? `?state=${encodeURIComponent(stateParam)}` : ''}`;
     };
 
     useEffect(() => {
@@ -32,7 +32,7 @@ export default function SignInContent() {
                     <div className="flex items-center gap-3">
                         <Image
                             src="/logo.png"
-                            alt="ProfResume"
+                            alt="Hirecta"
                             height={40}
                             width={140}
                             priority
@@ -42,7 +42,7 @@ export default function SignInContent() {
                     </div>
                     <div className="flex items-center gap-4">
                         <span className="text-sm text-slate-600 hidden sm:block">
-                            New to ProfResume?
+                            New to Hirecta?
                         </span>
                     </div>
                 </div>
@@ -234,7 +234,7 @@ export default function SignInContent() {
                             ))}
                         </div>
                         <p className="text-gray-700 italic mb-4 text-lg">
-                            "I landed my dream job at Google within 2 weeks of using ProfResume. The AI-powered suggestions made my resume stand out from hundreds of applicants!"
+                            "I landed my dream job at Google within 2 weeks of using Hirecta. The AI-powered suggestions made my resume stand out from hundreds of applicants!"
                         </p>
                         <p className="text-sm font-bold text-gray-900">— Sarah Chen, Software Engineer at Google</p>
                     </div>

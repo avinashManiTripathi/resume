@@ -3,14 +3,14 @@ import { IntroSection } from "@/components/IntroSection";
 import { ENV } from "@/app/env";
 
 export const metadata: Metadata = {
-    title: 'Success Stories - Real Results from ProfResume Users',
-    description: 'Read how job seekers transformed their careers and landed dream jobs at top companies using ProfResume AI resume builder.',
+    title: 'Success Stories - Real Results from Hirecta Users',
+    description: 'Read how job seekers transformed their careers and landed dream jobs at top companies using Hirecta AI resume builder.',
     alternates: {
         canonical: '/success-stories',
     },
     openGraph: {
-        title: 'ProfResume Success Stories - Real Career Transformations',
-        description: 'Real people, real results. See how ProfResume helped job seekers land positions at Google, Fortune 500s, and more.',
+        title: 'Hirecta Success Stories - Real Career Transformations',
+        description: 'Real people, real results. See how Hirecta helped job seekers land positions at Google, Fortune 500s, and more.',
         url: '/success-stories',
         type: 'website',
     },
@@ -25,7 +25,7 @@ export default function SuccessStoriesPage() {
             salary: "+$60k",
             time: "2 weeks",
             story:
-                "After struggling to get interviews for months, I rebuilt my resume with ProfResume. The ATS optimization made all the difference - I went from 0 responses to 12 interviews in just 2 weeks. Now I'm at my dream company!",
+                "After struggling to get interviews for months, I rebuilt my resume with Hirecta. The ATS optimization made all the difference - I went from 0 responses to 12 interviews in just 2 weeks. Now I'm at my dream company!",
         },
         {
             name: "Michael Rodriguez",
@@ -34,7 +34,7 @@ export default function SuccessStoriesPage() {
             salary: "+$45k",
             time: "3 weeks",
             story:
-                "I was stuck in retail for 5 years. ProfResume helped me highlight my transferable skills and pivot into B2B sales. The career change templates were perfect for my situation.",
+                "I was stuck in retail for 5 years. Hirecta helped me highlight my transferable skills and pivot into B2B sales. The career change templates were perfect for my situation.",
         },
         {
             name: "Emily Watson",
@@ -43,7 +43,7 @@ export default function SuccessStoriesPage() {
             salary: "$75k",
             time: "1 month",
             story:
-                "As a new grad with limited experience, I didn't know how to make my resume stand out. ProfResume's student templates helped me showcase my projects and internships effectively. Landed my first job at a Fortune 500 company!",
+                "As a new grad with limited experience, I didn't know how to make my resume stand out. Hirecta's student templates helped me showcase my projects and internships effectively. Landed my first job at a Fortune 500 company!",
         },
     ];
 
@@ -53,7 +53,7 @@ export default function SuccessStoriesPage() {
             <IntroSection
                 sectionClassName="text-center bg-gradient-to-br from-gray-50 to-gray-100 pt-24 px-8 pb-16"
                 title="Success Stories"
-                description="Real people, real results. See how ProfResume helped transform careers."
+                description="Real people, real results. See how Hirecta helped transform careers."
             />
 
             {/* Stories */}
@@ -122,7 +122,7 @@ export default function SuccessStoriesPage() {
                         Ready to Write Your Success Story?
                     </h2>
                     <p className="text-lg md:text-xl opacity-90 mb-10">
-                        Join thousands who've transformed their careers with ProfResume
+                        Join thousands who've transformed their careers with Hirecta
                     </p>
                     <a
                         href={ENV.EDITOR_URL}

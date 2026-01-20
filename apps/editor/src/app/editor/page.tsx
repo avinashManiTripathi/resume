@@ -364,8 +364,8 @@ function ResumeEditor() {
     // Check if user is logged in
     if (!isLoggedIn) {
       sessionStorage.setItem('pending_download', format);
-      const isProd = window.location.hostname.endsWith('profresume.com');
-      const authUrl = isProd ? 'https://auth.profresume.com' : 'http://localhost:3001';
+      const isProd = window.location.hostname.endsWith('hirecta.com');
+      const authUrl = isProd ? 'https://auth.hirecta.com' : 'http://localhost:3001';
       window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
     }
@@ -758,7 +758,7 @@ function ResumeEditor() {
           <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
             {showTemplates ? (
               <TemplateSelector
-                apiBase={API_BASE || 'https://api.profresume.com'}
+                apiBase={API_BASE || 'https://api.hirecta.com'}
                 selectedTemplateId={templateId || ''}
                 onBack={() => setShowTemplates(false)}
                 onSelectTemplate={(template) => {

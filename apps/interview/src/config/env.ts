@@ -1,7 +1,7 @@
-const isProd = typeof window !== 'undefined' && window.location.hostname.endsWith('profresume.com');
+const isProd = typeof window !== 'undefined' && window.location.hostname.endsWith('hirecta.com');
 
 export const ENV = {
-    API_URL: isProd ? 'https://api.profresume.com' : 'http://localhost:3000',
-    AUTH_URL: isProd ? 'https://auth.profresume.com' : 'http://localhost:3001',
-    EDITOR_URL: isProd ? 'https://edit.profresume.com' : 'http://localhost:3002',
+    API_URL: isProd ? 'https://api.hirecta.com' : 'http://localhost:3000',
+    AUTH_URL: isProd ? 'https://auth.hirecta.com' : 'http://localhost:3001',
+    EDITOR_URL: isProd ? 'https://edit.hirecta.com' : 'http://localhost:3002',
 };

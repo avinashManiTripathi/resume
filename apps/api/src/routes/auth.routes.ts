@@ -10,7 +10,7 @@ const router = Router();
 router.get('/google/url', (req: Request, res: Response) => {
     try {
         const clientId = process.env.GOOGLE_CLIENT_ID;
-        const callbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://api.profresume.com/api/auth/google/callback';
+        const callbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://api.hirecta.com/api/auth/google/callback';
         const scope = 'profile email';
         const { state } = req.query
 
@@ -78,12 +78,12 @@ router.get('/google/callback',
                 sameSite: 'lax',  // 'lax' works for localhost and production
                 maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
                 // In development, don't set domain (allows localhost)
-                // In production, set to .profresume.com for cross-subdomain cookies
-                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
+                // In production, set to .hirecta.com for cross-subdomain cookies
+                domain: process.env.NODE_ENV === 'production' ? '.hirecta.com' : '.hirecta.com',
             });
 
             console.log('Token cookie set:', {
-                domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
+                domain: process.env.NODE_ENV === 'production' ? '.hirecta.com' : '.hirecta.com',
                 httpOnly: true,
                 sameSite: 'lax',
                 secure: process.env.NODE_ENV === 'production'
@@ -95,7 +95,7 @@ router.get('/google/callback',
                 try {
                     // State is URL-encoded, decode it first
                     const decodedState = decodeURIComponent(state);
-                    // State format might be: ?redirect=https://interview.profresume.com or redirect=https://interview.profresume.com
+                    // State format might be: ?redirect=https://interview.hirecta.com or redirect=https://interview.hirecta.com
                     // Remove leading ? if present
                     const cleanState = decodedState.startsWith('?') ? decodedState.substring(1) : decodedState;
                     const stateParams = new URLSearchParams(cleanState);
@@ -110,16 +110,16 @@ router.get('/google/callback',
                         console.log('Using redirect from state:', cleanRedirect);
                     } else {
                         // Fallback to default frontend URL
-                        redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.profresume.com');
+                        redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
                         console.log('No redirect in state, using default:', redirectUrl.toString());
                     }
                 } catch (error) {
                     console.error('Error parsing state parameter:', error);
-                    redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.profresume.com');
+                    redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
                 }
             } else {
                 // No state, use default
-                redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.profresume.com');
+                redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
                 console.log('No state parameter, using default:', redirectUrl.toString());
             }
 
@@ -223,12 +223,12 @@ router.post('/logout', (req: Request, res: Response) => {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         // CRITICAL: Must match domain setting when cookie was created
-        // In development: undefined (localhost), in production: .profresume.com
-        domain: process.env.NODE_ENV === 'production' ? '.profresume.com' : '.profresume.com',
+        // In development: undefined (localhost), in production: .hirecta.com
+        domain: process.env.NODE_ENV === 'production' ? '.hirecta.com' : '.hirecta.com',
         path: '/',
     });
 
-    console.log('Logout: Cookie cleared with domain:', process.env.NODE_ENV === 'production' ? '.profresume.com' : 'undefined (localhost)');
+    console.log('Logout: Cookie cleared with domain:', process.env.NODE_ENV === 'production' ? '.hirecta.com' : 'undefined (localhost)');
 
     res.status(200).json({ message: 'Logged out successfully' });
 });

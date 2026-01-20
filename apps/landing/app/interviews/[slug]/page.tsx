@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const interview = await getInterview(slug);
 
     if (!interview) return {
-        title: "Interview Questions Not Found | ProfResume",
+        title: "Interview Questions Not Found | Hirecta",
         description: "The requested interview questions page could not be found.",
         metadataBase: new URL(ENV.BASE_URL),
     };
@@ -73,12 +73,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     return {
         metadataBase: new URL(ENV.BASE_URL),
-        title: `${interview.title} | ProfResume Interview Prep`,
+        title: `${interview.title} | Hirecta Interview Prep`,
         description: description,
         keywords: [interview.category, ...interview.tags, 'interview questions', 'interview prep', 'job interview'].join(', '),
         authors: [{ name: interview.author.name }],
-        creator: "ProfResume",
-        publisher: "ProfResume",
+        creator: "Hirecta",
+        publisher: "Hirecta",
         alternates: {
             canonical: `${ENV.BASE_URL}/interviews/${slug}`,
         },
@@ -86,7 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: interview.title,
             description: description,
             url: `${ENV.BASE_URL}/interviews/${slug}`,
-            siteName: "ProfResume",
+            siteName: "Hirecta",
             locale: "en_US",
             type: "article",
             publishedTime: interview.publishDate,
@@ -111,7 +111,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             title: interview.title,
             description: description,
             images: interview.featuredImage ? [interview.featuredImage] : [`${ENV.BASE_URL}/og-interview.png`],
-            creator: "@profresume",
+            creator: "@hirecta",
         },
         robots: {
             index: true,
@@ -178,7 +178,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
         },
         "publisher": {
             "@type": "Organization",
-            "name": "ProfResume",
+            "name": "Hirecta",
             "logo": {
                 "@type": "ImageObject",
                 "url": `${ENV.BASE_URL}/favicon.png`
@@ -416,7 +416,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                                             },
                                             {
                                                 condition: true, // Always show
-                                                href: `${ENV.INTERVIEW_URL || 'https://interview.profresume.com'}`,
+                                                href: `${ENV.INTERVIEW_URL || 'https://interview.hirecta.com'}`,
                                                 title: 'Practice Mock Interview'
                                             },
                                         ]

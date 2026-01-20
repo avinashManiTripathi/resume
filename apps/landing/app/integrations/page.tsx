@@ -1,13 +1,13 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: 'Integrations - Connect Your Job Search Cloud | ProfResume',
+    title: 'Integrations - Connect Your Job Search Cloud | Hirecta',
     description: 'Sync your resume with LinkedIn, Google Drive, and more. Our upcoming integrations will streamline your application process across all platforms.',
     alternates: {
         canonical: '/integrations',
     },
     openGraph: {
-        title: 'ProfResume Integrations',
+        title: 'Hirecta Integrations',
         description: 'Connect with your favorite platforms soon.',
         url: '/integrations',
         type: 'website',
@@ -20,7 +20,7 @@ export default function IntegrationsPage() {
             <section className="pt-32 pb-16 px-6 bg-gradient-to-br from-gray-50 to-gray-100 text-center">
                 <div className="max-w-4xl mx-auto">
                     <h1 className="text-5xl font-black text-gray-900 mb-6">Integrations</h1>
-                    <p className="text-xl text-gray-600">Connect ProfResume with your favorite platforms (Coming Soon)</p>
+                    <p className="text-xl text-gray-600">Connect Hirecta with your favorite platforms (Coming Soon)</p>
                 </div>
             </section>
 

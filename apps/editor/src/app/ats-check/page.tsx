@@ -49,7 +49,7 @@ interface ATSResult {
 
 type Step = 'upload' | 'analyzing' | 'results';
 
-const baseUrl = "https://profresume.com";
+const baseUrl = "https://hirecta.com";
 
 // Structured Data Schemas
 const breadcrumbSchema = {
@@ -80,7 +80,7 @@ const webPageSchema = {
     "inLanguage": "en-US",
     "isPartOf": {
         "@type": "WebSite",
-        "name": "ProfResume",
+        "name": "Hirecta",
         "url": baseUrl
     }
 };
@@ -88,7 +88,7 @@ const webPageSchema = {
 const softwareAppSchema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "ProfResume ATS Checker",
+    "name": "Hirecta ATS Checker",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
     "offers": {
@@ -226,7 +226,7 @@ export default function ATSCheckerPage() {
                 }
             }, 800);
 
-            const response = await fetch("https://api.profresume.com/api/ats/check", {
+            const response = await fetch("https://api.hirecta.com/api/ats/check", {
                 method: "POST",
                 body: formData,
             });
