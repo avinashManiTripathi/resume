@@ -152,18 +152,30 @@ function ResumeEditor() {
         if (storedData) {
           const parsed = JSON.parse(storedData);
           if (parsed.resume) setResume(parsed.resume);
+
+          // Restore ID and Template
+          if (parsed.docId) setDocId(parsed.docId);
           if (parsed.templateId) setTemplateId(parsed.templateId);
+
           if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
           if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
 
+          // Update URL to match restored state
+          const url = new URL(window.location.href);
+          url.searchParams.delete('fromSubscription');
+          if (parsed.docId) url.searchParams.set('id', parsed.docId);
+          if (parsed.templateId) url.searchParams.set('templateId', parsed.templateId);
+          window.history.replaceState({}, '', url.toString());
+
           // Clear storage
           sessionStorage.removeItem('redirect_resume_data');
+          return;
         }
       } catch (e) {
         console.error("Failed to restore resume data", e);
       }
 
-      // Clean up URL parameter
+      // Fallback cleanup if no data restored
       const url = new URL(window.location.href);
       url.searchParams.delete('fromSubscription');
       window.history.replaceState({}, '', url.toString());
@@ -422,7 +434,8 @@ function ResumeEditor() {
         resume,
         templateId,
         fontFamily,
-        sectionOrder
+        sectionOrder,
+        docId
       };
       sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
 
