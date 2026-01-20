@@ -66,7 +66,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {templates.map((template) => {
                             const templateId = template.type || template.id || template._id || '';
-                            const isSelected = selectedTemplateId === templateId;
+                            const isSelected = selectedTemplateId === template._id || selectedTemplateId === template.id || selectedTemplateId === template.type;
                             const templateImage = template.thumbnail || template.image || '';
 
                             return (
