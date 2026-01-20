@@ -94,7 +94,10 @@ function ResumeEditor() {
 
   // Set default template ID when templates are loaded
   useEffect(() => {
-    if (!templatesLoading && templates && templates.length > 0) {
+    const fromSub = searchParams.get('fromSubscription');
+
+    // Only set default if NOT returning from subscription
+    if (!templatesLoading && templates && templates.length > 0 && fromSub !== 'true') {
       if (templates[0]._id) {
         setDefaultTemplateId(templates[0]._id);
 
@@ -109,7 +112,7 @@ function ResumeEditor() {
         }
       }
     }
-  }, [templates, templatesLoading, urlTemplateId, templateId]);
+  }, [templates, templatesLoading, urlTemplateId, templateId, searchParams]);
 
   // Auto-progress loading steps
   useEffect(() => {
