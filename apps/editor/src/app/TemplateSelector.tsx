@@ -65,7 +65,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                 {!loading && !error && templates && templates.length > 0 && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {templates.map((template) => {
-                            const templateId = template._id || '';
+                            const templateId = template.type || template.id || template._id || '';
                             const isSelected = selectedTemplateId === templateId;
                             const templateImage = template.thumbnail || template.image || '';
 
@@ -73,7 +73,7 @@ export default function TemplateSelector({ onBack, onSelectTemplate, apiBase, se
                                 <div
                                     key={templateId}
                                     className="bg-white p-4 relative rounded-xl transition-all duration-300 cursor-pointer ring-2 ring-gray-200 hover:ring-blue-400 shadow-md"
-                                    onClick={() => onSelectTemplate(template)}
+                                    onClick={() => onSelectTemplate({ ...template, id: templateId, _id: template._id || templateId })}
                                 >
                                     {/* Selected Badge - Blue Tick at 16px from top-right */}
                                     {isSelected && (

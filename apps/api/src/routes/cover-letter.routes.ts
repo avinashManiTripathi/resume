@@ -18,7 +18,7 @@ const router = Router();
  */
 router.get('/templates', async (req: Request, res: Response) => {
     try {
-        const templates = coverLetterService.getAllTemplates();
+        const templates = await coverLetterService.getAllTemplates();
 
         res.json({
             success: true,
@@ -41,11 +41,11 @@ router.get('/templates', async (req: Request, res: Response) => {
 router.get('/templates/:id', async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const template = coverLetterService.getTemplate(id);
+        const template = await coverLetterService.getTemplate(id);
 
         res.json({
             success: true,
-            template
+            template: template ? { ...template, id: template._id } : null
         });
     } catch (error: any) {
         console.error('Get template error:', error);
@@ -71,7 +71,7 @@ router.post('/preview', async (req: Request, res: Response) => {
             });
         }
 
-        const content = coverLetterService.previewCoverLetter(templateId, userData);
+        const content = await coverLetterService.previewCoverLetter(templateId, userData);
 
         res.json({
             success: true,

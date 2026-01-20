@@ -11,7 +11,7 @@ import TemplateSelector from "../TemplateSelector";
 import { downloadPdf } from "@repo/utils-client";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2 } from "lucide-react";
+import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
@@ -20,13 +20,13 @@ import { StepLoader } from '@repo/ui/step-loader';
 
 
 function ResumeEditor() {
-  const API_BASE = "https://api.profresume.com"
+  const API_BASE = ENV.API_URL
   const searchParams = useSearchParams();
   const router = useRouter();
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
-  const defaultTemplateId = "6959f1c2de127e0f17295492";
+  const defaultTemplateId = "696e14fce15299e55244d1ce";
 
   // Persistence
   const { saveDocument, getDocument, isLoggedIn } = usePersistence();
@@ -737,10 +737,6 @@ function ResumeEditor() {
         profileImage={profileImage}
         onProfileImageChange={handleProfileImageChange}
         onDownload={handleDownload}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPrevPage={prevPage}
-        onNextPage={nextPage}
         onSmartImport={() => setShowSmartImport(true)}
         onTemplateChange={() => setShowTemplates(true)}
         fontFamily={fontFamily}
@@ -789,7 +785,7 @@ function ResumeEditor() {
         {/* Right Section - Canvas (55%) */}
         <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
 
-          <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-4">
+          <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4">
             <div className="relative w-full flex justify-center">
               <canvas
                 ref={canvasRef}
@@ -798,6 +794,35 @@ function ResumeEditor() {
                 className="bg-white border-r border-slate-200/60"
               />
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-4 flex items-center justify-center gap-3 bg-white p-2 px-4 rounded-full shadow-md border border-slate-200/60 sticky bottom-4 z-10 transition-all duration-300 hover:shadow-lg">
+                <button
+                  onClick={prevPage}
+                  disabled={currentPage <= 1}
+                  className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
+                  aria-label="Previous Page"
+                >
+                  <ChevronLeft className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
+                </button>
+
+                <div className="flex flex-col items-center">
+                  <span className="font-semibold text-sm text-slate-700 tabular-nums">
+                    {currentPage} <span className="text-slate-400 font-normal text-sm mx-1">/</span> {totalPages}
+                  </span>
+                </div>
+
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage >= totalPages}
+                  className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
+                  aria-label="Next Page"
+                >
+                  <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
+                </button>
+              </div>
+            )}
             {/* Overlay when loading */}
             {(isPdfGenerating) && (
               <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">

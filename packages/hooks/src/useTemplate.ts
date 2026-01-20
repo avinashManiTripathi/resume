@@ -6,6 +6,7 @@ import { useGet } from './network';
  */
 export interface Template {
     _id: string;
+    id?: string;
     name: string;
     html: string;
     image?: string;

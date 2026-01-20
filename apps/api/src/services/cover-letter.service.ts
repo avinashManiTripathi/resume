@@ -3,38 +3,49 @@
  * Business logic for cover letter generation
  */
 
-import {
-    COVER_LETTER_TEMPLATES,
-    getTemplateById,
-    isValidTemplateId
-} from '../constants/coverLetterTemplates';
-import { CoverLetterUserData, FlatCoverLetterUserData, GenerateCoverLetterRequest, TemplateMetadata } from '../types/cover-letter.types';
+import { CoverLetterTemplate, ICoverLetterTemplate } from '../models/CoverLetterTemplates';
+import { CoverLetterTemplate as ICoverLetterTemplateLocal } from '../constants/coverLetterTemplates';
+import { CoverLetterUserData, GenerateCoverLetterRequest, TemplateMetadata } from '../types/cover-letter.types';
 import { processTemplate, getTemplateMetadata, formatContentToHTML } from '../utils/templateProcessor';
-import { validateUserData, sanitizeUserData, isValidFormat } from '../utils/validation';
+import { sanitizeUserData, isValidFormat } from '../utils/validation';
 import { generatePDF, generateDOCX, getMimeType, getFileExtension } from '../utils/fileGenerator';
 
 class CoverLetterService {
     /**
+     * Map DB Document to Interface
+     */
+    private mapDocumentToTemplate(doc: ICoverLetterTemplate): ICoverLetterTemplateLocal {
+        return {
+            _id: doc.type,
+            name: doc.name,
+            category: doc.category,
+            image: doc.image,
+            description: doc.description,
+            previewText: doc.previewText,
+            templateBody: doc.templateBody,
+            supportedFields: doc.supportedFields
+        };
+    }
+
+    /**
      * Get all available templates (metadata only)
      */
-    getAllTemplates(): TemplateMetadata[] {
-        return COVER_LETTER_TEMPLATES.map(template => getTemplateMetadata(template));
+    async getAllTemplates(): Promise<TemplateMetadata[]> {
+        const templates = await CoverLetterTemplate.find().select('-templateBody').sort({ createdAt: 1 });
+        return templates.map(t => getTemplateMetadata(this.mapDocumentToTemplate(t)));
     }
 
     /**
      * Get template by ID
      */
-    getTemplate(templateId: string) {
-        if (!isValidTemplateId(templateId)) {
-            throw new Error('Invalid template ID');
-        }
+    async getTemplate(templateId: string): Promise<ICoverLetterTemplateLocal> {
+        const template = await CoverLetterTemplate.findOne({ type: templateId });
 
-        const template = getTemplateById(templateId);
         if (!template) {
             throw new Error('Template not found');
         }
 
-        return template;
+        return this.mapDocumentToTemplate(template);
     }
 
     /**
@@ -90,19 +101,10 @@ class CoverLetterService {
         }
 
         // Get template
-        const template = getTemplateById(request.templateId);
-        if (!template) {
-            throw new Error('Template not found');
-        }
+        const template = await this.getTemplate(request.templateId);
 
         // Sanitize user data (Flat)
         const sanitizedData = sanitizeUserData(request.userData);
-
-        // Validate user data against template (Flat check)
-        // const validation = validateUserData(sanitizedData, template);
-        // if (!validation.isValid) {
-        //     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
-        // }
 
         // Transform to Structured Data
         const structuredData = this.mapToStructuredData(sanitizedData);
@@ -112,18 +114,15 @@ class CoverLetterService {
 
         // Generate file based on format
         let buffer: Buffer;
-        const templateName = template.id;
+        const templateName = template._id;
         const timestamp = Date.now();
 
         if (request.format === 'pdf') {
             // Convert to HTML for PDF
-            // Content is already full HTML from the template, so just pass it through or wrap if needed
-            // Our formatContentToHTML is still simple wrapper, which is fine
             const htmlContent = formatContentToHTML(content);
             buffer = await generatePDF(htmlContent);
         } else {
             // Generate DOCX
-            // improved HTML to text conversion for DOCX
             const plainTextContent = content
                 .replace(/<br\s*\/?>/gi, '\n')
                 .replace(/<\/p>/gi, '\n\n')
@@ -147,21 +146,12 @@ class CoverLetterService {
      * Preview cover letter content (without generating file)
      * Useful for showing preview before download
      */
-    previewCoverLetter(templateId: string, userData: any): string {
+    async previewCoverLetter(templateId: string, userData: any): Promise<string> {
         // Get template
-        const template = getTemplateById(templateId);
-        if (!template) {
-            throw new Error('Template not found');
-        }
+        const template = await this.getTemplate(templateId);
 
         // Sanitize user data
         const sanitizedData = sanitizeUserData(userData);
-
-        // Validate
-        // const validation = validateUserData(sanitizedData, template);
-        // if (!validation.isValid) {
-        //     throw new Error(`Validation failed: ${validation.errors.join(', ')}`);
-        // }
 
         // Transform
         const structuredData = this.mapToStructuredData(sanitizedData);

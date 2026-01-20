@@ -361,7 +361,7 @@ function CoverLetterCreateForm() {
                 url.searchParams.set('id', result.id);
                 window.history.replaceState({}, '', url.toString());
 
-                if (!sessionStorage.getItem('cl_persistence_popup_shown')) {
+                if (!localStorage.getItem('cl_persistence_popup_shown')) {
                     setDialog({
                         isOpen: true,
                         title: result.storage === 'local' ? "Saved Locally" : "Saved to Account",
@@ -370,7 +370,7 @@ function CoverLetterCreateForm() {
                             : "Your cover letter is being saved to your professional account.",
                         type: result.storage === 'local' ? "info" : "success"
                     });
-                    sessionStorage.setItem('cl_persistence_popup_shown', 'true');
+                    localStorage.setItem('cl_persistence_popup_shown', 'true');
                 }
             }
             setLastSaved(new Date());
@@ -540,8 +540,6 @@ function CoverLetterCreateForm() {
                     setShowSmartImport(true);
                 }}
                 // Hide unsupported props
-                currentPage={1}
-                totalPages={1}
                 classNameLeft="md:w-[45%]"
             />
 
@@ -567,15 +565,15 @@ function CoverLetterCreateForm() {
                         {showTemplates ? (
                             <TemplateSelector
                                 apiBase={API_BASE}
-                                endpoint="/api/cover-letter/templates"
+                                endpoint="/api/cover-letter-templates"
                                 selectedTemplateId={template?.id || templateIdParam || ''}
                                 onBack={() => setShowTemplates(false)}
                                 onSelectTemplate={(newTemplate: any) => {
-                                    if (newTemplate._id) {
+                                    if (newTemplate.id) {
                                         const url = new URL(window.location.href);
-                                        url.searchParams.set('templateId', newTemplate._id);
+                                        url.searchParams.set('templateId', newTemplate.id);
                                         window.history.replaceState({}, '', url.toString());
-                                        fetchTemplate(newTemplate._id);
+                                        fetchTemplate(newTemplate.id);
                                         setShowTemplates(false);
                                     }
                                 }}
@@ -663,7 +661,7 @@ function CoverLetterCreateForm() {
 
                 {/* Right: Real-time Preview */}
                 <div className="flex-1 relative flex flex-col items-center bg-transparent">
-                    <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 py-12 px-8">
+                    <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-8">
                         <div className="relative w-full max-w-[794px] flex justify-center">
                             <div className="relative bg-white border-r border-slate-200/60 w-full" style={{ aspectRatio: '210/297' }}>
                                 {/* Live Canvas Preview */}

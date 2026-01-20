@@ -10,11 +10,6 @@ interface ProfileHeaderProps {
     profileImage?: string;
     progress?: number;
     onDownload?: () => Promise<void>;
-    // Page navigation
-    currentPage?: number;
-    totalPages?: number;
-    onPrevPage?: () => void;
-    onNextPage?: () => void;
     // Profile image upload
     onProfileImageChange?: (imageUrl: string) => void;
     // Redesign - Sidebar actions in header
@@ -32,10 +27,6 @@ export function ProfileHeader({
     profileImage,
     progress = 20,
     onDownload,
-    currentPage = 1,
-    totalPages = 1,
-    onPrevPage,
-    onNextPage,
     onProfileImageChange,
     onSmartImport,
     onTemplateChange,
@@ -158,7 +149,7 @@ export function ProfileHeader({
                 <div className="hidden md:flex flex-1 bg-white rounded-none md:rounded-r-lg px-4 py-2 items-center gap-1 justify-between shadow-sm border border-gray-100 border-l-0">
                     <div className="flex items-center gap-1.5 lg:gap-3">
                         {/* Core Editing Actions */}
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-4">
                             <button
                                 onClick={onSmartImport}
                                 className="p-2 h-10 w-10 flex items-center justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
@@ -220,26 +211,7 @@ export function ProfileHeader({
 
                         <div className="w-px h-6 bg-gray-100 mx-1"></div>
 
-                        {/* Viewer Controls */}
-                        <div className="flex items-center gap-1">
-                            <button
-                                onClick={onPrevPage}
-                                disabled={currentPage <= 1}
-                                className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl transition-all ${currentPage > 1 ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' : 'text-gray-200 cursor-not-allowed'}`}
-                            >
-                                <CircleArrowUp size={18} />
-                            </button>
-                            <div className="px-3 h-8 flex items-center bg-gray-50 border border-gray-100 rounded-lg text-xs font-bold text-gray-500 min-w-[50px] justify-center">
-                                {currentPage}/{totalPages}
-                            </div>
-                            <button
-                                onClick={onNextPage}
-                                disabled={currentPage >= totalPages}
-                                className={`p-2 h-10 w-10 flex items-center justify-center rounded-xl transition-all ${currentPage < totalPages ? 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' : 'text-gray-200 cursor-not-allowed'}`}
-                            >
-                                <CircleArrowDown size={18} />
-                            </button>
-                        </div>
+
                     </div>
                     <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-end">
                         <Button onClick={handleDownload} variant="primary" className="flex-1 md:flex-initial">

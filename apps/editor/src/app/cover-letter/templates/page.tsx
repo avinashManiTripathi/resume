@@ -6,6 +6,8 @@ import { ArrowLeft, Sparkles, FileText, CheckCircle, Star, Palette, Zap, LayoutG
 
 interface Template {
     id: string;
+    _id: string;
+    type?: string;
     name: string;
     description: string;
     previewText: string;
@@ -29,10 +31,10 @@ export default function TemplatesPage() {
     const fetchTemplates = async () => {
         try {
             setLoading(true);
-            const response = await fetch("https://api.profresume.com/api/cover-letter/templates");
+            const response = await fetch("https://api.profresume.com/api/cover-letter-templates");
             const data = await response.json();
 
-            if (data.success) {
+            if (data.templates) {
                 setTemplates(data.templates);
             } else {
                 setError("Failed to load templates");
@@ -117,71 +119,74 @@ export default function TemplatesPage() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto relative z-10">
-                        {templates.map((template) => (
-                            <div
-                                key={template.id}
-                                onClick={() => handleSelectTemplate(template.id)}
-                                className="group bg-white rounded-[2rem] border border-gray-100 p-4 shadow-sm hover:shadow-2xl hover:shadow-blue-900/10 hover:border-blue-200 transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col h-full"
-                            >
-                                {/* Selection Indicator */}
-                                <div className="absolute top-6 right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity scale-50 group-hover:scale-100 duration-300">
-                                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/40">
-                                        <CheckCircle size={20} />
+                        {templates.map((template) => {
+                            const templateId = template.type || template.id || template._id;
+                            return (
+                                <div
+                                    key={templateId}
+                                    onClick={() => handleSelectTemplate(templateId)}
+                                    className="group bg-white rounded-[2rem] border border-gray-100 p-4 shadow-sm hover:shadow-2xl hover:shadow-blue-900/10 hover:border-blue-200 transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col h-full"
+                                >
+                                    {/* Selection Indicator */}
+                                    <div className="absolute top-6 right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity scale-50 group-hover:scale-100 duration-300">
+                                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/40">
+                                            <CheckCircle size={20} />
+                                        </div>
                                     </div>
-                                </div>
 
-                                {/* Preview Area */}
-                                <div className="relative aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden mb-6 border border-gray-100 group-hover:border-blue-100 transition-colors">
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 p-6 md:p-8">
-                                        {/* Abstract Template Representation */}
-                                        <div className="w-full h-full bg-white shadow-sm border border-gray-100 p-4 space-y-3 opacity-60 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-500">
-                                            <div className="h-4 bg-gray-200 rounded w-1/3 mb-6" />
-                                            <div className="space-y-2">
-                                                <div className="h-2 bg-gray-100 rounded w-full" />
-                                                <div className="h-2 bg-gray-100 rounded w-full" />
-                                                <div className="h-2 bg-gray-100 rounded w-5/6" />
+                                    {/* Preview Area */}
+                                    <div className="relative aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden mb-6 border border-gray-100 group-hover:border-blue-100 transition-colors">
+                                        <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 p-6 md:p-8">
+                                            {/* Abstract Template Representation */}
+                                            <div className="w-full h-full bg-white shadow-sm border border-gray-100 p-4 space-y-3 opacity-60 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-500">
+                                                <div className="h-4 bg-gray-200 rounded w-1/3 mb-6" />
+                                                <div className="space-y-2">
+                                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                                    <div className="h-2 bg-gray-100 rounded w-5/6" />
+                                                </div>
+                                                <div className="space-y-2 pt-4">
+                                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                                    <div className="h-2 bg-gray-100 rounded w-11/12" />
+                                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                                </div>
                                             </div>
-                                            <div className="space-y-2 pt-4">
-                                                <div className="h-2 bg-gray-100 rounded w-full" />
-                                                <div className="h-2 bg-gray-100 rounded w-11/12" />
-                                                <div className="h-2 bg-gray-100 rounded w-full" />
+                                        </div>
+
+                                        {/* Hover Overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-blue-900/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="px-2 pb-4 flex-1 flex flex-col">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{template.name}</h3>
+                                            <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-500 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                                                <Star size={10} className="fill-amber-500" />
+                                                Popular
+                                            </div>
+                                        </div>
+
+                                        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-4 flex-1">{template.description}</p>
+
+                                        <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100">
+                                            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400">
+                                                <Palette size={14} />
+                                                <span>Visual</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400">
+                                                <Shield size={14} />
+                                                <span>ATS-Ready</span>
+                                            </div>
+                                            <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 ml-auto">
+                                                <LayoutGrid size={14} />
+                                                <span>{template.supportedFields.length} Fields</span>
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* Hover Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-blue-900/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 </div>
-
-                                {/* Content */}
-                                <div className="px-2 pb-4 flex-1 flex flex-col">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{template.name}</h3>
-                                        <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-amber-500 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
-                                            <Star size={10} className="fill-amber-500" />
-                                            Popular
-                                        </div>
-                                    </div>
-
-                                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2 mb-4 flex-1">{template.description}</p>
-
-                                    <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100">
-                                        <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400">
-                                            <Palette size={14} />
-                                            <span>Visual</span>
-                                        </div>
-                                        <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400">
-                                            <Shield size={14} />
-                                            <span>ATS-Ready</span>
-                                        </div>
-                                        <div className="flex items-center gap-1.5 text-xs font-bold text-gray-400 ml-auto">
-                                            <LayoutGrid size={14} />
-                                            <span>{template.supportedFields.length} Fields</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </main>

@@ -427,7 +427,7 @@ export default function ATSCheckerPage() {
                                                     <Button
                                                         onClick={analyzeResume}
                                                         disabled={!file}
-                                                        className="w-full relative overflow-hidden group py-4 md:py-8 rounded-2xl text-xl font-black bg-blue-600 hover:bg-blue-700 text-white shadow-[0_20px_40px_-5px_rgba(37,99,235,0.3)] disabled:opacity-50 disabled:shadow-none transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 border border-blue-400/30"
+                                                        className="w-full relative overflow-hidden group py-4 md:py-8 rounded-2xl text-xl font-black bg-blue-600 hover:bg-blue-700 text-white shadow-[0_20px_40px_-5px_rgba(37,99,235,0.3)] disabled:opacity-50 disabled:shadow-none disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:bg-gray-300 disabled:hover:scale-100 disabled:cursor-not-allowed transition-all duration-500 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 border border-blue-400/30 disabled:border-gray-200"
                                                     >
                                                         {/* Shimmer Effect */}
                                                         <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[45deg] animate-shimmer pointer-events-none mb-0 pb-0" />

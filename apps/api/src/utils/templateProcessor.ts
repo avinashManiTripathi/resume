@@ -73,7 +73,7 @@ export function processTemplate(
  */
 export function validateTemplate(template: CoverLetterTemplate): boolean {
     return !!(
-        template.id &&
+        template._id &&
         template.name &&
         template.description &&
         template.templateBody &&
@@ -92,7 +92,7 @@ export function validateTemplate(template: CoverLetterTemplate): boolean {
  */
 export function getTemplateMetadata(template: CoverLetterTemplate) {
     return {
-        id: template.id,
+        id: template._id,
         name: template.name,
         description: template.description,
         previewText: template.previewText,

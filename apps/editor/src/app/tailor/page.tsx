@@ -308,7 +308,7 @@ export default function TailorResume() {
                                             <Button
                                                 onClick={handleAnalyze}
                                                 disabled={isAnalyzing || !jobDescription.trim()}
-                                                className="w-full py-8 md:py-10 rounded-3xl text-xl font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_20px_40px_-5px_rgba(79,70,229,0.3)] transform hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 border border-indigo-400/30 overflow-hidden relative group"
+                                                className="w-full py-8 md:py-10 rounded-3xl text-xl font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-[0_20px_40px_-5px_rgba(79,70,229,0.3)] transform hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 border border-indigo-400/30 overflow-hidden relative group disabled:opacity-70 disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none disabled:border-gray-200 disabled:hover:bg-gray-300 disabled:hover:scale-100 disabled:cursor-not-allowed"
                                             >
                                                 <div className="absolute inset-0 w-1/2 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[45deg] animate-shimmer pointer-events-none" />
                                                 <Sparkles className="w-6 h-6" />
