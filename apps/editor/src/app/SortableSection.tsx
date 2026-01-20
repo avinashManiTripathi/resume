@@ -98,11 +98,13 @@ export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitle
                 ) : undefined}
                 icon={
                     mounted ? (
-                        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+                        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-3 -m-3">
                             <GripVertical className="w-5 h-5 text-gray-400" />
                         </div>
                     ) : (
-                        <GripVertical className="w-5 h-5 text-gray-400" />
+                        <div className="p-3 -m-3">
+                            <GripVertical className="w-5 h-5 text-gray-400" />
+                        </div>
                     )
                 }
                 defaultOpen={defaultOpen}

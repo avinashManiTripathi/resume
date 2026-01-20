@@ -9,7 +9,8 @@ import {
     DndContext,
     closestCenter,
     KeyboardSensor,
-    PointerSensor,
+    MouseSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent,
@@ -52,9 +53,15 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
 
     // Sensors configuration - useSensors already returns stable references
     const sensors = useSensors(
-        useSensor(PointerSensor, {
+        useSensor(MouseSensor, {
             activationConstraint: {
                 distance: 8, // Prevents accidental drags
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250, // Delay to distinguish scroll from drag
+                tolerance: 5, // Movement tolerance
             },
         }),
         useSensor(KeyboardSensor, {

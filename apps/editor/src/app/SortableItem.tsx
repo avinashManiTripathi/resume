@@ -44,11 +44,13 @@ export function SortableItem({ id, index, label, onRemove, children }: SortableI
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                     {mounted ? (
-                        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+                        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-2 -m-2">
                             <GripVertical className="w-4 h-4 text-gray-400" />
                         </div>
                     ) : (
-                        <GripVertical className="w-4 h-4 text-gray-400" />
+                        <div className="p-2 -m-2">
+                            <GripVertical className="w-4 h-4 text-gray-400" />
+                        </div>
                     )}
                     <span className="text-sm font-semibold text-gray-700">
                         {index + 1}. {label}

@@ -487,7 +487,7 @@ function ResumeEditor() {
     const dpr = window.devicePixelRatio || 1;
     const baseViewport = pdfPage.getViewport({ scale: 1 });
 
-    const padding = 40;
+    const padding = 20;
 
     if (!scaleRef.current) {
       scaleRef.current =
@@ -791,7 +791,7 @@ function ResumeEditor() {
                 ref={canvasRef}
                 width={794}
                 height={1123}
-                className="bg-white border-r border-slate-200/60"
+                className="bg-white border-r border-slate-200/60 max-w-full object-contain shadow-2xl"
               />
             </div>
 
