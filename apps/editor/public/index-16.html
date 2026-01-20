@@ -360,6 +360,7 @@
 
     <script>
         window.hydrate = function (data) {
+
             const setText = (id, value) => {
                 const el = document.getElementById(id);
                 if (el) el.textContent = value || '';
@@ -566,21 +567,50 @@
                 });
                 sections.forEach(sec => main.appendChild(sec));
             }
+
+
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                // Simple logic to format YYYY-MM to Month YYYY or similar
+                // Assuming input is YYYY-MM
+                const date = new Date(dateString + '-01');
+                if (isNaN(date.getTime())) return dateString;
+                return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            }
+
+            // Handle Font Family
+            if (data.fontFamily) {
+                const systemFonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Verdana', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 'Impact', 'Calibri', 'Cambria'];
+                if (systemFonts.includes(data.fontFamily)) {
+                    document.body.style.fontFamily = `"${data.fontFamily}", sans-serif`;
+                } else {
+                    return new Promise((resolve) => {
+                        const link = document.createElement('link');
+                        link.href = `https://fonts.googleapis.com/css2?family=${data.fontFamily.replace(/\s+/g, '+')}:wght@400;700&display=swap`;
+                        link.rel = 'stylesheet';
+
+                        const onFontReady = () => {
+                            document.body.style.fontFamily = `"${data.fontFamily}", sans-serif`;
+                            document.fonts.load(`16px "${data.fontFamily}"`).then(() => {
+                                resolve();
+                            }).catch(() => {
+                                console.warn('Failed to load font file');
+                                resolve();
+                            });
+                        };
+
+                        link.onload = onFontReady;
+                        link.onerror = () => {
+                            console.warn('Failed to load font CSS');
+                            resolve();
+                        };
+
+                        document.head.appendChild(link);
+                    });
+                }
+            }
+            return document.fonts.ready;
         };
-
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            // Simple logic to format YYYY-MM to Month YYYY or similar
-            // Assuming input is YYYY-MM
-            const date = new Date(dateString + '-01');
-            if (isNaN(date.getTime())) return dateString;
-            return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-        }
-
-        // Load font
-        const link = document.createElement('link');
-        link.href = 'https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap'; // System font mostly but fallback
-        // Actually Times New Roman is standard web safe, no link needed usually, but good practice if using specific web font
     </script>
 </body>
 

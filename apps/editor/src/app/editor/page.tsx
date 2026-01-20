@@ -3,6 +3,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback, Suspense } from "react";
 import { useDebounce, exportToDoc, canDownload, setSubscription, getSubscription, type SubscriptionTier } from "@repo/utils-client";
+import { useTemplates } from "@repo/hooks/useTemplate";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "../FieldRenderer";
@@ -26,7 +27,11 @@ function ResumeEditor() {
 
   // Get template ID from URL or use default
   const urlTemplateId = searchParams.get('templateId');
-  const defaultTemplateId = "696e14fce15299e55244d1ce";
+
+  // Clean default template ID - will be set from fetched templates
+  const [defaultTemplateId, setDefaultTemplateId] = useState<string>("696e14fce15299e55244d1ce");
+
+
 
   // Persistence
   const { saveDocument, getDocument, isLoggedIn } = usePersistence();
@@ -82,6 +87,30 @@ function ResumeEditor() {
     "Finalizing Download..."
   ];
 
+  // Fetch templates
+  const { templates, loading: templatesLoading } = useTemplates({
+    apiUrl: API_BASE,
+  });
+
+  // Set default template ID when templates are loaded
+  useEffect(() => {
+    if (!templatesLoading && templates && templates.length > 0) {
+      if (templates[0]._id) {
+        setDefaultTemplateId(templates[0]._id);
+
+        // If no template ID in URL, set it to the first template
+        // But only if we haven't already set a template ID (state)
+        if (!urlTemplateId && !templateId) {
+          setTemplateId(templates[0]._id);
+          // Update URL as well
+          const url = new URL(window.location.href);
+          url.searchParams.set('templateId', templates[0]._id);
+          window.history.replaceState({}, '', url.toString());
+        }
+      }
+    }
+  }, [templates, templatesLoading, urlTemplateId, templateId]);
+
   // Auto-progress loading steps
   useEffect(() => {
     if (isLoading && loadingStep < loadingSteps.length - 1) {
@@ -117,6 +146,23 @@ function ResumeEditor() {
 
     // Skip check if user just came from subscription page
     if (fromSubscription === 'true') {
+      // Restore data from sessionStorage if available
+      try {
+        const storedData = sessionStorage.getItem('redirect_resume_data');
+        if (storedData) {
+          const parsed = JSON.parse(storedData);
+          if (parsed.resume) setResume(parsed.resume);
+          if (parsed.templateId) setTemplateId(parsed.templateId);
+          if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+          if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
+
+          // Clear storage
+          sessionStorage.removeItem('redirect_resume_data');
+        }
+      } catch (e) {
+        console.error("Failed to restore resume data", e);
+      }
+
       // Clean up URL parameter
       const url = new URL(window.location.href);
       url.searchParams.delete('fromSubscription');
@@ -371,6 +417,15 @@ function ResumeEditor() {
     }
     // Check subscription before allowing download
     if (!canDownload() || ENV.BY_PASS_SUBSCRIPTION === 'false') {
+      // Save current state to sessionStorage before redirecting
+      const stateToSave = {
+        resume,
+        templateId,
+        fontFamily,
+        sectionOrder
+      };
+      sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
+
       // Redirect to subscription page instead of showing modal
       router.push('/subscription?returnTo=editor');
       return;
@@ -637,13 +692,14 @@ function ResumeEditor() {
   // Hide loading when editor is fully initialized
   useEffect(() => {
     // Check if initial loading is complete
-    if (isLoading && !isPdfGenerating && resume && loadingStep >= loadingSteps.length - 1) {
+    // Added templatesLoading check
+    if (isLoading && !isPdfGenerating && resume && loadingStep >= loadingSteps.length - 1 && !templatesLoading) {
       const timer = setTimeout(() => {
         setIsLoading(false);
       }, 500); // Small delay to ensure smooth transition
       return () => clearTimeout(timer);
     }
-  }, [isPdfGenerating, resume, loadingStep, loadingSteps.length, isLoading]);
+  }, [isPdfGenerating, resume, loadingStep, loadingSteps.length, isLoading, templatesLoading]);
 
   return (
     <div className="flex flex-col h-screen w-full bg-slate-50">
