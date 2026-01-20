@@ -41,7 +41,7 @@ export function middleware(request: NextRequest) {
                 str += `${entries[i][0]}=${entries[i][1]}&`
             }
         }
-        authUrl.searchParams.set('redirect', "https://edit.hirecta.com" + pathname + (str ? "?" + str : ""));
+        authUrl.searchParams.set('redirect', "https://editor.hirecta.com" + pathname + (str ? "?" + str : ""));
         return NextResponse.redirect(authUrl);
     }
 

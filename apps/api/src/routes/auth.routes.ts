@@ -110,16 +110,16 @@ router.get('/google/callback',
                         console.log('Using redirect from state:', cleanRedirect);
                     } else {
                         // Fallback to default frontend URL
-                        redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
+                        redirectUrl = new URL(process.env.FRONTEND_URL || 'https://editor.hirecta.com');
                         console.log('No redirect in state, using default:', redirectUrl.toString());
                     }
                 } catch (error) {
                     console.error('Error parsing state parameter:', error);
-                    redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
+                    redirectUrl = new URL(process.env.FRONTEND_URL || 'https://editor.hirecta.com');
                 }
             } else {
                 // No state, use default
-                redirectUrl = new URL(process.env.FRONTEND_URL || 'https://edit.hirecta.com');
+                redirectUrl = new URL(process.env.FRONTEND_URL || 'https://editor.hirecta.com');
                 console.log('No state parameter, using default:', redirectUrl.toString());
             }
 

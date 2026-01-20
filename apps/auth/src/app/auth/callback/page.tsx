@@ -26,7 +26,7 @@ function CallbackContent() {
             // Determine editor URL based on environment
             const isProd = window.location.hostname.endsWith('hirecta.com');
             const editorBaseUrl = isProd
-                ? 'https://edit.hirecta.com'
+                ? 'https://editor.hirecta.com'
                 : 'http://localhost:3002';
 
             // Construct redirect URL to editor with user info

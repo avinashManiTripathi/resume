@@ -205,14 +205,14 @@ Output the JD in a well-structured, professional format.`
 
                                     <div className="py-1">
                                         <a
-                                            href="https://edit.hirecta.com"
+                                            href="https://editor.hirecta.com"
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                                         >
                                             <User className="w-4 h-4" />
                                             <span>Profile</span>
                                         </a>
                                         <a
-                                            href="https://edit.hirecta.com"
+                                            href="https://editor.hirecta.com"
                                             className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
                                         >
                                             <Settings className="w-4 h-4" />

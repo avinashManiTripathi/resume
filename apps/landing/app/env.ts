@@ -5,7 +5,7 @@ export const getEnv = (key: string) => {
 export const ENV = {
     API_URL: getEnv('API_URL') || 'https://api.hirecta.com',
     AUTH_URL: getEnv('AUTH_URL') || 'https://auth.hirecta.com',
-    EDITOR_URL: getEnv('EDITOR_URL') || 'https://edit.hirecta.com',
+    EDITOR_URL: getEnv('EDITOR_URL') || 'https://editor.hirecta.com',
     INTERVIEW_URL: getEnv('INTERVIEW_URL') || 'https://interview.hirecta.com',
     BASE_URL: getEnv('BASE_URL') || 'https://hirecta.com',
     SUPPORT_EMAIL: getEnv('SUPPORT_EMAIL') || 'it@hirecta.com',

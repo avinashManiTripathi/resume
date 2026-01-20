@@ -47,7 +47,7 @@ export class App {
                 origin: [
                     'https://hirecta.com',
                     'https://www.hirecta.com',
-                    'https://edit.hirecta.com',
+                    'https://editor.hirecta.com',
                     'https://auth.hirecta.com',
                     'https://admin.hirecta.com',
                     'https://interview.hirecta.com',
@@ -104,7 +104,7 @@ export class App {
         const allowedOrigins = [
             'https://hirecta.com',
             'https://www.hirecta.com',
-            'https://edit.hirecta.com',
+            'https://editor.hirecta.com',
             'https://auth.hirecta.com',
             'https://admin.hirecta.com',
             'https://interview.hirecta.com',
