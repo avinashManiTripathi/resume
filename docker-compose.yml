@@ -1,0 +1,62 @@
+
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./apps/api/.env
+
+  landing:
+    build:
+      context: .
+      dockerfile: Dockerfile.next
+      args:
+        APP_NAME: landing
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ""
+    ports:
+      - "3001:3000"
+
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile.next
+      args:
+        APP_NAME: admin
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    ports:
+      - "3002:3000"
+
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.next
+      args:
+        APP_NAME: auth
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    ports:
+      - "3003:3000"
+
+  editor:
+    build:
+      context: .
+      dockerfile: Dockerfile.next
+      args:
+        APP_NAME: editor
+        NEXT_PUBLIC_API_BASE: http://localhost:4000
+    ports:
+      - "3004:3000"
+
+  interview:
+    build:
+      context: .
+      dockerfile: Dockerfile.next
+      args:
+        APP_NAME: interview
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+    ports:
+      - "3005:3000"

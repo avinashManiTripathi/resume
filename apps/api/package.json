@@ -13,10 +13,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@repo/utils-server": "*",
+    "@repo/utils-server": "^0.0.1",
     "@types/multer": "^2.0.0",
     "axios": "^1.13.2",
-    "body-parser": "^2.2.1",
+    "body-parser": "^2.2.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -33,6 +33,8 @@
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@types/express-session": "^1.18.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/passport": "^1.0.17",
