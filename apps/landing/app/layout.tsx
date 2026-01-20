@@ -6,6 +6,7 @@ import { GlobalSchema } from "@/components/SchemaMarkup";
 import { primaryFont } from "@repo/fonts";
 import { ENV } from "./env";
 
+
 // Base URL configuration
 const baseUrl = ENV.BASE_URL;
 
