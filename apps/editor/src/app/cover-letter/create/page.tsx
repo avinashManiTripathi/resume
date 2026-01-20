@@ -669,7 +669,7 @@ function CoverLetterCreateForm() {
                                     <div className="absolute inset-0 flex justify-center bg-white">
                                         <canvas
                                             ref={canvasRef}
-                                            className="shadow-sm"
+                                            className=""
                                             style={{
                                                 maxWidth: '100%',
                                                 height: 'auto'

@@ -791,7 +791,7 @@ function ResumeEditor() {
                 ref={canvasRef}
                 width={794}
                 height={1123}
-                className="bg-white border-r border-slate-200/60 max-w-full object-contain shadow-2xl"
+                className="bg-white border-r border-slate-200/60 max-w-full object-contain"
               />
             </div>
 
