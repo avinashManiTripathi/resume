@@ -2,11 +2,7 @@ import { App } from './app';
 import { database } from './config/database';
 import dotenv from 'dotenv';
 import { initAI } from './services/ai-analysis.service';
-dotenv.config({
-    path: process.env.NODE_ENV === "production"
-        ? ".env.production"
-        : ".env"
-});
+dotenv.config();
 
 console.log("Environment: ", process.env.NODE_ENV);
 
