@@ -360,18 +360,6 @@ function CoverLetterCreateForm() {
                 const url = new URL(window.location.href);
                 url.searchParams.set('id', result.id);
                 window.history.replaceState({}, '', url.toString());
-
-                if (!localStorage.getItem('cl_persistence_popup_shown')) {
-                    setDialog({
-                        isOpen: true,
-                        title: result.storage === 'local' ? "Saved Locally" : "Saved to Account",
-                        description: result.storage === 'local'
-                            ? "Your cover letter is being saved to Local Storage. Sign in to access it anywhere."
-                            : "Your cover letter is being saved to your professional account.",
-                        type: result.storage === 'local' ? "info" : "success"
-                    });
-                    localStorage.setItem('cl_persistence_popup_shown', 'true');
-                }
             }
             setLastSaved(new Date());
         }
