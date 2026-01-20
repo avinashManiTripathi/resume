@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { initAI } from './services/ai-analysis.service';
 dotenv.config();
 
-console.log("Environment: ", process.env.NODE_ENV);
+console.log("Environment: Changes ", process.env.NODE_ENV);
 console.log('\n' + '='.repeat(50));
 console.log('🔍 ENVIRONMENT VARIABLE CHECK');
 console.log('='.repeat(50));
