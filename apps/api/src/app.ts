@@ -51,6 +51,10 @@ export class App {
                     'https://auth.profresume.com',
                     'https://admin.profresume.com',
                     'https://interview.profresume.com',
+                    'https://hirecta.com',
+                    'https://www.hirecta.com',
+                    'https://interview.hirecta.com',
+                    'https://api.hirecta.com',
                     'http://localhost:3000',
                     'http://localhost:3001',
                     'http://localhost:3002',
@@ -108,6 +112,10 @@ export class App {
             'https://auth.profresume.com',
             'https://admin.profresume.com',
             'https://interview.profresume.com',
+            'https://hirecta.com',
+            'https://www.hirecta.com',
+            'https://interview.hirecta.com',
+            'https://api.hirecta.com',
             'http://localhost:3000',
             'http://localhost:3001',
             'http://localhost:3002',
@@ -118,7 +126,7 @@ export class App {
             origin: (origin, callback) => {
                 // Allow requests with no origin (like mobile apps or curl)
                 if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.profresume.com')) {
+                if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.profresume.com') || origin.endsWith('.hirecta.com')) {
                     callback(null, true);
                 } else {
                     callback(new Error('Not allowed by CORS'));
