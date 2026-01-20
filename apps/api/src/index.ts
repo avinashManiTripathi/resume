@@ -1,8 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { App } from './app';
 import { database } from './config/database';
-import dotenv from 'dotenv';
 import { initAI } from './services/ai-analysis.service';
-dotenv.config();
 
 console.log("Environment: Changes ", process.env.NODE_ENV);
 console.log('\n' + '='.repeat(50));
