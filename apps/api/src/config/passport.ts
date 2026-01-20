@@ -3,12 +3,24 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { User } from '../models';
 
 export const configurePassport = () => {
+    // Check if Google OAuth credentials are configured
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+    const googleCallbackUrl = process.env.GOOGLE_CALLBACK_URL || 'https://api.profresume.com/api/auth/google/callback';
+
+    if (!googleClientId || !googleClientSecret) {
+        console.warn('⚠️  Google OAuth credentials not configured. Google authentication will not be available.');
+        console.warn('   Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables to enable Google OAuth.');
+        // Return early - don't configure Google strategy without credentials
+        return;
+    }
+
     passport.use(
         new GoogleStrategy(
             {
-                clientID: process.env.GOOGLE_CLIENT_ID || '',
-                clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-                callbackURL: process.env.GOOGLE_CALLBACK_URL || 'https://api.profresume.com/api/auth/google/callback',
+                clientID: googleClientId,
+                clientSecret: googleClientSecret,
+                callbackURL: googleCallbackUrl,
                 passReqToCallback: true, // Enable request passthrough to access state
             },
             async (req: any, accessToken: string, refreshToken: string, profile: any, done: any) => {
