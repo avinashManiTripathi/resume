@@ -97,13 +97,12 @@ export const metadata: Metadata = {
   // Icons (Next.js App Router best practice)
   icons: {
     icon: [
-      { url: `${baseUrl}/favicon.ico`, sizes: 'any' },
-      { url: `${baseUrl}/icon-48.png`, type: 'image/png', sizes: '48x48' },
-      { url: `${baseUrl}/icon-96.png`, type: 'image/png', sizes: '96x96' },
-      { url: `${baseUrl}/icon-192.png`, type: 'image/png', sizes: '192x192' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
     ],
-    shortcut: `${baseUrl}/icon-192.png`,
-    apple: `${baseUrl}/icon-192.png`,
+    shortcut: '/icon-192.png',
+    apple: '/apple-touch-icon.png',
   },
 };
 

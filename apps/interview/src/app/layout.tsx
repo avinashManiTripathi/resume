@@ -4,6 +4,15 @@ import './globals.css';
 export const metadata: Metadata = {
     title: 'Interview AI | Robotic Performance Engine',
     description: 'Master your career with neural interview simulations.',
+    icons: {
+        icon: [
+            { url: '/favicon.ico', sizes: 'any' },
+            { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+            { url: '/icon-512.png', type: 'image/png', sizes: '512x512' },
+        ],
+        shortcut: '/icon-192.png',
+        apple: '/apple-touch-icon.png',
+    },
 };
 
 export default function RootLayout({
