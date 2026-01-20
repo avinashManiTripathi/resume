@@ -1,0 +1,8 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd apps/landing && npm run build"
+
+[deploy]
+startCommand = "cd apps/landing && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

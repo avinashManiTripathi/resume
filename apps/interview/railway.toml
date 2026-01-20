@@ -1,0 +1,8 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd apps/interview && npm run build"
+
+[deploy]
+startCommand = "cd apps/interview && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

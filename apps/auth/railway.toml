@@ -1,0 +1,8 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "cd apps/auth && npm run build"
+
+[deploy]
+startCommand = "cd apps/auth && npm start"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
