@@ -679,7 +679,7 @@ function ResumeEditor() {
     return () => window.removeEventListener("resize", onResize);
   }, [renderPdf]);
 
-  // Update URL when template changes
+
   useEffect(() => {
     if (!urlTemplateId) {
       const url = new URL(window.location.href);
