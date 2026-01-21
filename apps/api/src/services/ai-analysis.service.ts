@@ -468,6 +468,9 @@ IMPORTANT RULES:
     "linkedin": "",
     "github": ""
   },
+  "summary": {
+    "content": "2–3 improved, ATS-optimized sentences tailored to the candidate's role"
+  },
   "experience": [
     {
       "jobTitle": "",
