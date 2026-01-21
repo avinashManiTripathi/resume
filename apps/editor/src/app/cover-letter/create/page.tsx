@@ -104,6 +104,9 @@ function CoverLetterCreateForm() {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
+    // Rendering state
+    const [isCanvasRendering, setIsCanvasRendering] = useState(false);
+
     // Fetch Template Info
 
     // Fetch Template Info
@@ -275,9 +278,14 @@ function CoverLetterCreateForm() {
     }, []);
 
     // Render PDF with loading state and auto-cancellation
+    // Render PDF with loading state and auto-cancellation
     const renderPdf = useCallback(async (page = currentPage) => {
-        if (!canvasRef.current || !template) return;
+        if (!canvasRef.current || !template || isCanvasRendering) return;
 
+        // requestData must be stable to prevent effect loops, but here we construct it inside
+        // the callback which is triggered by debouncedFormData changes
+
+        setIsCanvasRendering(true);
         try {
             const requestData = {
                 templateId: template.id,
@@ -292,27 +300,40 @@ function CoverLetterCreateForm() {
             }
         } catch (error) {
             console.error("Error rendering PDF:", error);
+        } finally {
+            setIsCanvasRendering(false);
         }
-    }, [currentPage, template, debouncedFormData, fontFamily, generatePDF, renderPDFPage]);
+    }, [currentPage, template?.id, debouncedFormData, fontFamily, generatePDF, renderPDFPage]); // Removed isCanvasRendering from deps to avoid loop starter
 
     // Cleanup scale on template change
     useEffect(() => {
         scaleRef.current = null;
     }, [template?.id]);
 
-    // Auto-render PDF when data changes
+    // Auto-render PDF when data changes - FIXED DEPENDENCIES
     useEffect(() => {
-        renderPdf();
-    }, [renderPdf]);
-
-    // Re-render on window resize
-    useLayoutEffect(() => {
-        const onResize = () => {
-            scaleRef.current = null; // Force recalculation of scale
+        if (template?.id) {
             renderPdf();
+        }
+    }, [renderPdf, template?.id]); // renderPdf now has stable dependencies
+
+    // Re-render on window resize - DEBOUNCED
+    useEffect(() => {
+        let timeoutId: NodeJS.Timeout;
+
+        const onResize = () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                scaleRef.current = null; // Force recalculation of scale
+                renderPdf();
+            }, 200);
         };
+
         window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
+        return () => {
+            window.removeEventListener("resize", onResize);
+            clearTimeout(timeoutId);
+        };
     }, [renderPdf]);
 
 
@@ -329,18 +350,11 @@ function CoverLetterCreateForm() {
         };
 
         setFormData(prev => ({ ...prev, ...mappedData }));
-
-        setDialog({
-            isOpen: true,
-            title: "Data Imported",
-            description: "Your cover letter details have been filled from the imported resume data.",
-            type: "success"
-        });
     };
 
 
-    // Auto-save logic
-    const handleAutoSave = useCallback(async (dataToSave = formData) => {
+    // Auto-save logic - FIXED DEPENDENCIES
+    const handleAutoSave = useCallback(async (dataToSave: FormData) => {
         if (!dataToSave.fullName && !dataToSave.jobTitle) return;
 
         setIsSaving(true);
@@ -364,7 +378,7 @@ function CoverLetterCreateForm() {
             setLastSaved(new Date());
         }
         setIsSaving(false);
-    }, [formData, docId, template, templateIdParam, saveDocument]);
+    }, [docId, template?.id, templateIdParam, saveDocument]); // Removed formData from deps
 
     // Auto-save effect
     useEffect(() => {

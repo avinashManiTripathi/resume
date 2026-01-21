@@ -276,12 +276,6 @@ function ResumeEditor() {
           });
           sessionStorage.setItem('persistence_popup_shown', 'true');
         } else if (result.storage === 'cloud' && !sessionStorage.getItem('persistence_popup_shown')) {
-          setSaveDialog({
-            isOpen: true,
-            title: "Saved to Account",
-            description: "Your resume is being saved to your professional account.",
-            type: 'success'
-          });
           sessionStorage.setItem('persistence_popup_shown', 'true');
         }
       }

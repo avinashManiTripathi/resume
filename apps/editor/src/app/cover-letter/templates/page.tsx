@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Sparkles, FileText, CheckCircle, Star, Palette, Zap, LayoutGrid, Shield } from "lucide-react";
+import { ENV } from "@/app/env";
 
 interface Template {
     id: string;
     _id: string;
     type?: string;
     name: string;
+    category?: string; // Add category
+    image?: string;    // Add image
     description: string;
     previewText: string;
     supportedFields: string[];
@@ -136,22 +139,33 @@ export default function TemplatesPage() {
 
                                     {/* Preview Area */}
                                     <div className="relative aspect-[3/4] bg-gray-50 rounded-2xl overflow-hidden mb-6 border border-gray-100 group-hover:border-blue-100 transition-colors">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 p-6 md:p-8">
-                                            {/* Abstract Template Representation */}
-                                            <div className="w-full h-full bg-white shadow-sm border border-gray-100 p-4 space-y-3 opacity-60 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-500">
-                                                <div className="h-4 bg-gray-200 rounded w-1/3 mb-6" />
-                                                <div className="space-y-2">
-                                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                                    <div className="h-2 bg-gray-100 rounded w-5/6" />
-                                                </div>
-                                                <div className="space-y-2 pt-4">
-                                                    <div className="h-2 bg-gray-100 rounded w-full" />
-                                                    <div className="h-2 bg-gray-100 rounded w-11/12" />
-                                                    <div className="h-2 bg-gray-100 rounded w-full" />
+                                        {template.image ? (
+                                            <div className="relative w-full h-full">
+                                                <img
+                                                    src={ENV.API_URL + template.image}
+                                                    alt={template.name}
+                                                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                            </div>
+                                        ) : (
+                                            <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 p-6 md:p-8">
+                                                {/* Abstract Template Representation (Fallback) */}
+                                                <div className="w-full h-full bg-white shadow-sm border border-gray-100 p-4 space-y-3 opacity-60 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-500">
+                                                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-6" />
+                                                    <div className="space-y-2">
+                                                        <div className="h-2 bg-gray-100 rounded w-full" />
+                                                        <div className="h-2 bg-gray-100 rounded w-full" />
+                                                        <div className="h-2 bg-gray-100 rounded w-5/6" />
+                                                    </div>
+                                                    <div className="space-y-2 pt-4">
+                                                        <div className="h-2 bg-gray-100 rounded w-full" />
+                                                        <div className="h-2 bg-gray-100 rounded w-11/12" />
+                                                        <div className="h-2 bg-gray-100 rounded w-full" />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
 
                                         {/* Hover Overlay */}
                                         <div className="absolute inset-0 bg-gradient-to-t from-blue-900/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
