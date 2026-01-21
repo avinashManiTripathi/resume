@@ -269,12 +269,6 @@ function ResumeEditor() {
         window.history.replaceState({}, '', url.toString());
 
         if (result.storage === 'local' && !sessionStorage.getItem('persistence_popup_shown')) {
-          setSaveDialog({
-            isOpen: true,
-            title: "Saved Locally",
-            description: "Your resume is being saved to Local Storage. To access it across devices, please sign in.",
-            type: 'info'
-          });
           sessionStorage.setItem('persistence_popup_shown', 'true');
         } else if (result.storage === 'cloud' && !sessionStorage.getItem('persistence_popup_shown')) {
           sessionStorage.setItem('persistence_popup_shown', 'true');

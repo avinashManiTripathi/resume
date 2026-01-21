@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, Mic, MicOff, FileText, Loader2, Send } from 'lucide-react';
+import { X, Sparkles, Mic, MicOff, FileText, Loader2, Send, Target, Briefcase, MessageCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@repo/ui/button';
 import { ENV } from './env';
 
@@ -20,6 +20,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
     const [textInput, setTextInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [transcript, setTranscript] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const recognitionRef = useRef<any>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -160,6 +161,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
         if (!content.trim()) return;
 
         setIsProcessing(true);
+        setError(null);
         try {
             const response = await fetch(`${ENV.API_URL}/api/resume/extract`, {
                 method: 'POST',
@@ -174,9 +176,11 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                 handleClose();
             } else {
                 console.error('Extraction failed:', result.message);
+                setError(result.message || "Failed to analyze content. Please try again.");
             }
         } catch (error) {
             console.error('Error processing input:', error);
+            setError("Network error. Please check your connection.");
         } finally {
             setIsProcessing(false);
         }
@@ -200,222 +204,280 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
-                {/* Header */}
-                <div className="relative p-8 pb-6 flex-shrink-0">
-                    <button
-                        onClick={handleClose}
-                        className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
-                    >
-                        <X className="w-5 h-5 text-gray-500" />
-                    </button>
+            <div className="bg-white rounded-none md:rounded-3xl shadow-2xl w-full max-w-5xl h-full md:h-[650px] max-h-[100dvh] overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-200">
+                {/* Left Sidebar - Guidance & Errors */}
+                <div className="w-1/3 bg-slate-50 border-r border-slate-100 p-8 flex flex-col justify-between hidden md:flex relative overflow-hidden">
+                    {/* Decorative Gradients */}
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl -ml-32 -mb-32 pointer-events-none" />
 
-                    {/* AI Badge */}
-                    <div className="flex justify-center mb-6">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 rounded-full border border-blue-100">
-                            <Sparkles className="w-4 h-4 text-blue-600" />
-                            <span className="text-sm font-semibold text-blue-600">AI-powered Resume</span>
+                    <div className="relative z-10">
+                        {/* Sidebar Header */}
+                        <div className="mb-8">
+                            <div className="inline-flex items-center gap-2 mb-6">
+                                <div className="p-2 bg-blue-100/50 rounded-xl">
+                                    <Sparkles className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <span className="text-sm font-bold text-slate-900 tracking-tight">AI Resume Assistant</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-900 leading-tight mb-2">
+                                Let's build your professional story
+                            </h3>
+                            <p className="text-slate-500 text-sm leading-relaxed">
+                                Our AI analyzes your input to create structured, professional resume points.
+                            </p>
+                        </div>
+
+                        {/* Modern Guidance Cards */}
+                        <div className="space-y-3">
+                            <div className="group p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-200">
+                                <div className="flex gap-3">
+                                    <div className="flex-shrink-0 mt-0.5">
+                                        <Target className="w-4 h-4 text-blue-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-slate-900 text-sm mb-0.5">Be Specific</h4>
+                                        <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-600">
+                                            Mention specific numbers & tools (e.g. "Increased sales by 20% using Salesforce").
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="group p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-100 transition-all duration-200">
+                                <div className="flex gap-3">
+                                    <div className="flex-shrink-0 mt-0.5">
+                                        <MessageCircle className="w-4 h-4 text-emerald-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-slate-900 text-sm mb-0.5">Speak Naturally</h4>
+                                        <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-600">
+                                            Just tell your story like you're talking to a colleague. We'll handle the formatting.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="group p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-amber-100 transition-all duration-200">
+                                <div className="flex gap-3">
+                                    <div className="flex-shrink-0 mt-0.5">
+                                        <Briefcase className="w-4 h-4 text-amber-500" />
+                                    </div>
+                                    <div>
+                                        <h4 className="font-semibold text-slate-900 text-sm mb-0.5">Cover Basics</h4>
+                                        <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-600">
+                                            Include roles, dates, company names, and your key responsibilities.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Title */}
-                    <h2 className="text-3xl font-bold text-gray-900 text-center mb-3">
-                        Professional highlights
-                    </h2>
-                    <p className="text-gray-600 text-center max-w-md mx-auto">
-                        Achievements, awards, stand-out results — share your past successes!
-                    </p>
-                </div>
-
-                {/* Input Mode Toggle */}
-                <div className="px-8 pb-6 flex-shrink-0">
-                    <div className="flex items-center justify-center gap-2 bg-gray-100 p-1 rounded-xl">
-                        <button
-                            onClick={() => {
-                                setInputMode('voice');
-                                setTextInput('');
-                            }}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${inputMode === 'voice'
-                                ? 'bg-white text-gray-900 shadow-sm'
-                                : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                        >
-                            <Mic className="w-4 h-4" />
-                            Voice input
-                        </button>
-                        <button
-                            onClick={() => {
-                                setInputMode('text');
-                                stopRecording();
-                            }}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all ${inputMode === 'text'
-                                ? 'bg-white text-gray-900 shadow-sm'
-                                : 'text-gray-600 hover:text-gray-900'
-                                }`}
-                        >
-                            <FileText className="w-4 h-4" />
-                            Text input
-                        </button>
+                    {/* Error Display Area (Bottom of Sidebar) */}
+                    <div className="mt-auto pt-6 relative z-10">
+                        {error && (
+                            <div className="bg-red-50 border border-red-100 rounded-2xl p-4 animate-in slide-in-from-bottom-2 shadow-sm">
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-white p-1.5 rounded-full shadow-sm flex-shrink-0 border border-red-100">
+                                        <AlertCircle className="w-4 h-4 text-red-500" />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-sm font-bold text-red-900 mb-0.5">Import Failed</h5>
+                                        <p className="text-xs text-red-700 leading-relaxed">
+                                            {error}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Scrollable Content Area */}
-                <div className="flex-1 overflow-y-auto px-8 pb-8">
-                    {inputMode === 'voice' ? (
-                        <div className="space-y-6">
-                            {/* Audio Visualization */}
-                            <div className="relative h-48 flex items-center justify-center">
-                                {/* Animated Background Blob */}
-                                <div className={`absolute inset-0 flex items-center justify-center ${isRecording && !isPaused ? 'animate-pulse' : ''}`}>
-                                    <div className="w-64 h-64 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 rounded-full blur-3xl opacity-60"></div>
-                                </div>
+                {/* Right Column - Main Content */}
+                <div className="flex-1 flex flex-col h-full bg-white relative">
+                    <button
+                        onClick={handleClose}
+                        className="absolute top-4 right-4 md:top-6 md:right-6 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
 
-                                {/* Waveform */}
-                                <div className="relative z-10">
-                                    {isRecording && !isPaused ? (
-                                        <div className="flex items-end justify-center gap-1 h-24">
-                                            {[...Array(20)].map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="w-1 bg-gradient-to-t from-blue-500 to-purple-500 rounded-full animate-sound-wave"
-                                                    style={{
-                                                        animationDelay: `${i * 0.1}s`,
-                                                        height: '100%'
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center justify-center gap-1 h-24">
-                                            {[...Array(20)].map((_, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="w-1 bg-gray-300 rounded-full"
-                                                    style={{
-                                                        height: `${Math.random() * 40 + 20}%`
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
+                    {/* Header */}
+                    <div className="px-6 pt-6 pb-2 md:px-10 md:pt-10 md:pb-2 flex-shrink-0">
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                            Import Content
+                        </h2>
+                        <p className="text-slate-500 text-sm">
+                            Choose how you want to provide your details.
+                        </p>
+                    </div>
+
+                    {/* Input Mode Toggle */}
+                    <div className="px-6 py-4 md:px-10 md:py-6 flex-shrink-0">
+                        <div className="flex items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl w-fit">
+                            <button
+                                onClick={() => {
+                                    setInputMode('voice');
+                                    setTextInput('');
+                                }}
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${inputMode === 'voice'
+                                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5'
+                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                                    }`}
+                            >
+                                <Mic className="w-4 h-4" />
+                                Voice Input
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setInputMode('text');
+                                    stopRecording();
+                                }}
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${inputMode === 'text'
+                                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5'
+                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                                    }`}
+                            >
+                                <FileText className="w-4 h-4" />
+                                Text Input
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Scrollable Content Area */}
+                    <div className="flex-1 overflow-y-auto px-6 pb-6 md:px-10 md:pb-6">
+                        {/* Mobile Error Display */}
+                        {error && (
+                            <div className="md:hidden mb-4 bg-red-50 border border-red-100 rounded-2xl p-4 animate-in slide-in-from-bottom-2 shadow-sm">
+                                <div className="flex items-start gap-3">
+                                    <div className="bg-white p-1.5 rounded-full shadow-sm flex-shrink-0 border border-red-100">
+                                        <AlertCircle className="w-4 h-4 text-red-500" />
+                                    </div>
+                                    <div>
+                                        <h5 className="text-sm font-bold text-red-900 mb-0.5">Import Failed</h5>
+                                        <p className="text-xs text-red-700 leading-relaxed">
+                                            {error}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Timer */}
-                            <div className="text-center">
-                                <div className="text-2xl font-mono font-semibold text-gray-900">
-                                    {formatTime(recordingTime)}/{formatTime(maxTime)}
-                                </div>
-                                {isPaused && (
-                                    <p className="text-sm text-orange-600 mt-2 font-medium">Paused</p>
-                                )}
-                            </div>
-
-                            {/* Editable Transcript */}
-                            {transcript && (
-                                <div className="space-y-2">
-                                    <label className="block text-sm font-medium text-gray-700">
-                                        Transcript (editable)
-                                    </label>
+                        )}
+                        {inputMode === 'voice' ? (
+                            <div className="h-full flex flex-col relative group">
+                                <div className="relative flex-1">
                                     <textarea
                                         value={transcript}
                                         onChange={(e) => setTranscript(e.target.value)}
-                                        className="w-full h-32 px-4 py-3 border-2 border-gray-200 rounded-xl resize-none focus:border-blue-500 focus:outline-none transition-colors text-sm"
-                                        placeholder="Your transcript will appear here..."
+                                        placeholder={"Speak naturally about your career. Mention your roles, specific projects you've led, technologies you've used, and the impact you made.\n\nExample: \"I've been working as a Product Designer at Apple for the last 4 years. I led the redesign of the Maps app which increased user engagement by 15%...\""}
+                                        className="w-full h-full min-h-[300px] p-6 pb-24 bg-slate-50 border border-slate-200 rounded-3xl resize-none focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all placeholder:text-slate-400 text-slate-700 leading-relaxed custom-scrollbar"
                                     />
-                                    <p className="text-xs text-gray-500">You can edit the transcript before submitting</p>
-                                </div>
-                            )}
 
-                            {/* Recording Controls */}
-                            <div className="flex justify-center gap-3">
-                                {!isRecording ? (
-
-                                    <Button onClick={startRecording} variant='primary'>
-                                        <Mic className="w-5 h-5" />
-                                        Start Recording
-                                    </Button>
-
-                                ) : (
-                                    <>
-                                        {!isPaused ? (
-                                            <Button onClick={pauseRecording}>
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z" />
-                                                </svg>
-                                                Pause
-                                            </Button>
-                                        ) : (
-                                            <Button onClick={resumeRecording}>
-                                                <Mic className="w-5 h-5" />
-                                                Resume
-                                            </Button>
+                                    {/* Floating Mic Button & Status */}
+                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
+                                        {/* Timer/Status Label */}
+                                        {isRecording && (
+                                            <div className="bg-slate-900/90 text-white text-xs font-mono py-1 px-3 rounded-full backdrop-blur-md animate-in slide-in-from-bottom-2 fade-in">
+                                                {formatTime(recordingTime)} • {isPaused ? 'PAUSED' : 'RECORDING'}
+                                            </div>
                                         )}
-                                        <Button onClick={stopRecording} variant='danger'>
-                                            <MicOff className="w-5 h-5" />
-                                            Stop
-                                        </Button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {/* Text Area */}
-                            <textarea
-                                value={textInput}
-                                onChange={(e) => setTextInput(e.target.value)}
-                                placeholder="Tell us about your achievements, awards, certifications, or notable accomplishments..."
-                                className="w-full h-48 px-4 py-3 border-2 border-gray-200 rounded-xl resize-none focus:border-blue-500 focus:outline-none transition-colors"
-                            />
-                            <div className="flex items-center justify-between text-sm text-gray-500">
-                                <span>{textInput.length} characters</span>
-                                <span>Minimum 50 characters recommended</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
 
-                {/* Footer */}
-                <div className="px-8  py-6 border-t border-gray-200 flex gap-3 justify-between bg-white">
-                    <Button
-                        onClick={handleClose}
-                        variant='outline'
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleExtract}
-                        disabled={isProcessing || (inputMode === 'voice' ? !transcript.trim() : !textInput.trim())}
-                        variant='primary'
-                    >
-                        {isProcessing ? (
-                            <>
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                                Processing...
-                            </>
+                                        <button
+                                            onClick={isRecording ? stopRecording : startRecording}
+                                            className={`relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg transition-all duration-300 ${isRecording
+                                                ? 'bg-red-500 hover:bg-red-600 text-white scale-110'
+                                                : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:scale-105'
+                                                }`}
+                                        >
+                                            {/* Pulsing Rings when recording */}
+                                            {isRecording && !isPaused && (
+                                                <>
+                                                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
+                                                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-20 animate-pulse delay-75 scale-125" />
+                                                </>
+                                            )}
+
+                                            {isRecording ? (
+                                                <div className="w-6 h-6 rounded-md bg-white shadow-sm" />
+                                            ) : (
+                                                <Mic className="w-8 h-8" />
+                                            )}
+                                        </button>
+
+                                        {!isRecording && !transcript && (
+                                            <span className="text-xs font-medium text-slate-400 bg-white/50 px-2 py-1 rounded-md mt-1 backdrop-blur-sm">
+                                                Tap to Speak
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         ) : (
-                            <>
-                                <Send className="w-5 h-5" />
-                                Generate with AI
-                            </>
+                            <div className="h-full flex flex-col">
+                                <div className="relative flex-1">
+                                    <textarea
+                                        value={textInput}
+                                        onChange={(e) => setTextInput(e.target.value)}
+                                        placeholder={"Paste your existing resume content or describe your professional background.\n\nInclude details like:\n• Job titles and companies\n• Key achievements and metrics (e.g., 'Increased sales by 20%')\n• Technical skills and tools used\n• Education and certifications"}
+                                        className="w-full h-full min-h-[300px] p-6 bg-slate-50 border border-slate-200 rounded-3xl resize-none focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all placeholder:text-slate-400 text-slate-700 leading-relaxed custom-scrollbar"
+                                    />
+                                    <div className="absolute bottom-4 right-4 text-xs font-semibold text-slate-400 bg-slate-100/50 backdrop-blur px-2 py-1 rounded-lg border border-slate-200/50">
+                                        {textInput.length} chars
+                                    </div>
+                                </div>
+                            </div>
                         )}
-                    </Button>
-                </div>
+                    </div>
 
-                <style jsx>{`
-                    @keyframes sound-wave {
-                        0%, 100% {
-                            height: 20%;
+                    {/* Footer - Main Action */}
+                    <div className="px-6 py-4 md:px-10 md:py-6 border-t border-slate-100 bg-white flex justify-end gap-3 rounded-none md:rounded-br-3xl">
+                        <Button
+                            onClick={handleClose}
+                            variant='outline'
+                            className="border-slate-200 text-slate-600 hover:bg-slate-50"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleExtract}
+                            disabled={isProcessing || (inputMode === 'voice' ? !transcript.trim() : !textInput.trim())}
+                            variant='primary'
+                            className={`min-w-[160px] ${isProcessing ? 'opacity-90' : ''}`}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                    Analyzing...
+                                </>
+                            ) : (
+                                <>
+                                    <Sparkles className="w-5 h-5 mr-2" />
+                                    Generate
+                                </>
+                            )}
+                        </Button>
+                    </div>
+
+                    <style jsx global>{`
+                        .custom-scrollbar::-webkit-scrollbar {
+                            width: 6px;
                         }
-                        50% {
-                            height: 100%;
+                        .custom-scrollbar::-webkit-scrollbar-track {
+                            background: transparent;
                         }
-                    }
-                    .animate-sound-wave {
-                        animation: sound-wave 1s ease-in-out infinite;
-                    }
-                `}</style>
+                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                            background-color: #cbd5e1;
+                            border-radius: 20px;
+                        }
+                        @keyframes sound-wave {
+                            0%, 100% { height: 20%; }
+                            50% { height: 100%; }
+                        }
+                        .animate-sound-wave {
+                            animation: sound-wave 1s ease-in-out infinite;
+                        }
+                    `}</style>
+                </div>
             </div>
         </div>
     );
