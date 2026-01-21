@@ -70,9 +70,9 @@ export function EditorSidebar() {
                         <Tooltip content={item.label} position="right">
                             <button
                                 onClick={item.onClick}
-                                className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 ${(item.href && isActive(item.href))
-                                    ? "bg-indigo-50 text-indigo-600 shadow-sm border border-indigo-100"
-                                    : "text-slate-500 hover:bg-indigo-50/50 hover:text-indigo-600"
+                                className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border ${(item.href && isActive(item.href))
+                                    ? "bg-indigo-50 text-indigo-600 shadow-sm border-indigo-200"
+                                    : "bg-white text-slate-500 border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 hover:shadow-sm"
                                     }`}
                             >
                                 <item.icon size={20} strokeWidth={2} />
@@ -88,7 +88,7 @@ export function EditorSidebar() {
                     <Tooltip content="Logout" position="right">
                         <button
                             onClick={logout}
-                            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-200"
+                            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 hover:shadow-sm"
                         >
                             <LogOut size={20} strokeWidth={2} />
                         </button>
