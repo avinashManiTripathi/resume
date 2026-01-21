@@ -691,7 +691,7 @@ function ResumeEditor() {
 
     // Re-render PDF with new template
     renderPdf();
-  }, [urlTemplateId, defaultTemplateId, renderPdf]);
+  }, [urlTemplateId, defaultTemplateId]);
 
   const userName = useMemo(() => {
     const name = `${resume?.personalInfo?.firstName || ""} ${resume?.personalInfo?.lastName || ""}`
