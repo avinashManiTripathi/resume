@@ -183,6 +183,36 @@ function SessionContent() {
     const socketRef = useRef<Socket | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
 
+    // Interview timer state (1 hour = 3600 seconds)
+    const [timeRemaining, setTimeRemaining] = useState(3600);
+    const [timerStarted, setTimerStarted] = useState(false);
+    const [showTimeWarning, setShowTimeWarning] = useState(false);
+
+    // Interview timer countdown
+    useEffect(() => {
+        if (!timerStarted || session?.status === 'completed') return;
+
+        const timer = setInterval(() => {
+            setTimeRemaining(prev => {
+                if (prev <= 0) {
+                    clearInterval(timer);
+                    handleEndInterview(true); // Auto-end
+                    return 0;
+                }
+
+                // Show warning at 5 minutes
+                if (prev === 300 && !showTimeWarning) {
+                    setShowTimeWarning(true);
+                    alert('⏰ 5 minutes remaining in your interview!');
+                }
+
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timerStarted, session?.status, showTimeWarning]);
+
     // Initialize WebSocket connection
     useEffect(() => {
         const socket = io(API_URL, {
@@ -234,6 +264,11 @@ function SessionContent() {
                 role: session.jdInfo?.role || 'Developer',
                 sessionId: session._id
             });
+
+            // Start timer if session is active
+            if (session.status === 'active' && !timerStarted) {
+                setTimerStarted(true);
+            }
         }
 
         return () => {
@@ -497,15 +532,31 @@ function SessionContent() {
     }; 
     */
 
-    const handleEndInterview = () => {
-        if (confirm('Are you sure you want to end this interview?')) {
+    const handleEndInterview = (autoEnd: boolean = false) => {
+        const confirmMessage = autoEnd
+            ? 'Interview time has ended. Redirecting to your report...'
+            : 'Are you sure you want to end this interview?';
+
+        if (autoEnd || confirm(confirmMessage)) {
             // Stop speech synthesis
             if (typeof window !== 'undefined' && window.speechSynthesis) {
                 window.speechSynthesis.cancel();
                 setIsSpeaking(false);
             }
-            router.push(`/report/${sessionId}`);
+            if (autoEnd) {
+                setTimeout(() => router.push(`/report/${sessionId}`), 2000);
+            } else {
+                router.push(`/report/${sessionId}`);
+            }
         }
+    };
+
+    // Format timer for display
+    const formatTime = (seconds: number): string => {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
 
     const submitAnswer = async () => {
@@ -690,6 +741,17 @@ function SessionContent() {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* Interview Timer - Color coded by time remaining */}
+                        <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 font-mono ${timeRemaining <= 300
+                            ? 'bg-red-50 border-red-300 text-red-700 animate-pulse'
+                            : timeRemaining <= 600
+                                ? 'bg-amber-50 border-amber-300 text-amber-700'
+                                : 'bg-blue-50 border-blue-300 text-blue-600'
+                            }`}>
+                            <Clock className="w-4 h-4" />
+                            <span className="text-sm font-bold">{formatTime(timeRemaining)}</span>
+                        </div>
+
                         {/* Voice Selector */}
                         <div className="relative group">
                             <select
@@ -850,7 +912,7 @@ function SessionContent() {
                             <div className="w-px h-8 bg-slate-200 mx-2"></div>
 
                             <button
-                                onClick={handleEndInterview}
+                                onClick={() => handleEndInterview()}
                                 className="control-btn p-4 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all"
                                 title="End interview"
                             >

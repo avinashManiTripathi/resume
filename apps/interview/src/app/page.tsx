@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Camera, Mic, Play, Shield, Video, Cpu, MessageSquare, Award, Sparkles, Binary, ChevronRight, CheckCircle, User, Settings, LogOut, ChevronDown, Clock } from 'lucide-react';
 import Image from 'next/image';
 import InterviewTypeDropdown from '../components/InterviewTypeDropdown';
 import { INTERVIEW_TYPES, DEFAULT_INTERVIEW_TYPE, InterviewType } from '../config/interview-types.constants';
@@ -20,6 +20,11 @@ export default function InterviewLandingPage() {
     const router = useRouter();
     const { user, isLoggedIn, logout } = useAuth();
 
+    // Session management state
+    const [previousSessions, setPreviousSessions] = useState<any[]>([]);
+    const [canStartNewInterview, setCanStartNewInterview] = useState(true);
+    const [showSessions, setShowSessions] = useState(false);
+
     const loadingSteps = [
         "Initializing AI Engine...",
         "Loading your profile...",
@@ -35,6 +40,37 @@ export default function InterviewLandingPage() {
             return () => clearTimeout(timer);
         }
     }, [isLoading, loadingStep, loadingSteps.length]);
+
+    // Fetch previous sessions and check daily limit
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch previous sessions
+                const sessionsRes = await fetch('https://api.hirecta.com/api/interview/sessions', {
+                    credentials: 'include'
+                });
+                const sessionsData = await sessionsRes.json();
+                if (sessionsData.success) {
+                    setPreviousSessions(sessionsData.data || []);
+                }
+
+                // Check if user can start new interview today
+                const canStartRes = await fetch('https://api.hirecta.com/api/interview/can-start', {
+                    credentials: 'include'
+                });
+                const canStartData = await canStartRes.json();
+                if (canStartData.success) {
+                    setCanStartNewInterview(canStartData.canStart);
+                }
+            } catch (err) {
+                console.error('Error fetching sessions:', err);
+            }
+        };
+
+        if (isLoggedIn || user) {
+            fetchData();
+        }
+    }, [isLoggedIn, user]);
 
     const startInterview = async () => {
         // Validate based on interview type
@@ -267,6 +303,47 @@ Output the JD in a well-structured, professional format.`
                                 />
                             </div>
 
+                            {/* Previous Sessions - Show if available */}
+                            {previousSessions.length > 0 && (
+                                <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl p-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="font-bold text-slate-900">Your Recent Interviews</h3>
+                                        <button
+                                            onClick={() => setShowSessions(!showSessions)}
+                                            className="text-sm text-blue-600 font-semibold hover:underline"
+                                        >
+                                            {showSessions ? 'Hide' : `View ${previousSessions.length} session(s)`}
+                                        </button>
+                                    </div>
+                                    {showSessions && (
+                                        <div className="space-y-3 max-h-64 overflow-y-auto">
+                                            {previousSessions.map((session) => (
+                                                <div
+                                                    key={session._id}
+                                                    onClick={() => router.push(`/session?id=${session._id}`)}
+                                                    className="bg-white border border-slate-200 rounded-xl p-4 hover:border-blue-400 hover:shadow-md transition-all cursor-pointer"
+                                                >
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <div className="font-bold text-sm text-slate-900">{session.jdInfo?.role || 'Interview'}</div>
+                                                            <div className="text-xs text-slate-500">
+                                                                {new Date(session.createdAt).toLocaleDateString()}
+                                                            </div>
+                                                        </div>
+                                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${session.status === 'completed'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : 'bg-amber-100 text-amber-700'
+                                                            }`}>
+                                                            {session.status}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* Job Description Textarea - Conditionally shown */}
                             {selectedInterviewType.requiresJD ? (
                                 <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl shadow-slate-200/50">
@@ -291,10 +368,23 @@ Output the JD in a well-structured, professional format.`
                                 </div>
                             )}
 
+                            {/* Daily Limit Warning */}
+                            {!canStartNewInterview && (
+                                <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 text-center">
+                                    <div className="inline-flex items-center justify-center w-12 h-12 bg-amber-500 rounded-xl mb-3">
+                                        <Clock className="w-6 h-6 text-white" />
+                                    </div>
+                                    <h4 className="font-bold text-amber-900 mb-2">Daily Interview Limit Reached</h4>
+                                    <p className="text-sm text-amber-700">
+                                        You've already completed an interview today. Please come back tomorrow to start a new one!
+                                    </p>
+                                </div>
+                            )}
+
                             <button
                                 onClick={startInterview}
-                                disabled={isLoading || (selectedInterviewType.requiresJD && !jd.trim())}
-                                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-5 rounded-2xl transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 text-lg active:scale-[0.98]"
+                                disabled={isLoading || (selectedInterviewType.requiresJD && !jd.trim()) || !canStartNewInterview}
+                                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-5 rounded-2xl transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-3 text-lg active:scale-[0.98]"
                             >
                                 {isLoading ? 'Initializing AI...' : 'Start Session Now'}
                                 {!isLoading && <ChevronRight className="w-5 h-5" />}
