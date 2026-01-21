@@ -88,6 +88,10 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
       {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
         protocol: apiUrl.startsWith('https') ? 'https' : 'http',
         hostname: apiHostname,
       },

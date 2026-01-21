@@ -134,6 +134,8 @@ export default function AboutPage() {
                             { name: "Saurabh Mani Tripathi", role: "CTO", image: "https://media.licdn.com/dms/image/v2/D5603AQGij0Uxmve3NQ/profile-displayphoto-crop_800_800/B56Zhzf3iCG4AQ-/0/1754284397400?e=1768435200&v=beta&t=yB_zkS8I5x35N3GJqL2ZGm1nIad965ouK0qV6d2Po1o" },
                             { name: "Devender Mani Tripathi", role: "Vice President", image: "https://media.licdn.com/dms/image/v2/C4D03AQEaP1KdUYW8SQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1633620066670?e=1768435200&v=beta&t=cEPRNM2zfMoi81cz653PCiRoc6sST7Q5CZADx20WBdE" },
                             { name: "Prateek Singh", role: "Head of Design", image: "https://storage.googleapis.com/definable-beta-public/photo_studio/5df49dfc-eee0-462b-b70e-3f5e93719597/1766399854_3b6229c8_0.png" },
+                            { name: "Shubham Shukla", role: "Advisory Board Member", image: "https://res.cloudinary.com/diiwanjlg/image/upload/v1766997125/1560776005723_j2wm0z.jpg" },
+                            { name: "Rajat Shukla", role: "Advisory Board Member", image: "https://res.cloudinary.com/diiwanjlg/image/upload/v1766996315/image_orvsj5.webp" }
                         ].map((member, idx) => (
                             <div key={idx} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
                                 <Image src={member.image} alt={member.name} width={100} height={100} className="w-24 h-24 mx-auto rounded-full mb-4 object-cover" ></Image>
