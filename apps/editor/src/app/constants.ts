@@ -599,7 +599,9 @@ export const dummyData = {
     "skills",
     "languages",
     "achievements",
+    "achievements",
     "interests",
+    "awards",
     "awards",
     "certifications",
     "publications",
@@ -676,6 +678,8 @@ export const ResumeFormSchema: FormSchema = {
     label: "Skills",
     type: "array",
     isCollapsible: true,
+    component: "smart-tags",
+    variant: "skills",
     item: {
       name: { label: "Skill Name", type: "text", className: className },
       level: {
@@ -684,6 +688,16 @@ export const ResumeFormSchema: FormSchema = {
         options: ["Beginner", "Intermediate", "Advanced", "Expert"],
         className: className
       }
+    }
+  },
+  interests: {
+    label: "Interests & Hobbies",
+    type: "array",
+    isCollapsible: true,
+    component: "smart-tags",
+    variant: "interests",
+    item: {
+      name: { label: "Interest/Hobby", type: "text", className: className }
     }
   }
 }

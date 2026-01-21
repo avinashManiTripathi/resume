@@ -23,6 +23,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { CustomSectionModal, SECTION_TEMPLATES } from "./CustomSectionModal";
+import { SkillsInput } from "./SkillsInput";
 
 interface Props {
     schema: FormSchema;
@@ -267,7 +268,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                                             {field.description}
                                                         </p>
                                                     )}
-                                                    <FieldRenderer
+                                                    < FieldRenderer
                                                         field={field}
                                                         value={data[key]?.[fieldKey] || ""}
                                                         onChange={(val) =>
@@ -283,51 +284,62 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                     )}
 
                                     {config.type === "array" && (
-                                        <DndContext
-                                            sensors={sensors}
-                                            collisionDetection={closestCenter}
-                                            onDragEnd={handleItemDragEnd(key)}
-                                        >
-                                            <SortableContext
-                                                items={(data[key] || []).map((_: any, i: number) => `${key}-${i}`)}
-                                                strategy={verticalListSortingStrategy}
+                                        config.component === "smart-tags" ? (
+                                            <div className="mb-4">
+                                                <SkillsInput
+                                                    value={data[key]}
+                                                    onChange={(val) => updateSection(key, val)}
+                                                    variant={config.variant || "skills"}
+                                                    label={config.label}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <DndContext
+                                                sensors={sensors}
+                                                collisionDetection={closestCenter}
+                                                onDragEnd={handleItemDragEnd(key)}
                                             >
-                                                <div className="space-y-4">
-                                                    {(data[key] || []).map((item: any, index: number) => (
-                                                        <SortableItem
-                                                            key={`${key}-${index}`}
-                                                            id={`${key}-${index}`}
-                                                            index={index}
-                                                            label={config.label}
-                                                            onRemove={() => removeItem(key, index)}
-                                                        >
-                                                            {Object.entries(config.item).map(([fieldKey, field]) => (
-                                                                <div key={fieldKey} className={"mb-3 " + field.className}>
-                                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 block mb-2">
-                                                                        {field.label}
-                                                                    </label>
-                                                                    <FieldRenderer
-                                                                        field={field}
-                                                                        value={item[fieldKey] || ""}
-                                                                        onChange={(val) =>
-                                                                            updateArrayItem(key, index, fieldKey, val)
-                                                                        }
-                                                                    />
-                                                                </div>
-                                                            ))}
-                                                        </SortableItem>
-                                                    ))}
+                                                <SortableContext
+                                                    items={(data[key] || []).map((_: any, i: number) => `${key}-${i}`)}
+                                                    strategy={verticalListSortingStrategy}
+                                                >
+                                                    <div className="space-y-4">
+                                                        {(data[key] || []).map((item: any, index: number) => (
+                                                            <SortableItem
+                                                                key={`${key}-${index}`}
+                                                                id={`${key}-${index}`}
+                                                                index={index}
+                                                                label={config.label}
+                                                                onRemove={() => removeItem(key, index)}
+                                                            >
+                                                                {Object.entries(config.item).map(([fieldKey, field]) => (
+                                                                    <div key={fieldKey} className={"mb-3 " + field.className}>
+                                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 block mb-2">
+                                                                            {field.label}
+                                                                        </label>
+                                                                        <FieldRenderer
+                                                                            field={field}
+                                                                            value={item[fieldKey] || ""}
+                                                                            onChange={(val) =>
+                                                                                updateArrayItem(key, index, fieldKey, val)
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                ))}
+                                                            </SortableItem>
+                                                        ))}
 
-                                                    <button
-                                                        onClick={() => addItem(key)}
-                                                        className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
-                                                    >
-                                                        <CirclePlus className="w-4 h-4 text-[#223DC5]" />
-                                                        <span className="text-[#223DC5]">Add {config.label}</span>
-                                                    </button>
-                                                </div>
-                                            </SortableContext>
-                                        </DndContext>
+                                                        <button
+                                                            onClick={() => addItem(key)}
+                                                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                                                        >
+                                                            <CirclePlus className="w-4 h-4 text-[#223DC5]" />
+                                                            <span className="text-[#223DC5]">Add {config.label}</span>
+                                                        </button>
+                                                    </div>
+                                                </SortableContext>
+                                            </DndContext>
+                                        )
                                     )}
                                 </SortableSection>
                             );

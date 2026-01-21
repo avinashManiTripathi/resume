@@ -1,8 +1,8 @@
 "use client";
 
-import { Share2, Download, RotateCcw, RotateCw, CircleArrowUp, CircleArrowDown, MousePointer, Hand, PencilLine, Loader2, Sparkles, LayoutGrid, Type, Trophy, ChevronDown } from "lucide-react";
+import { Share2, Download, RotateCcw, RotateCw, CircleArrowUp, CircleArrowDown, MousePointer, Hand, PencilLine, Loader2, Sparkles, LayoutGrid, Type, Trophy, ChevronDown, Check } from "lucide-react";
 import { Button } from "./button";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 
 interface ProfileHeaderProps {
     name: string;
@@ -38,6 +38,23 @@ export function ProfileHeader({
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [showFontSelector, setShowFontSelector] = useState(false);
+    const fontSelectorRef = useRef<HTMLDivElement>(null);
+
+    // Close on click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (fontSelectorRef.current && !fontSelectorRef.current.contains(event.target as Node)) {
+                setShowFontSelector(false);
+            }
+        };
+
+        if (showFontSelector) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showFontSelector]);
 
     const fonts = useMemo(() => [
         { name: 'Inter', label: 'Inter' },
@@ -177,10 +194,11 @@ export function ProfileHeader({
                             </button>
 
                             {/* Font Selector */}
-                            <div className="relative">
+                            <div className="relative" ref={fontSelectorRef}>
                                 <button
                                     onClick={() => setShowFontSelector(!showFontSelector)}
                                     className={`flex items-center gap-2 px-3 h-10 hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border ${showFontSelector ? 'bg-gray-50 border-gray-200' : 'border-transparent hover:border-gray-200'}`}
+                                    title="Select Font"
                                 >
                                     <Type size={16} />
                                     <span className="text-xs font-bold truncate max-w-[80px]">{fontFamily}</span>
@@ -188,8 +206,11 @@ export function ProfileHeader({
                                 </button>
 
                                 {showFontSelector && (
-                                    <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-3 w-56 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                                        <div className="space-y-1 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
+                                    <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 w-64 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <div className="px-3 py-2 border-b border-gray-50 mb-1">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select Font Family</span>
+                                        </div>
+                                        <div className="space-y-0.5 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
                                             {fonts.map((font) => (
                                                 <button
                                                     key={font.name}
@@ -197,13 +218,15 @@ export function ProfileHeader({
                                                         onFontChange?.(font.name);
                                                         setShowFontSelector(false);
                                                     }}
-                                                    className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-all ${fontFamily === font.name
-                                                        ? 'bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-100'
+                                                    className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center justify-between group ${fontFamily === font.name
+                                                        ? 'bg-indigo-50 text-indigo-700 font-semibold'
                                                         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                                         }`}
-                                                    style={{ fontFamily: font.name }}
                                                 >
-                                                    {font.label}
+                                                    <span style={{ fontFamily: font.name }}>{font.label}</span>
+                                                    {fontFamily === font.name && (
+                                                        <Check size={14} className="text-indigo-600" />
+                                                    )}
                                                 </button>
                                             ))}
                                         </div>

@@ -30,6 +30,8 @@ export interface ArraySchema {
     type: "array";
     isCollapsible?: boolean;
     item: Record<string, BaseField>;
+    component?: "smart-tags";
+    variant?: "skills" | "interests";
 }
 
 export type SectionSchema = ObjectSchema | ArraySchema;
