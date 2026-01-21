@@ -125,49 +125,60 @@ export function HowToGuide() {
 
                 {/* Enhanced Pro Tip Section */}
                 <div className="mt-20">
-                    <div className="relative rounded-3xl overflow-hidden bg-gray-900 shadow-2xl">
-                        {/* Background Gradients */}
-                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl opacity-50" />
-                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-violet-600/30 rounded-full blur-3xl opacity-50" />
+                    <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 p-8 md:p-12 shadow-2xl ring-1 ring-white/10 isolate">
+                        {/* Ambient Background Glow */}
+                        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-blue-500/30 rounded-full blur-[100px] pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] pointer-events-none"></div>
 
-                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 p-8 md:p-12">
+                        {/* Grid Pattern Overlay */}
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+
+                        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
                             <div className="flex-1 text-center md:text-left">
-                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/50 text-blue-200 text-xs font-bold mb-4 border border-blue-500/30">
-                                    <Sparkles className="w-3 h-3" />
+                                <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-xs font-bold text-blue-100 shadow-sm mb-6">
+                                    <Sparkles className="w-3.5 h-3.5" />
                                     Insider Secret
                                 </div>
-                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
+                                <h3 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
                                     The #1 Reason Resumes Get Rejected?
                                 </h3>
-                                <p className="text-gray-300 text-lg leading-relaxed max-w-2xl">
-                                    They're generic. Recruiters want to see how you match <span className="text-white font-semibold">their specific job</span>.
+                                <p className="text-blue-100/80 text-lg leading-relaxed max-w-2xl font-medium">
+                                    They're generic. Recruiters want to see how you match <span className="text-white font-bold underline decoration-blue-400 decoration-2 underline-offset-4">their specific job</span>.
                                     Our AI Tailor analyzes job descriptions and optimizes your resume keywords automatically.
                                 </p>
 
-                                <div className="flex flex-wrap gap-4 mt-6 justify-center md:justify-start">
-                                    <div className="flex items-center gap-2 text-gray-300 text-sm font-medium">
-                                        <CheckCircle2 className="w-4 h-4 text-green-400" />
-                                        <span>Pass ATS Filters</span>
+                                <div className="flex flex-wrap gap-x-6 gap-y-3 mt-8 justify-center md:justify-start">
+                                    <div className="flex items-center gap-2 text-white/90 text-sm font-bold">
+                                        <div className="w-5 h-5 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                        </div>
+                                        Pass ATS Filters
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-300 text-sm font-medium">
-                                        <CheckCircle2 className="w-4 h-4 text-green-400" />
-                                        <span>Match Keywords</span>
+                                    <div className="flex items-center gap-2 text-white/90 text-sm font-bold">
+                                        <div className="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                        </div>
+                                        Match Keywords
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-300 text-sm font-medium">
-                                        <CheckCircle2 className="w-4 h-4 text-green-400" />
-                                        <span>Triple Interviews</span>
+                                    <div className="flex items-center gap-2 text-white/90 text-sm font-bold">
+                                        <div className="w-5 h-5 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400">
+                                            <CheckCircle2 className="w-3.5 h-3.5" />
+                                        </div>
+                                        Triple Interviews
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="shrink-0">
+                            <div className="shrink-0 relative">
                                 <Link
                                     href="/tailor"
-                                    className="group relative inline-flex items-center gap-2 px-8 py-4 bg-white text-gray-900 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                                    className="group relative inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-900 rounded-xl font-black text-lg hover:bg-blue-50 hover:scale-[1.02] transition-all shadow-xl shadow-blue-900/50"
                                 >
                                     Try AI Tailor Free
-                                    <ChevronRight className="w-5 h-5 text-blue-700 transition-transform group-hover:translate-x-1" />
+                                    <ChevronRight className="w-5 h-5 text-blue-600 transition-transform group-hover:translate-x-1" />
                                 </Link>
+                                {/* Button Decoration */}
+                                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500 -z-10"></div>
                             </div>
                         </div>
                     </div>
