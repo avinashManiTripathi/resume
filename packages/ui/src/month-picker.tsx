@@ -72,8 +72,8 @@ export function MonthPicker({ value, onChange, placeholder = "Select Date", clas
             <div
                 onClick={() => setIsOpen(!isOpen)}
                 className={cn(
-                    "flex h-11 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer hover:bg-slate-50 transition-colors",
-                    !value && "text-slate-500"
+                    "flex w-full items-center justify-between px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-gray-100 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 cursor-pointer placeholder:text-gray-400",
+                    !value && "text-gray-400"
                 )}
             >
                 <div className="flex items-center gap-2 overflow-hidden">
