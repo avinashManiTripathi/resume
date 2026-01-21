@@ -5,7 +5,7 @@ import { App } from './app';
 import { database } from './config/database';
 import { initAI } from './services/ai-analysis.service';
 
-console.log("Environment: Changes ", process.env.NODE_ENV);
+console.log("Environment: Change ", process.env.NODE_ENV);
 console.log('\n' + '='.repeat(50));
 console.log('🔍 ENVIRONMENT VARIABLE CHECK');
 console.log('='.repeat(50));
