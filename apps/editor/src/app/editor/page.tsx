@@ -720,7 +720,7 @@ function ResumeEditor() {
       <EditorSidebar />
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Neural Analysis Modal (Initial Loading) */}
-        {!isLoading && (
+        {isLoading && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white animate-in fade-in duration-500">
             <div className="relative max-w-md w-full mx-4">
               <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
