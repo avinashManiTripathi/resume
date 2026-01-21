@@ -259,7 +259,8 @@ export const dummyData = {
         },
         "description": {
           "label": "Description",
-          "type": "richtext"
+          "type": "richtext",
+          "className": "w-full"
         }
       }
     },
@@ -377,7 +378,8 @@ export const dummyData = {
         },
         "description": {
           "label": "Description",
-          "type": "richtext"
+          "type": "richtext",
+          "className": "w-full"
         }
       }
     },
@@ -490,7 +492,8 @@ export const dummyData = {
         },
         "description": {
           "label": "Description",
-          "type": "richtext"
+          "type": "richtext",
+          "className": "w-full"
         }
       }
     },

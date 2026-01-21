@@ -27,6 +27,7 @@
     "./export-options": "./src/export-options.tsx",
     "./profile-header": "./src/profile-header.tsx",
     "./language-selector": "./src/language-selector.tsx",
+    "./month-picker": "./src/month-picker.tsx",
     "./number-input": "./src/number-input.tsx",
     "./rich-text-editor": "./src/rich-text-editor.tsx",
     "./pricing-modal": "./src/pricing-modal.tsx",

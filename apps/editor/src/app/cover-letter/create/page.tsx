@@ -10,6 +10,7 @@ import { Dialog } from "@repo/ui/dialog";
 import { Button } from "@repo/ui/button";
 import { ProfileHeader } from "@repo/ui/profile-header";
 import { StepLoader } from "@repo/ui/step-loader";
+import { EditorSidebar } from "../../../components/EditorSidebar";
 import { mapFormDataToStructured } from "../../../libs/cover-letter-utils";
 import TemplateSelector from "../../TemplateSelector";
 import SmartImportModal from "../../SmartImportModal";
@@ -527,209 +528,212 @@ function CoverLetterCreateForm() {
     }
 
     return (
-        <div className="flex flex-col h-screen w-full bg-slate-50">
-            {/* Header */}
-            <ProfileHeader
-                name={`${formData.fullName || 'Untitled'}'s Cover Letter`}
-                title={formData.jobTitle || "Job Title"}
-                progress={progress}
-                onDownload={async () => { await handleGenerate(); }}
-                onTemplateChange={() => setShowTemplates(true)}
-                fontFamily={fontFamily}
-                onFontChange={setFontFamily}
-                onSmartImport={() => {
-                    setSmartImportMode('voice');
-                    setShowSmartImport(true);
-                }}
-                // Hide unsupported props
-                classNameLeft="md:w-[45%]"
-            />
+        <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
+            <EditorSidebar />
+            <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
+                {/* Header */}
+                <ProfileHeader
+                    name={`${formData.fullName || 'Untitled'}'s Cover Letter`}
+                    title={formData.jobTitle || "Job Title"}
+                    progress={progress}
+                    onDownload={async () => { await handleGenerate(); }}
+                    onTemplateChange={() => setShowTemplates(true)}
+                    fontFamily={fontFamily}
+                    onFontChange={setFontFamily}
+                    onSmartImport={() => {
+                        setSmartImportMode('voice');
+                        setShowSmartImport(true);
+                    }}
+                    // Hide unsupported props
+                    classNameLeft="md:w-[45%]"
+                />
 
-            {/* Smart Import Modal */}
-            <SmartImportModal
-                isOpen={showSmartImport}
-                onClose={() => setShowSmartImport(false)}
-                onApply={handleSmartImportApply}
-                mode={smartImportMode}
-            />
+                {/* Smart Import Modal */}
+                <SmartImportModal
+                    isOpen={showSmartImport}
+                    onClose={() => setShowSmartImport(false)}
+                    onApply={handleSmartImportApply}
+                    mode={smartImportMode}
+                />
 
-            {/* Main Content - Split Glass Content */}
-            <div className="flex-1 flex overflow-hidden relative">
-                {/* Background Atmosphere */}
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-                </div>
-
-                {/* Left: Input Form (45%) */}
-                <div className="w-full md:w-[45%] shrink-0 flex flex-col relative bg-white border-r border-slate-200/60 overflow-hidden">
-                    <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
-                        {showTemplates ? (
-                            <TemplateSelector
-                                apiBase={API_BASE}
-                                endpoint="/api/cover-letter-templates"
-                                selectedTemplateId={template?.id || templateIdParam || ''}
-                                onBack={() => setShowTemplates(false)}
-                                onSelectTemplate={(newTemplate: any) => {
-                                    if (newTemplate.id) {
-                                        const url = new URL(window.location.href);
-                                        url.searchParams.set('templateId', newTemplate.id);
-                                        window.history.replaceState({}, '', url.toString());
-                                        fetchTemplate(newTemplate.id);
-                                        setShowTemplates(false);
-                                    }
-                                }}
-                            />
-                        ) : (
-                            <div className="p-6 md:p-12">
-                                <div className="max-w-2xl mx-auto space-y-8">
-                                    <div className="space-y-2">
-                                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">
-                                            <Sparkles size={12} />
-                                            <span>AI Context</span>
-                                        </div>
-                                        <h2 className="text-3xl font-black text-gray-900 tracking-tight">Your Details</h2>
-                                        <p className="text-gray-500 font-medium text-sm">Fill in the details below. The preview on the right updates automatically.</p>
-                                    </div>
-
-                                    {error && (
-                                        <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
-                                            <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">⚠️</div>
-                                            {error}
-                                        </div>
-                                    )}
-
-                                    <div className="space-y-6">
-                                        <div className="space-y-4">
-                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
-                                                <UserCircle size={18} className="text-blue-500" />
-                                                <h3>About You</h3>
-                                            </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
-                                                    <input type="text" value={formData.fullName} onChange={(e) => handleInputChange("fullName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="John Doe" />
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Job Title</label>
-                                                    <input type="text" value={formData.jobTitle} onChange={(e) => handleInputChange("jobTitle", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Software Engineer" />
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
-                                                    <input type="email" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="john@example.com" />
-                                                </div>
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
-                                                    <input type="tel" value={formData.phone} onChange={(e) => handleInputChange("phone", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="+1 555 000 0000" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
-                                                <Target size={18} className="text-blue-500" />
-                                                <h3>Target Role</h3>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Target Company</label>
-                                                <input type="text" value={formData.companyName} onChange={(e) => handleInputChange("companyName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Google, Microsoft..." />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
-                                                <Brain size={18} className="text-blue-500" />
-                                                <h3>Experience & Skills</h3>
-                                            </div>
-                                            <div className="space-y-1">
-                                                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Summary</label>
-                                                <div className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
-                                                    <RichTextEditor
-                                                        value={formData.experience}
-                                                        onChange={(value: string) => handleInputChange("experience", value)}
-                                                        placeholder="I have 5 years of experience..."
-                                                    />
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div className="h-12" />
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                {/* Main Content - Split Glass Content */}
+                <div className="flex-1 flex overflow-hidden relative">
+                    {/* Background Atmosphere */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
+                        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
                     </div>
-                </div>
 
-                {/* Right: Real-time Preview */}
-                <div className="flex-1 relative flex flex-col items-center bg-transparent">
-                    <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-8">
-                        <div className="relative w-full max-w-[794px] flex justify-center">
-                            <div className="relative bg-white border-r border-slate-200/60 w-full" style={{ aspectRatio: '210/297' }}>
-                                {/* Live Canvas Preview */}
-                                <main ref={mainRef} className="w-full h-full relative">
-                                    <div className="absolute inset-0 flex justify-center bg-white">
-                                        <canvas
-                                            ref={canvasRef}
-                                            className=""
-                                            style={{
-                                                maxWidth: '100%',
-                                                height: 'auto'
-                                            }}
-                                        />
-                                    </div>
-
-                                    {/* Overlay when loading */}
-                                    {(loading || isPdfGenerating) && (
-                                        <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                                            <div className="flex flex-col items-center gap-3">
-                                                <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
-                                                <p className="text-sm font-medium text-slate-600 animate-pulse">
-                                                    {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    )}
-                                </main>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {
-                generating && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/50 backdrop-blur-sm">
-                        <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
-                            {generationStep === generationSteps.length ? (
-                                <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
-                                    <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-20" />
-                                    <CheckCircle2 size={42} className="text-blue-600 relative z-10 animate-in zoom-in spin-in-12 duration-500" />
-                                </div>
+                    {/* Left: Input Form (45%) */}
+                    <div className="w-full md:w-[45%] shrink-0 flex flex-col relative bg-white border-r border-slate-200/60 overflow-hidden">
+                        <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
+                            {showTemplates ? (
+                                <TemplateSelector
+                                    apiBase={API_BASE}
+                                    endpoint="/api/cover-letter-templates"
+                                    selectedTemplateId={template?.id || templateIdParam || ''}
+                                    onBack={() => setShowTemplates(false)}
+                                    onSelectTemplate={(newTemplate: any) => {
+                                        if (newTemplate.id) {
+                                            const url = new URL(window.location.href);
+                                            url.searchParams.set('templateId', newTemplate.id);
+                                            window.history.replaceState({}, '', url.toString());
+                                            fetchTemplate(newTemplate.id);
+                                            setShowTemplates(false);
+                                        }
+                                    }}
+                                />
                             ) : (
-                                <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
-                                    <Wand2 size={32} className="text-blue-600 relative z-10" />
-                                    <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
+                                <div className="p-6 md:p-12">
+                                    <div className="max-w-2xl mx-auto space-y-8">
+                                        <div className="space-y-2">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full border border-blue-100 text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">
+                                                <Sparkles size={12} />
+                                                <span>AI Context</span>
+                                            </div>
+                                            <h2 className="text-3xl font-black text-gray-900 tracking-tight">Your Details</h2>
+                                            <p className="text-gray-500 font-medium text-sm">Fill in the details below. The preview on the right updates automatically.</p>
+                                        </div>
+
+                                        {error && (
+                                            <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+                                                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">⚠️</div>
+                                                {error}
+                                            </div>
+                                        )}
+
+                                        <div className="space-y-6">
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                    <UserCircle size={18} className="text-blue-500" />
+                                                    <h3>About You</h3>
+                                                </div>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Full Name</label>
+                                                        <input type="text" value={formData.fullName} onChange={(e) => handleInputChange("fullName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="John Doe" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Job Title</label>
+                                                        <input type="text" value={formData.jobTitle} onChange={(e) => handleInputChange("jobTitle", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Software Engineer" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email</label>
+                                                        <input type="email" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="john@example.com" />
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Phone</label>
+                                                        <input type="tel" value={formData.phone} onChange={(e) => handleInputChange("phone", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="+1 555 000 0000" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                    <Target size={18} className="text-blue-500" />
+                                                    <h3>Target Role</h3>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Target Company</label>
+                                                    <input type="text" value={formData.companyName} onChange={(e) => handleInputChange("companyName", e.target.value)} className="w-full px-5 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900" placeholder="Google, Microsoft..." />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="flex items-center gap-2 text-gray-900 font-bold text-sm uppercase tracking-wide">
+                                                    <Brain size={18} className="text-blue-500" />
+                                                    <h3>Experience & Skills</h3>
+                                                </div>
+                                                <div className="space-y-1">
+                                                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Summary</label>
+                                                    <div className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
+                                                        <RichTextEditor
+                                                            value={formData.experience}
+                                                            onChange={(value: string) => handleInputChange("experience", value)}
+                                                            placeholder="I have 5 years of experience..."
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className="h-12" />
+                                        </div>
+                                    </div>
                                 </div>
                             )}
-                            <div className="text-center mb-4">
-                                <h3 className="text-2xl font-black text-gray-900 mb-2">
-                                    {generationStep === generationSteps.length ? "Download Complete!" : "Generating Cover Letter"}
-                                </h3>
-                                <p className="text-slate-500 text-sm">
-                                    {generationStep === generationSteps.length ? "Your file is ready." : "Please wait while we create your document..."}
-                                </p>
-                            </div>
-                            <div className="flex justify-center text-left">
-                                <StepLoader steps={generationSteps} currentStep={generationStep} />
+                        </div>
+                    </div>
+
+                    {/* Right: Real-time Preview */}
+                    <div className="flex-1 relative flex flex-col items-center bg-transparent">
+                        <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-8">
+                            <div className="relative w-full max-w-[794px] flex justify-center">
+                                <div className="relative bg-white border-r border-slate-200/60 w-full" style={{ aspectRatio: '210/297' }}>
+                                    {/* Live Canvas Preview */}
+                                    <main ref={mainRef} className="w-full h-full relative">
+                                        <div className="absolute inset-0 flex justify-center bg-white">
+                                            <canvas
+                                                ref={canvasRef}
+                                                className=""
+                                                style={{
+                                                    maxWidth: '100%',
+                                                    height: 'auto'
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Overlay when loading */}
+                                        {(loading || isPdfGenerating) && (
+                                            <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                                                <div className="flex flex-col items-center gap-3">
+                                                    <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
+                                                    <p className="text-sm font-medium text-slate-600 animate-pulse">
+                                                        {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </main>
+                                </div>
                             </div>
                         </div>
                     </div>
-                )
-            }
+                </div>
 
-            <Dialog isOpen={dialog.isOpen} onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))} title={dialog.title} description={dialog.description} type={dialog.type} primaryActionLabel="Got it" />
-        </div >
+                {
+                    generating && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/50 backdrop-blur-sm">
+                            <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
+                                {generationStep === generationSteps.length ? (
+                                    <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
+                                        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-20" />
+                                        <CheckCircle2 size={42} className="text-blue-600 relative z-10 animate-in zoom-in spin-in-12 duration-500" />
+                                    </div>
+                                ) : (
+                                    <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
+                                        <Wand2 size={32} className="text-blue-600 relative z-10" />
+                                        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
+                                    </div>
+                                )}
+                                <div className="text-center mb-4">
+                                    <h3 className="text-2xl font-black text-gray-900 mb-2">
+                                        {generationStep === generationSteps.length ? "Download Complete!" : "Generating Cover Letter"}
+                                    </h3>
+                                    <p className="text-slate-500 text-sm">
+                                        {generationStep === generationSteps.length ? "Your file is ready." : "Please wait while we create your document..."}
+                                    </p>
+                                </div>
+                                <div className="flex justify-center text-left">
+                                    <StepLoader steps={generationSteps} currentStep={generationStep} />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+
+                <Dialog isOpen={dialog.isOpen} onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))} title={dialog.title} description={dialog.description} type={dialog.type} primaryActionLabel="Got it" />
+            </div>
+        </div>
     );
 }
 

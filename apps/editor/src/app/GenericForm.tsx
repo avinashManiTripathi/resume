@@ -92,7 +92,8 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                         acc[fieldKey] = {
                             label: fieldDef?.label || fieldKey,
                             value: fieldValue as string || '',
-                            type: fieldDef?.type || 'text'
+                            type: fieldDef?.type || 'text',
+                            className: fieldDef?.className
                         };
                         return acc;
                     }, {} as Record<string, any>)
@@ -130,7 +131,8 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                         acc[fieldKey] = {
                             label: fieldDef?.label || fieldKey,
                             value: fieldValue as string,
-                            type: fieldDef?.type || 'text'
+                            type: fieldDef?.type || 'text',
+                            className: fieldDef?.className
                         };
                         return acc;
                     }, {} as Record<string, any>)
@@ -209,7 +211,8 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                 acc[key] = {
                     label: field.label,
                     type: field.type,
-                    options: field.options
+                    options: field.options,
+                    className: field.className
                 };
                 return acc;
             }, {} as Record<string, any>)

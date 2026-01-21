@@ -83,28 +83,33 @@ export function ProfileHeader({
                 {/* Left: Profile Info */}
                 <div className={`w-full ${classNameLeft} shrink-0 bg-white justify-between rounded-none md:rounded-l-lg px-3 md:px-4 py-2 md:py-3 flex items-center gap-2 md:gap-4 border-r border-slate-200`}>
                     <div className="flex items-center gap-2 md:gap-4">
-                        <div className="relative">
-                            <div className="w-10 md:w-14 border-[3px] md:border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-10 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden text-xs md:text-base">
-                                {profileImage ? (
-                                    <img src={profileImage} alt={name} className="w-full h-full object-cover" />
-                                ) : (
-                                    name.split(" ").map(n => n[0]).join("").toUpperCase()
-                                )}
-                            </div>
+                        <div className="relative group">
                             <label
                                 htmlFor="profile-image-upload"
-                                className="hidden md:flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white cursor-pointer hover:bg-[#d1d5ea] transition-colors"
+                                className="cursor-pointer block relative"
+                            >
+                                <div className="w-10 md:w-14 border-[3px] md:border-[5px] border-[#F0F0F0] shadow-[0_4px_12px_#F4EBFF] h-10 md:h-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold overflow-hidden text-xs md:text-base relative group-hover:after:absolute group-hover:after:inset-0 group-hover:after:bg-black/10 group-hover:after:transition-colors">
+                                    {profileImage ? (
+                                        <img src={profileImage} alt={name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        name.split(" ").map(n => n[0]).join("").toUpperCase()
+                                    )}
+                                </div>
+                            </label>
+                            <label
+                                htmlFor="profile-image-upload"
+                                className="hidden md:flex items-center justify-center absolute -bottom-1 -right-1 w-6 h-6 bg-[#E1E5FA] rounded-full border-2 border-white cursor-pointer hover:bg-[#d1d5ea] transition-colors z-10"
                                 title="Change profile picture"
                             >
                                 <PencilLine size={12} />
-                                <input
-                                    id="profile-image-upload"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleImageUpload}
-                                    className="hidden"
-                                />
                             </label>
+                            <input
+                                id="profile-image-upload"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                            />
                         </div>
                         <div className="min-w-0 flex-1">
                             <h1 className="text-sm md:text-lg font-semibold text-gray-900 truncate">{name}</h1>

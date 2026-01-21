@@ -1,7 +1,7 @@
 import { TextArea } from "@repo/ui/text-area"
 import { Input } from "@repo/ui/input"
 import { RichTextEditor } from "@repo/ui/rich-text-editor"
-
+import { MonthPicker } from "@repo/ui/month-picker"
 export type FieldType =
     | "text"
     | "email"
@@ -79,6 +79,17 @@ const FieldRenderer = ({ field, value, onChange }: Props) => {
                     </option>
                 ))}
             </select>
+        );
+    }
+
+
+
+    if (field.type === "month") {
+        return (
+            <MonthPicker
+                value={value || ""}
+                onChange={(newValue) => onChange(newValue)}
+            />
         );
     }
 
