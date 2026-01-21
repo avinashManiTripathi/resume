@@ -10,7 +10,7 @@ export interface SavedDocument {
     id: string;
     _id?: string;
     title: string;
-    type: 'resume' | 'cover-letter';
+    type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history';
     templateId: string;
     data: any;
     lastModified: string;
@@ -120,6 +120,12 @@ export function usePersistence() {
     const saveDocument = useCallback(async (doc: Omit<SavedDocument, 'lastModified' | 'id'> & { id?: string }) => {
         // If no ID, generate a temporary one
         const documentId = doc.id || `doc_${Date.now()}`;
+
+        // ATS Scans and Tailor History are always local for now
+        if (doc.type === 'ats-scan' || doc.type === 'tailor-history') {
+            const success = saveToLocalStorage({ ...doc, id: documentId });
+            return { success, id: documentId, storage: 'local' as const };
+        }
 
         if (isLoggedIn) {
             const backendId = await saveToBackend({ ...doc, id: documentId });

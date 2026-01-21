@@ -16,7 +16,12 @@ import {
   MapPin,
   Phone,
   Layout,
-  Briefcase
+  Briefcase,
+  Target,
+  Sparkles,
+  BarChart3,
+  CheckCircle,
+  AlertCircle
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { StepLoader } from '@repo/ui/step-loader';
@@ -34,6 +39,9 @@ export default function DashboardPage() {
 
   const [resumes, setResumes] = useState<SavedDocument[]>([]);
   const [coverLetters, setCoverLetters] = useState<SavedDocument[]>([]);
+  const [atsScans, setAtsScans] = useState<SavedDocument[]>([]);
+  const [tailorHistory, setTailorHistory] = useState<SavedDocument[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
 
@@ -41,7 +49,7 @@ export default function DashboardPage() {
   const [deleteDialog, setDeleteDialog] = useState<{
     isOpen: boolean;
     id: string;
-    type: 'resume' | 'cover-letter';
+    type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history';
     title: string;
   }>({
     isOpen: false,
@@ -70,8 +78,14 @@ export default function DashboardPage() {
     setLoading(true);
     const { backendDocs, localDocs } = await getDocuments();
     const allDocs = [...backendDocs, ...localDocs];
+
+    // Sort by lastModified descending
+    allDocs.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
+
     setResumes(allDocs.filter(d => d.type === 'resume'));
     setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
+    setAtsScans(allDocs.filter(d => d.type === 'ats-scan'));
+    setTailorHistory(allDocs.filter(d => d.type === 'tailor-history'));
 
     const waitForSteps = () => {
       return new Promise<void>((resolve) => {
@@ -108,7 +122,7 @@ export default function DashboardPage() {
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  const handleDelete = async (id: string, type: 'resume' | 'cover-letter', title: string) => {
+  const handleDelete = async (id: string, type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history', title: string) => {
     setDeleteDialog({
       isOpen: true,
       id,
@@ -119,6 +133,7 @@ export default function DashboardPage() {
 
   const confirmDelete = async () => {
     const { id, type } = deleteDialog;
+    // @ts-ignore - types are compatible enough for this purpose
     const success = await deleteDocument(id, type);
     if (success) {
       fetchDocs();
@@ -169,43 +184,46 @@ export default function DashboardPage() {
           <div>
             {/* Project Links (Replica) */}
             <div className="space-y-1">
-              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Project 01</div>
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">My Workspace</div>
               <div className="px-3 py-2 text-sm font-bold text-indigo-700 bg-indigo-50/80 rounded-lg cursor-pointer flex justify-between items-center group">
                 Dashboard
               </div>
             </div>
-            {/* Add Project */}
-            <button className="flex items-center gap-2 mt-4 px-3 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
-              <Plus size={14} /> Add project
-            </button>
           </div>
 
           <div>
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">Process</h3>
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">Tools & Analysis</h3>
             <div className="space-y-1 relative pl-3">
               {/* Vertical Line for Process */}
               <div className="absolute left-3 top-2 bottom-2 w-[2px] bg-slate-100"></div>
 
-              <div className="flex items-center gap-3 px-3 py-2 text-sm font-bold text-slate-800 rounded-lg cursor-pointer bg-white relative z-10">
+              <div className="flex items-center gap-3 px-3 py-2 text-sm font-bold text-slate-800 rounded-lg cursor-pointer bg-white relative z-10 transition-colors">
                 <div className="w-2.5 h-0.5 bg-indigo-600 rounded-full"></div>
-                Active candidates
+                Optimization
               </div>
               {/* Sub items */}
               <div className="pl-6 space-y-1 mt-1">
-                <div className="py-1.5 text-sm text-indigo-600 font-medium cursor-pointer">Stats & Overview</div> {/* Replaced 'Screening' */}
-                <Link href="/templates" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Templates</Link>
-                <Link href="/tailor" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">AI Tailor</Link>
-                <Link href="https://interview.hirecta.com" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Mock Interview</Link>
+                <Link href="/ats-check" className="block py-1.5 text-sm text-slate-500 hover:text-blue-600 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
+                  ATS Checker
+                </Link>
+                <Link href="/tailor" className="block py-1.5 text-sm text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
+                  AI Tailor
+                </Link>
+                <Link href="/templates" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
+                  Templates
+                </Link>
+                <Link href="https://interview.hirecta.com" className="block py-1.5 text-sm text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
+                  Mock Interview
+                </Link>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">People</h3>
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">Account</h3>
             <div className="space-y-1">
-              {/* Candidates / Employees */}
-              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Candidates</div>
-              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Employees</div>
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Settings</div>
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Support</div>
             </div>
           </div>
         </div>
@@ -252,7 +270,7 @@ export default function DashboardPage() {
                   {user?.name?.[0] || 'G'}
                 </div>
               )}
-              <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "Dannielle S."}</span>
+              <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "User"}</span>
             </div>
           </div>
         </header>
@@ -260,7 +278,7 @@ export default function DashboardPage() {
         <main className="px-8 lg:px-12 pb-20">
           {/* Breadcrumbs */}
           <div className="text-xs font-medium text-slate-400 mb-6 flex items-center gap-2">
-            <span>Active candidates</span> <ChevronRight size={12} /> <span>Applied for a role</span> <ChevronRight size={12} /> <span className="text-slate-900">{user?.name}</span>
+            <span>My Workspace</span> <ChevronRight size={12} /> <span className="text-slate-900">Dashboard</span>
           </div>
 
           {/* Profile Header */}
@@ -271,168 +289,242 @@ export default function DashboardPage() {
                   <img src={user.picture} alt="" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm" />
                 ) : (
                   <div className="w-20 h-20 rounded-full bg-indigo-50 border-4 border-white shadow-sm flex items-center justify-center text-2xl font-bold text-indigo-400">
-                    {user?.name?.[0]}
+                    {user?.name?.[0] || 'U'}
                   </div>
                 )}
                 <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full"></div>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-1">{user?.name || "Mahamed Hendrix"}</h1>
-                <p className="text-slate-500 font-medium">Job Seeker &middot; Product Designer</p>
+                <h1 className="text-3xl font-bold text-slate-900 mb-1">{user?.name || "Welcome Back"}</h1>
+                <p className="text-slate-500 font-medium">{user?.email || "Job Seeker"}</p>
               </div>
             </div>
             <Link href="/editor" className="px-6 py-2.5 bg-[#6366F1] hover:bg-[#5558DD] text-white font-bold text-sm rounded-lg shadow-sm shadow-indigo-200 transition-all flex items-center gap-2">
-              Create New
+              Create New Resume
             </Link>
           </div>
 
-          {/* Tabs */}
-          <div className="border-b border-slate-200 mb-8">
-            <div className="flex items-center gap-8">
-              <button className="pb-3 border-b-2 border-[#6366F1] font-bold text-slate-900 text-sm">Job Application</button>
-              <button className="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-slate-600 text-sm transition-colors">Comments (12)</button>
-            </div>
-          </div>
-
-          {/* 🟢 TWO COLUMN GRID (The Replica Content) */}
+          {/* 🟢 GRID LAYOUT */}
           <div className="grid grid-cols-12 gap-10">
 
-            {/* LEFT COLUMN: Dummy Profile Data */}
+            {/* LEFT COLUMN: Profile & Quick Links */}
             <div className="col-span-12 lg:col-span-4 space-y-10">
-              {/* About */}
-              <section>
-                <h3 className="font-bold text-lg text-slate-900 mb-5">About</h3>
-
-                <div className="grid grid-cols-3 gap-y-4 gap-x-2 text-sm mb-6">
-                  <div>
-                    <p className="text-slate-400 font-medium mb-1">Applying for</p>
-                    <p className="text-slate-900 font-semibold">Medical Assistant</p>
+              {/* ATS Quick Check */}
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg shadow-blue-900/10 relative overflow-hidden group cursor-pointer hover:shadow-blue-900/20 transition-all" onClick={() => router.push('/ats-check')}>
+                <div className="absolute top-0 right-0 p-4 opacity-10">
+                  <Target size={100} />
+                </div>
+                <div className="relative z-10 space-y-4">
+                  <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                    <Target className="text-white" size={20} />
                   </div>
                   <div>
-                    <p className="text-slate-400 font-medium mb-1">Resume</p>
-                    <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700">
-                      <FileText size={12} /> resume.pdf
+                    <h3 className="text-lg font-bold">Check ATS Score</h3>
+                    <p className="text-sm text-blue-100 mt-1">Is your resume robot-ready? Get an instant score now.</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider bg-black/20 w-fit px-3 py-1.5 rounded-lg border border-white/10 group-hover:bg-black/30 transition-colors">
+                    Start Scan <ArrowRight size={12} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tailor Quick Link */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-indigo-300 transition-all" onClick={() => router.push('/tailor')}>
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                    <Sparkles size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">Tailor with AI</h3>
+                    <p className="text-sm text-slate-500 mt-1">Customize your resume for a specific job description in seconds.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* About (Dummy for now) */}
+              <section>
+                <h3 className="font-bold text-lg text-slate-900 mb-5">Profile Summary</h3>
+                <div className="space-y-4">
+                  <div className="bg-white p-4 rounded-xl border border-slate-200">
+                    <p className="text-sm text-slate-600 leading-relaxed italic">
+                      "{dummyAbout}"
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white p-4 rounded-xl border border-slate-200">
+                      <p className="text-xs text-slate-400 font-bold uppercase mb-1">Email</p>
+                      <p className="text-sm font-medium text-slate-900 truncate" title={dummyContact.email}>{dummyContact.email}</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border border-slate-200">
+                      <p className="text-xs text-slate-400 font-bold uppercase mb-1">Phone</p>
+                      <p className="text-sm font-medium text-slate-900">{dummyContact.phone}</p>
                     </div>
                   </div>
-                  <div>
-                    <p className="text-slate-400 font-medium mb-1">Location</p>
-                    <p className="text-slate-900 font-semibold">New York, USA</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Summary</p>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    {dummyAbout}
-                  </p>
-                </div>
-              </section>
-
-              {/* Contact */}
-              <section>
-                <h3 className="font-bold text-lg text-slate-900 mb-5">Contact</h3>
-                <div className="grid grid-cols-2 gap-6 text-sm">
-                  <div>
-                    <p className="text-slate-400 font-medium mb-1">Phone number</p>
-                    <p className="text-slate-900 font-semibold">{dummyContact.phone}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-400 font-medium mb-1">Email</p>
-                    <p className="text-slate-900 font-semibold truncate" title={dummyContact.email}>{dummyContact.email}</p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Key Skills */}
-              <section>
-                <h3 className="font-bold text-lg text-slate-900 mb-5">Key Skills</h3>
-                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
-                  {dummySkills.map((skill, i) => (
-                    <div key={i} className="flex items-center gap-2 text-sm text-slate-600 font-medium">
-                      <span className="text-slate-400 font-light">&mdash;</span> {skill}
-                    </div>
-                  ))}
                 </div>
               </section>
             </div>
 
-            {/* RIGHT COLUMN: Real Documents (Mapped to "Education" & "Exp") */}
+            {/* RIGHT COLUMN: Documents & History */}
             <div className="col-span-12 lg:col-span-8 space-y-8">
 
-              {/* "Education" Style Card -> Resumes */}
+              {/* SECTION: Recent Documents (Resumes) */}
               <div className="relative">
-                {/* The blue selection border effect from image */}
+                {/* Selection Border Effect */}
                 <div className="absolute -inset-0.5 rounded-2xl border-2 border-[#6366F1] bg-transparent opacity-0 pointer-events-none"></div>
 
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                  <h3 className="font-bold text-lg text-slate-900 mb-6">Resumes</h3>
+                  <h3 className="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
+                    <FileText size={20} className="text-indigo-600" /> Resumes
+                  </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {resumes.length === 0 ? (
-                      <div className="col-span-2 text-center py-4 text-slate-400 text-sm font-medium">No resumes created yet.</div>
+                      <div className="col-span-2 py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
+                        <p className="text-slate-400 text-sm font-medium">No resumes created yet.</p>
+                      </div>
                     ) : (
                       resumes.slice(0, 4).map(doc => (
-                        <Link href={`/editor?id=${doc.id || doc._id}`} key={doc.id || doc._id} className="group cursor-pointer">
-                          <p className="font-bold text-xs text-slate-900 uppercase tracking-tight mb-2 group-hover:text-[#6366F1] transition-colors">
-                            {doc.title || "UNTITLED RESUME"}
-                          </p>
-                          <p className="text-sm text-slate-500 font-medium">Hirecta Editor, {new Date(doc.lastModified).getFullYear()}</p>
-                        </Link>
+                        <div key={doc.id || doc._id} className="group relative bg-white border border-slate-200 hover:border-indigo-400 rounded-xl p-5 hover:shadow-md transition-all cursor-pointer">
+                          <Link href={`/editor?id=${doc.id || doc._id}`} className="absolute inset-0 z-0" />
+                          <div className="flex justify-between items-start mb-2 relative z-10">
+                            <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                              <FileText size={18} />
+                            </div>
+                            <button onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDelete(doc.id || doc._id || "", 'resume', doc.title || "Untitled");
+                            }} className="text-slate-300 hover:text-rose-500 transition-colors p-1">
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                          <h4 className="font-bold text-slate-900 text-sm truncate pr-2 group-hover:text-indigo-600 transition-colors">{doc.title}</h4>
+                          <p className="text-xs text-slate-500 mt-1">Edited {getTimeAgo(doc.lastModified)}</p>
+                        </div>
                       ))
                     )}
 
-                    {/* Add New Button (Simulating the + Box) */}
-                    <Link href="/editor" className="min-h-[60px] flex flex-col justify-center border-2 border-dashed border-slate-200 rounded-xl p-4 hover:border-[#6366F1] hover:bg-slate-50 transition-all group text-center">
-                      <span className="text-xs font-bold text-slate-400 group-hover:text-[#6366F1] transition-colors uppercase">+ Add Resume</span>
+                    {/* Add New Button */}
+                    <Link href="/editor" className="min-h-[120px] flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 transition-all group">
+                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-400 group-hover:text-indigo-600 transition-colors mb-2">
+                        <Plus size={20} />
+                      </div>
+                      <span className="text-xs font-bold text-slate-400 group-hover:text-indigo-600 transition-colors uppercase">Create New Resume</span>
                     </Link>
                   </div>
                 </div>
               </div>
 
-              {/* "Professional Experience" Style -> Cover Letters */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60">
+              {/* SECTION: Optimization History Tabs */}
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                <h3 className="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
+                  <BarChart3 size={20} className="text-emerald-600" /> Optimization History
+                </h3>
+
+                {atsScans.length === 0 && tailorHistory.length === 0 ? (
+                  <div className="py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
+                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-4">
+                      <Target size={32} />
+                    </div>
+                    <p className="text-slate-900 font-bold mb-1">No Analysis History</p>
+                    <p className="text-slate-500 text-sm mb-4">Run an ATS scan or Tailor operation to see results here.</p>
+                    <div className="flex justify-center gap-4">
+                      <Link href="/ats-check" className="text-xs font-bold text-blue-600 hover:underline">Run ATS Check</Link>
+                      <Link href="/tailor" className="text-xs font-bold text-indigo-600 hover:underline">Try Tailor AI</Link>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {/* ATS Scans List */}
+                    {atsScans.length > 0 && (
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">ATS Check Results</h4>
+                        <div className="space-y-3">
+                          {atsScans.slice(0, 3).map((scan: any) => (
+                            <div key={scan.id} className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-blue-200 transition-colors">
+                              <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg ${scan.data.score >= 80 ? 'bg-emerald-500' : scan.data.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}>
+                                  {scan.data.score}
+                                </div>
+                                <div>
+                                  <p className="font-bold text-slate-900 text-sm">{scan.data.fileName || "Resume Scan"}</p>
+                                  <p className="text-xs text-slate-500">{new Date(scan.data.scannedAt).toLocaleDateString()} &middot; {scan.data.feedback?.strengths?.length || 0} Strengths found</p>
+                                </div>
+                              </div>
+                              <button onClick={() => handleDelete(scan.id, 'ats-scan', scan.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Tailor History List */}
+                    {tailorHistory.length > 0 && (
+                      <div className={atsScans.length > 0 ? "pt-6 border-t border-slate-100" : ""}>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tailored Resumes</h4>
+                        <div className="space-y-3">
+                          {tailorHistory.slice(0, 3).map((tailor: any) => (
+                            <div key={tailor.id} className="flex items-center justify-between p-4 bg-indigo-50/50 border border-indigo-100/50 rounded-xl hover:border-indigo-300 transition-colors">
+                              <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
+                                  <Sparkles size={20} />
+                                </div>
+                                <div>
+                                  <p className="font-bold text-slate-900 text-sm">{tailor.data.jobTitle || "Custom Role"} @ {tailor.data.company || "Company"}</p>
+                                  <p className="text-xs text-slate-500">{new Date(tailor.data.createdAt).toLocaleDateString()} &middot; Tailored Context</p>
+                                </div>
+                              </div>
+                              <button onClick={() => handleDelete(tailor.id, 'tailor-history', tailor.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* SECTION: Cover Letters (Reduced prominence) */}
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-bold text-lg text-slate-900">Cover Letters</h3>
-                  <button className="text-slate-300 hover:text-slate-600"><MoreHorizontal size={20} /></button>
+                  <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                    <FileText size={20} className="text-slate-400" /> Cover Letters
+                  </h3>
                 </div>
 
-                <div className="space-y-8">
+                <div className="space-y-4">
                   {coverLetters.length === 0 ? (
                     <div className="text-center py-4 text-slate-400 text-sm">No cover letters found.</div>
                   ) : (
-                    coverLetters.map(doc => (
-                      <div key={doc.id || doc._id} className="group relative pl-8 border-l-2 border-transparent hover:border-[#6366F1] transition-colors">
-                        {/* Bullet line */}
-                        <div className="absolute left-[-5px] top-1.5 w-2 h-2 rounded-full bg-slate-300 group-hover:bg-[#6366F1] transition-colors"></div>
-
-                        <div className="flex justify-between items-start mb-1">
-                          <h4 className="font-bold text-sm text-slate-900 uppercase tracking-tight group-hover:text-[#6366F1] transition-colors">
-                            {doc.title || "UNTITLED LETTER"} / {new Date(doc.lastModified).toLocaleDateString()}
-                          </h4>
-                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={(e) => {
-                              e.preventDefault();
-                              handleDelete(doc.id || doc._id || "", 'cover-letter', doc.title || "Untitled");
-                            }} className="text-slate-300 hover:text-rose-500"><Trash2 size={14} /></button>
+                    coverLetters.slice(0, 3).map(doc => (
+                      <div key={doc.id || doc._id} className="group flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-slate-200 rounded-full group-hover:bg-indigo-500 transition-colors"></div>
+                          <div>
+                            <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
+                              {doc.title || "UNTITLED LETTER"}
+                            </h4>
+                            <p className="text-xs text-slate-400">Last edited {getTimeAgo(doc.lastModified)}</p>
                           </div>
                         </div>
-                        <p className="text-xs text-slate-400 font-medium mb-3">AI Generated Draft</p>
-
-                        <div className="space-y-3">
-                          <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                            &mdash; Tailored application document created with Hirecta AI.
-                          </p>
-                          <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                            &mdash; Last edited {getTimeAgo(doc.lastModified)}.
-                          </p>
+                        <div className="flex items-center gap-2">
+                          <Link href={`/cover-letter?id=${doc.id || doc._id}`} className="text-xs font-bold text-indigo-600 hover:underline px-3 py-1 bg-indigo-50 rounded-md">
+                            Edit
+                          </Link>
+                          <button onClick={() => handleDelete(doc.id || doc._id || "", 'cover-letter', doc.title || "Untitled")} className="text-slate-300 hover:text-rose-500 p-2">
+                            <Trash2 size={14} />
+                          </button>
                         </div>
-                        <Link href={`/cover-letter?id=${doc.id || doc._id}`} className="absolute inset-0 z-10" />
                       </div>
                     ))
                   )}
 
-                  <Link href="/cover-letter" className="flex items-center gap-2 text-sm font-bold text-[#6366F1] hover:text-[#5558DD] transition-colors mt-4">
-                    See all or Create New <ArrowRight size={14} />
+                  <Link href="/cover-letter" className="block text-center text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors mt-4 py-2 border-t border-slate-100">
+                    View All Cover Letters
                   </Link>
                 </div>
               </div>

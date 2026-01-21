@@ -7,6 +7,7 @@ import { StepLoader } from "@repo/ui/step-loader";
 import { KeywordBanner } from "./KeywordBanner";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
+import { usePersistence } from "../hooks/usePersistence";
 
 
 interface ATSResult {
@@ -162,6 +163,7 @@ export default function ATSCheckerPage() {
     const [currentStageIndex, setCurrentStageIndex] = useState(0);
     const [result, setResult] = useState<ATSResult | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const { saveDocument } = usePersistence();
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -243,6 +245,23 @@ export default function ATSCheckerPage() {
             await new Promise(resolve => setTimeout(resolve, 500));
 
             setResult(data);
+
+            // Save the scan result
+            const scanDoc = {
+                id: `ats_${Date.now()}`,
+                title: `ATS Scan - ${file.name}`,
+                type: 'ats-scan' as const,
+                templateId: 'ats-report',
+                data: {
+                    ...data,
+                    fileName: file.name,
+                    scannedAt: new Date().toISOString()
+                }
+            };
+
+            // We can ignore the promise here or handle error silently
+            saveDocument(scanDoc).catch(console.error);
+
             setCurrentStep('results');
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred");

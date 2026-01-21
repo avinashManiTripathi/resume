@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@repo/ui/button';
 import { Dialog } from '@repo/ui/dialog';
 import { StepLoader } from '@repo/ui/step-loader';
+import { usePersistence } from '../hooks/usePersistence';
 
 export default function TailorResume() {
     const router = useRouter();
@@ -29,6 +30,7 @@ export default function TailorResume() {
         description: "",
         type: "info"
     });
+    const { saveDocument } = usePersistence();
 
     const tailoringStages = [
         'Uploading resume...',
@@ -142,6 +144,21 @@ export default function TailorResume() {
 
             const result = await response.json();
             if (result.success && result.data) {
+                // Save Tailor History
+                const historyDoc = {
+                    id: `tailor_${Date.now()}`,
+                    title: `Tailor - ${jobTitle || 'Job Role'} @ ${company || 'Company'}`,
+                    type: 'tailor-history' as const,
+                    templateId: 'tailor-report',
+                    data: {
+                        jobTitle,
+                        company,
+                        jobDescription: jobDescription.substring(0, 200) + '...', // Save snippet
+                        createdAt: new Date().toISOString()
+                    }
+                };
+                saveDocument(historyDoc).catch(console.error);
+
                 sessionStorage.setItem('parsedResumeData', JSON.stringify(result.data));
                 router.push('/editor?fromTailor=true');
             }
