@@ -156,17 +156,19 @@ export function ProfileHeader({
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={onSmartImport}
-                                className="p-2 h-10 w-10 flex items-center justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
+                                className="px-3 h-10 flex items-center gap-2 justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
                                 title="Smart Import (AI)"
                             >
                                 <Sparkles size={18} />
+                                <span className="text-sm font-semibold hidden lg:inline">Smart Import</span>
                             </button>
                             <button
                                 onClick={onTemplateChange}
-                                className="p-2 h-10 w-10 flex items-center justify-center hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border border-transparent hover:border-gray-200"
+                                className="px-3 h-10 flex items-center gap-2 justify-center hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border border-transparent hover:border-gray-200"
                                 title="Change Template"
                             >
                                 <LayoutGrid size={18} />
+                                <span className="text-sm font-medium hidden lg:inline">Template</span>
                             </button>
 
                             {/* Font Selector */}

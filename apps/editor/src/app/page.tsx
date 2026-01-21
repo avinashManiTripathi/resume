@@ -228,11 +228,20 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="text-slate-400 hover:text-slate-600 transition-colors"><Settings size={20} /></button>
-            <button className="text-slate-400 hover:text-slate-600 transition-colors"><Mail size={20} /></button>
-            <button className="relative text-slate-400 hover:text-slate-600 transition-colors">
-              <Bell size={20} />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-rose-500 rounded-full border border-[#F3F4F6]"></span>
+            <button className="flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors">
+              <Settings size={20} />
+              <span className="text-sm font-medium hidden sm:inline">Settings</span>
+            </button>
+            <button className="flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors">
+              <Mail size={20} />
+              <span className="text-sm font-medium hidden sm:inline">Messages</span>
+            </button>
+            <button className="relative flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors">
+              <div className="relative">
+                <Bell size={20} />
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-rose-500 rounded-full border border-[#F3F4F6]"></span>
+              </div>
+              <span className="text-sm font-medium hidden sm:inline">BroadCast</span>
             </button>
 
             <div className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer" onClick={logout}>
