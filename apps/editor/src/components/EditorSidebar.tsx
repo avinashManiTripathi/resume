@@ -20,16 +20,16 @@ export function EditorSidebar() {
     const { logout } = usePersistence();
 
     const menuItems = [
-        {
-            label: "Go Back",
-            icon: ArrowLeft,
-            onClick: () => router.back(),
-            variant: "secondary"
-        },
+        // {
+        //     label: "Go Back",
+        //     icon: ArrowLeft,
+        //     onClick: () => router.back(),
+        //     variant: "secondary"
+        // },
         {
             label: "Dashboard",
             icon: LayoutGrid,
-            href: "/", // Assuming dashboard route or external
+            href: "https://editor.hirecta.com", // Assuming dashboard route or external
             onClick: () => window.location.href = "https://editor.hirecta.com" // Adjust to actual dashboard URL
         },
         {
