@@ -116,10 +116,36 @@ export function setupInterviewSocket(io: Server) {
             }
 
             try {
-                // Generate AI response
-                const systemPrompt = `You are interviewing ${session.name} for a ${session.role} position. 
-                Evaluate their previous answer and ask the next logical technical or behavioral question. 
-                If they provide code, analyze it.`;
+                // Fetch full session from DB to get JD info
+                let jdContext = '';
+                if (session.sessionId) {
+                    const dbSession = await InterviewSession.findById(session.sessionId);
+                    if (dbSession && dbSession.jdInfo) {
+                        const jdInfo = dbSession.jdInfo;
+                        jdContext = `
+Job Role: ${jdInfo.role || session.role}
+Required Skills: ${jdInfo.skills?.join(', ') || 'Not specified'}
+Tech Stack: ${jdInfo.techStack?.join(', ') || 'Not specified'}
+Experience Level: ${jdInfo.experienceLevel || 'Not specified'}
+Is Developer Role: ${jdInfo.isDeveloper ? 'Yes' : 'No'}`;
+                    }
+                }
+
+                // Enhanced AI prompt with JD context
+                const systemPrompt = `You are conducting a professional technical interview for ${session.name} for a ${session.role} position.
+
+${jdContext}
+
+INTERVIEW GUIDELINES:
+1. First question should always be "Tell me about yourself" (if this is their first response)
+2. Ask technical questions relevant to the job requirements and tech stack mentioned above
+3. For developer roles, include coding and system design questions
+4. Evaluate their previous answer before asking the next question
+5. Ask follow-up questions based on their responses
+6. Keep questions professional, clear, and challenging
+7. Progress naturally through: intro → technical skills → coding (if developer) → behavioral → wrap-up
+
+Current conversation context: Review their previous answers and ask the next logical question.`;
 
                 // Convert history to format expected by service
                 const contextMessages = session.history.map(h => ({
