@@ -190,6 +190,45 @@ function SessionContent() {
     const [timerStarted, setTimerStarted] = useState(false);
     const [showTimeWarning, setShowTimeWarning] = useState(false);
 
+    // Fetch session data on mount
+    useEffect(() => {
+        const fetchSession = async () => {
+            if (!sessionId) {
+                console.error('No session ID provided');
+                router.push('/');
+                return;
+            }
+
+            try {
+                console.log('📡 Fetching session:', sessionId);
+                const response = await fetch(`${API_URL}/api/interview/${sessionId}`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch session: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ Session loaded:', result.data);
+
+                if (result.success) {
+                    setSession(result.data);
+                } else {
+                    console.error('Failed to load session:', result.message);
+                    alert('Failed to load interview session');
+                    router.push('/');
+                }
+            } catch (error) {
+                console.error('Error fetching session:', error);
+                alert('Failed to connect to server');
+                router.push('/');
+            }
+        };
+
+        fetchSession();
+    }, [sessionId, router]);
+
     // Interview timer countdown
     useEffect(() => {
         if (!timerStarted || session?.status === 'completed') return;
@@ -271,8 +310,11 @@ function SessionContent() {
 
         // Start interview if session loaded
         if (session) {
+            const userName = session.userId?.name || 'Candidate';
+            console.log('🎬 Starting interview for:', userName, 'Role:', session.jdInfo?.role);
+
             socket.emit('start-interview', {
-                name: 'Avinash', // TODO: Get from session/user
+                name: userName,
                 role: session.jdInfo?.role || 'Developer',
                 sessionId: session._id
             });
@@ -767,8 +809,8 @@ function SessionContent() {
                     <div className="flex items-center gap-3">
                         {/* WebSocket Connection Status */}
                         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isSocketConnected
-                                ? 'bg-green-50 border-green-300 text-green-700'
-                                : 'bg-red-50 border-red-300 text-red-700'
+                            ? 'bg-green-50 border-green-300 text-green-700'
+                            : 'bg-red-50 border-red-300 text-red-700'
                             }`}>
                             <div className={`w-2 h-2 rounded-full ${isSocketConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
                                 }`} />
