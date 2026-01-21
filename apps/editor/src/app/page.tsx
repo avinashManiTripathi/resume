@@ -2,38 +2,21 @@
 
 import Link from "next/link";
 import {
-  LayoutDashboard,
-  FileText,
-  Mail,
-  Plus,
-  Settings,
-  CreditCard,
-  Clock,
-  ChevronRight,
   Search,
-  UserCircle,
-  LogOut,
-  ExternalLink,
-  Sparkles,
-  Trash2,
-  Briefcase,
-  Target,
-  Mic2,
-  BarChart3,
-  Share2,
-  GraduationCap,
-  Navigation,
-  MessageSquare,
-  MoreHorizontal,
-  ChevronDown,
-  HelpCircle,
-  Zap,
-  Globe,
+  Settings,
   Bell,
-  Command,
-  DockIcon,
-  CheckCheck,
-  LayoutGrid
+  Mail,
+  MoreHorizontal,
+  Plus,
+  ArrowRight,
+  FileText,
+  Clock,
+  Trash2,
+  ChevronRight,
+  MapPin,
+  Phone,
+  Layout,
+  Briefcase
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { StepLoader } from '@repo/ui/step-loader';
@@ -41,9 +24,7 @@ import { getSubscription } from "@repo/utils-client";
 import Image from "next/image";
 import { usePersistence, SavedDocument } from "./hooks/usePersistence";
 import { Dialog } from "@repo/ui/dialog";
-import { ComingSoon } from "../components/ComingSoon";
 import { useRouter } from "next/navigation";
-import { Button } from "@repo/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -55,7 +36,6 @@ export default function DashboardPage() {
   const [coverLetters, setCoverLetters] = useState<SavedDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
-  const [activeGoal, setActiveGoal] = useState("Resume Building");
 
   // Deletion Dialog State
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -71,9 +51,9 @@ export default function DashboardPage() {
   });
 
   const loadingSteps = [
-    "Loading your workspace...",
-    "Fetching documents...",
-    "Setting up dashboard..."
+    "Loading Hirecta...",
+    "Syncing profile...",
+    "Fetching documents..."
   ];
 
   // Auto-progress loading steps
@@ -93,12 +73,10 @@ export default function DashboardPage() {
     setResumes(allDocs.filter(d => d.type === 'resume'));
     setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
 
-    // Wait for all steps to complete before hiding loading
     const waitForSteps = () => {
       return new Promise<void>((resolve) => {
         const checkSteps = () => {
           if (loadingStep >= loadingSteps.length - 1) {
-            // Add small delay after last step for smooth UX
             setTimeout(() => resolve(), 500);
           } else {
             setTimeout(checkSteps, 100);
@@ -150,478 +128,321 @@ export default function DashboardPage() {
     }
   };
 
-  const goals = [
-    { name: "Resume Building", icon: FileText },
-    { name: "Job Search", icon: Briefcase },
-    { name: "Interview Prep", icon: Mic2 },
-    { name: "Career Path", icon: GraduationCap }
-  ];
-
-  const mainNav = [
-    { icon: LayoutDashboard, label: "Overview", active: true },
-    { icon: FileText, label: "My Documents", count: resumes.length + coverLetters.length },
-    { icon: Target, label: "Application Tracker" },
-  ];
-
-  const toolsNav = [
-    { icon: Zap, label: "AI Tailor", isNew: true },
-    { icon: CheckCheck, label: "ATS Cheker" },
-    { icon: DockIcon, label: "Resume Builder" },
-    { icon: BarChart3, label: "Market Insights" },
-    { icon: Mic2, label: "AI Interview", isNew: true, href: "http://localhost:3005" },
-    { icon: Share2, label: "Outreach" },
-
-
+  // 🟢 DUMMY DATA FOR VISUAL REPLICA
+  const dummyAbout = "Attentive and detail-oriented professional with experience in building high-quality documents. Dedicated to creating ATS-optimized resumes and persuasive cover letters to help land the dream job.";
+  const dummyContact = { phone: "(123) 456-7890", email: user?.email || "user@example.com" };
+  const dummySkills = [
+    "Microsoft Office Suite", "Database Management", "ICD-9 & CPT Designations",
+    "HIPAA Guidelines", "First Aid and CPR", "Team Leadership"
   ];
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] text-[#0F172A] overflow-hidden font-sans selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="flex min-h-screen bg-[#F3F4F6] font-[family-name:var(--font-inter)] text-slate-900">
+
       {/* Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white animate-in fade-in duration-300">
-          <div className="bg-white border border-slate-100 rounded-3xl shadow-2xl p-12 max-w-md w-full mx-4 animate-in zoom-in slide-in-from-bottom-4 duration-500">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
-                <LayoutGrid className="w-8 h-8 text-blue-600 animate-pulse" />
-              </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Loading Dashboard</h2>
-              <p className="text-sm text-slate-500">Please wait while we prepare your workspace</p>
-            </div>
-            <StepLoader
-              steps={loadingSteps}
-              currentStep={loadingStep}
-              size="md"
-            />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/90 backdrop-blur-sm">
+          <div className="max-w-md w-full mx-4 text-center">
+            <StepLoader steps={loadingSteps} currentStep={loadingStep} size="md" />
           </div>
         </div>
       )}
-      {/* Sidebar - Refined Minimalist */}
-      <aside className="w-72 h-full border-r border-slate-200/60 flex flex-col py-8 px-5 flex-shrink-0 bg-white/50 backdrop-blur-3xl">
-        <div className="mb-10 px-3">
-          <Link href="/" className="inline-block transition-all hover:opacity-80 active:scale-95">
+
+      {/* 🟢 LEFT SIDEBAR (Fixed Width) */}
+      <aside className="w-[260px] fixed inset-y-0 left-0 bg-white border-r border-slate-200 z-50 flex flex-col py-8 px-6 overflow-y-auto hidden lg:flex">
+        {/* Logo Area */}
+        <div className="flex items-center gap-3 mb-10 px-2">
+          <Link href="/">
             <Image
               src="/logo.png"
               alt="Hirecta"
               width={120}
-              height={26}
+              height={32}
+              className="h-8 w-auto object-contain"
               priority
             />
           </Link>
         </div>
 
-
-        {/* Improved User Profile Section */}
-        <div className="group relative p-3 rounded-2xl bg-gray-50 border border-gray-100 transition-all hover:bg-white hover:shadow-xl hover:shadow-indigo-500/5 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-tr from-blue-500 to-indigo-600 ring-2 ring-white shadow-md flex items-center justify-center text-white font-bold text-xs">
-                {user?.picture ? (
-                  <img src={user.picture} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  (user?.name?.[0] || 'G')
-                )}
-              </div>
-              <div className="absolute -bottom-1 -right-1 bg-white p-0.5 rounded-full shadow-sm">
-                <div className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></div>
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-extrabold text-[13px] text-gray-900 truncate leading-tight tracking-tight">
-                {isLoggedIn ? (user?.name || user?.email?.split('@')[0]) : "Guest Explorer"}
-              </h3>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Professional Site</p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="flex-1 overflow-y-auto space-y-6 custom-scrollbar">
+        {/* Nav Groups */}
+        <div className="space-y-8 flex-1">
           <div>
-            <p className="px-3 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Core</p>
-            <div className="space-y-0.5">
-              {mainNav.map((item, idx) => (
-                <button
-                  key={idx}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group ${item.active
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-100 font-bold"
-                    : "text-gray-500 hover:bg-gray-50 font-semibold"
-                    }`}
-                >
-                  <item.icon size={16} strokeWidth={item.active ? 2.5 : 2} />
-                  <span className="text-[13px] flex-1 text-left">{item.label}</span>
-                  {item.count !== undefined && !item.active && (
-                    <span className="text-[10px] font-black text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-md">{item.count}</span>
-                  )}
-                </button>
-              ))}
+            {/* Project Links (Replica) */}
+            <div className="space-y-1">
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Project 01</div>
+              <div className="px-3 py-2 text-sm font-bold text-indigo-700 bg-indigo-50/80 rounded-lg cursor-pointer flex justify-between items-center group">
+                Dashboard
+              </div>
+            </div>
+            {/* Add Project */}
+            <button className="flex items-center gap-2 mt-4 px-3 text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
+              <Plus size={14} /> Add project
+            </button>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">Process</h3>
+            <div className="space-y-1 relative pl-3">
+              {/* Vertical Line for Process */}
+              <div className="absolute left-3 top-2 bottom-2 w-[2px] bg-slate-100"></div>
+
+              <div className="flex items-center gap-3 px-3 py-2 text-sm font-bold text-slate-800 rounded-lg cursor-pointer bg-white relative z-10">
+                <div className="w-2.5 h-0.5 bg-indigo-600 rounded-full"></div>
+                Active candidates
+              </div>
+              {/* Sub items */}
+              <div className="pl-6 space-y-1 mt-1">
+                <div className="py-1.5 text-sm text-indigo-600 font-medium cursor-pointer">Stats & Overview</div> {/* Replaced 'Screening' */}
+                <Link href="/templates" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Templates</Link>
+                <Link href="/tailor" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">AI Tailor</Link>
+                <Link href="https://interview.hirecta.com" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer">Mock Interview</Link>
+              </div>
             </div>
           </div>
 
           <div>
-            <p className="px-3 text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Power Tools</p>
-            <div className="space-y-0.5">
-              {toolsNav.map((item: any, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => item.href && (item.href.startsWith('http') ? window.location.href = item.href : router.push(item.href))}
-                  className="w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all text-gray-500 hover:bg-gray-50 font-semibold group"
-                >
-                  <div className={`p-1 rounded-lg transition-colors ${item.isNew ? "bg-amber-50 text-amber-600" : "bg-gray-100 text-gray-400 group-hover:bg-blue-50 group-hover:text-blue-600"}`}>
-                    <item.icon size={14} />
-                  </div>
-                  <span className="text-[13px] flex-1 text-left">{item.label}</span>
-                  {item.isNew && <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>}
-                </button>
-              ))}
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">People</h3>
+            <div className="space-y-1">
+              {/* Candidates / Employees */}
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Candidates</div>
+              <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Employees</div>
             </div>
           </div>
-        </nav>
-
-        <div className="mt-auto pt-4 px-2">
-
-          <button
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl transition-all group  bg-blue-600 text-white shadow-lg shadow-blue-100 font-bold`}
-          >
-            <Globe />
-            <span className="text-[13px] flex-1 text-left">Go to Main Site</span>
-
-          </button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-transparent">
-        {/* Superior Header */}
-        <header className="h-[90px] px-10 flex items-center justify-between flex-shrink-0 sticky top-0 bg-[#F8FAFC]/80 backdrop-blur-xl z-40">
-          <div className="relative group max-w-md w-full mr-8">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-4.5 h-4.5 group-focus-within:text-indigo-500 transition-colors" />
+      {/* 🟡 MAIN CONTENT WRAPPER */}
+      <div className="flex-1 lg:ml-[260px] min-w-0">
+
+        {/* HEADER */}
+        <header className="h-20 bg-[#F3F4F6] flex items-center justify-between px-8 lg:px-12 sticky top-0 z-40">
+          <div className="relative w-96">
+            <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
             <input
               type="text"
-              placeholder="Search workspaces & documents..."
-              className="w-full pl-12 pr-6 py-3 bg-white border border-slate-200 rounded-2xl text-[13px] font-medium focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search..."
+              className="w-full bg-transparent pl-8 pr-4 py-2 border-none focus:outline-none focus:ring-0 placeholder:text-slate-400 text-sm text-slate-700 font-medium"
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="relative p-2.5 text-gray-400 hover:text-indigo-600 transition-all">
-              <Bell size={20} strokeWidth={1.5} />
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 border-2 border-[#F8FAFC] rounded-full"></span>
+          <div className="flex items-center gap-6">
+            <button className="text-slate-400 hover:text-slate-600 transition-colors"><Settings size={20} /></button>
+            <button className="text-slate-400 hover:text-slate-600 transition-colors"><Mail size={20} /></button>
+            <button className="relative text-slate-400 hover:text-slate-600 transition-colors">
+              <Bell size={20} />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-rose-500 rounded-full border border-[#F3F4F6]"></span>
             </button>
-            <div className="h-6 w-[1px] bg-gray-200 mx-2"></div>
-            <button onClick={() => router.push("/subscription")} className="flex items-center gap-2.5 px-6 py-3 bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl font-black text-[12px] uppercase tracking-wider shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] hover:scale-[1.02] transition-all active:scale-95">
-              <Sparkles size={16} fill="white" className="animate-pulse" />
-              Go Pro
-            </button>
-            <button onClick={logout} className="p-3 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-2xl transition-all border border-gray-200 group">
-              <LogOut size={20} strokeWidth={1.5} className="group-hover:translate-x-0.5 transition-transform" />
-            </button>
+
+            <div className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer" onClick={logout}>
+              {user?.picture ? (
+                <img src={user.picture} alt="" className="w-9 h-9 rounded-xl object-cover shadow-sm bg-white" />
+              ) : (
+                <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
+                  {user?.name?.[0] || 'G'}
+                </div>
+              )}
+              <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "Dannielle S."}</span>
+            </div>
           </div>
         </header>
 
-        <main className="px-12 py-6 max-w-[1400px] mx-auto w-full">
-          {/* Immersive Welcome Area */}
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="bg-blue-50 text-blue-600 text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">Welcome Back</span>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-slate-100 to-transparent"></div>
-            </div>
-            <h1 className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
-              Design your future, <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{isLoggedIn ? user?.name : "Explorer"}</span>
-            </h1>
+        <main className="px-8 lg:px-12 pb-20">
+          {/* Breadcrumbs */}
+          <div className="text-xs font-medium text-slate-400 mb-6 flex items-center gap-2">
+            <span>Active candidates</span> <ChevronRight size={12} /> <span>Applied for a role</span> <ChevronRight size={12} /> <span className="text-slate-900">{user?.name}</span>
           </div>
 
-          {/* New Advanced Goal Navigator */}
-          <div className="relative mb-8 p-2 bg-slate-200/50 rounded-[2.25rem] w-fit backdrop-blur-md border border-white">
-            <div className="flex items-center">
-              {goals.map((goal, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveGoal(goal.name)}
-                  className={`relative flex items-center gap-3 px-8 py-3.5 rounded-[1.75rem] text-[13px] font-black transition-all z-10 ${activeGoal === goal.name
-                    ? "text-white"
-                    : "text-slate-500 hover:text-slate-900"
-                    }`}
-                >
-                  <goal.icon size={16} strokeWidth={activeGoal === goal.name ? 2.5 : 2} />
-                  {goal.name}
-                  {activeGoal === goal.name && (
-                    <div className="absolute inset-0 bg-blue-600 rounded-[1.75rem] -z-10 shadow-lg shadow-blue-500/20"></div>
-                  )}
-                </button>
-              ))}
+          {/* Profile Header */}
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center gap-6">
+              <div className="relative">
+                {user?.picture ? (
+                  <img src={user.picture} alt="" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm" />
+                ) : (
+                  <div className="w-20 h-20 rounded-full bg-indigo-50 border-4 border-white shadow-sm flex items-center justify-center text-2xl font-bold text-indigo-400">
+                    {user?.name?.[0]}
+                  </div>
+                )}
+                <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full"></div>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-slate-900 mb-1">{user?.name || "Mahamed Hendrix"}</h1>
+                <p className="text-slate-500 font-medium">Job Seeker &middot; Product Designer</p>
+              </div>
+            </div>
+            <Link href="/editor" className="px-6 py-2.5 bg-[#6366F1] hover:bg-[#5558DD] text-white font-bold text-sm rounded-lg shadow-sm shadow-indigo-200 transition-all flex items-center gap-2">
+              Create New
+            </Link>
+          </div>
+
+          {/* Tabs */}
+          <div className="border-b border-slate-200 mb-8">
+            <div className="flex items-center gap-8">
+              <button className="pb-3 border-b-2 border-[#6366F1] font-bold text-slate-900 text-sm">Job Application</button>
+              <button className="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-slate-600 text-sm transition-colors">Comments (12)</button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-20 items-stretch">
-            {activeGoal === "Resume Building" ? (
-              <>
-                {/* Unique Health/Progress Card */}
-                <div className="xl:col-span-1 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
-                  <div className="relative z-10 h-full flex flex-col">
-                    <div className="flex justify-between items-start mb-6">
-                      <h3 className="text-base font-black text-slate-900">Career Pulse</h3>
-                      <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
-                        <BarChart3 size={16} />
-                      </div>
-                    </div>
+          {/* 🟢 TWO COLUMN GRID (The Replica Content) */}
+          <div className="grid grid-cols-12 gap-10">
 
-                    <div className="flex flex-col items-center justify-center flex-1 my-4 relative">
-                      {/* Radial Progress Visual */}
-                      <div className="w-44 h-44 rounded-full border-[8px] border-slate-50 flex items-center justify-center relative group-hover:scale-105 transition-transform">
-                        <svg className="absolute inset-0 w-full h-full -rotate-90" style={{ overflow: 'visible' }}>
-                          <defs>
-                            <linearGradient id="careerPulseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" style={{ stopColor: '#6366f1', stopOpacity: 1 }} />
-                              <stop offset="50%" style={{ stopColor: '#8b5cf6', stopOpacity: 1 }} />
-                              <stop offset="100%" style={{ stopColor: '#a855f7', stopOpacity: 1 }} />
-                            </linearGradient>
-                            <filter id="glow">
-                              <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-                              <feMerge>
-                                <feMergeNode in="coloredBlur" />
-                                <feMergeNode in="SourceGraphic" />
-                              </feMerge>
-                            </filter>
-                          </defs>
-                          <circle
-                            cx="50%"
-                            cy="50%"
-                            r="42%"
-                            fill="none"
-                            stroke="url(#careerPulseGradient)"
-                            strokeWidth="12"
-                            strokeDasharray="264"
-                            strokeDashoffset="224"
-                            strokeLinecap="round"
-                            filter="url(#glow)"
-                          />
-                        </svg>
-                        <div className="text-center relative z-10">
-                          <span className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-br from-blue-500 via-indigo-500 to-indigo-600 drop-shadow-sm">15%</span>
-                          <p className="text-[9px] font-black uppercase text-slate-400 tracking-wider mt-1">Ready</p>
-                        </div>
-                      </div>
-                    </div>
+            {/* LEFT COLUMN: Dummy Profile Data */}
+            <div className="col-span-12 lg:col-span-4 space-y-10">
+              {/* About */}
+              <section>
+                <h3 className="font-bold text-lg text-slate-900 mb-5">About</h3>
 
-                    <div className="space-y-3">
-                      <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between hover:border-indigo-200 transition-colors">
-                        <div className="flex items-center gap-2.5">
-                          <FileText size={14} className="text-indigo-500" />
-                          <span className="text-xs font-bold text-slate-700">Resume Quality</span>
-                        </div>
-                        <span className="text-xs font-black text-emerald-600">Optimum</span>
-                      </div>
-                      <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between hover:border-amber-200 transition-colors">
-                        <div className="flex items-center gap-2.5">
-                          <Target size={14} className="text-amber-500" />
-                          <span className="text-xs font-bold text-slate-700">Market Reach</span>
-                        </div>
-                        <span className="text-xs font-black text-slate-400">Inactive</span>
-                      </div>
+                <div className="grid grid-cols-3 gap-y-4 gap-x-2 text-sm mb-6">
+                  <div>
+                    <p className="text-slate-400 font-medium mb-1">Applying for</p>
+                    <p className="text-slate-900 font-semibold">Medical Assistant</p>
+                  </div>
+                  <div>
+                    <p className="text-slate-400 font-medium mb-1">Resume</p>
+                    <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-700">
+                      <FileText size={12} /> resume.pdf
                     </div>
+                  </div>
+                  <div>
+                    <p className="text-slate-400 font-medium mb-1">Location</p>
+                    <p className="text-slate-900 font-semibold">New York, USA</p>
                   </div>
                 </div>
 
-                {/* Premium Smart Insight Card */}
-                <div className="xl:col-span-2 bg-gradient-to-br from-slate-900 to-blue-950 rounded-2xl p-8 relative overflow-hidden group border border-slate-800 shadow-lg">
-                  <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-400/10 to-transparent opacity-50"></div>
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide">Summary</p>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {dummyAbout}
+                  </p>
+                </div>
+              </section>
 
-                  <div className="relative z-10 flex flex-col h-full">
-                    <div className="flex items-center gap-2 mb-5 animate-pulse">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue-400"></div>
-                      <span className="text-[9px] font-black text-blue-300 uppercase tracking-widest leading-none">AI Insight Engine</span>
-                    </div>
-
-                    <h2 className="text-2xl font-black text-white leading-tight tracking-tight mb-3 max-w-lg">
-                      Level up your profile <br />
-                      to reach <span className="text-blue-400">95% score</span>
-                    </h2>
-
-                    <p className="text-blue-200/70 text-sm font-medium leading-relaxed max-w-sm mb-6">
-                      Our algorithm detected missing industry keywords. Adding them could increase visibility by 3.4x.
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-3 mt-auto">
-                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-lg hover:bg-white/10 transition-all cursor-pointer group/card">
-                        <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
-                          <Plus size={14} />
-                        </div>
-                        <p className="text-xs font-extrabold text-white mb-0.5">Add Accomplishments</p>
-                        <span className="text-[9px] font-bold text-blue-400">+35% Exposure</span>
-                      </div>
-                      <div className="p-4 rounded-xl bg-blue-600 text-white shadow-lg hover:bg-blue-500 transition-all cursor-pointer group/card">
-                        <div className="w-7 h-7 rounded-lg bg-white/10 text-white flex items-center justify-center mb-2.5 group-hover/card:scale-110 transition-transform">
-                          <Zap size={14} fill="white" />
-                        </div>
-                        <p className="text-xs font-extrabold mb-0.5">Boost with AI</p>
-                        <span className="text-[9px] font-bold text-blue-200 tracking-wide">Optimize Metadata</span>
-                      </div>
-                    </div>
+              {/* Contact */}
+              <section>
+                <h3 className="font-bold text-lg text-slate-900 mb-5">Contact</h3>
+                <div className="grid grid-cols-2 gap-6 text-sm">
+                  <div>
+                    <p className="text-slate-400 font-medium mb-1">Phone number</p>
+                    <p className="text-slate-900 font-semibold">{dummyContact.phone}</p>
                   </div>
-
-                  {/* Decorative Document Mesh */}
-                  <div className="absolute -right-20 -bottom-10 w-[400px] h-full opacity-10 pointer-events-none skew-x-[-12deg] group-hover:skew-x-[-6deg] transition-all duration-1000">
-                    <div className="w-full h-full bg-gradient-to-t from-white to-transparent rounded-t-[4rem]"></div>
+                  <div>
+                    <p className="text-slate-400 font-medium mb-1">Email</p>
+                    <p className="text-slate-900 font-semibold truncate" title={dummyContact.email}>{dummyContact.email}</p>
                   </div>
                 </div>
+              </section>
 
-                {/* Dashboard Launchpad */}
-                <div className="col-span-full mt-10 mb-12">
-                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-5">Quick Launchpad</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <Link
-                      href="/editor"
-                      className="group p-5 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all shadow-lg shadow-blue-200/50"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white group-hover:bg-white/30 transition-colors">
-                          <Plus size={20} strokeWidth={2.5} />
-                        </div>
-                        <div>
-                          <p className="text-white font-black text-sm tracking-tight">Create Resume</p>
-                          <p className="text-blue-100 text-[10px] font-bold uppercase tracking-wider">Start from scratch</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="text-white/40 group-hover:translate-x-1 transition-transform" size={18} />
-                    </Link>
+              {/* Key Skills */}
+              <section>
+                <h3 className="font-bold text-lg text-slate-900 mb-5">Key Skills</h3>
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                  {dummySkills.map((skill, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-slate-600 font-medium">
+                      <span className="text-slate-400 font-light">&mdash;</span> {skill}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
 
-                    <Link
-                      href="/cover-letter"
-                      className="group p-5 bg-white border border-slate-200 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all hover:shadow-lg hover:border-indigo-200"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-700 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                          <Mail size={20} />
-                        </div>
-                        <div>
-                          <p className="text-slate-900 font-black text-sm tracking-tight">Cover Letter</p>
-                          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Perfect match</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" size={18} />
-                    </Link>
+            {/* RIGHT COLUMN: Real Documents (Mapped to "Education" & "Exp") */}
+            <div className="col-span-12 lg:col-span-8 space-y-8">
 
-                    <Link
-                      href="/tailor"
-                      className="group p-5 bg-white border border-slate-200 rounded-xl flex items-center justify-between hover:scale-[1.02] hover:-translate-y-1 active:scale-95 transition-all hover:shadow-lg hover:border-amber-200"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-700 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">
-                          <Zap size={20} className="fill-amber-500 text-amber-500" />
-                        </div>
-                        <div>
-                          <p className="text-slate-900 font-black text-sm tracking-tight">Tailor Resume</p>
-                          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Optimize with AI</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="text-slate-300 group-hover:text-amber-400 group-hover:translate-x-1 transition-all" size={18} />
+              {/* "Education" Style Card -> Resumes */}
+              <div className="relative">
+                {/* The blue selection border effect from image */}
+                <div className="absolute -inset-0.5 rounded-2xl border-2 border-[#6366F1] bg-transparent opacity-0 pointer-events-none"></div>
+
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                  <h3 className="font-bold text-lg text-slate-900 mb-6">Resumes</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {resumes.length === 0 ? (
+                      <div className="col-span-2 text-center py-4 text-slate-400 text-sm font-medium">No resumes created yet.</div>
+                    ) : (
+                      resumes.slice(0, 4).map(doc => (
+                        <Link href={`/editor?id=${doc.id || doc._id}`} key={doc.id || doc._id} className="group cursor-pointer">
+                          <p className="font-bold text-xs text-slate-900 uppercase tracking-tight mb-2 group-hover:text-[#6366F1] transition-colors">
+                            {doc.title || "UNTITLED RESUME"}
+                          </p>
+                          <p className="text-sm text-slate-500 font-medium">Hirecta Editor, {new Date(doc.lastModified).getFullYear()}</p>
+                        </Link>
+                      ))
+                    )}
+
+                    {/* Add New Button (Simulating the + Box) */}
+                    <Link href="/editor" className="min-h-[60px] flex flex-col justify-center border-2 border-dashed border-slate-200 rounded-xl p-4 hover:border-[#6366F1] hover:bg-slate-50 transition-all group text-center">
+                      <span className="text-xs font-bold text-slate-400 group-hover:text-[#6366F1] transition-colors uppercase">+ Add Resume</span>
                     </Link>
                   </div>
                 </div>
+              </div>
 
-                {/* Recents Area */}
-                <div className="col-span-full mt-10 mb-10">
-                  <div className="flex items-center justify-between mb-10">
-                    <h3 className="text-[20px] font-black tracking-tight">Recent Projects</h3>
-                    <div className="flex items-center gap-2">
-                      <button className="px-4 py-2 text-slate-500 font-black text-[11px] uppercase tracking-widest hover:text-slate-900 transition-all">View All</button>
-                      <div className="w-[1px] h-4 bg-slate-200"></div>
-                      <Link href="/editor" className="flex items-center gap-2 px-6 py-2.5 bg-white border border-slate-200 rounded-xl font-bold text-[12px] hover:shadow-lg transition-all active:scale-95">
-                        <Plus size={16} /> New Project
-                      </Link>
-                    </div>
-                  </div>
+              {/* "Professional Experience" Style -> Cover Letters */}
+              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200/60">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="font-bold text-lg text-slate-900">Cover Letters</h3>
+                  <button className="text-slate-300 hover:text-slate-600"><MoreHorizontal size={20} /></button>
+                </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {resumes.slice(0, 3).map((resume: SavedDocument) => (
-                      <div key={resume.id || resume._id} className="group bg-white p-8 rounded-xl border border-slate-200/60 hover:border-indigo-400 hover:shadow-2xl hover:shadow-indigo-500/5 transition-all duration-500 flex flex-col h-64 relative overflow-hidden">
-                        <div className="flex justify-between items-start mb-6">
-                          <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
-                            <FileText size={24} />
-                          </div>
-                          <div className="flex gap-1">
-                            <button className="p-2 text-slate-400 hover:text-rose-500 transition-all" onClick={() => handleDelete(resume._id || resume.id, 'resume', resume.title)}>
-                              <Trash2 size={18} />
-                            </button>
+                <div className="space-y-8">
+                  {coverLetters.length === 0 ? (
+                    <div className="text-center py-4 text-slate-400 text-sm">No cover letters found.</div>
+                  ) : (
+                    coverLetters.map(doc => (
+                      <div key={doc.id || doc._id} className="group relative pl-8 border-l-2 border-transparent hover:border-[#6366F1] transition-colors">
+                        {/* Bullet line */}
+                        <div className="absolute left-[-5px] top-1.5 w-2 h-2 rounded-full bg-slate-300 group-hover:bg-[#6366F1] transition-colors"></div>
+
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-bold text-sm text-slate-900 uppercase tracking-tight group-hover:text-[#6366F1] transition-colors">
+                            {doc.title || "UNTITLED LETTER"} / {new Date(doc.lastModified).toLocaleDateString()}
+                          </h4>
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={(e) => {
+                              e.preventDefault();
+                              handleDelete(doc.id || doc._id || "", 'cover-letter', doc.title || "Untitled");
+                            }} className="text-slate-300 hover:text-rose-500"><Trash2 size={14} /></button>
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <h4 className="font-black text-slate-900 text-lg mb-1 group-hover:text-indigo-600 transition-colors truncate">{resume.title || "Untitled Masterpiece"}</h4>
-                          <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            {getTimeAgo(resume.lastModified)}
-                            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                            <span className={resume._id?.startsWith('doc_') ? "" : "text-blue-600"}>
-                              {resume._id?.startsWith('doc_') ? "LOCAL SPACE" : "CLOUD SYNC"}
-                            </span>
+                        <p className="text-xs text-slate-400 font-medium mb-3">AI Generated Draft</p>
+
+                        <div className="space-y-3">
+                          <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                            &mdash; Tailored application document created with Hirecta AI.
+                          </p>
+                          <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                            &mdash; Last edited {getTimeAgo(doc.lastModified)}.
                           </p>
                         </div>
-                        <Link
-                          href={`/editor?id=${resume._id || resume.id}`}
-                          className="mt-6 py-3 px-6 bg-slate-50 text-slate-900 rounded-xl font-black text-[12px] uppercase tracking-widest text-center group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm"
-                        >
-                          Edit Project
-                        </Link>
+                        <Link href={`/cover-letter?id=${doc.id || doc._id}`} className="absolute inset-0 z-10" />
                       </div>
-                    ))}
+                    ))
+                  )}
 
-                    {resumes.length === 0 && !loading && (
-                      <Link href="/editor" className="border-2 border-dashed border-slate-200 rounded-xl p-12 flex flex-col items-center justify-center gap-4 text-slate-300 hover:bg-white hover:border-blue-500 hover:text-blue-500 transition-all duration-500 group h-64 bg-slate-50/50">
-                        <div className="w-16 h-16 rounded-3xl bg-white border border-slate-100 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
-                          <Plus size={32} />
-                        </div>
-                        <span className="font-black text-[12px] uppercase tracking-[0.2em]">Start New Creation</span>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : activeGoal === "Job Search" ? (
-              <div className="col-span-full">
-                <ComingSoon
-                  title="Job Search Engine"
-                  icon={Briefcase}
-                  description="Automate your job search with our AI-powered tracker. Sync with top job boards, track applications, and get personalized job recommendations based on your resume."
-                />
-              </div>
-            ) : activeGoal === "Interview Prep" ? (
-              <div className="col-span-full">
-                <div className="bg-white rounded-[3rem] p-12 border border-slate-200/60 shadow-xl flex flex-col items-center text-center max-w-4xl mx-auto">
-                  <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mb-8">
-                    <Mic2 size={40} />
-                  </div>
-                  <h2 className="text-3xl font-black mb-4">Master Your Next Interview</h2>
-                  <p className="text-slate-500 font-medium mb-10 max-w-lg leading-relaxed">
-                    Experience our world-class AI Robotic Interviewer. Paste any Job Description and get a realistic 1-hour interview simulation with technical questions and coding rounds.
-                  </p>
-                  <Button variant="primary" onClick={() => window.location.href = 'https://interview.hirecta.com'}>START AI INTERVIEW <ChevronRight size={24} /></Button>
-
+                  <Link href="/cover-letter" className="flex items-center gap-2 text-sm font-bold text-[#6366F1] hover:text-[#5558DD] transition-colors mt-4">
+                    See all or Create New <ArrowRight size={14} />
+                  </Link>
                 </div>
               </div>
-            ) : (
-              <div className="col-span-full">
-                <ComingSoon
-                  title="Career Path Architect"
-                  icon={GraduationCap}
-                  description="Visualize your professional growth. Get a step-by-step roadmap for your dream role, including skill gap analysis and recommended certifications."
-                />
-              </div>
-            )}
+
+            </div>
           </div>
         </main>
-
-        <Dialog
-          isOpen={deleteDialog.isOpen}
-          onClose={() => setDeleteDialog(prev => ({ ...prev, isOpen: false }))}
-          title="Destroy Record"
-          description={`Warning: Deleting "${deleteDialog.title}" will purge it from our systems. This action cannot be reversed.`}
-          type="confirm"
-          primaryActionLabel="Confirm Deletion"
-          onPrimaryAction={confirmDelete}
-          secondaryActionLabel="Preserve Document"
-        />
       </div>
+
+      <Dialog
+        isOpen={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog(prev => ({ ...prev, isOpen: false }))}
+        title="Delete Document"
+        description={`Are you sure you want to delete "${deleteDialog.title}"? This action cannot be undone.`}
+        type="confirm"
+        primaryActionLabel="Delete Forever"
+        onPrimaryAction={confirmDelete}
+        secondaryActionLabel="Cancel"
+      />
     </div>
   );
 }
