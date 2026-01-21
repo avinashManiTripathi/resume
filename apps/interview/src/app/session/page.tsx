@@ -11,7 +11,8 @@ import {
 import { sessionConfig, aiSettings, type SidebarConfig } from '../../config/session.constants';
 import InterviewChat from '../../components/InterviewChat';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+console.log('🌐 API_URL configured as:', API_URL);
 
 // Animated Avatar Component with realistic facial animations
 function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; size?: 'small' | 'large' }) {
@@ -182,6 +183,7 @@ function SessionContent() {
     // Socket state
     const socketRef = useRef<Socket | null>(null);
     const [messages, setMessages] = useState<any[]>([]);
+    const [isSocketConnected, setIsSocketConnected] = useState(false);
 
     // Interview timer state (1 hour = 3600 seconds)
     const [timeRemaining, setTimeRemaining] = useState(3600);
@@ -222,6 +224,12 @@ function SessionContent() {
 
         socket.on('connect', () => {
             console.log('✅ Connected to WebSocket backend');
+            setIsSocketConnected(true);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected from WebSocket backend');
+            setIsSocketConnected(false);
         });
 
         // Handle restored history
@@ -240,6 +248,7 @@ function SessionContent() {
         });
 
         socket.on('message', (data: any) => {
+            console.log('📨 Received message from server:', data);
             setIsLoading(false);
 
             // Add to chat messages
@@ -251,7 +260,10 @@ function SessionContent() {
 
             // Speak the response
             if (data.content) {
+                console.log('🎤 Calling speak function with content:', data.content.substring(0, 50) + '...');
                 speak(data.content);
+            } else {
+                console.warn('⚠️ Message has no content to speak');
             }
         });
 
@@ -310,7 +322,14 @@ function SessionContent() {
 
     // Text-to-speech function with auto voice control (using constants)
     const speak = (text: string) => {
-        if (typeof window !== 'undefined' && window.speechSynthesis) {
+        console.log('🔊 Attempting to speak:', text.substring(0, 50) + '...');
+
+        if (typeof window === 'undefined' || !window.speechSynthesis) {
+            console.error('❌ Speech synthesis not available');
+            return;
+        }
+
+        try {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
 
@@ -364,7 +383,8 @@ function SessionContent() {
                 }
             };
 
-            utterance.onerror = () => {
+            utterance.onerror = (event: any) => {
+                console.error('❌ Speech error:', event.error);
                 setIsSpeaking(false);
                 // Also try to resume on error
                 if (recognitionRef.current && !isListening) {
@@ -379,7 +399,10 @@ function SessionContent() {
                 }
             };
 
+            console.log('🗣️ Starting speech synthesis...');
             window.speechSynthesis.speak(utterance);
+        } catch (error) {
+            console.error('❌ Error in speak function:', error);
         }
     };
 
@@ -740,7 +763,20 @@ function SessionContent() {
                         </div>
                     </div>
 
+
                     <div className="flex items-center gap-3">
+                        {/* WebSocket Connection Status */}
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isSocketConnected
+                                ? 'bg-green-50 border-green-300 text-green-700'
+                                : 'bg-red-50 border-red-300 text-red-700'
+                            }`}>
+                            <div className={`w-2 h-2 rounded-full ${isSocketConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                                }`} />
+                            <span className="text-xs font-bold">
+                                {isSocketConnected ? 'Connected' : 'Disconnected'}
+                            </span>
+                        </div>
+
                         {/* Interview Timer - Color coded by time remaining */}
                         <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 font-mono ${timeRemaining <= 300
                             ? 'bg-red-50 border-red-300 text-red-700 animate-pulse'

@@ -56,47 +56,34 @@ export function setupInterviewSocket(io: Server) {
 
             // Only trigger AI greeting if history is empty
             if (sessionHistory.length === 0) {
-                // Initial greeting
-                const systemPrompt = `You are a professional technical interviewer for a ${data.role} position. 
-                Candidate name: ${data.name}. 
-                Start by introducing yourself as "Neural AI" and asking a relevant opening question about their background.
-                Keep responses concise and professional.`;
+                // Standard opening question - always start with self introduction
+                const greeting = `Hello ${data.name}! I'm Neural AI, your technical interviewer for this ${data.role} position. I'm excited to learn more about your background and experience. Let's begin with a fundamental question: Tell me about yourself.`;
 
-                try {
-                    const response = await deepseekService.chat([], systemPrompt);
+                const message = {
+                    content: greeting,
+                    timestamp: new Date().toISOString()
+                };
 
-                    const message = {
-                        content: response,
-                        timestamp: new Date().toISOString()
-                    };
+                // Save to in-memory history
+                const session = sessions.get(socket.id);
+                if (session) {
+                    session.history.push({ role: 'assistant', content: greeting, timestamp: message.timestamp });
 
-                    // Save to in-memory history
-                    const session = sessions.get(socket.id);
-                    if (session) {
-                        session.history.push({ role: 'assistant', content: response, timestamp: message.timestamp });
-
-                        // Save to DB
-                        if (session.sessionId) {
-                            await InterviewSession.findByIdAndUpdate(session.sessionId, {
-                                $push: {
-                                    history: {
-                                        role: 'interviewer',
-                                        content: response,
-                                        timestamp: new Date()
-                                    }
+                    // Save to DB
+                    if (session.sessionId) {
+                        await InterviewSession.findByIdAndUpdate(session.sessionId, {
+                            $push: {
+                                history: {
+                                    role: 'interviewer',
+                                    content: greeting,
+                                    timestamp: new Date()
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
-
-                    socket.emit('message', message);
-                } catch (error) {
-                    console.error('Error generating opening:', error);
-                    socket.emit('message', {
-                        content: `Hello ${data.name}, I am your AI interviewer. Let's begin by discussing your background.`,
-                        timestamp: new Date().toISOString()
-                    });
                 }
+
+                socket.emit('message', message);
             } else {
                 console.log('Skipping greeting, history exists.');
             }
