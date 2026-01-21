@@ -125,9 +125,11 @@ ${company ? `**COMPANY:** ${company}` : ''}
     "email": "string",
     "phone": "string",
     "jobTitle": "string (use target job title if appropriate)",
-    "summary": "string (2-3 compelling sentences tailored to this job)",
     "linkedin": "string (full URL if present)",
     "github": "string (full URL if present)"
+  },
+  "summary": {
+    "content": "string (2-3 compelling sentences tailored to this job)"
   },
   "experience": [
     {
