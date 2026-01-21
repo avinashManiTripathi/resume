@@ -1,10 +1,7 @@
 import { Router, Request, Response } from 'express';
 import multer from 'multer';
-import mammoth from 'mammoth';
 import { analyzeResumeWithAI } from '../services/ai-analysis.service';
-const { PDFParse } = require("pdf-parse");
-const pdfParse = PDFParse;
-
+import { extractTextFromFile, extractTextFromDOCX } from '../utils/file-parser';
 
 const router = Router();
 
@@ -24,41 +21,6 @@ const upload = multer({
 });
 
 /**
- * Extract text from PDF
- */
-/**
- * Helper function to extract text from uploaded file
- */
-async function extractTextFromFile(file: Buffer): Promise<string> {
-    try {
-        // pdf-parse v2 API: create parser instance with buffer
-        const parser = new pdfParse({ data: file });
-
-        // Extract text using getText() method
-        const result = await parser.getText();
-
-        if (!result || !result.text) {
-            throw new Error('No text extracted from PDF');
-        }
-        console.log('PDF parsed successfully, text length:', result.text.length);
-        return result.text;
-    } catch (error: any) {
-        console.error('PDF parsing error:', error);
-        throw new Error(`Failed to extract text from PDF: ${error.message}`);
-    }
-}
-
-
-/**
- * Extract text from DOCX
- */
-async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
-    const result = await mammoth.extractRawText({ buffer });
-    return result.value;
-}
-
-
-/**
  * Check ATS score
  * POST /api/ats/check
  */
@@ -69,12 +31,7 @@ router.post('/check', upload.single('resume'), async (req: Request, res: Respons
         }
 
         // Extract text from file
-        let resumeText: string;
-        if (req.file.mimetype === 'application/pdf') {
-            resumeText = await extractTextFromFile(req.file.buffer);
-        } else {
-            resumeText = await extractTextFromDOCX(req.file.buffer);
-        }
+        const resumeText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
 
         if (!resumeText || resumeText.trim().length < 100) {
             return res.status(400).json({

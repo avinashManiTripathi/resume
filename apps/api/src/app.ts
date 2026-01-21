@@ -134,6 +134,8 @@ export class App {
         // Cookie parser
         this.app.use(cookieParser());
 
+        console.log({ GENAI_API_KEY: process.env.GENAI_API_KEY })
+
         if (process.env.GENAI_API_KEY) {
             initAI(process.env.GENAI_API_KEY);
             initInterviewAI(process.env.GENAI_API_KEY);

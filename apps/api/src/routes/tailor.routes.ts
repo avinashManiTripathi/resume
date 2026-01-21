@@ -3,8 +3,8 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
 import { parseResumeWithAI } from '../services/ai-analysis.service';
-const { PDFParse } = require("pdf-parse");
-const pdfParse = PDFParse;
+import { extractTextFromPDF } from '../utils/file-parser';
+
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 const tailorService = new TailorService();
@@ -26,7 +26,7 @@ router.post('/analyze', upload.single('resume'), async (req: Request, res: Respo
         // For now, use mock resume data if no file uploaded
         // In production, extract text from uploaded file
         const resumeText = req.file
-            ? await extractTextFromFile(req.file.buffer)
+            ? await extractTextFromPDF(req.file.buffer)
             : getMockResumeText();
 
         const analysis = await tailorService.analyzeResume(resumeText, jobDescription, {
@@ -83,8 +83,8 @@ router.post('/parse', upload.single('resume'), async (req: Request, res: Respons
             return res.status(400).json({ error: 'Resume file is required' });
         }
 
-        // Extract text from PDF
-        const resumeText = await extractTextFromFile(req.file.buffer);
+        // Extract text from PDF using shared utility
+        const resumeText = await extractTextFromPDF(req.file.buffer);
 
         // Parse resume with AI
         const parsedData = await parseResumeWithAI(
@@ -107,27 +107,6 @@ router.post('/parse', upload.single('resume'), async (req: Request, res: Respons
         });
     }
 });
-
-/**
- * Helper function to extract text from uploaded file
- */
-async function extractTextFromFile(file: Buffer): Promise<string> {
-    try {
-        // pdf-parse v2 API: create parser instance with buffer
-        const parser = new pdfParse({ data: file });
-
-        // Extract text using getText() method
-        const result = await parser.getText();
-
-        if (!result || !result.text) {
-            throw new Error('No text extracted from PDF');
-        }
-        return result.text;
-    } catch (error: any) {
-        console.error('PDF parsing error:', error);
-        throw new Error(`Failed to extract text from PDF: ${error.message}`);
-    }
-}
 
 /**
  * Mock resume text for testing

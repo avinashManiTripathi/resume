@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Sparkles, Mic, MicOff, FileText, Loader2, Send } from 'lucide-react';
 import { Button } from '@repo/ui/button';
+import { ENV } from './env';
 
 interface SmartImportModalProps {
     isOpen: boolean;
@@ -160,7 +161,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
 
         setIsProcessing(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/resume/extract`, {
+            const response = await fetch(`${ENV.API_URL}/api/resume/extract`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: content })
