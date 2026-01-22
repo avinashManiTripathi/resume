@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
     LayoutGrid,
     ShieldCheck,
@@ -16,48 +16,66 @@ import {
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
 
-export function EditorSidebar() {
+interface EditorSidebarProps {
+    onTabChange?: (tab: string) => void;
+    activeTab?: string;
+}
+
+export function EditorSidebar({ onTabChange, activeTab: propActiveTab }: EditorSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const { logout } = usePersistence();
+
+    // Determine active tab from prop, query param, or pathname
+    const activeTab = propActiveTab || searchParams.get('tab') || (pathname === '/editor' ? 'editor' : pathname.split('/')[1]);
 
     const menuItems = [
         {
             label: "Dashboard",
+            id: "dashboard",
             icon: LayoutGrid,
-            href: "https://editor.hirecta.com", // Assuming dashboard route or external
+            href: "https://editor.hirecta.com",
             onClick: () => window.location.href = "https://editor.hirecta.com"
         },
         {
             label: "ATS Check",
+            id: "ats-check",
             icon: ScanSearch,
             href: "/ats-check",
             onClick: () => router.push("/ats-check")
         },
         {
             label: "Tailor",
+            id: "tailor",
             icon: Wand2,
             href: "/tailor",
             onClick: () => router.push("/tailor")
         },
         {
             label: "Cover Letter",
+            id: "cover-letter",
             icon: FileText,
             href: "/cover-letter",
             onClick: () => router.push("/cover-letter")
         },
         {
             label: "Subscription",
+            id: "subscription",
             icon: CreditCard,
-            href: "/subscription",
-            onClick: () => router.push("/subscription")
+            href: "/editor?tab=subscription",
+            onClick: () => onTabChange ? onTabChange('subscription') : router.push("/editor?tab=subscription")
         }
     ];
 
-    const isActive = (path: string) => pathname?.startsWith(path);
+    const isActive = (item: typeof menuItems[0]) => {
+        if (item.id === 'subscription' && activeTab === 'subscription') return true;
+        if (item.id === 'dashboard' && activeTab === 'editor') return true;
+        return pathname?.startsWith(item.href || '');
+    };
 
     const getItemStyles = (item: typeof menuItems[0]) => {
-        const active = item.href && isActive(item.href);
+        const active = isActive(item);
         const baseClass = "w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all duration-300 border shadow-sm hover:scale-105 active:scale-95";
 
         if (item.label === "Tailor") {
@@ -84,7 +102,7 @@ export function EditorSidebar() {
                 : "bg-blue-50/40 text-blue-600 border-blue-100/50 hover:bg-blue-100 hover:text-blue-700 hover:border-blue-300 hover:shadow-blue-100"}`;
         }
 
-        // Default / Dashboard
+        // Default / Dashboard / Editor
         return `${baseClass} ${active
             ? "bg-indigo-100 text-indigo-700 border-indigo-300 shadow-indigo-100"
             : "bg-indigo-50/40 text-indigo-600 border-indigo-100/50 hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-300 hover:shadow-indigo-100"}`;
@@ -94,9 +112,12 @@ export function EditorSidebar() {
         <div className="w-16 md:w-20 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-2 md:py-5 shrink-0 z-50">
             {/* Logo area */}
             <div className="mb-6 pb-2 md:pb-5 border-b border-slate-100 w-full flex justify-center">
-                <div className="w-10 h-10 flex items-center justify-center">
+                <button
+                    onClick={() => onTabChange ? onTabChange('editor') : router.push('/editor')}
+                    className="w-10 h-10 flex items-center justify-center hover:scale-105 transition-transform"
+                >
                     <img src="/apple-touch-icon.png" alt="Logo" className="w-10 h-10 rounded-full object-cover shadow-sm" />
-                </div>
+                </button>
             </div>
 
             {/* Menu Items */}

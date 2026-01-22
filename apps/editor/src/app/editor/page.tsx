@@ -19,6 +19,7 @@ import { usePersistence } from "../hooks/usePersistence";
 import { ENV } from "../env";
 import { StepLoader } from '@repo/ui/step-loader';
 import { EditorSidebar } from "../../components/EditorSidebar";
+import { SubscriptionView } from "../../components/SubscriptionView";
 
 
 function ResumeEditor() {
@@ -58,6 +59,9 @@ function ResumeEditor() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
+  const [activeTab, setActiveTab] = useState<'editor' | 'subscription'>(
+    (searchParams.get('tab') as 'subscription') || 'editor'
+  );
   const [templateId, setTemplateId] = useState(urlTemplateId);
   const [fontFamily, setFontFamily] = useState('Inter');
   const [isLoading, setIsLoading] = useState(true);
@@ -146,6 +150,14 @@ function ResumeEditor() {
       setMode(text === 'true' ? 'text' : 'voice');
     }
 
+
+    // Sync active tab with URL
+    const tab = searchParams.get('tab');
+    if (tab === 'subscription' && activeTab !== 'subscription') {
+      setActiveTab('subscription');
+    } else if (!tab && activeTab !== 'editor') {
+      setActiveTab('editor');
+    }
 
     // Skip check if user just came from subscription page
     if (fromSubscription === 'true') {
@@ -733,7 +745,16 @@ function ResumeEditor() {
 
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
-      <EditorSidebar />
+      <EditorSidebar
+        onTabChange={(tab) => {
+          setActiveTab(tab as any);
+          const params = new URLSearchParams(searchParams.toString());
+          if (tab === 'editor') params.delete('tab');
+          else params.set('tab', tab);
+          router.replace(`?${params.toString()}`, { scroll: false });
+        }}
+        activeTab={activeTab}
+      />
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Neural Analysis Modal (Initial Loading) */}
         {isLoading && (
@@ -818,112 +839,125 @@ function ResumeEditor() {
           </div>
         )}
         {/* Header */}
-        <ProfileHeader
-          name={userName + "'s Resume"}
-          title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
-          progress={progress}
-          profileImage={profileImage}
-          onProfileImageChange={handleProfileImageChange}
-          onDownload={handleDownload}
-          onSmartImport={() => setShowSmartImport(true)}
-          onTemplateChange={() => setShowTemplates(true)}
-          fontFamily={fontFamily}
-          onFontChange={setFontFamily}
-          onTailor={() => router.push('/tailor')}
-        />
+        {activeTab === 'editor' && (
+          <ProfileHeader
+            name={userName + "'s Resume"}
+            title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
+            progress={progress}
+            profileImage={profileImage}
+            onProfileImageChange={handleProfileImageChange}
+            onDownload={handleDownload}
+            onSmartImport={() => setShowSmartImport(true)}
+            onTemplateChange={() => setShowTemplates(true)}
+            fontFamily={fontFamily}
+            onFontChange={setFontFamily}
+            onTailor={() => router.push('/tailor')}
+          />
+        )}
 
         {/* Main Content - Split Glass Content */}
         <div className="flex-1 flex overflow-hidden relative">
-          {/* Background Atmosphere */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-          </div>
-
-          {/* Left Section - Form (45%) */}
-          <div className={`w-full md:w-[45%] flex flex-col rounded-none md:rounded-lg relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
-
-            <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
-              {showTemplates ? (
-                <TemplateSelector
-                  apiBase={API_BASE || 'https://api.hirecta.com'}
-                  selectedTemplateId={templateId || ''}
-                  onBack={() => setShowTemplates(false)}
-                  onSelectTemplate={(template) => {
-                    const params = new URLSearchParams(searchParams.toString());
-                    params.set('templateId', template._id);
-                    router.replace(`?${params.toString()}`, { scroll: false });
-                    setTemplateId(template._id);
-                  }}
-                />
-              ) : (
-                <GenericForm
-                  schema={schema}
-                  data={resume}
-                  sectionOrder={sectionOrder}
-                  setSectionOrder={setSectionOrder}
-                  onChange={handleResumeChange}
-                  onSchemaChange={setSchema}
-                  onSectionNameChange={handleSectionNameChange}
-                />
-              )}
-            </div>
-          </div>
-
-          {/* Right Section - Canvas (55%) */}
-          <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
-
-            <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4">
-              <div className="relative w-full flex justify-center">
-                <canvas
-                  ref={canvasRef}
-                  width={794}
-                  height={1123}
-                  className="bg-white border-r border-slate-200/60 max-w-full object-contain"
-                />
+          {activeTab === 'subscription' ? (
+            <SubscriptionView onBack={() => {
+              setActiveTab('editor');
+              const params = new URLSearchParams(searchParams.toString());
+              params.delete('tab');
+              router.replace(`?${params.toString()}`, { scroll: false });
+            }} />
+          ) : (
+            <>
+              {/* Background Atmosphere */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(99,102,241,0.03),transparent_50%)]" />
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
               </div>
 
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-center gap-3 bg-white p-2 px-4 rounded-full shadow-md border border-slate-200/60 sticky bottom-4 z-10 transition-all duration-300 hover:shadow-lg">
-                  <button
-                    onClick={prevPage}
-                    disabled={currentPage <= 1}
-                    className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
-                    aria-label="Previous Page"
-                  >
-                    <ChevronLeft className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
-                  </button>
+              {/* Left Section - Form (45%) */}
+              <div className={`w-full md:w-[45%] flex flex-col rounded-none md:rounded-lg relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
 
-                  <div className="flex flex-col items-center">
-                    <span className="font-semibold text-sm text-slate-700 tabular-nums">
-                      {currentPage} <span className="text-slate-400 font-normal text-sm mx-1">/</span> {totalPages}
-                    </span>
+                <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
+                  {showTemplates ? (
+                    <TemplateSelector
+                      apiBase={API_BASE || 'https://api.hirecta.com'}
+                      selectedTemplateId={templateId || ''}
+                      onBack={() => setShowTemplates(false)}
+                      onSelectTemplate={(template) => {
+                        const params = new URLSearchParams(searchParams.toString());
+                        params.set('templateId', template._id);
+                        router.replace(`?${params.toString()}`, { scroll: false });
+                        setTemplateId(template._id);
+                      }}
+                    />
+                  ) : (
+                    <GenericForm
+                      schema={schema}
+                      data={resume}
+                      sectionOrder={sectionOrder}
+                      setSectionOrder={setSectionOrder}
+                      onChange={handleResumeChange}
+                      onSchemaChange={setSchema}
+                      onSectionNameChange={handleSectionNameChange}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Right Section - Canvas (55%) */}
+              <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
+
+                <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4">
+                  <div className="relative w-full flex justify-center">
+                    <canvas
+                      ref={canvasRef}
+                      width={794}
+                      height={1123}
+                      className="bg-white border-r border-slate-200/60 max-w-full object-contain"
+                    />
                   </div>
 
-                  <button
-                    onClick={nextPage}
-                    disabled={currentPage >= totalPages}
-                    className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
-                    aria-label="Next Page"
-                  >
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
-                  </button>
+                  {/* Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="mt-4 flex items-center justify-center gap-3 bg-white p-2 px-4 rounded-full shadow-md border border-slate-200/60 sticky bottom-4 z-10 transition-all duration-300 hover:shadow-lg">
+                      <button
+                        onClick={prevPage}
+                        disabled={currentPage <= 1}
+                        className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
+                        aria-label="Previous Page"
+                      >
+                        <ChevronLeft className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
+                      </button>
+
+                      <div className="flex flex-col items-center">
+                        <span className="font-semibold text-sm text-slate-700 tabular-nums">
+                          {currentPage} <span className="text-slate-400 font-normal text-sm mx-1">/</span> {totalPages}
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={nextPage}
+                        disabled={currentPage >= totalPages}
+                        className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
+                        aria-label="Next Page"
+                      >
+                        <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
+                      </button>
+                    </div>
+                  )}
+                  {/* Overlay when loading */}
+                  {(isPdfGenerating) && (
+                    <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                      <div className="flex flex-col items-center gap-3">
+                        <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
+                        <p className="text-sm font-medium text-slate-600 animate-pulse">
+                          {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-              {/* Overlay when loading */}
-              {(isPdfGenerating) && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
-                    <p className="text-sm font-medium text-slate-600 animate-pulse">
-                      {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </main>
+              </main>
+            </>
+          )}
         </div>
 
         {/* Floating Preview Button - Only visible on mobile */}
