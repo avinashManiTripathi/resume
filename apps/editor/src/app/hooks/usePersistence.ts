@@ -224,7 +224,7 @@ export function usePersistence() {
         return { backendDocs, localDocs };
     }, [isLoggedIn]);
 
-    const deleteDocument = useCallback(async (id: string, type: 'resume' | 'cover-letter') => {
+    const deleteDocument = useCallback(async (id: string, type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history' | 'interview-session') => {
         if (id.startsWith('doc_')) {
             // Delete from local storage
             try {
