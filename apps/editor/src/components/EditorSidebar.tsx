@@ -10,7 +10,8 @@ import {
     ArrowLeft,
     Settings,
     User,
-    ScanSearch
+    ScanSearch,
+    CreditCard
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
@@ -44,6 +45,12 @@ export function EditorSidebar() {
             icon: FileText,
             href: "/cover-letter",
             onClick: () => router.push("/cover-letter")
+        },
+        {
+            label: "Subscription",
+            icon: CreditCard,
+            href: "/subscription",
+            onClick: () => router.push("/subscription")
         }
     ];
 
@@ -69,6 +76,12 @@ export function EditorSidebar() {
             return `${baseClass} ${active
                 ? "bg-purple-100 text-purple-700 border-purple-300 shadow-purple-100"
                 : "bg-purple-50/40 text-purple-600 border-purple-100/50 hover:bg-purple-100 hover:text-purple-700 hover:border-purple-300 hover:shadow-purple-100"}`;
+        }
+
+        if (item.label === "Subscription") {
+            return `${baseClass} ${active
+                ? "bg-blue-100 text-blue-700 border-blue-300 shadow-blue-100"
+                : "bg-blue-50/40 text-blue-600 border-blue-100/50 hover:bg-blue-100 hover:text-blue-700 hover:border-blue-300 hover:shadow-blue-100"}`;
         }
 
         // Default / Dashboard

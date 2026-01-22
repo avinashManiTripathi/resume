@@ -17,7 +17,6 @@ export class PdfController {
         try {
             const resumeData: ResumeData = req.body;
 
-
             // Generate PDF
             const pdfBuffer = await this.pdfService.generatePdf(resumeData, {
                 inline: true,

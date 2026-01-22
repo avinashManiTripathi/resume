@@ -21,6 +21,7 @@ export interface ISubscription extends Document {
     endDate?: Date;
     stripeCustomerId?: string;
     stripeSubscriptionId?: string;
+    paymentId?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -58,6 +59,10 @@ const SubscriptionSchema: Schema = new Schema(
             sparse: true,
         },
         stripeSubscriptionId: {
+            type: String,
+            sparse: true,
+        },
+        paymentId: {
             type: String,
             sparse: true,
         },

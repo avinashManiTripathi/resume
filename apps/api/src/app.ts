@@ -24,6 +24,7 @@ import coverLetterRoutes from './routes/cover-letter.routes';
 import interviewRoutes from './routes/interview.routes';
 import blogRoutes from './routes/blog.routes';
 import coverLetterTemplateRoutes from './routes/cover-letter-template.routes';
+import adminRoutes from './routes/admin.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -225,6 +226,9 @@ export class App {
 
         // Cover letter template routes (Admin)
         this.app.use('/api/cover-letter-templates', coverLetterTemplateRoutes);
+
+        // General Admin routes
+        this.app.use('/api/admin', adminRoutes);
 
         // Legacy route (for backward compatibility)
         this.app.use('/', pdfRoutes);

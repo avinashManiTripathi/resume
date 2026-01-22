@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { StepLoader } from '@repo/ui/step-loader';
-import { getSubscription } from "@repo/utils-client";
 import Image from "next/image";
 import { usePersistence, SavedDocument } from "./hooks/usePersistence";
 import { Dialog } from "@repo/ui/dialog";
@@ -43,9 +42,8 @@ interface UserProfile {
 
 export default function DashboardPage() {
   const router = useRouter()
-  const subscription = getSubscription();
   const [searchQuery, setSearchQuery] = useState("");
-  const { getDocuments, isLoggedIn, user: rawUser, logout, deleteDocument } = usePersistence();
+  const { getDocuments, isLoggedIn, user: rawUser, logout, deleteDocument, subscription } = usePersistence();
   const user = rawUser as UserProfile;
 
   const [resumes, setResumes] = useState<SavedDocument[]>([]);

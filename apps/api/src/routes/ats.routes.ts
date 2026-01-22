@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import { analyzeResumeWithAI } from '../services/ai-analysis.service';
 import { extractTextFromFile, extractTextFromDOCX } from '../utils/file-parser';
+import { verifyToken, requireSubscription } from '../middleware/auth.middleware';
+import { FeatureName } from '../models';
 
 const router = Router();
 
@@ -24,7 +26,7 @@ const upload = multer({
  * Check ATS score
  * POST /api/ats/check
  */
-router.post('/check', upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/check', verifyToken, requireSubscription(FeatureName.ATS_CHECK), upload.single('resume'), async (req: Request, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });

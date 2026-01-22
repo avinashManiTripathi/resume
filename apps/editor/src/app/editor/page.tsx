@@ -2,7 +2,7 @@
 
 
 import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback, Suspense } from "react";
-import { useDebounce, exportToDoc, canDownload, setSubscription, getSubscription, type SubscriptionTier } from "@repo/utils-client";
+import { useDebounce, exportToDoc, canDownload, type SubscriptionTier } from "@repo/utils-client";
 import { useTemplates } from "@repo/hooks/useTemplate";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
@@ -35,7 +35,7 @@ function ResumeEditor() {
 
 
   // Persistence
-  const { saveDocument, getDocument, isLoggedIn } = usePersistence();
+  const { saveDocument, getDocument, isLoggedIn, subscription, setSubscription } = usePersistence();
   const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -135,9 +135,8 @@ function ResumeEditor() {
     }
   }, [isDownloadingPdf, downloadingStep, downloadingSteps.length]);
 
-  // Check subscription on mount - redirect if no active subscription
+  // Handle voice/text import from URL
   useEffect(() => {
-    const subscription = getSubscription();
     const fromSubscription = searchParams.get('fromSubscription');
 
     const voice = searchParams.get('voice');
@@ -420,7 +419,7 @@ function ResumeEditor() {
       return;
     }
     // Check subscription before allowing download
-    if (!canDownload() || ENV.BY_PASS_SUBSCRIPTION === 'false') {
+    if (!canDownload(subscription) && ENV.BY_PASS_SUBSCRIPTION === 'false') {
       // Save current state to sessionStorage before redirecting
       const stateToSave = {
         resume,

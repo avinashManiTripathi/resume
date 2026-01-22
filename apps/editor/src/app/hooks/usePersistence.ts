@@ -19,6 +19,7 @@ export interface SavedDocument {
 export function usePersistence() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const [user, setUser] = useState<any>(null);
+    const [subscription, setSubscription] = useState<any>(null);
     const [showPersistencePopup, setShowPersistencePopup] = useState(false);
 
     // Initial check for auth status
@@ -55,6 +56,20 @@ export function usePersistence() {
                     const userData = await response.json();
                     setUser(userData);
                     setIsLoggedIn(true);
+
+                    // Also fetch subscription status
+                    try {
+                        const subResponse = await fetch(`${API_BASE}/api/subscription/status`, {
+                            headers: { 'Accept': 'application/json' },
+                            credentials: 'include'
+                        });
+                        if (subResponse.ok) {
+                            const subData = await subResponse.json();
+                            setSubscription(subData.subscription);
+                        }
+                    } catch (subError) {
+                        console.error('Failed to fetch subscription status:', subError);
+                    }
                 } else {
                     setIsLoggedIn(false);
                 }
@@ -274,6 +289,8 @@ export function usePersistence() {
     return {
         isLoggedIn,
         user,
+        subscription,
+        setSubscription,
         logout,
         saveDocument,
         deleteDocument,

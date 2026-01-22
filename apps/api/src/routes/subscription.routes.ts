@@ -1,57 +1,34 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response, Request } from 'express';
+import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
+import { Subscription, User } from '../models';
+import { SubscriptionPlan, SubscriptionStatus } from '../models/Subscription';
 
 const router = Router();
 
-// Mock subscription database (replace with real database in production)
-const subscriptions = new Map<string, any>();
-
 /**
- * Create new subscription
- * POST /api/subscription/create
+ * Get current user's subscription status
+ * GET /api/subscription/status
  */
-router.post('/create', async (req: Request, res: Response) => {
+router.get('/status', verifyToken, async (req: Request, res: Response) => {
     try {
-        const { userId, tier, paymentMethod, paymentData } = req.body;
-
-        if (!userId || !tier) {
-            return res.status(400).json({ error: 'Missing required fields' });
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
         }
 
-        // Simulate payment processing
-        const subscription = {
-            id: `sub_${Date.now()}`,
-            userId,
-            tier,
-            active: true,
-            startDate: new Date().toISOString(),
-            expiryDate: tier !== 'free' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : undefined,
-            paymentMethod,
-            createdAt: new Date().toISOString(),
-        };
-
-        subscriptions.set(userId, subscription);
-
-        res.status(201).json({
-            success: true,
-            subscription,
-        });
-    } catch (error) {
-        console.error('Error creating subscription:', error);
-        res.status(500).json({ error: 'Failed to create subscription' });
-    }
-});
-
-/**
- * Get subscription status
- * GET /api/subscription/status/:userId
- */
-router.get('/status/:userId', async (req: Request, res: Response) => {
-    try {
-        const { userId } = req.params;
-        const subscription = subscriptions.get(userId);
+        const subscription = await Subscription.findOne({ userId }).sort({ createdAt: -1 });
 
         if (!subscription) {
-            return res.status(404).json({ error: 'Subscription not found' });
+            // Return a default free subscription if none exists
+            return res.json({
+                success: true,
+                subscription: {
+                    plan: SubscriptionPlan.FREE,
+                    status: SubscriptionStatus.ACTIVE,
+                    startDate: new Date(),
+                }
+            });
         }
 
         res.json({
@@ -65,59 +42,89 @@ router.get('/status/:userId', async (req: Request, res: Response) => {
 });
 
 /**
- * Update subscription tier
- * PUT /api/subscription/update
+ * Create or upgrade subscription (Simulated payment)
+ * POST /api/subscription/create
  */
-router.put('/update', async (req: Request, res: Response) => {
+router.post('/create', verifyToken, async (req: Request, res: Response) => {
     try {
-        const { userId, tier } = req.body;
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const { tier, paymentMethod, paymentId } = req.body;
 
         if (!userId || !tier) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        const subscription = subscriptions.get(userId);
-
-        if (!subscription) {
-            return res.status(404).json({ error: 'Subscription not found' });
+        // Validate tier
+        if (!Object.values(SubscriptionPlan).includes(tier)) {
+            return res.status(400).json({ error: 'Invalid subscription tier' });
         }
 
-        subscription.tier = tier;
-        subscription.updatedAt = new Date().toISOString();
+        // Calculate expiry date (30 days from now)
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(startDate.getDate() + 30);
 
-        subscriptions.set(userId, subscription);
+        // Update or Create subscription
+        let subscription = await Subscription.findOne({ userId });
 
-        res.json({
+        if (subscription) {
+            subscription.plan = tier as SubscriptionPlan;
+            subscription.status = SubscriptionStatus.ACTIVE;
+            subscription.startDate = startDate;
+            subscription.endDate = endDate;
+            // storing payment id if provided (e.g. razorpay_payment_id)
+            if (paymentId) subscription.paymentId = paymentId;
+            await subscription.save();
+        } else {
+            subscription = await Subscription.create({
+                userId,
+                plan: tier as SubscriptionPlan,
+                status: SubscriptionStatus.ACTIVE,
+                startDate,
+                endDate,
+                paymentId
+            });
+        }
+
+        // Update user reference
+        await User.findByIdAndUpdate(userId, { subscription: subscription._id });
+
+        res.status(201).json({
             success: true,
             subscription,
         });
     } catch (error) {
-        console.error('Error updating subscription:', error);
-        res.status(500).json({ error: 'Failed to update subscription' });
+        console.error('Error creating subscription:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
     }
 });
 
 /**
  * Cancel subscription
- * DELETE /api/subscription/cancel/:userId
+ * POST /api/subscription/cancel
  */
-router.delete('/cancel/:userId', async (req: Request, res: Response) => {
+router.post('/cancel', verifyToken, async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;
-        const subscription = subscriptions.get(userId);
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const subscription = await Subscription.findOne({ userId });
 
         if (!subscription) {
             return res.status(404).json({ error: 'Subscription not found' });
         }
 
-        subscription.active = false;
-        subscription.cancelledAt = new Date().toISOString();
-
-        subscriptions.set(userId, subscription);
+        subscription.status = SubscriptionStatus.CANCELLED;
+        await subscription.save();
 
         res.json({
             success: true,
             message: 'Subscription cancelled successfully',
+            subscription
         });
     } catch (error) {
         console.error('Error cancelling subscription:', error);
@@ -126,26 +133,31 @@ router.delete('/cancel/:userId', async (req: Request, res: Response) => {
 });
 
 /**
- * Get billing history
- * GET /api/subscription/invoices/:userId
+ * Get billing history (Mock)
  */
-router.get('/invoices/:userId', async (req: Request, res: Response) => {
+router.get('/invoices', verifyToken, async (req: Request, res: Response) => {
     try {
-        const { userId } = req.params;
-        const subscription = subscriptions.get(userId);
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const subscription = await Subscription.findOne({ userId });
 
         if (!subscription) {
-            return res.status(404).json({ error: 'Subscription not found' });
+            return res.json({ success: true, invoices: [] });
         }
 
         // Mock invoice data
         const invoices = [
             {
                 id: `inv_${Date.now()}`,
-                amount: subscription.tier === 'pro' ? 9 : subscription.tier === 'premium' ? 19 : 0,
+                amount: subscription.plan === SubscriptionPlan.PRO ? 900 : subscription.plan === SubscriptionPlan.PREMIUM ? 1900 : 0,
                 status: 'paid',
                 date: subscription.startDate,
-                description: `${subscription.tier.charAt(0).toUpperCase() + subscription.tier.slice(1)} Plan`,
+                description: `${subscription.plan.toUpperCase()} Plan Subscription`,
+                currency: 'INR'
             },
         ];
 
@@ -160,3 +172,4 @@ router.get('/invoices/:userId', async (req: Request, res: Response) => {
 });
 
 export default router;
+

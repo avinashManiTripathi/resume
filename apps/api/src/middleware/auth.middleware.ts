@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWTPayload } from '../types/user.types';
+import { config } from '../config';
+import { Subscription, FeatureConfig, FeatureName } from '../models';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
@@ -113,4 +115,50 @@ export const requireAdmin = async (req: Request, res: Response, next: NextFuncti
         console.error('Admin verification error:', error);
         return res.status(500).json({ error: 'Failed to verify admin status' });
     }
+};
+
+/**
+ * Middleware to require an active pro/premium subscription based on dynamic feature configuration
+ */
+export const requireSubscription = (featureName: FeatureName) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            if (config.byPassSubscription) {
+                return next();
+            }
+
+            // Check if this feature is actually premium in the database
+            const featureConfig = await FeatureConfig.findOne({ name: featureName });
+
+            // If feature is not found or marked as not premium, allow access
+            if (featureConfig && !featureConfig.isPremium) {
+                return next();
+            }
+
+            const authReq = req as AuthRequest;
+            const userId = authReq.user?.userId;
+
+            if (!userId) {
+                return res.status(401).json({ error: 'Authentication required' });
+            }
+
+            const subscription = await Subscription.findOne({
+                userId,
+                status: 'active',
+                plan: { $in: ['pro', 'premium'] }
+            });
+
+            if (!subscription) {
+                return res.status(403).json({
+                    error: 'Active subscription required',
+                    message: `Please upgrade your plan to access ${featureName.replace('-', ' ')}`
+                });
+            }
+
+            next();
+        } catch (error) {
+            console.error('Subscription verification error:', error);
+            return res.status(500).json({ error: 'Failed to verify subscription' });
+        }
+    };
 };

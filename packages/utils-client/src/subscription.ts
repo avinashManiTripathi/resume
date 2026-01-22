@@ -11,88 +11,10 @@ export interface SubscriptionStatus {
     expiryDate?: string;
 }
 
-const STORAGE_KEY = 'resumeSubscription';
-
-/**
- * Get the current subscription status from localStorage
- */
-export function getSubscription(): SubscriptionStatus | null {
-    if (typeof window === 'undefined') return null;
-
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (!stored) return null;
-
-        const subscription: SubscriptionStatus = JSON.parse(stored);
-
-        // Check if subscription has expired
-        if (subscription.expiryDate) {
-            const expiryDate = new Date(subscription.expiryDate);
-            const now = new Date();
-
-            if (now > expiryDate) {
-                // Subscription expired, remove it
-                localStorage.removeItem(STORAGE_KEY);
-                return null;
-            }
-        }
-
-        return subscription;
-    } catch (error) {
-        console.error('Error reading subscription from localStorage:', error);
-        return null;
-    }
-}
-
-/**
- * Save subscription status to localStorage
- */
-export function setSubscription(tier: SubscriptionTier, durationMonths?: number): SubscriptionStatus {
-    const startDate = new Date().toISOString();
-    let expiryDate: string | undefined;
-
-    // Calculate expiry date if duration is provided
-    if (durationMonths && durationMonths > 0) {
-        const expiry = new Date();
-        expiry.setMonth(expiry.getMonth() + durationMonths);
-        expiryDate = expiry.toISOString();
-    }
-
-    const subscription: SubscriptionStatus = {
-        tier,
-        active: true,
-        startDate,
-        expiryDate,
-    };
-
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(subscription));
-    } catch (error) {
-        console.error('Error saving subscription to localStorage:', error);
-    }
-
-    return subscription;
-}
-
-/**
- * Remove subscription from localStorage
- */
-export function clearSubscription(): void {
-    if (typeof window === 'undefined') return;
-
-    try {
-        localStorage.removeItem(STORAGE_KEY);
-    } catch (error) {
-        console.error('Error clearing subscription from localStorage:', error);
-    }
-}
-
 /**
  * Check if user has an active subscription (Pro or Premium)
  */
-export function hasActiveSubscription(): boolean {
-    const subscription = getSubscription();
-
+export function hasActiveSubscription(subscription: SubscriptionStatus | null): boolean {
     if (!subscription || !subscription.active) {
         return false;
     }
@@ -104,8 +26,8 @@ export function hasActiveSubscription(): boolean {
 /**
  * Check if user can download based on their subscription tier
  */
-export function canDownload(): boolean {
-    return hasActiveSubscription();
+export function canDownload(subscription: SubscriptionStatus | null): boolean {
+    return hasActiveSubscription(subscription);
 }
 
 /**

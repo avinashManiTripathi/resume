@@ -1,9 +1,10 @@
-import { Router } from 'express';
-import { Request, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import { TailorService } from '../services/tailor.service';
 import { parseResumeWithAI } from '../services/ai-analysis.service';
 import { extractTextFromPDF } from '../utils/file-parser';
+import { verifyToken, requireSubscription } from '../middleware/auth.middleware';
+import { FeatureName } from '../models';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
@@ -14,7 +15,7 @@ const tailorService = new TailorService();
  * POST /api/tailor/analyze
  * Analyze resume against job description
  */
-router.post('/analyze', upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/analyze', verifyToken, requireSubscription(FeatureName.TAILOR), upload.single('resume'), async (req: Request, res: Response) => {
     try {
 
         const { jobDescription, jobTitle, company } = req.body;
@@ -48,7 +49,7 @@ router.post('/analyze', upload.single('resume'), async (req: Request, res: Respo
  * POST /api/tailor/apply-suggestions
  * Apply suggestions to resume
  */
-router.post('/apply-suggestions', async (req: Request, res: Response) => {
+router.post('/apply-suggestions', verifyToken, requireSubscription(FeatureName.TAILOR), async (req: Request, res: Response) => {
     try {
         const { resumeData, suggestions } = req.body;
 
@@ -71,7 +72,7 @@ router.post('/apply-suggestions', async (req: Request, res: Response) => {
  * Parse resume PDF and tailor it to job description using AI
  * Returns structured JSON data for the editor
  */
-router.post('/parse', upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/parse', verifyToken, requireSubscription(FeatureName.TAILOR), upload.single('resume'), async (req: Request, res: Response) => {
     try {
         const { jobDescription, jobTitle, company } = req.body;
 

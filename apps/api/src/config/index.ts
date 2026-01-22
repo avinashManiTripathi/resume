@@ -18,4 +18,7 @@ export const config = {
 
     // AI configuration
     geminiApiKey: process.env.GENAI_API_KEY || 'AIzaSyCDSugzsIRrSbKT2eimReibCncLozIuKEg',
+
+    // Subscription settings
+    byPassSubscription: process.env.BY_PASS_SUBSCRIPTION === 'true',
 };
