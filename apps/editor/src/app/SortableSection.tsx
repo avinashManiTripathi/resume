@@ -49,6 +49,9 @@ export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitle
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
+        // Stop propagation to prevent dnd-kit from picking up Space/Enter
+        e.stopPropagation();
+
         if (e.key === 'Enter') {
             handleSave();
         } else if (e.key === 'Escape') {
