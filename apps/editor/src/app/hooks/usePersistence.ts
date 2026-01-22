@@ -10,7 +10,7 @@ export interface SavedDocument {
     id: string;
     _id?: string;
     title: string;
-    type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history';
+    type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history' | 'interview-session';
     templateId: string;
     data: any;
     lastModified: string;
@@ -188,9 +188,10 @@ export function usePersistence() {
 
         if (isLoggedIn) {
             try {
-                const [resumesRes, lettersRes] = await Promise.all([
+                const [resumesRes, lettersRes, interviewsRes] = await Promise.all([
                     fetch(`${API_BASE}/api/resume`, { credentials: 'include' }),
-                    fetch(`${API_BASE}/api/cover-letter`, { credentials: 'include' })
+                    fetch(`${API_BASE}/api/cover-letter`, { credentials: 'include' }),
+                    fetch(`${API_BASE}/api/interview/sessions`, { credentials: 'include' })
                 ]);
 
                 if (resumesRes.ok) {
@@ -201,6 +202,19 @@ export function usePersistence() {
                 if (lettersRes.ok) {
                     const data = await lettersRes.json();
                     backendDocs = [...backendDocs, ...data.data.map((d: any) => ({ ...d, type: 'cover-letter' }))];
+                }
+
+                if (interviewsRes.ok) {
+                    const data = await interviewsRes.json();
+                    backendDocs = [...backendDocs, ...data.data.map((d: any) => ({
+                        id: d._id,
+                        _id: d._id,
+                        title: d.jdInfo?.jobTitle ? `${d.jdInfo.jobTitle} @ ${d.jdInfo.company}` : "Mock Interview",
+                        type: 'interview-session',
+                        templateId: 'interview',
+                        data: d,
+                        lastModified: d.updatedAt || d.createdAt
+                    }))];
                 }
             } catch (error) {
                 console.error('Failed to fetch backend documents:', error);

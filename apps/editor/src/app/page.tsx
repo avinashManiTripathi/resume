@@ -21,7 +21,13 @@ import {
   Sparkles,
   BarChart3,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  LogOut,
+  User,
+  Video,
+  Headphones,
+  ChevronDown,
+  PenTool
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { StepLoader } from '@repo/ui/step-loader';
@@ -41,6 +47,8 @@ export default function DashboardPage() {
   const [coverLetters, setCoverLetters] = useState<SavedDocument[]>([]);
   const [atsScans, setAtsScans] = useState<SavedDocument[]>([]);
   const [tailorHistory, setTailorHistory] = useState<SavedDocument[]>([]);
+  const [interviewSessions, setInterviewSessions] = useState<SavedDocument[]>([]);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
@@ -87,6 +95,7 @@ export default function DashboardPage() {
     setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
     setAtsScans(allDocs.filter(d => d.type === 'ats-scan'));
     setTailorHistory(allDocs.filter(d => d.type === 'tailor-history'));
+    setInterviewSessions(allDocs.filter(d => d.type === 'interview-session'));
 
     const waitForSteps = () => {
       return new Promise<void>((resolve) => {
@@ -213,6 +222,9 @@ export default function DashboardPage() {
                 <Link href="/templates" className="block py-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
                   Templates
                 </Link>
+                <Link href="/cover-letter" className="block py-1.5 text-sm text-slate-500 hover:text-purple-600 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
+                  Cover Letters
+                </Link>
                 <Link href="https://interview.hirecta.com" className="block py-1.5 text-sm text-slate-500 hover:text-emerald-600 transition-colors cursor-pointer font-medium hover:bg-slate-50 rounded-md px-2 -mx-2">
                   Mock Interview
                 </Link>
@@ -263,15 +275,47 @@ export default function DashboardPage() {
               <span className="text-sm font-medium hidden sm:inline">BroadCast</span>
             </button>
 
-            <div className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer" onClick={logout}>
-              {user?.picture ? (
-                <img src={user.picture} alt="" className="w-9 h-9 rounded-xl object-cover shadow-sm bg-white" />
-              ) : (
-                <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
-                  {user?.name?.[0] || 'G'}
+            <div className="relative">
+              <button
+                className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer focus:outline-none"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
+              >
+                {user?.picture ? (
+                  <img src={user.picture} alt="" className="w-9 h-9 rounded-xl object-cover shadow-sm bg-white" />
+                ) : (
+                  <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
+                    {user?.name?.[0] || 'G'}
+                  </div>
+                )}
+                <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "User"}</span>
+                <ChevronDown size={14} className={`text-slate-400 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* User Dropdown */}
+              {showUserMenu && (
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-3 py-2 border-b border-slate-50 mb-1">
+                    <p className="text-sm font-bold text-slate-900">{user?.name || "User"}</p>
+                    <p className="text-xs text-slate-500 truncate">{user?.email || "user@example.com"}</p>
+                  </div>
+                  <div className="space-y-0.5">
+                    <button className="w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                      <Settings size={16} /> Settings
+                    </button>
+                    <button className="w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                      <Headphones size={16} /> Support
+                    </button>
+                    <div className="my-1 border-t border-slate-50"></div>
+                    <button
+                      onClick={logout}
+                      className="w-full text-left px-3 py-2 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-2"
+                    >
+                      <LogOut size={16} /> Logout
+                    </button>
+                  </div>
                 </div>
               )}
-              <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "User"}</span>
             </div>
           </div>
         </header>
@@ -340,198 +384,291 @@ export default function DashboardPage() {
                     <p className="text-sm text-slate-500 mt-1">Customize your resume for a specific job description in seconds.</p>
                   </div>
                 </div>
-              </div>
 
-              {/* About (Dummy for now) */}
-              <section>
-                <h3 className="font-bold text-lg text-slate-900 mb-5">Profile Summary</h3>
-                <div className="space-y-4">
-                  <div className="bg-white p-4 rounded-xl border border-slate-200">
-                    <p className="text-sm text-slate-600 leading-relaxed italic">
-                      "{dummyAbout}"
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white p-4 rounded-xl border border-slate-200">
-                      <p className="text-xs text-slate-400 font-bold uppercase mb-1">Email</p>
-                      <p className="text-sm font-medium text-slate-900 truncate" title={dummyContact.email}>{dummyContact.email}</p>
+                {/* Cover Letter Quick Link */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-purple-300 transition-all" onClick={() => router.push('/cover-letter')}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600">
+                      <PenTool size={20} />
                     </div>
-                    <div className="bg-white p-4 rounded-xl border border-slate-200">
-                      <p className="text-xs text-slate-400 font-bold uppercase mb-1">Phone</p>
-                      <p className="text-sm font-medium text-slate-900">{dummyContact.phone}</p>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900">Cover Letter</h3>
+                      <p className="text-sm text-slate-500 mt-1">Write a persuasive cover letter using our professional templates.</p>
                     </div>
                   </div>
                 </div>
-              </section>
-            </div>
 
-            {/* RIGHT COLUMN: Documents & History */}
-            <div className="col-span-12 lg:col-span-8 space-y-8">
+                {/* Mock Interview Quick Link */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-emerald-300 transition-all" onClick={() => window.open('https://interview.hirecta.com', '_blank')}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
+                      <Video size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900">Mock Interview</h3>
+                      <p className="text-sm text-slate-500 mt-1">Practice your interview skills with our AI interviewer.</p>
+                    </div>
+                  </div>
+                </div>
 
-              {/* SECTION: Recent Documents (Resumes) */}
-              <div className="relative">
-                {/* Selection Border Effect */}
-                <div className="absolute -inset-0.5 rounded-2xl border-2 border-[#6366F1] bg-transparent opacity-0 pointer-events-none"></div>
+                {/* About (Dummy for now) */}
+                <section>
+                  <h3 className="font-bold text-lg text-slate-900 mb-5">Profile Summary</h3>
+                  <div className="space-y-4">
+                    <div className="bg-white p-4 rounded-xl border border-slate-200">
+                      <p className="text-sm text-slate-600 leading-relaxed italic">
+                        "{dummyAbout}"
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200">
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Email</p>
+                        <p className="text-sm font-medium text-slate-900 truncate" title={dummyContact.email}>{dummyContact.email}</p>
+                      </div>
+                      <div className="bg-white p-4 rounded-xl border border-slate-200">
+                        <p className="text-xs text-slate-400 font-bold uppercase mb-1">Phone</p>
+                        <p className="text-sm font-medium text-slate-900">{dummyContact.phone}</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
 
+              {/* RIGHT COLUMN: Documents & History */}
+              <div className="col-span-12 lg:col-span-8 space-y-8">
+
+                {/* SECTION: Recent Documents (Resumes) */}
+                <div className="relative">
+                  {/* Selection Border Effect */}
+                  <div className="absolute -inset-0.5 rounded-2xl border-2 border-[#6366F1] bg-transparent opacity-0 pointer-events-none"></div>
+
+                  <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                    <h3 className="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
+                      <FileText size={20} className="text-indigo-600" /> Resumes
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {resumes.length === 0 ? (
+                        <div className="col-span-2 py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
+                          <p className="text-slate-400 text-sm font-medium">No resumes created yet.</p>
+                        </div>
+                      ) : (
+                        resumes.slice(0, 4).map(doc => (
+                          <div key={doc.id || doc._id} className="group relative bg-white border border-slate-200 hover:border-indigo-400 rounded-xl p-5 hover:shadow-md transition-all cursor-pointer">
+                            <Link href={`/editor?id=${doc.id || doc._id}`} className="absolute inset-0 z-0" />
+                            <div className="flex justify-between items-start mb-2 relative z-10">
+                              <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                                <FileText size={18} />
+                              </div>
+                              <button onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleDelete(doc.id || doc._id || "", 'resume', doc.title || "Untitled");
+                              }} className="text-slate-300 hover:text-rose-500 transition-colors p-1">
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
+                            <h4 className="font-bold text-slate-900 text-sm truncate pr-2 group-hover:text-indigo-600 transition-colors">{doc.title}</h4>
+                            <p className="text-xs text-slate-500 mt-1">Edited {getTimeAgo(doc.lastModified)}</p>
+                          </div>
+                        ))
+                      )}
+
+                      {/* Add New Button */}
+                      <Link href="/editor" className="min-h-[120px] flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 transition-all group">
+                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-400 group-hover:text-indigo-600 transition-colors mb-2">
+                          <Plus size={20} />
+                        </div>
+                        <span className="text-xs font-bold text-slate-400 group-hover:text-indigo-600 transition-colors uppercase">Create New Resume</span>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SECTION: Optimization History Tabs */}
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
                   <h3 className="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
-                    <FileText size={20} className="text-indigo-600" /> Resumes
+                    <BarChart3 size={20} className="text-emerald-600" /> Optimization History
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {resumes.length === 0 ? (
-                      <div className="col-span-2 py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
-                        <p className="text-slate-400 text-sm font-medium">No resumes created yet.</p>
+                  {atsScans.length === 0 && tailorHistory.length === 0 ? (
+                    <div className="py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
+                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-4">
+                        <Target size={32} />
                       </div>
-                    ) : (
-                      resumes.slice(0, 4).map(doc => (
-                        <div key={doc.id || doc._id} className="group relative bg-white border border-slate-200 hover:border-indigo-400 rounded-xl p-5 hover:shadow-md transition-all cursor-pointer">
-                          <Link href={`/editor?id=${doc.id || doc._id}`} className="absolute inset-0 z-0" />
-                          <div className="flex justify-between items-start mb-2 relative z-10">
-                            <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-                              <FileText size={18} />
+                      <p className="text-slate-900 font-bold mb-1">No Analysis History</p>
+                      <p className="text-slate-500 text-sm mb-4">Run an ATS scan or Tailor operation to see results here.</p>
+                      <div className="flex justify-center gap-4">
+                        <Link href="/ats-check" className="text-xs font-bold text-blue-600 hover:underline">Run ATS Check</Link>
+                        <Link href="/tailor" className="text-xs font-bold text-indigo-600 hover:underline">Try Tailor AI</Link>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {/* ATS Scans List */}
+                      {atsScans.length > 0 && (
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">ATS Check Results</h4>
+                          <div className="space-y-3">
+                            {atsScans.slice(0, 3).map((scan: any) => (
+                              <div key={scan.id} className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-blue-200 transition-colors">
+                                <div className="flex items-center gap-4">
+                                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg ${scan.data.score >= 80 ? 'bg-emerald-500' : scan.data.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}>
+                                    {scan.data.score}
+                                  </div>
+                                  <div>
+                                    <p className="font-bold text-slate-900 text-sm">{scan.data.fileName || "Resume Scan"}</p>
+                                    <p className="text-xs text-slate-500">{new Date(scan.data.scannedAt).toLocaleDateString()} &middot; {scan.data.feedback?.strengths?.length || 0} Strengths found</p>
+                                  </div>
+                                </div>
+                                <button onClick={() => handleDelete(scan.id, 'ats-scan', scan.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Tailor History List */}
+                      {tailorHistory.length > 0 && (
+                        <div className={atsScans.length > 0 ? "pt-6 border-t border-slate-100" : ""}>
+                          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tailored Resumes</h4>
+                          <div className="space-y-3">
+                            {tailorHistory.slice(0, 3).map((tailor: any) => (
+                              <div key={tailor.id} className="flex items-center justify-between p-4 bg-indigo-50/50 border border-indigo-100/50 rounded-xl hover:border-indigo-300 transition-colors">
+                                <div className="flex items-center gap-4">
+                                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <Sparkles size={20} />
+                                  </div>
+                                  <div>
+                                    <p className="font-bold text-slate-900 text-sm">{tailor.data.jobTitle || "Custom Role"} @ {tailor.data.company || "Company"}</p>
+                                    <p className="text-xs text-slate-500">{new Date(tailor.data.createdAt).toLocaleDateString()} &middot; Tailored Context</p>
+                                  </div>
+                                </div>
+                                <button onClick={() => handleDelete(tailor.id, 'tailor-history', tailor.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* SECTION: Mock Interview Sessions */}
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+
+                  <div className="flex items-center justify-between mb-6 relative z-10">
+                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                      <Video size={20} className="text-indigo-600" /> Mock Interview Sessions
+                    </h3>
+                    <a
+                      href="https://interview.hirecta.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-sm hover:shadow-indigo-200"
+                    >
+                      Start Interview <ArrowRight size={14} />
+                    </a>
+                  </div>
+
+                  {interviewSessions.length === 0 ? (
+                    <div className="py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center relative z-10">
+                      <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 mx-auto mb-3">
+                        <Video size={24} />
+                      </div>
+                      <p className="text-slate-900 font-bold mb-1">No Practice Sessions Yet</p>
+                      <p className="text-slate-500 text-xs mb-4">Practice your interview skills with our AI interviewer.</p>
+                      <a href="https://interview.hirecta.com" target="_blank" rel="noreferrer" className="text-xs font-bold text-indigo-600 hover:underline">
+                        Start Your First Session
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 relative z-10">
+                      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Recent Sessions</h4>
+                      {interviewSessions.slice(0, 3).map((session: any) => (
+                        <div key={session.id} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl hover:border-indigo-200 hover:shadow-sm transition-all group">
+                          <div className="flex items-center gap-4">
+                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${session.data.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'}`}>
+                              {session.data.status === 'completed' ? <CheckCircle size={18} /> : <Clock size={18} />}
                             </div>
-                            <button onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleDelete(doc.id || doc._id || "", 'resume', doc.title || "Untitled");
-                            }} className="text-slate-300 hover:text-rose-500 transition-colors p-1">
+                            <div>
+                              <p className="font-bold text-slate-900 text-sm">{session.title}</p>
+                              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                <span>{new Date(session.lastModified).toLocaleDateString()}</span>
+                                <span>&middot;</span>
+                                <span className={`capitalize ${session.data.status === 'completed' ? 'text-emerald-600 font-medium' : 'text-amber-600 font-medium'}`}>
+                                  {session.data.status}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <a
+                            href={`https://interview.hirecta.com/session/${session.id}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-indigo-100"
+                          >
+                            View Details
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* SECTION: Cover Letters (Enhanced) */}
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50/50 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+
+                  <div className="flex items-center justify-between mb-8 relative z-10">
+                    <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+                      <PenTool size={20} className="text-purple-600" /> Cover Letters
+                    </h3>
+                    <Link href="/cover-letter" className="flex items-center gap-2 px-3 py-1.5 bg-purple-50 text-purple-700 hover:bg-purple-100 font-bold text-xs rounded-lg transition-colors">
+                      <Plus size={14} /> Create New
+                    </Link>
+                  </div>
+
+                  <div className="space-y-4">
+                    {coverLetters.length === 0 ? (
+                      <div className="text-center py-4 text-slate-400 text-sm">No cover letters found.</div>
+                    ) : (
+                      coverLetters.slice(0, 3).map(doc => (
+                        <div key={doc.id || doc._id} className="group flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="w-2 h-2 bg-slate-200 rounded-full group-hover:bg-indigo-500 transition-colors"></div>
+                            <div>
+                              <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
+                                {doc.title || "UNTITLED LETTER"}
+                              </h4>
+                              <p className="text-xs text-slate-400">Last edited {getTimeAgo(doc.lastModified)}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Link href={`/cover-letter?id=${doc.id || doc._id}`} className="text-xs font-bold text-indigo-600 hover:underline px-3 py-1 bg-indigo-50 rounded-md">
+                              Edit
+                            </Link>
+                            <button onClick={() => handleDelete(doc.id || doc._id || "", 'cover-letter', doc.title || "Untitled")} className="text-slate-300 hover:text-rose-500 p-2">
                               <Trash2 size={14} />
                             </button>
                           </div>
-                          <h4 className="font-bold text-slate-900 text-sm truncate pr-2 group-hover:text-indigo-600 transition-colors">{doc.title}</h4>
-                          <p className="text-xs text-slate-500 mt-1">Edited {getTimeAgo(doc.lastModified)}</p>
                         </div>
                       ))
                     )}
 
-                    {/* Add New Button */}
-                    <Link href="/editor" className="min-h-[120px] flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 hover:bg-slate-50 hover:border-indigo-400 transition-all group">
-                      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-400 group-hover:text-indigo-600 transition-colors mb-2">
-                        <Plus size={20} />
-                      </div>
-                      <span className="text-xs font-bold text-slate-400 group-hover:text-indigo-600 transition-colors uppercase">Create New Resume</span>
+                    <Link href="/cover-letter" className="block text-center text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors mt-4 py-2 border-t border-slate-100">
+                      View All Cover Letters
                     </Link>
                   </div>
                 </div>
+
               </div>
-
-              {/* SECTION: Optimization History Tabs */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <h3 className="font-bold text-lg text-slate-900 mb-6 flex items-center gap-2">
-                  <BarChart3 size={20} className="text-emerald-600" /> Optimization History
-                </h3>
-
-                {atsScans.length === 0 && tailorHistory.length === 0 ? (
-                  <div className="py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center">
-                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-4">
-                      <Target size={32} />
-                    </div>
-                    <p className="text-slate-900 font-bold mb-1">No Analysis History</p>
-                    <p className="text-slate-500 text-sm mb-4">Run an ATS scan or Tailor operation to see results here.</p>
-                    <div className="flex justify-center gap-4">
-                      <Link href="/ats-check" className="text-xs font-bold text-blue-600 hover:underline">Run ATS Check</Link>
-                      <Link href="/tailor" className="text-xs font-bold text-indigo-600 hover:underline">Try Tailor AI</Link>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {/* ATS Scans List */}
-                    {atsScans.length > 0 && (
-                      <div>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">ATS Check Results</h4>
-                        <div className="space-y-3">
-                          {atsScans.slice(0, 3).map((scan: any) => (
-                            <div key={scan.id} className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-blue-200 transition-colors">
-                              <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg ${scan.data.score >= 80 ? 'bg-emerald-500' : scan.data.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}>
-                                  {scan.data.score}
-                                </div>
-                                <div>
-                                  <p className="font-bold text-slate-900 text-sm">{scan.data.fileName || "Resume Scan"}</p>
-                                  <p className="text-xs text-slate-500">{new Date(scan.data.scannedAt).toLocaleDateString()} &middot; {scan.data.feedback?.strengths?.length || 0} Strengths found</p>
-                                </div>
-                              </div>
-                              <button onClick={() => handleDelete(scan.id, 'ats-scan', scan.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Tailor History List */}
-                    {tailorHistory.length > 0 && (
-                      <div className={atsScans.length > 0 ? "pt-6 border-t border-slate-100" : ""}>
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tailored Resumes</h4>
-                        <div className="space-y-3">
-                          {tailorHistory.slice(0, 3).map((tailor: any) => (
-                            <div key={tailor.id} className="flex items-center justify-between p-4 bg-indigo-50/50 border border-indigo-100/50 rounded-xl hover:border-indigo-300 transition-colors">
-                              <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
-                                  <Sparkles size={20} />
-                                </div>
-                                <div>
-                                  <p className="font-bold text-slate-900 text-sm">{tailor.data.jobTitle || "Custom Role"} @ {tailor.data.company || "Company"}</p>
-                                  <p className="text-xs text-slate-500">{new Date(tailor.data.createdAt).toLocaleDateString()} &middot; Tailored Context</p>
-                                </div>
-                              </div>
-                              <button onClick={() => handleDelete(tailor.id, 'tailor-history', tailor.title)} className="p-2 text-slate-300 hover:text-rose-500 transition-colors">
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* SECTION: Cover Letters (Reduced prominence) */}
-              <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2">
-                    <FileText size={20} className="text-slate-400" /> Cover Letters
-                  </h3>
-                </div>
-
-                <div className="space-y-4">
-                  {coverLetters.length === 0 ? (
-                    <div className="text-center py-4 text-slate-400 text-sm">No cover letters found.</div>
-                  ) : (
-                    coverLetters.slice(0, 3).map(doc => (
-                      <div key={doc.id || doc._id} className="group flex items-center justify-between p-3 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="w-2 h-2 bg-slate-200 rounded-full group-hover:bg-indigo-500 transition-colors"></div>
-                          <div>
-                            <h4 className="font-bold text-sm text-slate-900 group-hover:text-indigo-600 transition-colors">
-                              {doc.title || "UNTITLED LETTER"}
-                            </h4>
-                            <p className="text-xs text-slate-400">Last edited {getTimeAgo(doc.lastModified)}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Link href={`/cover-letter?id=${doc.id || doc._id}`} className="text-xs font-bold text-indigo-600 hover:underline px-3 py-1 bg-indigo-50 rounded-md">
-                            Edit
-                          </Link>
-                          <button onClick={() => handleDelete(doc.id || doc._id || "", 'cover-letter', doc.title || "Untitled")} className="text-slate-300 hover:text-rose-500 p-2">
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </div>
-                    ))
-                  )}
-
-                  <Link href="/cover-letter" className="block text-center text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors mt-4 py-2 border-t border-slate-100">
-                    View All Cover Letters
-                  </Link>
-                </div>
-              </div>
-
             </div>
-          </div>
         </main>
       </div>
 
