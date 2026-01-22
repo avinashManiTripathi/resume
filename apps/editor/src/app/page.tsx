@@ -748,6 +748,7 @@ function DashboardContent() {
                 <div className="bg-white rounded-[40px] shadow-sm border border-slate-200 overflow-hidden">
                   <SubscriptionView
                     onBack={() => setActiveToolView(null)}
+                    onSuccess={() => setActiveToolView(null)}
                   />
                 </div>
               )}
@@ -780,8 +781,8 @@ function DashboardContent() {
                       <h1 className="text-3xl font-bold text-slate-900">{user?.name || "Welcome Back"}</h1>
                       {subscription && (
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${subscription.plan === 'free'
-                            ? 'bg-slate-50 text-slate-400 border-slate-200'
-                            : 'bg-blue-50 text-blue-600 border-blue-100 shadow-sm shadow-blue-50'
+                          ? 'bg-slate-50 text-slate-400 border-slate-200'
+                          : 'bg-blue-50 text-blue-600 border-blue-100 shadow-sm shadow-blue-50'
                           }`}>
                           {subscription.plan === 'free' ? 'Free' : subscription.plan}
                         </span>

@@ -185,11 +185,7 @@ function ResumeEditor() {
       return;
     }
 
-    // Redirect to subscription page if no subscription exists
-    if (!subscription || subscription.plan === 'free') {
-      router.push('/subscription?redirect=/editor');
-    }
-  }, [router, searchParams, subscription]);
+  }, [router, searchParams]);
 
   // Load existing document if ID is provided
   const urlDocId = searchParams.get('id');

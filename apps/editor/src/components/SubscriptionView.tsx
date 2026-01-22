@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
     getTierDisplayName,
     type SubscriptionTier
@@ -59,10 +60,13 @@ const pricingTiers = [
 interface SubscriptionViewProps {
     onBack?: () => void;
     hideBack?: boolean;
+    onSuccess?: () => void;
 }
 
-export function SubscriptionView({ onBack, hideBack }: SubscriptionViewProps) {
+export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionViewProps) {
     const { user, subscription, setSubscription } = usePersistence();
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const API_BASE = ENV.API_URL;
 
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier | null>(null);
@@ -99,7 +103,16 @@ export function SubscriptionView({ onBack, hideBack }: SubscriptionViewProps) {
                 setShowMockForm(false);
                 setTimeout(() => {
                     setShowSuccess(false);
-                    setView('dashboard');
+                    if (onSuccess) {
+                        onSuccess();
+                    } else {
+                        const returnTo = searchParams.get('returnTo');
+                        if (returnTo === 'editor') {
+                            router.push('/editor?fromSubscription=true');
+                        } else {
+                            setView('dashboard');
+                        }
+                    }
                 }, 2500);
             }
         } catch (error) {
