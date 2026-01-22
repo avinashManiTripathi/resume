@@ -22,7 +22,7 @@ import { EditorSidebar } from "../../components/EditorSidebar";
 
 
 function ResumeEditor() {
-  const API_BASE = ENV.API_URL
+  const API_BASE = ENV.API_URL;
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -447,7 +447,24 @@ function ResumeEditor() {
       setIsDownloadingPdf(true);
       setDownloadingStep(0);
       try {
-        await downloadPdf(apiUrl, fileName, resumeData);
+        const response = await downloadPdf(apiUrl, fileName, resumeData);
+
+        if (response && response.status === 403) {
+          // Save state for return
+          const stateToSave = {
+            resume,
+            templateId,
+            fontFamily,
+            sectionOrder,
+            docId
+          };
+          sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
+          router.push('/subscription?returnTo=editor');
+        } else if (response && response.status === 401) {
+          const isProd = window.location.hostname.endsWith('hirecta.com');
+          const authUrl = isProd ? 'https://auth.hirecta.com' : 'http://localhost:3001';
+          window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
+        }
       } finally {
         // Small delay before closing to show completion
         setTimeout(() => {
@@ -647,8 +664,12 @@ function ResumeEditor() {
       if (pdfData) {
         await renderPDFPage(pdfData, page);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error rendering PDF:", error);
+      // Handle 403/401 during preview if they happen despite being 'public'
+      if (error?.message?.includes('403')) {
+        // router.push('/subscription?returnTo=editor');
+      }
     }
   }, [currentPage, templateId, sectionLabels, fontFamily, debouncedResume, debouncedSectionOrder, generatePDF, renderPDFPage]);
 

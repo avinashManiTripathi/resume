@@ -58,6 +58,7 @@ export function useFetch<T = any>(
         try {
             const response = await fetch(url, {
                 ...options,
+                credentials: 'include',
                 signal: abortControllerRef.current.signal,
             });
 
@@ -144,6 +145,7 @@ export function usePost<T = any>(url: string): MutationState<T> {
                         'Content-Type': 'application/json',
                     },
                     body: body ? JSON.stringify(body) : undefined,
+                    credentials: 'include',
                     signal: abortControllerRef.current.signal,
                 });
 
@@ -219,6 +221,7 @@ export function usePut<T = any>(url: string): MutationState<T> {
                         'Content-Type': 'application/json',
                     },
                     body: body ? JSON.stringify(body) : undefined,
+                    credentials: 'include',
                     signal: abortControllerRef.current.signal,
                 });
 
@@ -294,6 +297,7 @@ export function usePatch<T = any>(url: string): MutationState<T> {
                         'Content-Type': 'application/json',
                     },
                     body: body ? JSON.stringify(body) : undefined,
+                    credentials: 'include',
                     signal: abortControllerRef.current.signal,
                 });
 
@@ -369,6 +373,7 @@ export function useDelete<T = any>(url: string): MutationState<T> {
                         'Content-Type': 'application/json',
                     } : undefined,
                     body: body ? JSON.stringify(body) : undefined,
+                    credentials: 'include',
                     signal: abortControllerRef.current.signal,
                 });
 
@@ -454,6 +459,7 @@ export function usePostArrayBuffer(url: string) {
                         'Content-Type': 'application/json',
                     },
                     body: body ? JSON.stringify(body) : undefined,
+                    credentials: 'include',
                     signal: abortControllerRef.current.signal,
                 });
 
