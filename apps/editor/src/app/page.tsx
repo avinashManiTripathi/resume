@@ -55,9 +55,22 @@ export default function DashboardPage() {
   const [interviewSessions, setInterviewSessions] = useState<SavedDocument[]>([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [activeToolView, setActiveToolView] = useState<'ats-checker' | 'ai-tailor' | 'templates' | 'cover-letters' | 'mock-interview' | null>(null);
+  const [headerImgError, setHeaderImgError] = useState(false);
+  const [profileImgError, setProfileImgError] = useState(false);
+
+
 
   const [loading, setLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
+
+  // Helper for initials
+  const getInitials = (name?: string) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 0) return 'U';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
 
   // Deletion Dialog State
   const [deleteDialog, setDeleteDialog] = useState<{
@@ -316,11 +329,19 @@ export default function DashboardPage() {
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
               >
-                {user?.picture ? (
-                  <Image src={user?.picture || ""} alt="" width={36} height={36} className="w-9 h-9 rounded-xl object-cover shadow-sm bg-white" />
+
+                {user?.picture && !headerImgError ? (
+                  <Image
+                    src={user?.picture || ""}
+                    alt=""
+                    width={36}
+                    height={36}
+                    className="w-9 h-9 rounded-xl object-cover shadow-sm bg-white"
+                    onError={() => setHeaderImgError(true)}
+                  />
                 ) : (
-                  <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
-                    {user?.name?.[0] || 'G'}
+                  <div className="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs ring-2 ring-white shadow-sm">
+                    {getInitials(user?.name)}
                   </div>
                 )}
                 <span className="text-sm font-bold text-slate-800 hidden md:block">{user?.name || "User"}</span>
@@ -680,11 +701,18 @@ export default function DashboardPage() {
               <div className="flex items-start justify-between mb-8">
                 <div className="flex items-center gap-6">
                   <div className="relative">
-                    {user?.picture ? (
-                      <Image src={user?.picture || ""} alt="" width={80} height={80} className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm" />
+                    {user?.picture && !profileImgError ? (
+                      <Image
+                        src={user?.picture || ""}
+                        alt=""
+                        width={80}
+                        height={80}
+                        className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-sm"
+                        onError={() => setProfileImgError(true)}
+                      />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-indigo-50 border-4 border-white shadow-sm flex items-center justify-center text-2xl font-bold text-indigo-400">
-                        {user?.name?.[0] || 'U'}
+                      <div className="w-20 h-20 rounded-full bg-indigo-50 border-4 border-white shadow-sm flex items-center justify-center text-2xl font-bold text-indigo-500">
+                        {getInitials(user?.name)}
                       </div>
                     )}
                     <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full"></div>
