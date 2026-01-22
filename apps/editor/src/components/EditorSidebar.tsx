@@ -63,8 +63,8 @@ export function EditorSidebar({ onTabChange, activeTab: propActiveTab }: EditorS
             label: "Subscription",
             id: "subscription",
             icon: CreditCard,
-            href: "/editor?tab=subscription",
-            onClick: () => onTabChange ? onTabChange('subscription') : router.push("/editor?tab=subscription")
+            href: "/",
+            onClick: () => window.location.href = "/?tab=subscription"
         }
     ];
 

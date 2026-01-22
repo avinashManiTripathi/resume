@@ -24,14 +24,16 @@ import {
   PenTool,
   X,
   Eye,
-  Download
+  Download,
+  CreditCard
 } from "lucide-react";
+import { SubscriptionView } from "../components/SubscriptionView";
 import { useState, useEffect, useCallback } from "react";
 import { StepLoader } from '@repo/ui/step-loader';
 import Image from "next/image";
 import { usePersistence, SavedDocument } from "./hooks/usePersistence";
 import { Dialog } from "@repo/ui/dialog";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 
 interface UserProfile {
@@ -52,7 +54,7 @@ export default function DashboardPage() {
   const [tailorHistory, setTailorHistory] = useState<SavedDocument[]>([]);
   const [interviewSessions, setInterviewSessions] = useState<SavedDocument[]>([]);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [activeToolView, setActiveToolView] = useState<'ats-checker' | 'ai-tailor' | 'templates' | 'cover-letters' | 'mock-interview' | null>(null);
+  const [activeToolView, setActiveToolView] = useState<'ats-checker' | 'ai-tailor' | 'templates' | 'cover-letters' | 'mock-interview' | 'subscription' | null>(null);
   const [headerImgError, setHeaderImgError] = useState(false);
   const [profileImgError, setProfileImgError] = useState(false);
 
@@ -131,9 +133,18 @@ export default function DashboardPage() {
     setLoading(false);
   }, [getDocuments, loadingStep, loadingSteps.length]);
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     fetchDocs();
   }, [fetchDocs]);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'subscription' && activeToolView !== 'subscription') {
+      setActiveToolView('subscription');
+    }
+  }, [searchParams, activeToolView]);
 
   const getTimeAgo = (date: string | Date | undefined) => {
     if (!date) return "Unknown";
@@ -313,6 +324,12 @@ export default function DashboardPage() {
             <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 px-3">Account</h3>
             <div className="space-y-1">
               <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Settings</div>
+              <div
+                onClick={() => setActiveToolView('subscription')}
+                className={`px-3 py-2 text-sm font-medium rounded-lg cursor-pointer transition-colors ${activeToolView === 'subscription' ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'}`}
+              >
+                Subscription
+              </div>
               <div className="px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 cursor-pointer">Support</div>
             </div>
           </div>
@@ -415,7 +432,8 @@ export default function DashboardPage() {
                   activeToolView === 'templates' ? 'Templates' :
                     activeToolView === 'cover-letters' ? 'Cover Letters' :
                       activeToolView === 'mock-interview' ? 'Mock Interview' :
-                        'Dashboard'}
+                        activeToolView === 'subscription' ? 'Subscription' :
+                          'Dashboard'}
             </span>
           </div>
 
@@ -438,6 +456,7 @@ export default function DashboardPage() {
                       {activeToolView === 'templates' && <><Layout className="text-slate-700" size={32} /> Templates</>}
                       {activeToolView === 'cover-letters' && <><PenTool className="text-purple-600" size={32} /> Cover Letters</>}
                       {activeToolView === 'mock-interview' && <><Video className="text-emerald-600" size={32} /> Mock Interview</>}
+                      {activeToolView === 'subscription' && <><CreditCard className="text-blue-600" size={32} /> Subscription</>}
                     </h1>
                     <p className="text-slate-500 mt-1">
                       {activeToolView === 'ats-checker' && 'View all your ATS scan results and optimize your resume'}
@@ -445,6 +464,7 @@ export default function DashboardPage() {
                       {activeToolView === 'templates' && 'Browse and select from professional resume templates'}
                       {activeToolView === 'cover-letters' && 'Manage all your cover letters in one place'}
                       {activeToolView === 'mock-interview' && 'Review your practice interview sessions'}
+                      {activeToolView === 'subscription' && 'Manage your account and subscription plans'}
                     </p>
                   </div>
                 </div>
@@ -720,6 +740,15 @@ export default function DashboardPage() {
                       ))}
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Subscription View */}
+              {activeToolView === 'subscription' && (
+                <div className="bg-white rounded-[40px] shadow-sm border border-slate-200 overflow-hidden">
+                  <SubscriptionView
+                    onBack={() => setActiveToolView(null)}
+                  />
                 </div>
               )}
             </div>
