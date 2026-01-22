@@ -58,9 +58,10 @@ const pricingTiers = [
 
 interface SubscriptionViewProps {
     onBack?: () => void;
+    hideBack?: boolean;
 }
 
-export function SubscriptionView({ onBack }: SubscriptionViewProps) {
+export function SubscriptionView({ onBack, hideBack }: SubscriptionViewProps) {
     const { user, subscription, setSubscription } = usePersistence();
     const API_BASE = ENV.API_URL;
 

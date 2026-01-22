@@ -776,7 +776,17 @@ function DashboardContent() {
                     <div className="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full"></div>
                   </div>
                   <div>
-                    <h1 className="text-3xl font-bold text-slate-900 mb-1">{user?.name || "Welcome Back"}</h1>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h1 className="text-3xl font-bold text-slate-900">{user?.name || "Welcome Back"}</h1>
+                      {subscription && (
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${subscription.plan === 'free'
+                            ? 'bg-slate-50 text-slate-400 border-slate-200'
+                            : 'bg-blue-50 text-blue-600 border-blue-100 shadow-sm shadow-blue-50'
+                          }`}>
+                          {subscription.plan === 'free' ? 'Free' : subscription.plan}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-slate-500 font-medium">{user?.email || "Job Seeker"}</p>
                   </div>
                 </div>
@@ -831,6 +841,32 @@ function DashboardContent() {
                       <div>
                         <h3 className="text-lg font-bold text-slate-900">Cover Letter</h3>
                         <p className="text-sm text-slate-500 mt-1">Write a persuasive cover letter using our professional templates.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Subscription Quick View */}
+                  <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-blue-300 transition-all" onClick={() => setActiveToolView('subscription')}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 border border-blue-100">
+                          <CreditCard size={20} />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">Active Plan</h3>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{subscription?.plan === 'free' ? 'Limited Access' : 'Pro Access'}</p>
+                        </div>
+                      </div>
+                      <div className={`px-2 py-1 rounded-lg text-[10px] font-black uppercase ${subscription?.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
+                        {subscription?.status || 'Active'}
+                      </div>
+                    </div>
+                    <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100/50">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-slate-500 font-medium">Valid until</span>
+                        <span className="text-slate-900 font-bold">
+                          {subscription?.endDate ? new Date(subscription.endDate).toLocaleDateString() : 'N/A'}
+                        </span>
                       </div>
                     </div>
                   </div>
