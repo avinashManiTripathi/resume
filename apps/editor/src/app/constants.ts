@@ -690,6 +690,22 @@ export const ResumeFormSchema: FormSchema = {
       }
     }
   },
+  languages: {
+    label: "Languages",
+    type: "array",
+    isCollapsible: true,
+    component: "smart-tags",
+    variant: "languages",
+    item: {
+      language: { label: "Language", type: "text", className: className },
+      proficiency: {
+        label: "Proficiency",
+        type: "select",
+        options: ["Native", "Fluent", "Advanced", "Intermediate", "Basic"],
+        className: className
+      }
+    }
+  },
   interests: {
     label: "Interests & Hobbies",
     type: "array",

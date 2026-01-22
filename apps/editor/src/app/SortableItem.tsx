@@ -11,11 +11,12 @@ interface SortableItemProps {
     label: string;
     onRemove: () => void;
     children: React.ReactNode;
+    defaultOpen?: boolean;
 }
 
-export function SortableItem({ id, index, label, onRemove, children }: SortableItemProps) {
+export function SortableItem({ id, index, label, onRemove, children, defaultOpen = false }: SortableItemProps) {
     const [mounted, setMounted] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(defaultOpen);
     const [overflow, setOverflow] = useState(isOpen ? 'visible' : 'hidden');
 
     const {

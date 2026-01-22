@@ -83,3 +83,36 @@ export const COMMON_SKILLS = [
     "Technical Writing",
     "Public Speaking"
 ];
+
+export const COMMON_LANGUAGES = [
+    "English",
+    "Spanish",
+    "French",
+    "German",
+    "Chinese",
+    "Mandarin",
+    "Japanese",
+    "Korean",
+    "Hindi",
+    "Arabic",
+    "Portuguese",
+    "Russian",
+    "Italian",
+    "Dutch",
+    "Turkish",
+    "Polish",
+    "Swedish",
+    "Norwegian",
+    "Danish",
+    "Finnish",
+    "Greek",
+    "Hebrew",
+    "Thai",
+    "Vietnamese",
+    "Indonesian",
+    "Malay",
+    "Ukrainian",
+    "Czech",
+    "Romanian",
+    "Hungarian"
+];

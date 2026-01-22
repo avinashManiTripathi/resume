@@ -2,18 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Type, Tags, GripVertical, ChevronDown, Check, Sparkles } from 'lucide-react';
 import { RichTextEditor } from '@repo/ui/rich-text-editor';
 import { Button } from '@repo/ui/button';
-import { COMMON_SKILLS } from './common-skills';
+import { COMMON_SKILLS, COMMON_LANGUAGES } from './common-skills';
 
 interface SkillsInputProps {
     value: any;
     onChange: (value: any) => void;
-    variant?: "skills" | "interests";
+    variant?: "skills" | "interests" | "languages";
     label?: string;
 }
 
-const PROFICIENCY_LEVELS = ["Beginner", "Intermediate", "Advanced", "Expert"];
+const SKILL_LEVELS = ["Beginner", "Intermediate", "Advanced", "Expert"];
+const LANGUAGE_LEVELS = ["Native", "Fluent", "Advanced", "Intermediate", "Basic"];
 
 export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, variant = "skills" }) => {
+    // Determine keys and options based on variant
+    const nameKey = variant === "languages" ? "language" : "name";
+    const levelKey = variant === "languages" ? "proficiency" : "level";
+    const hasLevel = variant !== "interests";
+    const levelOptions = variant === "languages" ? LANGUAGE_LEVELS : SKILL_LEVELS;
+    const suggestionsSource = variant === "languages" ? COMMON_LANGUAGES : COMMON_SKILLS;
+    const defaultLevel = variant === "languages" ? "Intermediate" : "Intermediate";
+
     // Determine mode based on value type (string -> rich text, array -> builder)
     const [mode, setMode] = useState<'builder' | 'richtext'>(
         typeof value === 'string' ? 'richtext' : 'builder'
@@ -31,9 +40,9 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
 
     useEffect(() => {
         if (inputValue.length > 0) {
-            const filtered = COMMON_SKILLS.filter(skill =>
-                skill.toLowerCase().includes(inputValue.toLowerCase()) &&
-                !items.some((item: any) => item.name === skill)
+            const filtered = suggestionsSource.filter(item =>
+                item.toLowerCase().includes(inputValue.toLowerCase()) &&
+                !items.some((existing: any) => existing[nameKey] === item)
             ).slice(0, 5);
             setSuggestions(filtered);
             setShowSuggestions(true);
@@ -42,7 +51,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
             setSuggestions([]);
             setShowSuggestions(false);
         }
-    }, [inputValue, items]);
+    }, [inputValue, items, suggestionsSource, nameKey]);
 
     // Close suggestions on click outside
     useEffect(() => {
@@ -59,9 +68,9 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
     const handleAddItem = (name: string) => {
         if (!name.trim()) return;
 
-        const newItem = variant === "skills"
-            ? { name: name.trim(), level: "Intermediate" } // Default level
-            : { name: name.trim() };
+        const newItem = hasLevel
+            ? { [nameKey]: name.trim(), [levelKey]: defaultLevel }
+            : { [nameKey]: name.trim() };
 
         onChange([...items, newItem]);
         setInputValue("");
@@ -77,7 +86,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
 
     const handleUpdateLevel = (index: number, newLevel: string) => {
         const newItems = [...items];
-        newItems[index] = { ...newItems[index], level: newLevel };
+        newItems[index] = { ...newItems[index], [levelKey]: newLevel };
         onChange(newItems);
     };
 
@@ -106,7 +115,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
         if (mode === 'builder') {
             // Convert tags to HTML list
             const listItems = items.map((item: any) =>
-                `<li>${item.name}${item.level ? ` - ${item.level}` : ''}</li>`
+                `<li>${item[nameKey]}${item[levelKey] ? ` - ${item[levelKey]}` : ''}</li>`
             ).join('');
             onChange(`<ul>${listItems}</ul>`);
             setMode('richtext');
@@ -148,11 +157,23 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
         );
     }
 
+    // Labels configuration
+    let labelText = "Add Skills";
+    let placeholderText = "e.g. Project Management, React...";
+
+    if (variant === 'interests') {
+        labelText = "Add Interests";
+        placeholderText = "e.g. Photography, Hiking, Chess...";
+    } else if (variant === 'languages') {
+        labelText = "Add Languages";
+        placeholderText = "e.g. English, French, Spanish...";
+    }
+
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between mb-2">
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    {variant === 'skills' ? 'Add Skills' : 'Add Interests'}
+                    {labelText}
                 </label>
                 <div className="flex items-center gap-2">
                     {variant === 'skills' && items.length === 0 && (
@@ -160,7 +181,22 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                             onClick={() => {
                                 // Quick add suggestions
                                 const popular = ["Communication", "Leadership", "Problem Solving"];
-                                const newItems = popular.map(name => ({ name, level: "Intermediate" }));
+                                const newItems = popular.map(name => ({ [nameKey]: name, [levelKey]: defaultLevel }));
+                                onChange([...items, ...newItems]);
+                            }}
+                            className="text-[10px] flex items-center gap-1 text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full hover:bg-indigo-100 transition-colors mr-auto"
+                        >
+                            <Sparkles className="w-3 h-3" />
+                            Auto-fill Common
+                        </button>
+                    )}
+
+                    {variant === 'languages' && items.length === 0 && (
+                        <button
+                            onClick={() => {
+                                // Quick add suggestions for languages
+                                const popular = ["English", "Spanish", "French"];
+                                const newItems = popular.map(name => ({ [nameKey]: name, [levelKey]: defaultLevel }));
                                 onChange([...items, ...newItems]);
                             }}
                             className="text-[10px] flex items-center gap-1 text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full hover:bg-indigo-100 transition-colors mr-auto"
@@ -204,7 +240,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                     onFocus={() => {
                         if (inputValue) setShowSuggestions(true);
                     }}
-                    placeholder={variant === 'skills' ? "e.g. Project Management, React, Python..." : "e.g. Photography, Hiking, Chess..."}
+                    placeholder={placeholderText}
                     className="block w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all shadow-sm group-hover:border-slate-300"
                 />
 
@@ -242,16 +278,16 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                         {/* Name */}
                         <div className="flex items-center px-3 py-2 bg-gray-50/50 border-b sm:border-b-0 sm:border-r border-gray-100">
                             <GripVertical className="w-3 h-3 text-gray-300 mr-2 cursor-move" />
-                            <span className="text-sm font-semibold text-gray-700">{item.name}</span>
+                            <span className="text-sm font-semibold text-gray-700">{item[nameKey]}</span>
                         </div>
 
-                        {/* Proficiency (Skills Only) */}
-                        {variant === 'skills' && (
+                        {/* Proficiency (Skills & Languages Only) */}
+                        {hasLevel && (
                             <div className="relative px-2 py-1">
                                 <Dropdown
-                                    value={item.level}
+                                    value={item[levelKey]}
                                     onChange={(val) => handleUpdateLevel(index, val)}
-                                    options={PROFICIENCY_LEVELS}
+                                    options={levelOptions}
                                 />
                             </div>
                         )}

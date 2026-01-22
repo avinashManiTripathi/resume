@@ -368,6 +368,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                                                 index={index}
                                                                 label={config.label}
                                                                 onRemove={() => removeItem(key, index)}
+                                                                defaultOpen={Object.values(item).every(v => !v)}
                                                             >
                                                                 {Object.entries(config.item).map(([fieldKey, field]) => (
                                                                     <div key={fieldKey} className={"mb-3 " + field.className}>
