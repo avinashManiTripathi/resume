@@ -441,7 +441,8 @@ function ResumeEditor() {
         sectionLabels,
         ...resume,
         fontFamily,
-        order: sectionOrder
+        order: sectionOrder,
+        intent: 'download'
       };
       setIsDownloadingPdf(true);
       setDownloadingStep(0);
@@ -635,7 +636,8 @@ function ResumeEditor() {
         ...debouncedResume as any,
         templateId,
         fontFamily,
-        order: debouncedSectionOrder
+        order: debouncedSectionOrder,
+        intent: 'preview'
       };
 
       // Use hook for automatic request cancellation

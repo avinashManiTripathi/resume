@@ -119,8 +119,10 @@ export const requireAdmin = async (req: Request, res: Response, next: NextFuncti
 
 /**
  * Middleware to require an active pro/premium subscription based on dynamic feature configuration
+ * @param featureName Name of the feature to check
+ * @param allowPreview If true, allows 'intent=preview' to bypass the check
  */
-export const requireSubscription = (featureName: FeatureName) => {
+export const requireSubscription = (featureName: FeatureName, allowPreview: boolean = false) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             if (config.byPassSubscription) {
@@ -132,6 +134,12 @@ export const requireSubscription = (featureName: FeatureName) => {
 
             // If feature is not found or marked as not premium, allow access
             if (featureConfig && !featureConfig.isPremium) {
+                return next();
+            }
+
+            // Check intent - if it's a preview and we allow it, bypass subscription check
+            const intent = req.body?.intent || req.query?.intent;
+            if (allowPreview && intent === 'preview') {
                 return next();
             }
 
