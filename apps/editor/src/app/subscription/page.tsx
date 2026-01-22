@@ -20,7 +20,9 @@ import {
     XCircle,
     Info,
     Rocket,
-    Gift
+    Gift,
+    ChevronRight,
+    Loader2
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePersistence } from "../hooks/usePersistence";
@@ -68,6 +70,7 @@ function SubscriptionContent() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [view, setView] = useState<'plans' | 'dashboard'>('dashboard');
+    const [showMockForm, setShowMockForm] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn === false) {
@@ -77,79 +80,51 @@ function SubscriptionContent() {
         }
     }, [isLoggedIn]);
 
-    // Load Razorpay Script
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-        script.async = true;
-        document.body.appendChild(script);
-        return () => {
-            document.body.removeChild(script);
-        }
-    }, []);
+    const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '' });
 
-    const handleRazorpayPayment = async (tier: SubscriptionTier) => {
+    const handleMockPayment = async () => {
+        if (!selectedTier) return;
+        if (cardDetails.number.replace(/\s/g, '').length < 16) {
+            alert('Please enter a valid 16-digit card number (e.g., 4242...)');
+            return;
+        }
         setIsProcessing(true);
 
-        const tierData = pricingTiers.find(t => t.id === tier);
-        if (!tierData) return;
+        try {
+            const res = await fetch(`${API_BASE}/api/subscription/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    tier: selectedTier,
+                    paymentMethod: 'manual_mock',
+                    paymentId: `mock_${Date.now()}`,
+                    // We don't actually save the card details on the backend for this mock
+                })
+            });
 
-        const options = {
-            key: "rzp_test_dummykey", // Replace with real key in production
-            amount: tierData.price * 100,
-            currency: "USD",
-            name: "Hirecta",
-            description: `${tier.toUpperCase()} Subscription`,
-            handler: async function (response: any) {
-                try {
-                    const res = await fetch(`${API_BASE}/api/subscription/create`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        credentials: 'include',
-                        body: JSON.stringify({
-                            tier,
-                            paymentMethod: 'razorpay',
-                            paymentId: response.razorpay_payment_id
-                        })
-                    });
-
-                    if (res.ok) {
-                        const data = await res.json();
-                        setSubscription(data.subscription);
-                        setShowSuccess(true);
-                        setTimeout(() => {
-                            const redirectPath = returnTo ? `/${returnTo}` : '/editor';
-                            router.push(redirectPath);
-                        }, 2500);
-                    }
-                } catch (error) {
-                    console.error('Failed to save subscription:', error);
-                    alert('Payment successful but failed to update subscription. Please contact support.');
-                } finally {
-                    setIsProcessing(false);
-                }
-            },
-            prefill: {
-                name: user?.name,
-                email: user?.email,
-            },
-            theme: {
-                color: "#2563eb"
-            },
-            modal: {
-                ondismiss: () => setIsProcessing(false)
+            if (res.ok) {
+                const data = await res.json();
+                setSubscription(data.subscription);
+                setShowSuccess(true);
+                setShowMockForm(false);
+                setTimeout(() => {
+                    const redirectPath = returnTo ? `/${returnTo}` : '/editor';
+                    router.push(redirectPath);
+                }, 2500);
             }
-        };
-
-        const rzp = new (window as any).Razorpay(options);
-        rzp.open();
+        } catch (error) {
+            console.error('Failed to save subscription:', error);
+            alert('Failed to update subscription. Please contact support.');
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
-    const handleTierSelect = async (tier: SubscriptionTier) => {
+    const handleTierSelect = (tier: SubscriptionTier) => {
         if (tier === 'free') return;
-
         setSelectedTier(tier);
-        handleRazorpayPayment(tier);
+        setShowMockForm(true);
     };
 
     const handleCancelSubscription = async () => {
@@ -172,19 +147,19 @@ function SubscriptionContent() {
 
     if (showSuccess) {
         return (
-            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4">
-                <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-12 max-w-lg w-full text-center border border-white/20 shadow-2xl animate-in zoom-in duration-500">
-                    <div className="w-24 h-24 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-emerald-500/10">
-                        <CheckCircle2 size={48} className="text-emerald-400" />
+            <div className="min-h-screen bg-white flex items-center justify-center p-4">
+                <div className="bg-white border border-slate-100 rounded-[40px] p-12 max-w-lg w-full text-center shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] animate-in zoom-in duration-500">
+                    <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-emerald-50">
+                        <CheckCircle2 size={48} className="text-emerald-500" />
                     </div>
-                    <h2 className="text-3xl font-bold text-white mb-4">
-                        Payment Successful!
+                    <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">
+                        Subscription Activated!
                     </h2>
-                    <p className="text-slate-300 text-lg mb-8">
-                        Welcome to the <span className="text-blue-400 font-bold">{selectedTier && getTierDisplayName(selectedTier)}</span> plan. Your professional journey just got a major boost!
+                    <p className="text-slate-500 text-lg mb-8 font-medium">
+                        Welcome to the <span className="text-blue-600 font-black">{selectedTier && getTierDisplayName(selectedTier)}</span> tier. Your professional tools are now unlocked.
                     </p>
-                    <div className="flex items-center justify-center gap-3 text-emerald-400 font-medium bg-emerald-400/10 py-3 rounded-2xl border border-emerald-400/20">
-                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-emerald-400 border-t-transparent"></div>
+                    <div className="flex items-center justify-center gap-3 text-blue-600 font-bold bg-blue-50 py-4 rounded-2xl border border-blue-100 uppercase tracking-widest text-sm">
+                        <Loader2 className="animate-spin h-5 w-5" />
                         Redirecting to workspace...
                     </div>
                 </div>
@@ -192,276 +167,377 @@ function SubscriptionContent() {
         );
     }
 
-    const currentPlan = pricingTiers.find(t => t.id === (subscription?.plan || 'free'));
+    const currentPlanId = subscription?.plan || 'free';
+    const currentPlan = pricingTiers.find(t => t.id === currentPlanId);
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-200 selection:bg-blue-500/30">
-            {/* Background Decorations */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full"></div>
-            </div>
+        <div className="min-h-screen bg-slate-50/50 text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+            {/* Header Background Decoration */}
+            <div className="absolute top-0 left-0 right-0 h-[400px] bg-white border-b border-slate-100 -z-10" />
 
-            <div className="relative max-w-7xl mx-auto px-4 py-8 md:py-16">
-                {/* Header Actions */}
-                <div className="flex items-center justify-between mb-12">
-                    <button
-                        onClick={() => router.push(returnTo ? `/${returnTo}` : '/editor')}
-                        className="group flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all hover:scale-105 active:scale-95"
-                    >
-                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-medium">Return to Editor</span>
-                    </button>
-
-                    <div className="flex items-center gap-4">
-                        <div className="flex bg-white/5 p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
-                            <button
-                                onClick={() => setView('dashboard')}
-                                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${view === 'dashboard' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-                            >
-                                My Account
-                            </button>
-                            <button
-                                onClick={() => setView('plans')}
-                                className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${view === 'plans' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'}`}
-                            >
-                                Plans & Upgrade
-                            </button>
+            <div className="relative max-w-7xl mx-auto px-6 py-12 lg:py-20">
+                {/* Top Actions */}
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16">
+                    <div className="flex items-center gap-6">
+                        <button
+                            onClick={() => router.push(returnTo ? `/${returnTo}` : '/editor')}
+                            className="bg-white border border-slate-200 p-4 rounded-2xl hover:bg-slate-50 transition-all hover:scale-105 active:scale-95 shadow-sm"
+                        >
+                            <ArrowLeft className="w-6 h-6 text-slate-600" />
+                        </button>
+                        <div>
+                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Subscription</h1>
+                            <p className="text-slate-500 font-medium">Manage your professional workspace</p>
                         </div>
+                    </div>
+
+                    <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50 backdrop-blur-md">
+                        <button
+                            onClick={() => setView('dashboard')}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-white text-blue-600 shadow-lg shadow-slate-200/50 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-900'}`}
+                        >
+                            Overview
+                        </button>
+                        <button
+                            onClick={() => setView('plans')}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'plans' ? 'bg-white text-blue-600 shadow-lg shadow-slate-200/50 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-900'}`}
+                        >
+                            All Plans
+                        </button>
                     </div>
                 </div>
 
                 {view === 'dashboard' ? (
-                    <div className="grid lg:grid-cols-3 gap-8">
+                    <div className="grid lg:grid-cols-3 gap-8 items-start">
                         {/* Account Card */}
                         <div className="lg:col-span-2 space-y-8">
-                            <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 blur-3xl group-hover:bg-blue-600/20 transition-all duration-500"></div>
+                            <div className="bg-white border border-slate-100 rounded-[40px] p-8 lg:p-12 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.05)] relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 blur-[80px] -mr-32 -mt-32 rounded-full transition-all duration-700 group-hover:scale-110" />
 
-                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
-                                    <div className="flex items-center gap-5">
-                                        <div className="w-20 h-20 rounded-[24px] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-blue-500/20 ring-4 ring-white/5 overflow-hidden">
+                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12 relative z-10">
+                                    <div className="flex items-center gap-6">
+                                        <div className="w-24 h-24 rounded-[32px] bg-gradient-to-br from-blue-600 to-indigo-700 p-1 flex items-center justify-center shadow-2xl shadow-blue-200 ring-4 ring-white">
                                             {user?.picture ? (
-                                                <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                                                <img src={user.picture} alt={user.name} className="w-full h-full object-cover rounded-[30px]" />
                                             ) : (
-                                                <UserIcon size={32} className="text-white" />
+                                                <UserIcon size={40} className="text-white" />
                                             )}
                                         </div>
                                         <div>
-                                            <h2 className="text-3xl font-bold text-white mb-1">{user?.name}</h2>
-                                            <div className="flex items-center gap-2 text-slate-400">
-                                                <Mail size={14} />
-                                                <span className="text-sm font-medium">{user?.email}</span>
+                                            <h2 className="text-4xl font-black text-slate-900 mb-2 tracking-tight">{user?.name}</h2>
+                                            <div className="flex items-center gap-3 text-slate-500 bg-slate-50 px-4 py-2 rounded-xl border border-slate-100 w-fit font-bold text-sm">
+                                                <Mail size={16} />
+                                                <span>{user?.email}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="px-5 py-2.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-sm">
-                                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">User ID</span>
-                                        <span className="text-sm font-mono text-slate-300">#{user?._id?.slice(-8) || 'GUEST'}</span>
+                                    <div className="bg-slate-50 border border-slate-200/60 p-5 rounded-3xl text-center min-w-[140px]">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-1">User Reference</span>
+                                        <span className="text-base font-black text-slate-900 font-mono tracking-tighter">#{user?._id?.slice(-8).toUpperCase() || 'GUEST'}</span>
                                     </div>
                                 </div>
 
-                                <div className="grid sm:grid-cols-2 gap-6">
-                                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/[0.07] transition-all group/card">
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 group-hover/card:scale-110 transition-transform">
-                                                <Crown size={24} />
+                                <div className="grid sm:grid-cols-2 gap-8 relative z-10">
+                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-8 hover:bg-white transition-all hover:shadow-xl hover:shadow-slate-200/50 group/card ring-1 ring-inset ring-slate-100/50">
+                                        <div className="flex items-center gap-5 mb-6">
+                                            <div className="w-16 h-16 rounded-3xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200 group-hover/card:scale-110 transition-transform">
+                                                <Crown size={32} />
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Current Plan</p>
-                                                <p className="text-lg font-bold text-white capitalize">{currentPlan?.name || 'Free'}</p>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Membership</p>
+                                                <p className="text-2xl font-black text-slate-900 capitalize tracking-tight">{currentPlan?.name || 'Free Tier'}</p>
                                             </div>
                                         </div>
-                                        {subscription?.status === 'active' ? (
-                                            <div className="flex items-center gap-2 text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-xl w-fit text-sm font-semibold">
-                                                <CheckCircle2 size={16} />
-                                                Active
-                                            </div>
-                                        ) : (
-                                            <div className="flex items-center gap-2 text-slate-400 bg-white/5 px-3 py-1.5 rounded-xl w-fit text-sm font-medium">
-                                                <Info size={16} />
-                                                Trial / Inactive
-                                            </div>
-                                        )}
+                                        <div className="flex items-center gap-3 text-emerald-600 bg-emerald-50 px-5 py-2.5 rounded-2xl w-fit text-sm font-black border border-emerald-100">
+                                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                            {subscription?.status === 'active' ? 'Active' : 'Free Account'}
+                                        </div>
                                     </div>
 
-                                    <div className="bg-white/5 border border-white/10 rounded-3xl p-6 hover:bg-white/[0.07] transition-all group/card">
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover/card:scale-110 transition-transform">
-                                                <Calendar size={24} />
+                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-8 hover:bg-white transition-all hover:shadow-xl hover:shadow-slate-200/50 group/card ring-1 ring-inset ring-slate-100/50">
+                                        <div className="flex items-center gap-5 mb-6">
+                                            <div className="w-16 h-16 rounded-3xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-200 group-hover/card:scale-110 transition-transform">
+                                                <Calendar size={32} />
                                             </div>
                                             <div>
-                                                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Renews On</p>
-                                                <p className="text-lg font-bold text-white">
-                                                    {subscription?.endDate ? new Date(subscription.endDate).toLocaleDateString() : 'N/A'}
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Billing Period</p>
+                                                <p className="text-2xl font-black text-slate-900 tracking-tight">
+                                                    {subscription?.endDate ? new Date(subscription.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never'}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="text-xs text-slate-400 font-medium">
-                                            Next billing amount: <span className="text-white font-bold">${currentPlan?.price || 0}</span>
+                                        <div className="text-sm text-slate-500 font-bold flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
+                                            Renews via mock billing
                                         </div>
                                     </div>
                                 </div>
-
-                                {subscription?.plan && subscription.plan !== 'free' && (
-                                    <div className="mt-10 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-6">
-                                        <div className="flex items-center gap-3 text-slate-400">
-                                            <Shield className="text-emerald-400" size={20} />
-                                            <p className="text-sm font-medium">Your account is secured with 256-bit encryption</p>
-                                        </div>
-                                        <button
-                                            onClick={handleCancelSubscription}
-                                            className="text-sm font-bold text-rose-400 hover:text-rose-300 px-4 py-2 hover:bg-rose-500/10 rounded-xl transition-all flex items-center gap-2"
-                                        >
-                                            <XCircle size={16} />
-                                            Cancel Subscription
-                                        </button>
-                                    </div>
-                                )}
                             </div>
 
-                            {/* Features Preview */}
-                            <div className="bg-white/5 border border-white/10 rounded-[32px] p-8">
-                                <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                                    <Zap className="text-amber-400" size={20} />
-                                    Included Benefits
-                                </h3>
-                                <div className="grid sm:grid-cols-2 gap-4">
-                                    {currentPlan?.features.map((f, i) => (
-                                        <div key={i} className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/5">
-                                            <div className="p-1.5 bg-blue-500/20 rounded-lg text-blue-400">
-                                                <Check size={14} strokeWidth={3} />
+                            {/* Plans Preview */}
+                            {currentPlanId === 'free' && (
+                                <div className="bg-black rounded-[32px] p-1 scale-[0.98] hover:scale-100 transition-all cursor-pointer shadow-2xl shadow-slate-200" onClick={() => setView('plans')}>
+                                    <div className="bg-white rounded-[28px] p-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                                        <div className="flex items-center gap-6">
+                                            <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-900">
+                                                <Rocket size={32} />
                                             </div>
-                                            <span className="text-sm font-medium text-slate-300">{f}</span>
+                                            <div>
+                                                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Unlock Premium Potential</h3>
+                                                <p className="text-slate-500 font-medium">Get unlimited downloads, AI features, and all templates.</p>
+                                            </div>
+                                        </div>
+                                        <button className="whitespace-nowrap bg-slate-900 text-white px-8 py-4 rounded-2xl font-black hover:bg-black transition-colors shadow-lg shadow-slate-200 flex items-center gap-2">
+                                            Upgrade Now
+                                            <ChevronRight size={20} />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Danger Zone (Mock) */}
+                            {currentPlanId !== 'free' && (
+                                <div className="bg-white border border-slate-100 rounded-[32px] p-8 shadow-sm">
+                                    <h3 className="text-xl font-black text-slate-900 mb-6 tracking-tight">Account Settings</h3>
+                                    <button
+                                        onClick={handleCancelSubscription}
+                                        className="text-red-500 font-bold text-sm bg-red-50 hover:bg-red-100 px-6 py-3 rounded-2xl transition-colors border border-red-100"
+                                    >
+                                        Cancel Subscription
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Summary / Stats Card */}
+                        <div className="space-y-8">
+                            <div className="bg-white border border-slate-100 rounded-[40px] p-10 shadow-[0_24px_48px_-12px_rgba(0,0,0,0.05)]">
+                                <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Tier Benefits</h3>
+                                <div className="space-y-6 text-slate-600">
+                                    {(currentPlan?.features || pricingTiers[0].features).map((feature, i) => (
+                                        <div key={i} className="flex items-start gap-4 font-bold text-sm">
+                                            <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 mt-0.5 border border-blue-100">
+                                                <Check size={14} />
+                                            </div>
+                                            <span>{feature}</span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                        </div>
 
-                        {/* Quick Tips / Upsell */}
-                        <div className="space-y-6">
-                            <div className="bg-gradient-to-br from-blue-600/20 to-indigo-600/20 backdrop-blur-md border border-blue-500/20 rounded-[32px] p-8 shadow-xl relative overflow-hidden group">
-                                <div className="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                            <div className="bg-slate-900 rounded-[40px] p-10 text-white shadow-2xl overflow-hidden relative group">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 blur-3xl group-hover:bg-blue-500/30 transition-all duration-500" />
                                 <div className="relative z-10">
-                                    <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg shadow-blue-600/20">
-                                        <Rocket size={28} />
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Total Value</p>
+                                    <h3 className="text-4xl font-black mb-2 tracking-tighter">$0.00 <span className="text-sm font-medium text-slate-400 line-through tracking-normal">$299/yr</span></h3>
+                                    <p className="text-slate-400 text-sm font-medium mb-8">Early access pricing in effect.</p>
+                                    <div className="flex items-center gap-3 py-4 border-t border-slate-800">
+                                        <Shield size={20} className="text-blue-400" />
+                                        <span className="text-xs font-bold text-slate-300">Enterprise grade security</span>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-white mb-3">Maximize Your Potential</h3>
-                                    <p className="text-slate-300 text-sm leading-relaxed mb-6 font-medium">
-                                        Unlock AI-powered tailoring and professional templates to stand out from the crowd.
-                                    </p>
-                                    {subscription?.plan !== 'premium' && (
-                                        <button
-                                            onClick={() => setView('plans')}
-                                            className="w-full py-4 bg-white text-blue-900 rounded-2xl font-bold hover:bg-blue-50 transition-all flex items-center justify-center gap-2 shadow-xl hover:shadow-white/10 hover:-translate-y-1"
-                                        >
-                                            Upgrade Now
-                                            <Sparkles size={18} />
-                                        </button>
-                                    )}
                                 </div>
-                            </div>
-
-                            <div className="bg-white/5 border border-white/10 rounded-[32px] p-8">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <Gift size={20} className="text-purple-400" />
-                                    <h4 className="font-bold text-white">Referral Reward</h4>
-                                </div>
-                                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                                    Invite 3 friends and get <span className="text-white font-bold">1 month of Premium</span> for free.
-                                </p>
-                                <button className="w-full py-3 bg-white/5 text-white border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-all">
-                                    Invite Friends
-                                </button>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    <div>
-                        <div className="text-center mb-16">
-                            <h1 className="text-5xl font-extrabold text-white mb-6 tracking-tight">
-                                Simple, <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Transparent</span> Pricing
-                            </h1>
-                            <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium">
-                                Choose the plan that works best for your career goals. No hidden fees.
+                    <div className="space-y-20 max-w-6xl mx-auto">
+                        {/* Title Section */}
+                        <div className="text-center space-y-4">
+                            <h2 className="text-5xl font-black text-slate-900 tracking-tight lg:text-6xl">Choose Your Strategy</h2>
+                            <p className="text-xl text-slate-500 font-medium max-w-2xl mx-auto">
+                                Accelerate your career growth with professional tools designed for clarity and impact.
                             </p>
                         </div>
 
-                        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                        {/* Pricing Grid */}
+                        <div className="grid md:grid-cols-3 gap-8">
                             {pricingTiers.map((tier) => (
                                 <div
                                     key={tier.id}
-                                    className={`relative bg-white/5 backdrop-blur-md border border-white/10 rounded-[40px] p-10 transition-all hover:scale-[1.02] hover:bg-white/[0.08] flex flex-col ${tier.popular ? 'lg:-translate-y-4 ring-2 ring-blue-500/50 shadow-2xl shadow-blue-500/10' : ''}`}
+                                    className={`relative group bg-white border rounded-[48px] p-10 lg:p-12 transition-all duration-500 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.12)] flex flex-col h-full ${tier.popular ? "border-blue-200 ring-2 ring-blue-100 ring-offset-4 shadow-xl scale-[1.02]" : "border-slate-100"
+                                        }`}
                                 >
                                     {tier.popular && (
-                                        <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full text-sm font-bold text-white shadow-xl">
-                                            Most Popular
+                                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-200 whitespace-nowrap z-20">
+                                            Most Popular Choice
                                         </div>
                                     )}
 
-                                    <div className="mb-8">
-                                        <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
-                                        <p className="text-slate-400 text-sm font-medium">{tier.description}</p>
+                                    <div className="mb-10">
+                                        <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">{tier.name}</h3>
+                                        <p className="text-slate-500 font-medium text-sm leading-relaxed">{tier.description}</p>
                                     </div>
 
-                                    <div className="mb-8">
-                                        <div className="flex items-baseline gap-1">
-                                            <span className="text-5xl font-black text-white">${tier.price}</span>
-                                            <span className="text-slate-400 font-bold uppercase text-xs tracking-widest">/{tier.period}</span>
+                                    <div className="mb-10">
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-5xl font-black text-slate-900 tracking-tighter">${tier.price}</span>
+                                            <span className="text-slate-400 font-bold text-lg lowercase">/{tier.period}</span>
                                         </div>
                                     </div>
 
-                                    <ul className="space-y-4 mb-10 flex-1">
-                                        {tier.features.map((feature, idx) => (
-                                            <li key={idx} className="flex items-start gap-4">
-                                                <div className="p-1 bg-white/10 rounded-lg text-emerald-400 mt-1">
-                                                    <Check size={14} strokeWidth={3} />
+                                    <div className="space-y-5 mb-12 flex-grow">
+                                        {tier.features.map((feature, i) => (
+                                            <div key={i} className="flex items-start gap-4 font-bold text-sm text-slate-600">
+                                                <div className="w-6 h-6 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 mt-0.5 border border-slate-200/50 group-hover:text-blue-500 group-hover:bg-blue-50 group-hover:border-blue-100 transition-colors">
+                                                    <Check size={14} />
                                                 </div>
-                                                <span className="text-slate-300 text-sm font-medium">{feature}</span>
-                                            </li>
+                                                <span>{feature}</span>
+                                            </div>
                                         ))}
-                                    </ul>
+                                    </div>
 
                                     <button
-                                        disabled={isProcessing || subscription?.plan === tier.id}
                                         onClick={() => handleTierSelect(tier.id)}
-                                        className={`w-full py-5 rounded-[24px] font-bold text-lg transition-all flex items-center justify-center gap-3 ${tier.id === 'free'
-                                            ? 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'
+                                        disabled={currentPlanId === tier.id}
+                                        className={`w-full py-5 rounded-3xl font-black transition-all group-hover:scale-[1.02] active:scale-[0.98] ${currentPlanId === tier.id
+                                            ? "bg-slate-50 text-slate-400 border border-slate-100 cursor-not-allowed uppercase text-xs tracking-widest"
                                             : tier.popular
-                                                ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-xl shadow-blue-600/30'
-                                                : 'bg-white text-blue-900 hover:bg-slate-100 shadow-lg'
-                                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                ? "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-200"
+                                                : "bg-slate-900 text-white hover:bg-slate-800 shadow-xl shadow-slate-200"
+                                            }`}
                                     >
-                                        {isProcessing && tier.id === selectedTier ? (
-                                            <div className="w-6 h-6 border-3 border-current border-t-transparent rounded-full animate-spin"></div>
-                                        ) : (
-                                            <>
-                                                {subscription?.plan === tier.id ? 'Active Plan' : tier.id === 'free' ? 'Default Plan' : 'Get Started'}
-                                                {tier.id !== 'free' && <ArrowRight size={20} />}
-                                            </>
-                                        )}
+                                        {currentPlanId === tier.id ? "Already Active" : `Select ${tier.name}`}
                                     </button>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* FAQ/Trust section */}
+                        <div className="bg-white border border-slate-100 rounded-[56px] p-12 lg:p-20 text-center relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600" />
+                            <h3 className="text-3xl font-black text-slate-900 mb-6 tracking-tight">Manual Activation Required</h3>
+                            <p className="text-slate-500 font-medium max-w-2xl mx-auto mb-10 leading-relaxed text-lg">
+                                We're currently in early-access mode. To activate a premium tier, select a plan above and fill out the activation request. No real payment will be processed.
+                            </p>
+                            <div className="flex flex-wrap items-center justify-center gap-12">
+                                <div className="flex items-center gap-4 text-slate-400">
+                                    <Shield size={24} />
+                                    <span className="font-bold text-sm tracking-widest uppercase">SSL Secured</span>
+                                </div>
+                                <div className="flex items-center gap-4 text-slate-400">
+                                    <CreditCard size={24} />
+                                    <span className="font-bold text-sm tracking-widest uppercase">Safe Simulation</span>
+                                </div>
+                                <div className="flex items-center gap-4 text-slate-400">
+                                    <Zap size={24} />
+                                    <span className="font-bold text-sm tracking-widest uppercase">Instant Access</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
             </div>
 
-            {/* Footer Trust Section */}
-            <div className="max-w-7xl mx-auto px-4 py-8 mb-16">
-                <div className="bg-white/5 border border-white/10 rounded-[32px] p-8 flex flex-wrap items-center justify-center gap-12 backdrop-blur-sm grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-700">
-                    <span className="text-lg font-bold">Trusted by hiring managers at</span>
-                    <div className="flex flex-wrap items-center justify-center gap-10">
-                        <span className="text-xl font-black italic tracking-tighter">Google</span>
-                        <span className="text-xl font-black tracking-tighter">amazon</span>
-                        <span className="text-xl font-black tracking-tighter">Meta</span>
-                        <span className="text-xl font-black tracking-tighter lowercase">S<span className="text-blue-500">ales</span>force</span>
-                        <span className="text-xl font-black italic">Microsoft</span>
+            {/* Mock Payment Form Modal */}
+            {showMockForm && selectedTier && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xl animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[48px] p-10 md:p-14 max-w-xl w-full shadow-[0_64px_128px_-24px_rgba(0,0,0,0.25)] relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-700" />
+
+                        <div className="flex justify-between items-start mb-10">
+                            <div>
+                                <div className="bg-blue-50 text-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4 border border-blue-100 w-fit">
+                                    Activation Required
+                                </div>
+                                <h2 className="text-4xl font-black text-slate-900 tracking-tight">Setup {getTierDisplayName(selectedTier)}</h2>
+                                <p className="text-slate-500 font-medium mt-2">Activate your membership manually</p>
+                            </div>
+                            <button onClick={() => setShowMockForm(false)} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                                <XCircle size={28} />
+                            </button>
+                        </div>
+
+                        <div className="space-y-8">
+                            <div className="bg-slate-50 border border-slate-200/50 p-6 rounded-3xl">
+                                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Account Reference</p>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 overflow-hidden">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1 font-mono">Name</p>
+                                        <p className="text-sm font-bold text-slate-900 truncate">{user?.name || 'N/A'}</p>
+                                    </div>
+                                    <div className="bg-white p-4 rounded-2xl border border-slate-100 overflow-hidden">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1 font-mono">Email</p>
+                                        <p className="text-sm font-bold text-slate-900 truncate">{user?.email || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-2">Payment Details (Mock Mode)</label>
+
+                                    <div className="space-y-4">
+                                        <div className="relative group">
+                                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
+                                                <CreditCard size={20} />
+                                            </div>
+                                            <input
+                                                type="text"
+                                                placeholder="Card Number (Try 4242 4242 4242 4242)"
+                                                value={cardDetails.number}
+                                                onChange={(e) => {
+                                                    const val = e.target.value.replace(/\D/g, '').slice(0, 16);
+                                                    const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+                                                    setCardDetails({ ...cardDetails, number: formatted });
+                                                }}
+                                                className="w-full bg-slate-50 border-2 border-slate-100 rounded-3xl py-5 pl-14 pr-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                            />
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <input
+                                                type="text"
+                                                placeholder="MM / YY"
+                                                value={cardDetails.expiry}
+                                                onChange={(e) => {
+                                                    let val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                                    if (val.length >= 2) val = val.slice(0, 2) + '/' + val.slice(2);
+                                                    setCardDetails({ ...cardDetails, expiry: val });
+                                                }}
+                                                className="bg-slate-50 border-2 border-slate-100 rounded-3xl py-5 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="CVV"
+                                                value={cardDetails.cvv}
+                                                onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/\D/g, '').slice(0, 3) })}
+                                                className="bg-slate-50 border-2 border-slate-100 rounded-3xl py-5 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4 p-5 bg-blue-50/50 rounded-3xl border border-blue-100/50">
+                                    <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-blue-600 shadow-sm shrink-0 border border-blue-100">
+                                        <Info size={20} />
+                                    </div>
+                                    <p className="text-[11px] text-blue-900/60 font-black leading-relaxed pt-1 uppercase tracking-tight">
+                                        Active Testing: You can use "4242 4242 4242 4242" with any future date. No real transaction will be created.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleMockPayment}
+                                disabled={isProcessing}
+                                className="w-full bg-slate-900 text-white py-6 rounded-[30px] font-black text-lg shadow-2xl shadow-slate-200 hover:bg-slate-800 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-4"
+                            >
+                                {isProcessing ? (
+                                    <>
+                                        <Loader2 className="animate-spin" size={24} />
+                                        Activating Access...
+                                    </>
+                                ) : (
+                                    <>
+                                        Confirm & Activate Tier
+                                        <ChevronRight size={24} />
+                                    </>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }
@@ -469,20 +545,11 @@ function SubscriptionContent() {
 export default function SubscriptionPage() {
     return (
         <Suspense fallback={
-            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
-                    <div className="text-slate-400 font-bold animate-pulse">Initializing Security...</div>
-                </div>
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center font-black text-slate-400 uppercase tracking-[0.3em]">
+                Initializing Premium Workspace...
             </div>
         }>
             <SubscriptionContent />
         </Suspense>
     );
 }
-
-const ArrowRight = ({ size }: { size: number }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M5 12h14m-7-7 7 7-7 7" />
-    </svg>
-);
