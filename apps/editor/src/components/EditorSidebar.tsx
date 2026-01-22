@@ -9,7 +9,8 @@ import {
     LogOut,
     ArrowLeft,
     Settings,
-    User
+    User,
+    ScanSearch
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
@@ -20,21 +21,15 @@ export function EditorSidebar() {
     const { logout } = usePersistence();
 
     const menuItems = [
-        // {
-        //     label: "Go Back",
-        //     icon: ArrowLeft,
-        //     onClick: () => router.back(),
-        //     variant: "secondary"
-        // },
         {
             label: "Dashboard",
             icon: LayoutGrid,
             href: "https://editor.hirecta.com", // Assuming dashboard route or external
-            onClick: () => window.location.href = "https://editor.hirecta.com" // Adjust to actual dashboard URL
+            onClick: () => window.location.href = "https://editor.hirecta.com"
         },
         {
             label: "ATS Check",
-            icon: ShieldCheck,
+            icon: ScanSearch,
             href: "/ats-check",
             onClick: () => router.push("/ats-check")
         },
@@ -54,6 +49,34 @@ export function EditorSidebar() {
 
     const isActive = (path: string) => pathname?.startsWith(path);
 
+    const getItemStyles = (item: typeof menuItems[0]) => {
+        const active = item.href && isActive(item.href);
+        const baseClass = "w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border";
+
+        if (item.label === "Tailor") {
+            return `${baseClass} ${active
+                ? "bg-amber-50 text-amber-600 border-amber-200 shadow-sm"
+                : "bg-white text-slate-500 border-slate-200 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600 hover:shadow-sm"}`;
+        }
+
+        if (item.label === "ATS Check") {
+            return `${baseClass} ${active
+                ? "bg-emerald-50 text-emerald-600 border-emerald-200 shadow-sm"
+                : "bg-white text-slate-500 border-slate-200 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600 hover:shadow-sm"}`;
+        }
+
+        if (item.label === "Cover Letter") {
+            return `${baseClass} ${active
+                ? "bg-purple-50 text-purple-600 border-purple-200 shadow-sm"
+                : "bg-white text-slate-500 border-slate-200 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-600 hover:shadow-sm"}`;
+        }
+
+        // Default / Dashboard
+        return `${baseClass} ${active
+            ? "bg-indigo-50 text-indigo-600 shadow-sm border-indigo-200"
+            : "bg-white text-slate-500 border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 hover:shadow-sm"}`;
+    };
+
     return (
         <div className="w-16 md:w-20 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-6 shrink-0 z-50">
             {/* Logo area */}
@@ -70,10 +93,7 @@ export function EditorSidebar() {
                         <Tooltip content={item.label} position="right">
                             <button
                                 onClick={item.onClick}
-                                className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border ${(item.href && isActive(item.href))
-                                    ? "bg-indigo-50 text-indigo-600 shadow-sm border-indigo-200"
-                                    : "bg-white text-slate-500 border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 hover:shadow-sm"
-                                    }`}
+                                className={getItemStyles(item)}
                             >
                                 <item.icon size={20} strokeWidth={2} />
                             </button>

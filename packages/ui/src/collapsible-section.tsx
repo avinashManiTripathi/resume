@@ -51,15 +51,27 @@ export function CollapsibleSection({
                 </div>
                 <div className="flex items-center gap-2">
                     {actions}
-                    {isCollapsible && (isOpen ? (
-                        <CircleMinus className="w-5 h-5 text-[#223DC5]" />
-                    ) : (
-                        <CirclePlus className="w-5 h-5 text-[#223DC5]" />
-                    ))}
+                    {isCollapsible && (
+                        <div className="w-8 h-8 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-lg transition-colors group-hover:bg-indigo-100">
+                            {isOpen ? (
+                                <CircleMinus className="w-5 h-5" />
+                            ) : (
+                                <CirclePlus className="w-5 h-5" />
+                            )}
+                        </div>
+                    )}
                     {actionsEnd}
                 </div>
             </div>
-            {(isOpen || !isCollapsible) && <div className="px-6 pb-6">{children}</div>}
+            <div
+                className={`grid transition-all duration-300 ease-in-out ${isOpen || !isCollapsible ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+            >
+                <div className="overflow-hidden">
+                    <div className="px-6 pb-6">
+                        {children}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

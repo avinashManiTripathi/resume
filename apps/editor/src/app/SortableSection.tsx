@@ -97,14 +97,14 @@ export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitle
                         </div>
                     )
                 ) : undefined}
-                actionsEnd={
+                actions={
                     onDelete ? (
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onDelete();
                             }}
-                            className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                            className="w-8 h-8 flex items-center justify-center bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-all duration-200 opacity-0 group-hover:opacity-100"
                             title="Delete section"
                         >
                             <Trash2Icon className="w-4 h-4" />
