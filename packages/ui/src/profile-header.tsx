@@ -173,9 +173,9 @@ export function ProfileHeader({
 
                 {/* Right: Toolbar - Consolidated editing tools */}
                 <div className="hidden md:flex flex-1 bg-white rounded-none md:rounded-r-lg px-4 py-2 items-center gap-1 justify-between shadow-sm border border-gray-100 border-l-0">
-                    <div className="flex items-center gap-1.5 lg:gap-2">
+                    <div className="flex items-center gap-1.5 lg:gap-3">
                         {/* Core Editing Actions */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
                             <button
                                 onClick={onSmartImport}
                                 className="px-3 h-10 flex items-center gap-2 justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
@@ -239,7 +239,7 @@ export function ProfileHeader({
                                 className="hidden lg:flex items-center gap-2 px-4 h-10 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/50"
                             >
                                 <Trophy size={16} className="fill-amber-700/20" />
-                                <span className="text-xs font-black uppercase tracking-widest">Tailor AI</span>
+                                <span className="text-xs font-black uppercase tracking-widest">Tailor</span>
                             </button>}
                         </div>
 

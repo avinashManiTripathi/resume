@@ -64,6 +64,7 @@ export default function DashboardPage() {
     "Fetching documents..."
   ];
 
+
   // Auto-progress loading steps
   useEffect(() => {
     if (loading && loadingStep < loadingSteps.length - 1) {
