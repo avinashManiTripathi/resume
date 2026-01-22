@@ -183,10 +183,41 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-[#F3F4F6] font-[family-name:var(--font-inter)] text-slate-900">
 
       {/* Loading Overlay */}
+      {/* Loading Overlay */}
       {loading && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/90 backdrop-blur-sm">
-          <div className="max-w-md w-full mx-4 text-center">
-            <StepLoader steps={loadingSteps} currentStep={loadingStep} size="md" />
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-500">
+          <div className="relative max-w-md w-full mx-4">
+            <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
+              {/* Animated Icon */}
+              <div className="flex justify-center mb-10">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
+                  <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
+                    <Layout className="w-12 h-12 text-white" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Hirecta Workspace</h2>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="flex gap-1">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                    ))}
+                  </div>
+                  <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{loadingSteps[loadingStep]}</span>
+                </div>
+              </div>
+
+              <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
+                <StepLoader
+                  steps={loadingSteps}
+                  currentStep={loadingStep}
+                  size="md"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Type, Tags, GripVertical, ChevronDown, Check, Sparkles } from 'lucide-react';
 import { RichTextEditor } from '@repo/ui/rich-text-editor';
 import { Button } from '@repo/ui/button';
@@ -37,6 +38,26 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
     const suggestionsRef = useRef<HTMLDivElement>(null);
 
     const items = Array.isArray(value) ? value : [];
+
+    // Edit State
+    const [editingIndex, setEditingIndex] = useState(-1);
+    const [editName, setEditName] = useState("");
+
+    const handleEditStart = (index: number, name: string) => {
+        setEditingIndex(index);
+        setEditName(name);
+    };
+
+    const handleEditSave = () => {
+        if (editingIndex > -1) {
+            if (editName.trim()) {
+                const newItems = [...items];
+                newItems[editingIndex] = { ...newItems[editingIndex], [nameKey]: editName.trim() };
+                onChange(newItems);
+            }
+            setEditingIndex(-1);
+        }
+    };
 
     useEffect(() => {
         if (inputValue.length > 0) {
@@ -271,14 +292,35 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                 {items.map((item: any, index: number) => (
                     <div
                         key={index}
-                        className="group flex flex-col sm:flex-row sm:items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200 overflow-hidden"
+                        className="group flex flex-col sm:flex-row sm:items-center bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-indigo-200 transition-all duration-200"
                     >
                         {/* Drag Handle (Visual only for now since simple list) */}
 
                         {/* Name */}
-                        <div className="flex items-center px-3 py-2 bg-gray-50/50 border-b sm:border-b-0 sm:border-r border-gray-100">
+                        <div className="flex items-center px-3 py-2 bg-gray-50/50 border-b sm:border-b-0 sm:border-r border-gray-100 flex-1 rounded-t-lg sm:rounded-l-lg sm:rounded-tr-none text-left">
                             <GripVertical className="w-3 h-3 text-gray-300 mr-2 cursor-move" />
-                            <span className="text-sm font-semibold text-gray-700">{item[nameKey]}</span>
+                            {editingIndex === index ? (
+                                <input
+                                    autoFocus
+                                    type="text"
+                                    value={editName}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                    onBlur={handleEditSave}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleEditSave()}
+                                    className="text-sm font-semibold text-gray-900 bg-white border border-indigo-300 rounded px-1 w-full outline-none focus:ring-2 focus:ring-indigo-100"
+                                    onClick={(e) => e.stopPropagation()}
+                                    onPointerDown={(e) => e.stopPropagation()}
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                />
+                            ) : (
+                                <span
+                                    className="text-sm font-semibold text-gray-700 cursor-text hover:text-indigo-600 transition-colors"
+                                    onDoubleClick={() => handleEditStart(index, item[nameKey])}
+                                    title="Double-click to edit"
+                                >
+                                    {item[nameKey]}
+                                </span>
+                            )}
                         </div>
 
                         {/* Proficiency (Skills & Languages Only) */}
@@ -315,22 +357,71 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
 // Internal Modern Dropdown Component
 const Dropdown = ({ value, onChange, options }: { value: string, onChange: (val: string) => void, options: string[] }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
     const ref = useRef<HTMLDivElement>(null);
+
+    const toggle = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Stop parent drag
+        if (!isOpen && ref.current) {
+            const rect = ref.current.getBoundingClientRect();
+            setCoords({
+                top: rect.bottom + window.scrollY + 4,
+                left: rect.left + window.scrollX,
+                width: rect.width
+            });
+        }
+        setIsOpen(!isOpen);
+    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            // Close if clicking outside the dropdown trigger AND the menu (handled by not bubbling or check)
+            // Since menu is in portal, ref.current check handles trigger. 
+            // We need a ref for the menu too or just close.
             if (ref.current && !ref.current.contains(event.target as Node)) {
-                setIsOpen(false);
+                // We also need to check if click is inside the portal content, but identifying that is tricky without a ref to it.
+                // Simplified: Close on any click outside trigger. The Portal click will bubble? 
+                // Portals bubble to React tree ancestors, so clicking menu items will bubble to here.
+                // DOM event listener is on document.
+                // We need to stop propagation inside the menu to prevent this document listener from closing it immediately?
+                // Actually, standard pattern:
+                // If target is not in trigger ref... check if target is in menu.
+                // I'll make the menu IDs match or use a specific class.
+                // Or simpler: The menu items interaction closes it anyway.
+                // So if I click menu -> item onClick runs -> setIsOpen(false).
+                // If I click empty space in menu -> it might close. 
+                // Let's rely on menu Ref if possible.
             }
         };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+
+        // Better approach for Portal outside click: Use a global transparent backdrop? No.
+        // I will use a ref for the trigger. The menu items close it.
+        // If user clicks AWAY, it should close.
+        // I will add a click listener to window.
+
+        const handleGlobalClick = (e: MouseEvent) => {
+            // Check if click is inside the trigger button
+            if (ref.current && ref.current.contains(e.target as Node)) {
+                return; // Let the button toggle handle it
+            }
+            // Since we can't easily ref the portal content from here without state/callback ref,
+            // and React Portals bubble events up to the component, 
+            // we can handle "click inside menu" by stopping propagation on the menu div.
+            setIsOpen(false);
+        };
+
+        if (isOpen) {
+            window.addEventListener('click', handleGlobalClick);
+        }
+        return () => window.removeEventListener('click', handleGlobalClick);
+    }, [isOpen]);
 
     return (
         <div className="relative" ref={ref}>
             <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={toggle}
+                onPointerDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
                 className="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-indigo-600 bg-indigo-50/50 hover:bg-indigo-100 rounded-md transition-colors"
                 title="Change Level"
             >
@@ -338,23 +429,46 @@ const Dropdown = ({ value, onChange, options }: { value: string, onChange: (val:
                 <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
-            {isOpen && (
-                <div className="absolute top-full left-0 mt-1 min-w-[140px] bg-white rounded-lg shadow-xl border border-gray-100 z-[100] overflow-hidden animate-in fade-in zoom-in-95 duration-100">
-                    <div className="py-1">
-                        {options.map((option) => (
-                            <button
-                                key={option}
-                                onClick={() => { onChange(option); setIsOpen(false); }}
-                                className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between hover:bg-gray-50 transition-colors
-                                    ${option === value ? 'text-indigo-600 font-semibold bg-indigo-50/30' : 'text-gray-600'}
-                                `}
-                            >
-                                {option}
-                                {option === value && <Check className="w-3 h-3" />}
-                            </button>
-                        ))}
+            {isOpen && createPortal(
+                <div
+                    className="fixed inset-0 z-[9999] cursor-default" // Invisible backdrop to handle clicks outside? No, that blocks page interaction.
+                    // Just render the menu absolutely.
+                    // To handle clicks inside menu not closing it instantly via global listener, we stop propagation on the menu container.
+                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '0px' }} // Dummy container to avoiding generic styles
+                >
+                    <div
+                        className="absolute bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden animate-in fade-in zoom-in-95 duration-100 max-h-60 overflow-y-auto"
+                        style={{
+                            top: coords.top,
+                            left: coords.left,
+                            minWidth: '140px',
+                            zIndex: 9999
+                        }}
+                        onClick={(e) => e.stopPropagation()} // Stop click from reaching window listener
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onMouseDown={(e) => e.stopPropagation()}
+                    >
+                        <div className="py-1">
+                            {options.map((option) => (
+                                <button
+                                    key={option}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // prevent double firing
+                                        onChange(option);
+                                        setIsOpen(false);
+                                    }}
+                                    className={`w-full text-left px-3 py-1.5 text-xs flex items-center justify-between hover:bg-gray-50 transition-colors
+                                        ${option === value ? 'text-indigo-600 font-semibold bg-indigo-50/30' : 'text-gray-600'}
+                                    `}
+                                >
+                                    {option}
+                                    {option === value && <Check className="w-3 h-3" />}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

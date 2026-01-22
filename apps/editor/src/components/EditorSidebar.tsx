@@ -78,9 +78,9 @@ export function EditorSidebar() {
     };
 
     return (
-        <div className="w-16 md:w-20 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-6 shrink-0 z-50">
+        <div className="w-16 md:w-20 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-2 md:py-5 shrink-0 z-50">
             {/* Logo area */}
-            <div className="mb-6 pb-6 border-b border-slate-100 w-full flex justify-center">
+            <div className="mb-6 pb-2 md:pb-5 border-b border-slate-100 w-full flex justify-center">
                 <div className="w-10 h-10 flex items-center justify-center">
                     <img src="/apple-touch-icon.png" alt="Logo" className="w-10 h-10 rounded-full object-cover shadow-sm" />
                 </div>

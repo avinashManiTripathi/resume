@@ -710,7 +710,7 @@ function ResumeEditor() {
   }, [isPdfGenerating, resume, loadingStep, loadingSteps.length, isLoading, templatesLoading]);
 
   return (
-    <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
+    <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
       <EditorSidebar />
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Neural Analysis Modal (Initial Loading) */}
@@ -819,7 +819,7 @@ function ResumeEditor() {
           </div>
 
           {/* Left Section - Form (45%) */}
-          <div className={`w-full md:w-[45%] flex flex-col relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+          <div className={`w-full md:w-[45%] flex flex-col rounded-none md:rounded-lg relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
 
             <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
               {showTemplates ? (

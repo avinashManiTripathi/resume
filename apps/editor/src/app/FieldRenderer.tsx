@@ -73,6 +73,8 @@ const FieldRenderer = ({ field, value, onChange }: Props) => {
             <select
                 value={value || ""}
                 onChange={(e) => onChange(e.target.value)}
+                onPointerDown={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
             >
                 <option value="">Select</option>
                 {field.options.map((opt) => (
