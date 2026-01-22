@@ -12,7 +12,7 @@ interface FeatureSetting {
     updatedAt: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+const API_BASE = "https://api.hirecta.com" //process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
 
 export default function FeaturesPage() {
     const [features, setFeatures] = useState<FeatureSetting[]>([]);
@@ -132,8 +132,8 @@ export default function FeaturesPage() {
                     onClick={() => togglePremium(feature.name, feature.isPremium, feature._id)}
                     disabled={savingId === feature._id}
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${feature.isPremium
-                            ? "bg-green-100 text-green-700 hover:bg-green-200"
-                            : "bg-orange-100 text-orange-700 hover:bg-orange-200"
+                        ? "bg-green-100 text-green-700 hover:bg-green-200"
+                        : "bg-orange-100 text-orange-700 hover:bg-orange-200"
                         }`}
                 >
                     {savingId === feature._id ? (
