@@ -3,13 +3,9 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
     LayoutGrid,
-    ShieldCheck,
     Wand2,
     FileText,
     LogOut,
-    ArrowLeft,
-    Settings,
-    User,
     ScanSearch,
     CreditCard
 } from "lucide-react";
