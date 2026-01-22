@@ -28,7 +28,7 @@ export function GlobalSchema() {
         "url": baseUrl,
         "logo": {
             "@type": "ImageObject",
-            "url": `${baseUrl}/icon-512.png`,
+            "url": `${baseUrl}/android-chrome-512x512.png`,
             "width": 512,
             "height": 512
         },
