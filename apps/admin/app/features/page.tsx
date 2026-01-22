@@ -12,7 +12,7 @@ interface FeatureSetting {
     updatedAt: string;
 }
 
-const API_BASE = "https://api.hirecta.com" //process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 
 export default function FeaturesPage() {
     const [features, setFeatures] = useState<FeatureSetting[]>([]);
