@@ -51,30 +51,30 @@ export function EditorSidebar() {
 
     const getItemStyles = (item: typeof menuItems[0]) => {
         const active = item.href && isActive(item.href);
-        const baseClass = "w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border";
+        const baseClass = "w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all duration-300 border shadow-sm hover:scale-105 active:scale-95";
 
         if (item.label === "Tailor") {
             return `${baseClass} ${active
-                ? "bg-amber-50 text-amber-600 border-amber-200 shadow-sm"
-                : "bg-white text-slate-500 border-slate-200 hover:border-amber-200 hover:bg-amber-50 hover:text-amber-600 hover:shadow-sm"}`;
+                ? "bg-amber-100 text-amber-700 border-amber-300 shadow-amber-100"
+                : "bg-amber-50/40 text-amber-600 border-amber-100/50 hover:bg-amber-100 hover:text-amber-700 hover:border-amber-300 hover:shadow-amber-100"}`;
         }
 
         if (item.label === "ATS Check") {
             return `${baseClass} ${active
-                ? "bg-emerald-50 text-emerald-600 border-emerald-200 shadow-sm"
-                : "bg-white text-slate-500 border-slate-200 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600 hover:shadow-sm"}`;
+                ? "bg-emerald-100 text-emerald-700 border-emerald-300 shadow-emerald-100"
+                : "bg-emerald-50/40 text-emerald-600 border-emerald-100/50 hover:bg-emerald-100 hover:text-emerald-700 hover:border-emerald-300 hover:shadow-emerald-100"}`;
         }
 
         if (item.label === "Cover Letter") {
             return `${baseClass} ${active
-                ? "bg-purple-50 text-purple-600 border-purple-200 shadow-sm"
-                : "bg-white text-slate-500 border-slate-200 hover:border-purple-200 hover:bg-purple-50 hover:text-purple-600 hover:shadow-sm"}`;
+                ? "bg-purple-100 text-purple-700 border-purple-300 shadow-purple-100"
+                : "bg-purple-50/40 text-purple-600 border-purple-100/50 hover:bg-purple-100 hover:text-purple-700 hover:border-purple-300 hover:shadow-purple-100"}`;
         }
 
         // Default / Dashboard
         return `${baseClass} ${active
-            ? "bg-indigo-50 text-indigo-600 shadow-sm border-indigo-200"
-            : "bg-white text-slate-500 border-slate-200 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 hover:shadow-sm"}`;
+            ? "bg-indigo-100 text-indigo-700 border-indigo-300 shadow-indigo-100"
+            : "bg-indigo-50/40 text-indigo-600 border-indigo-100/50 hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-300 hover:shadow-indigo-100"}`;
     };
 
     return (
@@ -108,7 +108,7 @@ export function EditorSidebar() {
                     <Tooltip content="Logout" position="right">
                         <button
                             onClick={logout}
-                            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl transition-all duration-200 border bg-white text-slate-500 border-slate-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600 hover:shadow-sm"
+                            className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-2xl transition-all duration-300 border bg-rose-50/40 text-rose-500 border-rose-100/50 hover:border-rose-300 hover:bg-rose-100 hover:text-rose-700 hover:shadow-md hover:scale-105 active:scale-95 shadow-sm"
                         >
                             <LogOut size={20} strokeWidth={2} />
                         </button>
