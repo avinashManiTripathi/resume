@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, AlertCircle, CheckCircle2, Info, AlertTriangle, HelpCircle } from "lucide-react";
 import { Button } from "./button";
 
@@ -15,6 +16,9 @@ interface DialogProps {
     secondaryActionLabel?: string;
     onSecondaryAction?: () => void;
     icon?: React.ReactNode;
+    checkboxLabel?: string;
+    checkboxChecked?: boolean;
+    onCheckboxChange?: (checked: boolean) => void;
 }
 
 export function Dialog({
@@ -27,7 +31,10 @@ export function Dialog({
     onPrimaryAction,
     secondaryActionLabel,
     onSecondaryAction,
-    icon
+    icon,
+    checkboxLabel,
+    checkboxChecked,
+    onCheckboxChange
 }: DialogProps) {
     const [isMounted, setIsMounted] = useState(false);
 
@@ -65,7 +72,9 @@ export function Dialog({
         onClose();
     };
 
-    return (
+    if (!isMounted) return null;
+
+    return createPortal(
         <div
             className={`fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
                 }`}
@@ -79,7 +88,7 @@ export function Dialog({
 
             {/* Modal Container */}
             <div
-                className={`relative bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full max-w-sm overflow-hidden transform transition-all duration-500 ease-out border border-gray-100 ${isOpen ? "scale-100 translate-y-0 opacity-100" : "scale-95 translate-y-8 opacity-0"
+                className={`relative bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full max-w-[460px] overflow-hidden transform transition-all duration-500 ease-out border border-gray-100 ${isOpen ? "scale-100 translate-y-0 opacity-100" : "scale-95 translate-y-8 opacity-0"
                     }`}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -98,7 +107,8 @@ export function Dialog({
                         <div className={`w-20 h-20 rounded-[1.75rem] flex items-center justify-center transition-transform duration-500 ${isOpen ? 'scale-100' : 'scale-50'} ${type === 'success' ? 'bg-green-50 shadow-inner' :
                             type === 'warning' ? 'bg-amber-50 shadow-inner' :
                                 type === 'error' ? 'bg-red-50 shadow-inner' :
-                                    'bg-blue-50 shadow-inner'
+                                    icon ? 'bg-red-50 shadow-inner' : // Use red background if generic confirm icon is replaced (likely Delete)
+                                        'bg-blue-50 shadow-inner'
                             }`}>
                             <div className="transform scale-125">
                                 {getIcon()}
@@ -113,27 +123,45 @@ export function Dialog({
                     </div>
 
                     {/* Actions Section */}
-                    <div className="flex flex-col gap-3">
-                        <Button
-                            onClick={handlePrimaryClick}
-                            variant={type === 'error' || type === 'warning' ? 'danger' : 'primary'}
-                            className="w-full justify-center py-4 rounded-2xl text-base font-bold shadow-lg shadow-blue-500/10 active:scale-[0.98] transition-all"
-                        >
-                            {primaryActionLabel}
-                        </Button>
-
-                        {secondaryActionLabel && (
-                            <Button
-                                onClick={handleSecondaryClick}
-                                variant="outline"
-                                className="w-full justify-center py-4 rounded-2xl border-gray-100 text-gray-400 hover:text-gray-600 font-bold active:scale-[0.98] transition-all"
-                            >
-                                {secondaryActionLabel}
-                            </Button>
+                    <div className="flex flex-col gap-4">
+                        {checkboxLabel && onCheckboxChange && (
+                            <div className="flex items-center justify-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="dialog-checkbox"
+                                    checked={checkboxChecked}
+                                    onChange={(e) => onCheckboxChange(e.target.checked)}
+                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                <label htmlFor="dialog-checkbox" className="text-sm text-gray-600 select-none cursor-pointer">
+                                    {checkboxLabel}
+                                </label>
+                            </div>
                         )}
+
+                        <div className="flex gap-3">
+                            <Button
+                                onClick={handlePrimaryClick}
+                                variant={type === 'error' || type === 'warning' || (icon && type === 'confirm') ? 'danger' : 'primary'}
+                                className="flex-1 justify-center py-4 rounded-2xl text-base font-bold shadow-lg shadow-blue-500/10 active:scale-[0.98] transition-all"
+                            >
+                                {primaryActionLabel}
+                            </Button>
+
+                            {secondaryActionLabel && (
+                                <Button
+                                    onClick={handleSecondaryClick}
+                                    variant="outline"
+                                    className="flex-1 justify-center py-4 rounded-2xl border-gray-100 text-gray-400 hover:text-gray-600 font-bold active:scale-[0.98] transition-all"
+                                >
+                                    {secondaryActionLabel}
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

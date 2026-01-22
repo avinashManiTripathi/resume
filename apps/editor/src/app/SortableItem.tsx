@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2Icon } from "lucide-react";
+import { GripVertical, Trash2Icon, ChevronDown, ChevronUp } from "lucide-react";
 
 interface SortableItemProps {
     id: string;
@@ -15,6 +15,8 @@ interface SortableItemProps {
 
 export function SortableItem({ id, index, label, onRemove, children }: SortableItemProps) {
     const [mounted, setMounted] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [overflow, setOverflow] = useState(isOpen ? 'visible' : 'hidden');
 
     const {
         attributes,
@@ -29,6 +31,15 @@ export function SortableItem({ id, index, label, onRemove, children }: SortableI
         setMounted(true);
     }, []);
 
+    useEffect(() => {
+        if (isOpen) {
+            const timer = setTimeout(() => setOverflow('visible'), 300); // Wait for transition
+            return () => clearTimeout(timer);
+        } else {
+            setOverflow('hidden');
+        }
+    }, [isOpen]);
+
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
@@ -39,9 +50,9 @@ export function SortableItem({ id, index, label, onRemove, children }: SortableI
         <div
             ref={setNodeRef}
             style={style}
-            className="p-5 bg-white rounded-[1.5rem] border border-slate-200 shadow-sm transition-all duration-300"
+            className="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm transition-all duration-300"
         >
-            <div className="flex items-center justify-between mb-4">
+            <div className={`flex items-center justify-between ${isOpen ? 'mb-4' : 'mb-0'} transition-all duration-300`}>
                 <div className="flex items-center gap-2">
                     {mounted ? (
                         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-2 -m-2">
@@ -56,15 +67,36 @@ export function SortableItem({ id, index, label, onRemove, children }: SortableI
                         {index + 1}. {label}
                     </span>
                 </div>
-                <button
-                    onClick={onRemove}
-                    className="flex items-center gap-1 text-red-600 hover:text-red-700 text-xs font-medium"
-                >
-                    <Trash2Icon className="w-3 h-3" />
-                    <span>Delete</span>
-                </button>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={onRemove}
+                        className="flex items-center gap-1 text-red-600 hover:text-red-700 text-xs font-medium px-2 py-1 rounded-md hover:bg-red-50 transition-colors"
+                    >
+                        <Trash2Icon className="w-3.5 h-3.5" />
+                        <span>Delete</span>
+                    </button>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 rounded-md transition-colors"
+                        title={isOpen ? "Collapse" : "Expand"}
+                    >
+                        {isOpen ? (
+                            <ChevronUp className="w-5 h-5" />
+                        ) : (
+                            <ChevronDown className="w-5 h-5" />
+                        )}
+                    </button>
+                </div>
             </div>
-            <div className="flex flex-wrap gap-2">{children}</div>
+
+            <div
+                className={`transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                style={{ overflow }}
+            >
+                <div className="flex flex-wrap gap-2 pt-2">
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }

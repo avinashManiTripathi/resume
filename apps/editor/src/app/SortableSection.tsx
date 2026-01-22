@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Trash2Icon } from "lucide-react";
 import { CollapsibleSection } from "@repo/ui/collapsible-section";
 
 interface SortableSectionProps {
@@ -12,11 +12,12 @@ interface SortableSectionProps {
     defaultOpen?: boolean;
     isCollapsible?: boolean;
     onTitleChange?: (newTitle: string) => void;
+    onDelete?: () => void;
     canEdit?: boolean;
     children: React.ReactNode;
 }
 
-export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitleChange, canEdit = true, children }: SortableSectionProps) {
+export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitleChange, onDelete, canEdit = true, children }: SortableSectionProps) {
     const [mounted, setMounted] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editValue, setEditValue] = useState(title);
@@ -86,16 +87,30 @@ export function SortableSection({ id, title, defaultOpen, isCollapsible, onTitle
                                     e.stopPropagation();
                                     setIsEditing(true);
                                 }}
-                                className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-100 rounded transition-opacity"
+                                className="p-1 hover:bg-gray-100 rounded text-gray-400 hover:text-blue-600 transition-all duration-200 opacity-0 group-hover:opacity-100"
                                 title="Edit section name"
                             >
-                                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                 </svg>
                             </button>
                         </div>
                     )
                 ) : undefined}
+                actionsEnd={
+                    onDelete ? (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete();
+                            }}
+                            className="p-1 hover:bg-red-50 rounded text-gray-400 hover:text-red-600 transition-all duration-200 opacity-0 group-hover:opacity-100"
+                            title="Delete section"
+                        >
+                            <Trash2Icon className="w-4 h-4" />
+                        </button>
+                    ) : undefined
+                }
                 icon={
                     mounted ? (
                         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing p-3 -m-3">

@@ -24,6 +24,8 @@ import {
 import { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { CustomSectionModal, SECTION_TEMPLATES } from "./CustomSectionModal";
 import { SkillsInput } from "./SkillsInput";
+import { Dialog } from "@repo/ui/dialog";
+import { AlertTriangle } from "lucide-react";
 
 interface Props {
     schema: FormSchema;
@@ -231,7 +233,47 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
         onSchemaChange(newSchema);
 
         setIsModalOpen(false);
+        setIsModalOpen(false);
     }, [schema, data, onChange, onSchemaChange, sectionOrder, setSectionOrder]);
+
+    const [deleteSectionDialog, setDeleteSectionDialog] = useState<{
+        isOpen: boolean;
+        sectionId: string | null;
+        sectionTitle: string;
+        isChecked: boolean;
+    }>({
+        isOpen: false,
+        sectionId: null,
+        sectionTitle: "",
+        isChecked: false
+    });
+
+    const [dontAskDeleteConfirmation, setDontAskDeleteConfirmation] = useState(false);
+
+    const handleDeleteSection = useCallback((sectionId: string) => {
+        // Remove from order
+        const newOrder = sectionOrder.filter(id => id !== sectionId);
+        setSectionOrder(newOrder);
+
+        // Remove data for BOTH standard and custom sections to "permanently remove" it
+        const newData = { ...data };
+
+        // If it's a custom section, remove from array
+        if (newData.customSections) {
+            const idx = newData.customSections.findIndex((cs: any) => cs.id === sectionId);
+            if (idx !== -1) {
+                newData.customSections.splice(idx, 1);
+            }
+        }
+
+        // Delete the data key (works for standard sections 'education' and custom 'section-id')
+        delete newData[sectionId];
+
+        // CRITICAL: Update the persistent sectionOrder in the data object
+        newData.sectionOrder = newOrder;
+
+        onChange(newData);
+    }, [data, onChange, sectionOrder, setSectionOrder]);
 
 
     return (
@@ -247,6 +289,14 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                             const config = schema[key];
                             if (!config) return null;
 
+                            const onDeleteSection = () => {
+                                if (dontAskDeleteConfirmation) {
+                                    handleDeleteSection(key);
+                                } else {
+                                    setDeleteSectionDialog({ isOpen: true, sectionId: key, sectionTitle: config.label, isChecked: false });
+                                }
+                            };
+
                             return (
                                 <SortableSection
                                     key={key}
@@ -255,6 +305,13 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                                     onTitleChange={onSectionNameChange ? (newLabel) => onSectionNameChange(key, newLabel) : undefined}
                                     defaultOpen={key === "personalInfo"}
                                     isCollapsible={config.isCollapsible}
+                                    onDelete={key !== "personalInfo" ? () => {
+                                        if (dontAskDeleteConfirmation) {
+                                            handleDeleteSection(key);
+                                        } else {
+                                            setDeleteSectionDialog({ isOpen: true, sectionId: key, sectionTitle: config.label, isChecked: false });
+                                        }
+                                    } : undefined}
                                 >
                                     {config.type === "object" && (
                                         <div className="flex flex-wrap gap-2">
@@ -363,6 +420,23 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onAdd={handleAddCustomSection}
+            />
+
+            <Dialog
+                isOpen={deleteSectionDialog.isOpen}
+                onClose={() => setDeleteSectionDialog(prev => ({ ...prev, isOpen: false }))}
+                title="Are you sure?"
+                description="This action will delete all your information. You won't be able to revert this!"
+                type="confirm"
+                icon={<AlertTriangle className="w-12 h-12 text-red-500" />}
+                primaryActionLabel="Yes, delete it"
+                onPrimaryAction={() => {
+                    if (deleteSectionDialog.sectionId) {
+                        handleDeleteSection(deleteSectionDialog.sectionId);
+                    }
+                    setDeleteSectionDialog(prev => ({ ...prev, isOpen: false }));
+                }}
+                secondaryActionLabel="Cancel"
             />
         </>
     );

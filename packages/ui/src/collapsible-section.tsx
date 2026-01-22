@@ -10,6 +10,7 @@ interface CollapsibleSectionProps {
     defaultOpen?: boolean;
     icon?: React.ReactNode;
     actions?: React.ReactNode;
+    actionsEnd?: React.ReactNode;
     isCollapsible?: boolean;
 }
 
@@ -21,6 +22,7 @@ export function CollapsibleSection({
     icon,
     isCollapsible = true,
     actions,
+    actionsEnd,
 }: CollapsibleSectionProps) {
     const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -32,7 +34,7 @@ export function CollapsibleSection({
         <div className={overrideClass}>
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
+                className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer group"
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
@@ -54,6 +56,7 @@ export function CollapsibleSection({
                     ) : (
                         <CirclePlus className="w-5 h-5 text-[#223DC5]" />
                     ))}
+                    {actionsEnd}
                 </div>
             </div>
             {(isOpen || !isCollapsible) && <div className="px-6 pb-6">{children}</div>}
