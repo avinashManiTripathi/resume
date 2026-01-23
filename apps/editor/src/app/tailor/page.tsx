@@ -336,7 +336,7 @@ export default function TailorResume() {
                                     </div>
                                 </div>
 
-                                {/* Right Column - Neural Visual */}
+                                {/* Right Column - Hirecta Visual */}
                                 <div className="hidden lg:flex sticky top-20 self-start bg-slate-50 items-start justify-center pt-32 p-12 overflow-hidden border-l border-gray-100 min-h-[calc(100vh-80px)]">
                                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#EEF2FF_0%,transparent_50%)]" />
                                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,#F5F3FF_0%,transparent_50%)]" />

@@ -343,7 +343,7 @@ function SessionContent() {
                 // Auto-select best voice if not already set
                 if (!voice) {
                     const preferredVoice = voices.find(v =>
-                        v.name.includes('Natural') || // Edge/Chrome Neural voices
+                        v.name.includes('Natural') || // Edge/Chrome Hirecta voices
                         v.name.includes('Samantha') || // macOS Siri-like
                         v.name.includes('Google US English') || // Chrome
                         v.name.includes('Microsoft Zira') || // Windows

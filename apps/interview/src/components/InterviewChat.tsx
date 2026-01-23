@@ -43,7 +43,7 @@ const InterviewChat: React.FC<InterviewChatProps> = ({
                     <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full animate-pulse shadow-sm shadow-emerald-500/50" />
                 </div>
                 <div>
-                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Neural link</h3>
+                    <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest">Hirecta link</h3>
                     <p className="text-[10px] text-purple-600 font-black uppercase tracking-widest opacity-80">Connected & active</p>
                 </div>
             </div>

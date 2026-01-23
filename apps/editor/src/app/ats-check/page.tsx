@@ -494,7 +494,7 @@ export default function ATSCheckerPage() {
                                             </div>
                                         </div>
 
-                                        {/* Right Column - Neural Scanner Hub */}
+                                        {/* Right Column - Hirecta Scanner Hub */}
                                         <div className="hidden lg:flex sticky top-20 self-start bg-slate-50 items-start justify-center pt-32 p-12 overflow-hidden border-l border-gray-100 min-h-[calc(100vh-80px)]">
                                             {/* Advanced Background Decorations */}
                                             <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,#EFF6FF_0%,transparent_50%)]" />

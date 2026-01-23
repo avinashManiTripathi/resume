@@ -43,7 +43,7 @@ export class DeepSeekService {
             console.error('DeepSeek Chat Error:', error.response?.data || error.message);
             // Fallback for demo/development if key fails
             if (process.env.NODE_ENV === 'development') {
-                return "I apologize, but I'm having trouble connecting to my neural network right now. Let's continue with the scheduled questions.";
+                return "I apologize, but I'm having trouble connecting to my Hirecta network right now. Let's continue with the scheduled questions.";
             }
             throw error;
         }

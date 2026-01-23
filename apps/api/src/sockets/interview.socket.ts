@@ -57,7 +57,7 @@ export function setupInterviewSocket(io: Server) {
             // Only trigger AI greeting if history is empty
             if (sessionHistory.length === 0) {
                 // Standard opening question - always start with self introduction
-                const greeting = `Hello ${data.name}! I'm Neural AI, your technical interviewer for this ${data.role} position. I'm excited to learn more about your background and experience. Let's begin with a fundamental question: Tell me about yourself.`;
+                const greeting = `Hello ${data.name}! I'm Hirecta AI, your technical interviewer for this ${data.role} position. I'm excited to learn more about your background and experience. Let's begin with a fundamental question: Tell me about yourself.`;
 
                 const message = {
                     content: greeting,

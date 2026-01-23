@@ -210,7 +210,7 @@ Output the JD in a well-structured, professional format.`
                 <div className="hidden md:flex items-center gap-6">
                     <div className="px-4 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[11px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
-                        AI Neural Engine v2.0
+                        AI Hirecta Engine v2.0
                     </div>
 
                     {/* User Avatar with Dropdown */}

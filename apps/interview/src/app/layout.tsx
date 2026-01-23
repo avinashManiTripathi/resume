@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
     title: 'Interview AI | Robotic Performance Engine',
-    description: 'Master your career with neural interview simulations.',
+    description: 'Master your career with Hirecta interview simulations.',
     icons: {
         icon: [
             { url: '/favicon.ico', sizes: 'any' },

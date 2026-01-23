@@ -736,11 +736,11 @@ function ResumeEditor() {
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
       <EditorSidebar />
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
-        {/* Neural Analysis Modal (Initial Loading) */}
+        {/* Hirecta Analysis Modal (Initial Loading) */}
         {isLoading && (
           <StepLoader
             loading={isLoading}
-            message="Neural Editor"
+            message="Hirecta Editor"
             subMessage={loadingSteps[loadingStep]}
             logoSrc="/logo.png"
             fullScreen={true}
