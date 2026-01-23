@@ -2,6 +2,7 @@ import { Router, Response, Request } from 'express';
 import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
 import { Subscription, User } from '../models';
 import { SubscriptionPlan, SubscriptionStatus } from '../models/Subscription';
+import { razorpayService } from '../services/razorpay.service';
 
 const router = Router();
 
@@ -38,6 +39,117 @@ router.get('/status', verifyToken, async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error fetching subscription:', error);
         res.status(500).json({ error: 'Failed to fetch subscription' });
+    }
+});
+
+/**
+ * Create Razorpay Order
+ * POST /api/subscription/create-order
+ */
+router.post('/create-order', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const { plan, billingCycle } = req.body;
+        if (!plan) return res.status(400).json({ error: 'Plan is required' });
+
+        // Pricing logic (should ideally be centralized)
+        let amount = 0;
+        if (plan === 'pro') {
+            amount = billingCycle === 'annual' ? 4990 : 499;
+        } else if (plan === 'premium') {
+            amount = billingCycle === 'annual' ? 9990 : 999;
+        }
+
+        if (amount === 0) return res.status(400).json({ error: 'Invalid plan' });
+
+        const order = await razorpayService.createOrder(amount * 100); // Amount in paise
+
+        res.json({
+            success: true,
+            orderId: order.id,
+            amount: order.amount,
+            currency: order.currency
+        });
+    } catch (error) {
+        console.error('Error creating order:', error);
+        res.status(500).json({ error: 'Failed to create order' });
+    }
+});
+
+/**
+ * Verify Razorpay Signature and Create Subscription
+ * POST /api/subscription/verify
+ */
+router.post('/verify', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const {
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+            plan,
+            billingCycle
+        } = req.body;
+
+        if (!userId || !razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(400).json({ error: 'Missing payment details' });
+        }
+
+        // Verify signature
+        const isValid = razorpayService.verifySignature(
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature
+        );
+
+        if (!isValid) {
+            return res.status(400).json({ error: 'Invalid payment signature' });
+        }
+
+        // Calculate expiry date (30 days or 365 days)
+        const startDate = new Date();
+        const endDate = new Date();
+        if (billingCycle === 'annual') {
+            endDate.setFullYear(startDate.getFullYear() + 1);
+        } else {
+            endDate.setDate(startDate.getDate() + 30);
+        }
+
+        // Update or Create subscription
+        let subscription = await Subscription.findOne({ userId });
+
+        if (subscription) {
+            subscription.plan = plan as SubscriptionPlan;
+            subscription.status = SubscriptionStatus.ACTIVE;
+            subscription.startDate = startDate;
+            subscription.endDate = endDate;
+            subscription.paymentId = razorpay_payment_id;
+            subscription.razorpayOrderId = razorpay_order_id;
+            subscription.razorpaySignature = razorpay_signature;
+            await subscription.save();
+        } else {
+            subscription = await Subscription.create({
+                userId,
+                plan: plan as SubscriptionPlan,
+                status: SubscriptionStatus.ACTIVE,
+                startDate,
+                endDate,
+                paymentId: razorpay_payment_id,
+                razorpayOrderId: razorpay_order_id,
+                razorpaySignature: razorpay_signature
+            });
+        }
+
+        // Update user reference
+        await User.findByIdAndUpdate(userId, { subscription: subscription._id });
+
+        res.json({
+            success: true,
+            subscription
+        });
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+        res.status(500).json({ error: 'Failed to verify payment' });
     }
 });
 

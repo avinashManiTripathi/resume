@@ -69,19 +69,9 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
     const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('pro');
     const [billingCycle, setBillingCycle] = useState<BillingCycle>('annual');
-    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
     const [isProcessing, setIsProcessing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showPaymentForm, setShowPaymentForm] = useState(false);
-
-    // Form states
-    const [billingName, setBillingName] = useState(user?.name || '');
-    const [cardNumber, setCardNumber] = useState('');
-    const [expiry, setExpiry] = useState('');
-    const [cvv, setCvv] = useState('');
-    const [upiId, setUpiId] = useState('');
-    const [accountNumber, setAccountNumber] = useState('');
-    const [ifscCode, setIfscCode] = useState('');
 
     const currentPlanId = subscription?.plan || 'free';
     const selectedPlan = pricingTiers.find(t => t.id === selectedTier);
@@ -89,74 +79,123 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
     const price = selectedPlan ? (isAnnual ? selectedPlan.annualPrice : selectedPlan.price) : 0;
     const savings = selectedPlan && isAnnual ? (selectedPlan.price * 12 - selectedPlan.annualPrice) : 0;
 
+    // Helper to load Razorpay script
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handlePayment = async () => {
         if (!selectedTier || selectedTier === 'free') return;
-
-        if (paymentMethod === 'card') {
-            if (cardNumber.replace(/\s/g, '').length < 16) {
-                alert('Please enter a valid card number');
-                return;
-            }
-            if (!expiry || !cvv) {
-                alert('Please fill in all card details');
-                return;
-            }
-        } else if (paymentMethod === 'upi') {
-            if (!upiId || !upiId.includes('@')) {
-                alert('Please enter a valid UPI ID (e.g., name@upi)');
-                return;
-            }
-        } else if (paymentMethod === 'bank') {
-            if (!accountNumber || !ifscCode) {
-                alert('Please fill in all bank details');
-                return;
-            }
-        }
 
         setIsProcessing(true);
 
         try {
-            const res = await fetch(`${API_BASE}/api/subscription/create`, {
+            // 1. Create Order on Backend
+            const orderRes = await fetch(`${API_BASE}/api/subscription/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
-                    tier: selectedTier,
-                    billingCycle,
-                    paymentMethod,
-                    paymentId: `${paymentMethod}_${Date.now()}`,
-                    amount: price
+                    plan: selectedTier,
+                    billingCycle
                 })
             });
 
-            if (res.ok) {
-                const data = await res.json();
-                setSubscription(data.subscription);
-                setShowSuccess(true);
-                setTimeout(() => {
-                    setShowSuccess(false);
-                    if (onSuccess) {
-                        onSuccess();
-                    } else {
-                        const returnTo = searchParams.get('returnTo');
-                        if (returnTo) {
-                            try {
-                                const decodedUrl = decodeURIComponent(returnTo);
-                                const safeUrl = decodedUrl.startsWith('/') ? decodedUrl : '/';
-                                router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}fromSubscription=true`);
-                            } catch {
-                                router.push('/editor?fromSubscription=true');
-                            }
-                        } else {
-                            setShowPaymentForm(false);
-                        }
-                    }
-                }, 2500);
+            if (!orderRes.ok) throw new Error('Failed to create order');
+            const orderData = await orderRes.json();
+
+            // 2. Load Razorpay Script
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                alert("Razorpay SDK failed to load. Are you online?");
+                setIsProcessing(false);
+                return;
             }
+
+            // 3. Open Razorpay Checkout
+            const options = {
+                key: ENV.RAZORPAY_KEY_ID,
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: "Hirecta",
+                description: `Upgrade to ${selectedTier.toUpperCase()} (${billingCycle})`,
+                image: "/logo.png",
+                order_id: orderData.orderId,
+                handler: async (response: any) => {
+                    // 4. Verify Payment on Backend
+                    setIsProcessing(true);
+                    try {
+                        const verifyRes = await fetch(`${API_BASE}/api/subscription/verify`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                plan: selectedTier,
+                                billingCycle
+                            })
+                        });
+
+                        if (verifyRes.ok) {
+                            const data = await verifyRes.json();
+                            setSubscription(data.subscription);
+                            setShowSuccess(true);
+                            setTimeout(() => {
+                                setShowSuccess(false);
+                                if (onSuccess) {
+                                    onSuccess();
+                                } else {
+                                    const returnTo = searchParams.get('returnTo');
+                                    if (returnTo) {
+                                        try {
+                                            const decodedUrl = decodeURIComponent(returnTo);
+                                            const safeUrl = decodedUrl.startsWith('/') ? decodedUrl : '/';
+                                            router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}fromSubscription=true`);
+                                        } catch {
+                                            router.push('/editor?fromSubscription=true');
+                                        }
+                                    } else {
+                                        setShowPaymentForm(false);
+                                    }
+                                }
+                            }, 2500);
+                        } else {
+                            throw new Error('Verification failed');
+                        }
+                    } catch (err) {
+                        console.error('Verification error:', err);
+                        alert('Payment verification failed. Please contact support.');
+                    } finally {
+                        setIsProcessing(false);
+                    }
+                },
+                prefill: {
+                    name: user?.name,
+                    email: user?.email,
+                },
+                theme: {
+                    color: "#4F46E5",
+                },
+                modal: {
+                    ondismiss: () => {
+                        setIsProcessing(false);
+                    }
+                }
+            };
+
+            const rzp = new (window as any).Razorpay(options);
+            rzp.open();
         } catch (error) {
-            console.error('Payment failed:', error);
-            alert('Payment failed. Please try again.');
-        } finally {
+            console.error('Payment initialization failed:', error);
+            alert('Failed to initiate payment. Please try again.');
             setIsProcessing(false);
         }
     };
@@ -213,139 +252,6 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                 </div>
                             </div>
 
-                            {/* Billing Information */}
-                            <div className="space-y-4">
-                                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Billed To</label>
-                                <Input
-                                    type="text"
-                                    name="billingName"
-                                    value={billingName}
-                                    onChange={(e) => setBillingName(e.target.value)}
-                                    placeholder="Full Name"
-                                />
-                            </div>
-
-                            {/* Payment Method Selection */}
-                            <div className="space-y-4">
-                                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Payment Method</label>
-                                <div className="grid grid-cols-3 gap-3">
-                                    <button
-                                        onClick={() => setPaymentMethod('card')}
-                                        className={`p-4 rounded-xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'card'
-                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        <CreditCard size={24} />
-                                        <span>Card</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setPaymentMethod('upi')}
-                                        className={`p-4 rounded-xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'upi'
-                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        <Smartphone size={24} />
-                                        <span>UPI</span>
-                                    </button>
-                                    <button
-                                        onClick={() => setPaymentMethod('bank')}
-                                        className={`p-4 rounded-xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'bank'
-                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
-                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
-                                            }`}
-                                    >
-                                        <Building2 size={24} />
-                                        <span>Bank</span>
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Payment Details */}
-                            {paymentMethod === 'card' && (
-                                <div className="space-y-4">
-                                    <div className="relative">
-                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 z-10">
-                                            <CreditCard size={20} />
-                                        </div>
-                                        <Input
-                                            type="text"
-                                            name="cardNumber"
-                                            placeholder="Card Number"
-                                            value={cardNumber}
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/\D/g, '').slice(0, 16);
-                                                const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-                                                setCardNumber(formatted);
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <Input
-                                            type="text"
-                                            name="expiry"
-                                            placeholder="MM / YY"
-                                            value={expiry}
-                                            onChange={(e) => {
-                                                let val = e.target.value.replace(/\D/g, '').slice(0, 4);
-                                                if (val.length >= 2) val = val.slice(0, 2) + ' / ' + val.slice(2);
-                                                setExpiry(val);
-                                            }}
-                                        />
-                                        <Input
-                                            type="text"
-                                            name="cvv"
-                                            placeholder="CVV"
-                                            value={cvv}
-                                            onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))}
-                                        />
-                                    </div>
-                                </div>
-                            )}
-
-                            {paymentMethod === 'upi' && (
-                                <div className="space-y-4">
-                                    <div className="relative">
-                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 z-10">
-                                            <Smartphone size={20} />
-                                        </div>
-                                        <Input
-                                            type="text"
-                                            name="upiId"
-                                            placeholder="UPI ID (e.g., yourname@upi)"
-                                            value={upiId}
-                                            onChange={(e) => setUpiId(e.target.value)}
-                                            className="pl-12"
-                                        />
-                                    </div>
-                                    <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-600 font-medium">
-                                        <p>Supported: Google Pay, PhonePe, Paytm, BHIM UPI</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            {paymentMethod === 'bank' && (
-                                <div className="space-y-4">
-                                    <Input
-                                        type="text"
-                                        name="accountNumber"
-                                        placeholder="Account Number"
-                                        value={accountNumber}
-                                        onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
-
-                                    />
-                                    <Input
-                                        type="text"
-                                        name="ifscCode"
-                                        placeholder="IFSC Code"
-                                        value={ifscCode}
-                                        onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
-
-                                    />
-                                </div>
-                            )}
-
                             {/* Action Buttons */}
                             <div className="flex gap-4 pt-4">
                                 <button
@@ -368,6 +274,16 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                         `Pay ₹${price.toLocaleString('en-IN')}`
                                     )}
                                 </button>
+                            </div>
+
+                            <div className="bg-indigo-50 border border-indigo-100 rounded-3xl p-6 space-y-3">
+                                <div className="flex items-center gap-3 text-indigo-600 font-black uppercase tracking-widest text-xs">
+                                    <Sparkles size={16} />
+                                    <span>Razorpay Secure</span>
+                                </div>
+                                <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                                    Safe & Secure payments powered by Razorpay. Supports Credit/Debit Cards, UPI (Google Pay, PhonePe), Net Banking, and Wallets.
+                                </p>
                             </div>
 
                             {/* Security Note */}

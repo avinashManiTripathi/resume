@@ -15,4 +15,5 @@ export const ENV = {
     SECURITY_EMAIL: getEnv('SECURITY_EMAIL') || 'security@hirecta.com',
     ENTERPRISE_EMAIL: getEnv('ENTERPRISE_EMAIL') || 'enterprise@hirecta.com',
     BY_PASS_SUBSCRIPTION: getEnv('BY_PASS_SUBSCRIPTION') || 'true',
+    RAZORPAY_KEY_ID: getEnv('RAZORPAY_KEY_ID') || 'rzp_test_S7QNCPGdnlqARx',
 }

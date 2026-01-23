@@ -22,6 +22,8 @@ export interface ISubscription extends Document {
     stripeCustomerId?: string;
     stripeSubscriptionId?: string;
     paymentId?: string;
+    razorpayOrderId?: string;
+    razorpaySignature?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -63,6 +65,14 @@ const SubscriptionSchema: Schema = new Schema(
             sparse: true,
         },
         paymentId: {
+            type: String,
+            sparse: true,
+        },
+        razorpayOrderId: {
+            type: String,
+            sparse: true,
+        },
+        razorpaySignature: {
             type: String,
             sparse: true,
         },

@@ -21,4 +21,10 @@ export const config = {
 
     // Subscription settings
     byPassSubscription: process.env.BY_PASS_SUBSCRIPTION === 'true',
+
+    // Razorpay configuration
+    razorpay: {
+        keyId: process.env.RAZORPAY_KEY_ID || '',
+        keySecret: process.env.RAZORPAY_KEY_SECRET || '',
+    }
 };
