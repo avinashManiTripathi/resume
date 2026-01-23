@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getTierDisplayName, type SubscriptionTier } from "@repo/utils-client";
+import { getTierDisplayName } from "@repo/utils-client";
 import {
     Check,
     CreditCard,
@@ -33,36 +33,6 @@ interface Plan {
     popular: boolean;
 }
 
-const pricingTiers = [
-    {
-        id: 'free' as SubscriptionTier,
-        name: 'Free',
-        price: 0,
-        annualPrice: 0,
-        period: 'forever',
-        description: 'Perfect for getting started',
-        features: ['1 Resume', '3 Basic Templates', 'Auto-save', 'Real-time Preview'],
-    },
-    {
-        id: 'pro' as SubscriptionTier,
-        name: 'Pro',
-        price: 499,
-        annualPrice: 4990,
-        period: 'month',
-        description: 'Best for job seekers',
-        popular: true,
-        features: ['Unlimited Resumes', '10+ Premium Templates', 'PDF Downloads', 'Word Export', 'Email Support'],
-    },
-    {
-        id: 'premium' as SubscriptionTier,
-        name: 'Premium',
-        price: 999,
-        annualPrice: 9990,
-        period: 'month',
-        description: 'For professionals',
-        features: ['Everything in Pro', 'All Templates', 'Priority Support', 'AI Features', 'Analytics', 'Cover Letters'],
-    },
-];
 
 type PaymentMethod = 'card' | 'upi' | 'bank';
 type BillingCycle = 'monthly' | 'annual';

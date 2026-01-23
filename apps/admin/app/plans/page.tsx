@@ -12,7 +12,8 @@ import {
     RefreshCw,
     Star,
     Circle,
-    Info
+    Info,
+    Save
 } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 
