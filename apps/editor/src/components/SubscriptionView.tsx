@@ -20,6 +20,18 @@ import { usePersistence } from "../app/hooks/usePersistence";
 import { ENV } from "../app/env";
 import Image from "next/image";
 import { Input } from "@repo/ui/input";
+import { useEffect } from "react";
+
+interface Plan {
+    planId: string;
+    name: string;
+    description: string;
+    monthlyPrice: number;
+    annualPrice: number;
+    currency: string;
+    features: string[];
+    popular: boolean;
+}
 
 const pricingTiers = [
     {
@@ -67,17 +79,39 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
     const router = useRouter();
     const API_BASE = ENV.API_URL;
 
-    const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('pro');
+    const [selectedTier, setSelectedTier] = useState<string>('pro');
     const [billingCycle, setBillingCycle] = useState<BillingCycle>('annual');
     const [isProcessing, setIsProcessing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showPaymentForm, setShowPaymentForm] = useState(false);
+    const [plans, setPlans] = useState<Plan[]>([]);
+    const [loadingPlans, setLoadingPlans] = useState(true);
+
+    useEffect(() => {
+        const fetchPlans = async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/plans`);
+                const data = await res.json();
+                if (data.success) {
+                    setPlans(data.plans);
+                    // Select first non-free plan by default if available
+                    const firstPremium = data.plans.find((p: Plan) => p.planId !== 'free');
+                    if (firstPremium) setSelectedTier(firstPremium.planId);
+                }
+            } catch (error) {
+                console.error("Error fetching plans:", error);
+            } finally {
+                setLoadingPlans(false);
+            }
+        };
+        fetchPlans();
+    }, [API_BASE]);
 
     const currentPlanId = subscription?.plan || 'free';
-    const selectedPlan = pricingTiers.find(t => t.id === selectedTier);
+    const selectedPlan = plans.find(t => t.planId === selectedTier);
     const isAnnual = billingCycle === 'annual';
-    const price = selectedPlan ? (isAnnual ? selectedPlan.annualPrice : selectedPlan.price) : 0;
-    const savings = selectedPlan && isAnnual ? (selectedPlan.price * 12 - selectedPlan.annualPrice) : 0;
+    const price = selectedPlan ? (isAnnual ? selectedPlan.annualPrice : selectedPlan.monthlyPrice) : 0;
+    const savings = selectedPlan && isAnnual ? (selectedPlan.monthlyPrice * 12 - selectedPlan.annualPrice) : 0;
 
     // Helper to load Razorpay script
     const loadRazorpayScript = () => {
@@ -311,7 +345,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                                 }`}
                                         >
                                             Pay Monthly
-                                            <div className="text-xs mt-1 opacity-80">₹{selectedPlan?.price}/mo</div>
+                                            <div className="text-xs mt-1 opacity-80">₹{selectedPlan?.monthlyPrice}/mo</div>
                                         </button>
                                         <button
                                             onClick={() => setBillingCycle('annual')}
@@ -412,9 +446,17 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
                 {/* Pricing Cards */}
                 <div className="grid md:grid-cols-3 gap-6 lg:gap-8 items-start">
-                    {pricingTiers.map((tier) => (
+                    {loadingPlans ? (
+                        <div className="col-span-3 flex justify-center py-12">
+                            <Loader2 className="animate-spin text-blue-600" size={48} />
+                        </div>
+                    ) : plans.length === 0 ? (
+                        <div className="col-span-3 text-center py-12 text-slate-500 font-medium">
+                            No subscription plans available at the moment.
+                        </div>
+                    ) : plans.map((tier) => (
                         <div
-                            key={tier.id}
+                            key={tier.planId}
                             className={`group relative p-8 rounded-3xl border flex flex-col transition-all duration-300 ${tier.popular
                                 ? 'border-blue-600 bg-blue-600 text-white shadow-xl'
                                 : 'border-slate-200 bg-white text-slate-900 hover:border-blue-200 hover:shadow-lg'
@@ -431,9 +473,9 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                     <h3 className={`text-xl font-bold ${tier.popular ? 'text-white' : 'text-slate-900'}`}>{tier.name}</h3>
                                     <div className="flex items-baseline gap-1">
                                         <span className={`text-4xl font-bold ${tier.popular ? 'text-white' : 'text-slate-900'}`}>
-                                            {tier.id === 'free' ? '₹0' : `₹${tier.price}`}
+                                            {tier.planId === 'free' ? '₹0' : `₹${tier.monthlyPrice}`}
                                         </span>
-                                        {tier.id !== 'free' && (
+                                        {tier.planId !== 'free' && (
                                             <span className={`text-sm font-medium ${tier.popular ? 'text-blue-100' : 'text-slate-500'}`}>/month</span>
                                         )}
                                     </div>
@@ -444,7 +486,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
                                 <div className="space-y-4">
                                     {tier.features.map((feature, i) => (
-                                        <div key={i} className="flex items-start gap-3">
+                                        <div key={i} className="flex items-start gap-4">
                                             <Check size={16} className={`shrink-0 mt-0.5 ${tier.popular ? 'text-white' : 'text-blue-600'}`} />
                                             <span className={`text-sm font-medium ${tier.popular ? 'text-blue-50' : 'text-slate-600'}`}>{feature}</span>
                                         </div>
@@ -455,22 +497,22 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                             <div className="mt-8 pt-6 border-t border-dashed border-opacity-20" style={{ borderColor: tier.popular ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.1)' }}>
                                 <button
                                     onClick={() => {
-                                        if (tier.id !== 'free') {
-                                            setSelectedTier(tier.id);
+                                        if (tier.planId !== 'free') {
+                                            setSelectedTier(tier.planId);
                                             setShowPaymentForm(true);
                                         }
                                     }}
-                                    disabled={currentPlanId === tier.id || tier.id === 'free'}
+                                    disabled={currentPlanId === tier.planId || tier.planId === 'free'}
                                     className={`w-full py-4 rounded-2xl font-bold text-sm transition-all ${tier.popular
                                         ? 'bg-white text-blue-600 hover:bg-blue-50'
-                                        : tier.id === 'free' || currentPlanId === tier.id
+                                        : tier.planId === 'free' || currentPlanId === tier.planId
                                             ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
                                             : 'bg-blue-600 text-white hover:bg-blue-700'
                                         }`}
                                 >
-                                    {currentPlanId === tier.id
+                                    {currentPlanId === tier.planId
                                         ? 'Current Plan'
-                                        : tier.id === 'free'
+                                        : tier.planId === 'free'
                                             ? 'Get Started'
                                             : `Get ${tier.name}`}
                                 </button>

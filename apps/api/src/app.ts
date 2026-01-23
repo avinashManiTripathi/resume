@@ -25,6 +25,7 @@ import interviewRoutes from './routes/interview.routes';
 import blogRoutes from './routes/blog.routes';
 import coverLetterTemplateRoutes from './routes/cover-letter-template.routes';
 import adminRoutes from './routes/admin.routes';
+import plansRoutes from './routes/plans.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
@@ -202,6 +203,9 @@ export class App {
 
         // Payment routes
         this.app.use('/api/payment', paymentRoutes);
+
+        // Plans routes
+        this.app.use('/api/plans', plansRoutes);
 
         // ATS routes
         this.app.use('/api/ats', atsRoutes);

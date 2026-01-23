@@ -1,6 +1,6 @@
 import { Router, Response, Request } from 'express';
 import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
-import { Subscription, User } from '../models';
+import { Subscription, User, Plan } from '../models';
 import { SubscriptionPlan, SubscriptionStatus } from '../models/Subscription';
 import { razorpayService } from '../services/razorpay.service';
 
@@ -48,18 +48,15 @@ router.get('/status', verifyToken, async (req: Request, res: Response) => {
  */
 router.post('/create-order', verifyToken, async (req: Request, res: Response) => {
     try {
-        const { plan, billingCycle } = req.body;
-        if (!plan) return res.status(400).json({ error: 'Plan is required' });
+        const { plan: planId, billingCycle } = req.body;
+        if (!planId) return res.status(400).json({ error: 'Plan is required' });
 
-        // Pricing logic (should ideally be centralized)
-        let amount = 0;
-        if (plan === 'pro') {
-            amount = billingCycle === 'annual' ? 4990 : 499;
-        } else if (plan === 'premium') {
-            amount = billingCycle === 'annual' ? 9990 : 999;
-        }
+        // Fetch plan from database
+        const plan = await Plan.findOne({ planId: planId.toLowerCase() });
+        if (!plan) return res.status(404).json({ error: 'Plan not found' });
 
-        if (amount === 0) return res.status(400).json({ error: 'Invalid plan' });
+        const amount = billingCycle === 'annual' ? plan.annualPrice : plan.monthlyPrice;
+        if (amount < 1) return res.status(400).json({ error: 'Invalid plan amount' });
 
         const order = await razorpayService.createOrder(amount * 100); // Amount in paise
 

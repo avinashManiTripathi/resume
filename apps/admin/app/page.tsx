@@ -219,6 +219,46 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Subscription Pricing Action */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Subscription & Revenue</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Link
+            href="/plans"
+            className="card-premium hover-lift p-8 group cursor-pointer"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-gray-900 mb-1">
+                  Manage Pricing
+                </h3>
+                <p className="text-gray-600">
+                  Configure subscription plans and pricing
+                </p>
+              </div>
+              <ArrowRight className="w-6 h-6 text-indigo-600 group-hover:translate-x-2 transition-transform duration-300" />
+            </div>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Update monthly and annual prices
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Manage plan features and visibility
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                Create new subscription tiers
+              </li>
+            </ul>
+          </Link>
+        </div>
+      </div>
+
       {/* Recent Activity */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
