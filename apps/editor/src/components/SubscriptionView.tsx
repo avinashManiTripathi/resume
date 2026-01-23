@@ -1,62 +1,58 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import {
-    getTierDisplayName,
-    type SubscriptionTier
-} from "@repo/utils-client";
+import { getTierDisplayName, type SubscriptionTier } from "@repo/utils-client";
 import {
     Check,
-    Sparkles,
-    Shield,
-    Zap,
-    Crown,
     CreditCard,
-    User as UserIcon,
-    Calendar,
-    Mail,
+    Building2,
+    Smartphone,
     CheckCircle2,
     XCircle,
-    Info,
-    Rocket,
-    ChevronRight,
     Loader2,
-    ArrowLeft
+    ArrowLeft,
+    Shield,
+    Lock,
+    Sparkles
 } from "lucide-react";
 import { usePersistence } from "../app/hooks/usePersistence";
 import { ENV } from "../app/env";
+import Image from "next/image";
 
 const pricingTiers = [
     {
         id: 'free' as SubscriptionTier,
         name: 'Free',
         price: 0,
+        annualPrice: 0,
         period: 'forever',
         description: 'Perfect for getting started',
         features: ['1 Resume', '3 Basic Templates', 'Auto-save', 'Real-time Preview'],
-        color: 'slate'
     },
     {
         id: 'pro' as SubscriptionTier,
         name: 'Pro',
-        price: 9,
+        price: 499,
+        annualPrice: 4990,
         period: 'month',
         description: 'Best for job seekers',
         popular: true,
         features: ['Unlimited Resumes', '10+ Premium Templates', 'PDF Downloads', 'Word Export', 'Email Support'],
-        color: 'blue'
     },
     {
         id: 'premium' as SubscriptionTier,
         name: 'Premium',
-        price: 19,
+        price: 999,
+        annualPrice: 9990,
         period: 'month',
         description: 'For professionals',
         features: ['Everything in Pro', 'All Templates', 'Priority Support', 'AI Features', 'Analytics', 'Cover Letters'],
-        color: 'indigo'
     },
 ];
+
+type PaymentMethod = 'card' | 'upi' | 'bank';
+type BillingCycle = 'monthly' | 'annual';
 
 interface SubscriptionViewProps {
     onBack?: () => void;
@@ -70,19 +66,59 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
     const router = useRouter();
     const API_BASE = ENV.API_URL;
 
-    const [selectedTier, setSelectedTier] = useState<SubscriptionTier | null>(null);
+    const [selectedTier, setSelectedTier] = useState<SubscriptionTier>('pro');
+    const [billingCycle, setBillingCycle] = useState<BillingCycle>('annual');
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
     const [isProcessing, setIsProcessing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-    const [view, setView] = useState<'plans' | 'dashboard'>('dashboard');
-    const [showMockForm, setShowMockForm] = useState(false);
-    const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '' });
+    const [showPaymentForm, setShowPaymentForm] = useState(false);
 
-    const handleMockPayment = async () => {
-        if (!selectedTier) return;
-        if (cardDetails.number.replace(/\s/g, '').length < 16) {
-            alert('Please enter a valid 16-digit card number (e.g., 4242...)');
-            return;
+    // Form states
+    const [billingName, setBillingName] = useState(user?.name || '');
+    const [cardNumber, setCardNumber] = useState('');
+    const [expiry, setExpiry] = useState('');
+    const [cvv, setCvv] = useState('');
+    const [upiId, setUpiId] = useState('');
+    const [accountNumber, setAccountNumber] = useState('');
+    const [ifscCode, setIfscCode] = useState('');
+
+    const currentPlanId = subscription?.plan || 'free';
+    const selectedPlan = pricingTiers.find(t => t.id === selectedTier);
+    const isAnnual = billingCycle === 'annual';
+    const price = selectedPlan ? (isAnnual ? selectedPlan.annualPrice : selectedPlan.price) : 0;
+    const savings = selectedPlan && isAnnual ? (selectedPlan.price * 12 - selectedPlan.annualPrice) : 0;
+
+    useEffect(() => {
+        if (currentPlanId !== 'free') {
+            setShowPaymentForm(false);
         }
+    }, [currentPlanId]);
+
+    const handlePayment = async () => {
+        if (!selectedTier || selectedTier === 'free') return;
+
+        // Validate based on payment method
+        if (paymentMethod === 'card') {
+            if (cardNumber.replace(/\s/g, '').length < 16) {
+                alert('Please enter a valid card number');
+                return;
+            }
+            if (!expiry || !cvv) {
+                alert('Please fill in all card details');
+                return;
+            }
+        } else if (paymentMethod === 'upi') {
+            if (!upiId || !upiId.includes('@')) {
+                alert('Please enter a valid UPI ID (e.g., name@upi)');
+                return;
+            }
+        } else if (paymentMethod === 'bank') {
+            if (!accountNumber || !ifscCode) {
+                alert('Please fill in all bank details');
+                return;
+            }
+        }
+
         setIsProcessing(true);
 
         try {
@@ -92,8 +128,10 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                 credentials: 'include',
                 body: JSON.stringify({
                     tier: selectedTier,
-                    paymentMethod: 'manual_mock',
-                    paymentId: `mock_${Date.now()}`
+                    billingCycle,
+                    paymentMethod,
+                    paymentId: `${paymentMethod}_${Date.now()}`,
+                    amount: price
                 })
             });
 
@@ -101,7 +139,6 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                 const data = await res.json();
                 setSubscription(data.subscription);
                 setShowSuccess(true);
-                setShowMockForm(false);
                 setTimeout(() => {
                     setShowSuccess(false);
                     if (onSuccess) {
@@ -117,357 +154,414 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                 router.push('/editor?fromSubscription=true');
                             }
                         } else {
-                            setView('dashboard');
+                            setShowPaymentForm(false);
                         }
                     }
                 }, 2500);
             }
         } catch (error) {
-            console.error('Failed to save subscription:', error);
-            alert('Failed to update subscription. Please contact support.');
+            console.error('Payment failed:', error);
+            alert('Payment failed. Please try again.');
         } finally {
             setIsProcessing(false);
         }
     };
 
-    const handleTierSelect = (tier: SubscriptionTier) => {
-        if (tier === 'free') return;
-        setSelectedTier(tier);
-        setShowMockForm(true);
-    };
-
-    const handleCancelSubscription = async () => {
-        if (!confirm('Are you sure you want to cancel your subscription? This will take effect at the end of your billing period.')) return;
-
-        try {
-            const res = await fetch(`${API_BASE}/api/subscription/cancel`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-            if (res.ok) {
-                const data = await res.json();
-                setSubscription(data.subscription);
-                alert('Your subscription has been set to cancel at the end of the period.');
-            }
-        } catch (error) {
-            console.error('Failed to cancel subscription:', error);
-        }
-    };
-
     if (showSuccess) {
         return (
-            <div className="h-full bg-[#F3F4F6] flex items-center justify-center p-4">
-                <div className="bg-white border border-slate-200 rounded-[40px] p-12 max-w-lg w-full text-center shadow-sm animate-in zoom-in duration-500">
-                    <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-emerald-50">
-                        <CheckCircle2 size={48} className="text-emerald-500" />
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+                <div className="bg-white border border-slate-200 rounded-[40px] p-12 max-w-lg w-full text-center shadow-2xl animate-in zoom-in duration-500">
+                    <div className="w-24 h-24 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-emerald-200">
+                        <CheckCircle2 size={48} className="text-white" />
                     </div>
-                    <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">
-                        Subscription Activated!
+                    <h2 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">
+                        Payment Successful!
                     </h2>
-                    <p className="text-slate-500 text-lg mb-8 font-medium">
-                        Welcome to the <span className="text-blue-600 font-black">{selectedTier && getTierDisplayName(selectedTier)}</span> tier.
+                    <p className="text-slate-600 text-lg mb-8 font-medium">
+                        Welcome to <span className="text-blue-600 font-black">{selectedPlan?.name}</span> plan.
                     </p>
                     <div className="flex items-center justify-center gap-3 text-blue-600 font-bold bg-blue-50 py-4 rounded-2xl border border-blue-100 uppercase tracking-widest text-sm">
                         <Loader2 className="animate-spin h-5 w-5" />
-                        Updating account...
+                        Activating your account...
                     </div>
                 </div>
             </div>
         );
     }
 
-    const currentPlanId = subscription?.plan || 'free';
-    const currentPlan = pricingTiers.find(t => t.id === currentPlanId);
+    if (showPaymentForm) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 lg:p-12 flex items-center justify-center">
+                <div className="max-w-7xl w-full bg-white rounded-[48px] shadow-2xl border border-slate-200 overflow-hidden">
+                    <div className="grid lg:grid-cols-2 gap-0">
+                        {/* Left Side - Payment Form */}
+                        <div className="p-8 lg:p-12 space-y-8">
+                            {/* Header with Logo */}
+                            <div className="space-y-6">
+                                <button
+                                    onClick={() => setShowPaymentForm(false)}
+                                    className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition-colors"
+                                >
+                                    <ArrowLeft size={20} />
+                                    <span>Back</span>
+                                </button>
 
-    return (
-        <div className="h-full bg-[#F3F4F6] text-slate-900 overflow-y-auto custom-scrollbar">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
-                {/* Header with Back Button */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
-                    <div className="flex items-center gap-4">
-                        {!hideBack && onBack && (
-                            <button
-                                onClick={onBack}
-                                className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm"
-                            >
-                                <ArrowLeft size={20} />
-                            </button>
-                        )}
-                        <div>
-                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Subscription</h1>
-                            <p className="text-slate-500 font-medium mt-1">Manage your professional workspace</p>
-                        </div>
-                    </div>
+                                <div className="space-y-3">
+                                    <Image
+                                        src="/logo.png"
+                                        alt="Hirecta"
+                                        width={140}
+                                        height={40}
+                                        className="h-10 w-auto object-contain"
+                                    />
+                                    <h1 className="text-4xl font-black text-slate-900 tracking-tight">Upgrade to {selectedPlan?.name}</h1>
+                                    <p className="text-slate-500 font-medium">Get unlimited access to premium features</p>
+                                </div>
+                            </div>
 
-                    {/* View Toggle */}
-                    <div className="flex bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
-                        <button
-                            onClick={() => setView('dashboard')}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200/50' : 'text-slate-500 hover:text-slate-900'}`}
-                        >
-                            Overview
-                        </button>
-                        <button
-                            onClick={() => setView('plans')}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'plans' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200/50' : 'text-slate-500 hover:text-slate-900'}`}
-                        >
-                            Plans
-                        </button>
-                    </div>
-                </div>
+                            {/* Billing Information */}
+                            <div className="space-y-4">
+                                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Billed To</label>
+                                <input
+                                    type="text"
+                                    value={billingName}
+                                    onChange={(e) => setBillingName(e.target.value)}
+                                    placeholder="Full Name"
+                                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                />
+                            </div>
 
-                {view === 'dashboard' ? (
-                    <div className="grid lg:grid-cols-3 gap-8 items-start">
-                        {/* Account Card */}
-                        <div className="lg:col-span-2 space-y-8">
-                            <div className="bg-white border border-slate-200 rounded-[40px] p-8 lg:p-12 shadow-sm relative overflow-hidden group">
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 blur-[80px] -mr-32 -mt-32 rounded-full transition-all duration-700 group-hover:scale-110" />
+                            {/* Payment Method Selection */}
+                            <div className="space-y-4">
+                                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Payment Method</label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button
+                                        onClick={() => setPaymentMethod('card')}
+                                        className={`p-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'card'
+                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        <CreditCard size={24} />
+                                        <span>Card</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentMethod('upi')}
+                                        className={`p-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'upi'
+                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        <Smartphone size={24} />
+                                        <span>UPI</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setPaymentMethod('bank')}
+                                        className={`p-4 rounded-2xl border-2 transition-all font-bold text-sm flex flex-col items-center gap-2 ${paymentMethod === 'bank'
+                                            ? 'border-blue-600 bg-blue-50 text-blue-600'
+                                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                                            }`}
+                                    >
+                                        <Building2 size={24} />
+                                        <span>Bank</span>
+                                    </button>
+                                </div>
+                            </div>
 
-                                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12 relative z-10">
-                                    <div className="flex items-center gap-6">
-                                        <div className="w-20 h-20 rounded-[28px] bg-gradient-to-br from-blue-600 to-indigo-700 p-1 flex items-center justify-center shadow-xl shadow-blue-100 ring-4 ring-white">
-                                            {user?.picture ? (
-                                                <img src={user.picture} alt={user.name} className="w-full h-full object-cover rounded-[24px]" />
-                                            ) : (
-                                                <UserIcon size={32} className="text-white" />
-                                            )}
+                            {/* Payment Details */}
+                            {paymentMethod === 'card' && (
+                                <div className="space-y-4">
+                                    <div className="relative">
+                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
+                                            <CreditCard size={20} />
                                         </div>
-                                        <div>
-                                            <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">{user?.name}</h2>
-                                            <div className="flex items-center gap-3 text-slate-500 bg-slate-50 px-4 py-1.5 rounded-xl border border-slate-100 w-fit font-bold text-xs">
-                                                <Mail size={14} />
-                                                <span>{user?.email}</span>
-                                            </div>
-                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Card Number"
+                                            value={cardNumber}
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/\D/g, '').slice(0, 16);
+                                                const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+                                                setCardNumber(formatted);
+                                            }}
+                                            className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 pl-14 pr-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                        />
                                     </div>
-                                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center min-w-[120px] shadow-sm">
-                                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-1">Status</span>
-                                        <span className={`text-xs font-black uppercase tracking-widest ${subscription?.status === 'active' ? 'text-emerald-500' : 'text-slate-400'}`}>
-                                            {subscription?.status === 'active' ? 'Active' : 'Limited'}
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <input
+                                            type="text"
+                                            placeholder="MM / YY"
+                                            value={expiry}
+                                            onChange={(e) => {
+                                                let val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                                if (val.length >= 2) val = val.slice(0, 2) + ' / ' + val.slice(2);
+                                                setExpiry(val);
+                                            }}
+                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                        />
+                                        <input
+                                            type="text"
+                                            placeholder="CVV"
+                                            value={cvv}
+                                            onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))}
+                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {paymentMethod === 'upi' && (
+                                <div className="space-y-4">
+                                    <div className="relative">
+                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400">
+                                            <Smartphone size={20} />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="UPI ID (e.g., yourname@upi)"
+                                            value={upiId}
+                                            onChange={(e) => setUpiId(e.target.value)}
+                                            className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 pl-14 pr-6 font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                        />
+                                    </div>
+                                    <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-sm text-blue-600 font-medium">
+                                        <p>Supported: Google Pay, PhonePe, Paytm, BHIM UPI</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {paymentMethod === 'bank' && (
+                                <div className="space-y-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Account Number"
+                                        value={accountNumber}
+                                        onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
+                                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="IFSC Code"
+                                        value={ifscCode}
+                                        onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none"
+                                    />
+                                </div>
+                            )}
+
+                            {/* Action Buttons */}
+                            <div className="flex gap-4 pt-4">
+                                <button
+                                    onClick={() => setShowPaymentForm(false)}
+                                    className="flex-1 py-4 rounded-2xl font-black text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handlePayment}
+                                    disabled={isProcessing}
+                                    className="flex-1 py-4 rounded-2xl font-black text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-200 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                >
+                                    {isProcessing ? (
+                                        <>
+                                            <Loader2 className="animate-spin" size={20} />
+                                            Processing...
+                                        </>
+                                    ) : (
+                                        `Pay ₹${price.toLocaleString('en-IN')}`
+                                    )}
+                                </button>
+                            </div>
+
+                            {/* Security Note */}
+                            <div className="flex items-start gap-3 text-xs text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                                <Lock size={16} className="mt-0.5 shrink-0" />
+                                <p className="font-medium">
+                                    Your payment information is encrypted and secure. We never store your card details.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Right Side - Plan Summary */}
+                        <div className="bg-gradient-to-br from-slate-50 to-blue-50 p-8 lg:p-12 flex flex-col">
+                            <div className="flex-1 space-y-8">
+                                <div className="space-y-4">
+                                    <h3 className="text-2xl font-black text-slate-900">{selectedPlan?.name} Plan</h3>
+
+                                    {/* Billing Cycle Toggle */}
+                                    <div className="bg-white rounded-2xl p-2 flex gap-2 border border-slate-200">
+                                        <button
+                                            onClick={() => setBillingCycle('monthly')}
+                                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all ${!isAnnual
+                                                ? 'bg-blue-600 text-white shadow-lg'
+                                                : 'text-slate-600 hover:bg-slate-50'
+                                                }`}
+                                        >
+                                            Pay Monthly
+                                            <div className="text-xs mt-1 opacity-80">₹{selectedPlan?.price}/mo</div>
+                                        </button>
+                                        <button
+                                            onClick={() => setBillingCycle('annual')}
+                                            className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all relative ${isAnnual
+                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                                                : 'text-slate-600 hover:bg-slate-50'
+                                                }`}
+                                        >
+                                            {isAnnual && savings > 0 && (
+                                                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-black px-2 py-1 rounded-full whitespace-nowrap">
+                                                    Save ₹{savings.toLocaleString('en-IN')}
+                                                </div>
+                                            )}
+                                            Pay Annual
+                                            <div className="text-xs mt-1 opacity-80">₹{Math.round((selectedPlan?.annualPrice || 0) / 12)}/mo</div>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Total */}
+                                <div className="space-y-4">
+                                    <div className="flex items-baseline justify-between">
+                                        <span className="text-2xl font-black text-slate-900">Total</span>
+                                        <span className="text-4xl font-black text-slate-900">
+                                            ₹{price.toLocaleString('en-IN')}
+                                            <span className="text-lg text-slate-500 font-bold">/{billingCycle === 'annual' ? 'year' : 'mo'}</span>
                                         </span>
                                     </div>
-                                </div>
 
-                                <div className="grid sm:grid-cols-2 gap-6 relative z-10">
-                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 shadow-sm hover:shadow-md transition-shadow">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Membership</p>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-100">
-                                                <Crown size={24} />
-                                            </div>
-                                            <p className="text-xl font-black text-slate-900 capitalize tracking-tight">{currentPlan?.name}</p>
-                                        </div>
-                                        <div className="text-xs font-bold text-blue-600 bg-blue-50 px-4 py-2 rounded-xl w-fit border border-blue-100">
-                                            Current Tier
-                                        </div>
-                                    </div>
-
-                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 shadow-sm hover:shadow-md transition-shadow">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Billing Period</p>
-                                        <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
-                                                <Calendar size={24} />
-                                            </div>
-                                            <p className="text-xl font-black text-slate-900 tracking-tight">
-                                                {subscription?.endDate ? new Date(subscription.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'Lifetime'}
-                                            </p>
-                                        </div>
-                                        <div className="text-xs text-slate-400 font-bold flex items-center gap-2">
-                                            <Info size={14} className="text-slate-300" />
-                                            Renews automatically
-                                        </div>
+                                    {/* Security Badge */}
+                                    <div className="flex items-start gap-2 text-xs text-slate-500 font-medium bg-white/50 p-4 rounded-2xl border border-slate-200">
+                                        <Shield size={16} className="mt-0.5 text-green-600 shrink-0" />
+                                        <p>Guaranteed to be safe & secure, ensuring that all transactions are protected with the highest level of security.</p>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Upgrade Banner */}
-                            {currentPlanId === 'free' && (
-                                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group shadow-xl shadow-slate-300/20 hover:shadow-2xl hover:shadow-slate-300/30 transition-all" onClick={() => setView('plans')}>
-                                    <div className="flex items-center gap-6 text-white text-left">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white group-hover:scale-110 transition-transform backdrop-blur-sm">
-                                            <Rocket size={28} />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-xl font-black tracking-tight">Unlock Premium Features</h3>
-                                            <p className="text-slate-300 font-medium text-sm">Get unlimited downloads and AI assistance.</p>
-                                        </div>
-                                    </div>
-                                    <button className="bg-white text-slate-900 px-6 py-3.5 rounded-2xl font-black transition-all hover:bg-slate-50 shadow-lg shadow-white/20 flex items-center gap-2 whitespace-nowrap">
-                                        Level Up
-                                        <ChevronRight size={18} />
-                                    </button>
-                                </div>
-                            )}
-
-                            {currentPlanId !== 'free' && (
-                                <div className="p-8 border-2 border-dashed border-slate-200 rounded-[32px] flex items-center justify-between bg-white shadow-sm">
-                                    <div>
-                                        <h4 className="font-black text-slate-900">Manage Billing</h4>
-                                        <p className="text-sm text-slate-500 font-medium">Update your preferences or cancel access.</p>
-                                    </div>
-                                    <button
-                                        onClick={handleCancelSubscription}
-                                        className="text-red-500 font-bold text-xs bg-red-50 hover:bg-red-100 px-6 py-3 rounded-2xl transition-colors border border-red-100"
-                                    >
-                                        Cancel Tier
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Benefits Panel */}
-                        <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm">
-                            <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Active Benefits</h3>
-                            <div className="space-y-6">
-                                {(currentPlan?.features || pricingTiers[0].features).map((feature, i) => (
-                                    <div key={i} className="flex items-start gap-4 font-bold text-sm text-slate-600">
-                                        <div className="w-6 h-6 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 mt-0.5 border border-blue-100 shrink-0">
-                                            <Check size={14} />
-                                        </div>
-                                        <span>{feature}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="space-y-12">
-                        <div className="text-center space-y-4">
-                            <h2 className="text-4xl font-black text-slate-900 tracking-tight">Elevate Your Presence</h2>
-                            <p className="text-slate-500 font-medium max-w-xl mx-auto">
-                                Join thousands of professionals using our premium tools to land their dream roles.
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {pricingTiers.map((tier) => (
-                                <div
-                                    key={tier.id}
-                                    className={`relative group bg-white border-2 rounded-[40px] p-10 transition-all duration-300 flex flex-col h-full shadow-sm hover:shadow-xl ${tier.popular ? "border-blue-600 shadow-xl shadow-blue-100 scale-[1.03]" : "border-slate-200 hover:border-slate-300"
-                                        }`}
-                                >
-                                    {tier.popular && (
-                                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-200">
-                                            Top Recommended
-                                        </div>
-                                    )}
-
-                                    <div className="mb-10 text-left">
-                                        <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">{tier.name}</h3>
-                                        <p className="text-slate-500 text-sm font-medium mb-6">{tier.description}</p>
-                                        <div className="flex items-baseline gap-1 mt-6">
-                                            <span className="text-5xl font-black text-slate-900 tracking-tighter">${tier.price}</span>
-                                            <span className="text-slate-400 font-bold text-sm">/{tier.period}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="space-y-5 mb-10 flex-grow">
-                                        {tier.features.map((feature, i) => (
-                                            <div key={i} className="flex items-start gap-4 font-bold text-sm text-slate-600 text-left">
-                                                <div className="w-5 h-5 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 mt-0.5 border border-slate-100 shrink-0">
-                                                    <Check size={12} />
+                                {/* Features */}
+                                <div className="space-y-4">
+                                    <h4 className="text-sm font-black text-slate-900 uppercase tracking-wider">What you'll get:</h4>
+                                    <div className="space-y-3">
+                                        {selectedPlan?.features.map((feature, i) => (
+                                            <div key={i} className="flex items-start gap-3 text-sm font-medium text-slate-700">
+                                                <div className="w-5 h-5 rounded-lg bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
+                                                    <Check size={14} className="text-blue-600" />
                                                 </div>
                                                 <span>{feature}</span>
                                             </div>
                                         ))}
                                     </div>
-
-                                    <button
-                                        onClick={() => handleTierSelect(tier.id)}
-                                        disabled={currentPlanId === tier.id}
-                                        className={`w-full py-4 rounded-[24px] font-black transition-all shadow-sm ${currentPlanId === tier.id
-                                            ? "bg-slate-50 text-slate-400 cursor-not-allowed uppercase text-[10px] tracking-widest border border-slate-200"
-                                            : tier.popular
-                                                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-200"
-                                                : "bg-slate-900 text-white hover:bg-black shadow-lg shadow-slate-200"
-                                            }`}
-                                    >
-                                        {currentPlanId === tier.id ? "Current Plan" : `Start with ${tier.name}`}
-                                    </button>
                                 </div>
-                            ))}
+                            </div>
+
+                            {/* Decorative Element */}
+                            <div className="mt-8 h-48 relative rounded-3xl overflow-hidden bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Sparkles className="w-24 h-24 text-blue-600/20" />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                )}
+                </div>
             </div>
+        );
+    }
 
-            {/* Mock Payment Form Modal */}
-            {showMockForm && selectedTier && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-xl animate-in fade-in duration-300">
-                    <div className="bg-white rounded-[48px] p-10 md:p-12 max-w-lg w-full shadow-2xl relative overflow-hidden border border-slate-200">
-                        <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-indigo-700" />
+    // Plan Selection View
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-6 lg:p-12">
+            <div className="max-w-7xl mx-auto space-y-12">
+                {/* Header */}
+                <div className="text-center space-y-4">
+                    {!hideBack && onBack && (
+                        <button
+                            onClick={onBack}
+                            className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition-colors mb-6"
+                        >
+                            <ArrowLeft size={20} />
+                            <span>Back to Dashboard</span>
+                        </button>
+                    )}
+                    <h1 className="text-5xl lg:text-6xl font-black text-slate-900 tracking-tight">Choose Your Plan</h1>
+                    <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto">
+                        Unlock premium features and take your career to the next level
+                    </p>
+                </div>
 
-                        <div className="flex justify-between items-start mb-10">
-                            <div>
-                                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Simulate Payment</h2>
-                                <p className="text-slate-500 font-medium text-sm mt-2">Enter credentials to unlock {getTierDisplayName(selectedTier)}</p>
-                            </div>
-                            <button onClick={() => setShowMockForm(false)} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900 transition-colors hover:bg-slate-100">
-                                <XCircle size={24} />
-                            </button>
-                        </div>
+                {/* Pricing Cards */}
+                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                    {pricingTiers.map((tier) => (
+                        <div
+                            key={tier.id}
+                            className={`relative bg-white rounded-[40px] p-8 lg:p-10 transition-all duration-300 flex flex-col border-2 ${tier.popular
+                                ? 'border-blue-600 shadow-2xl shadow-blue-100 scale-105'
+                                : tier.id === 'free'
+                                    ? 'border-slate-200 shadow-sm'
+                                    : 'border-slate-200 shadow-lg hover:shadow-xl hover:scale-105'
+                                } ${currentPlanId === tier.id ? 'ring-4 ring-green-500 ring-opacity-50' : ''}`}
+                        >
+                            {tier.popular && (
+                                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider shadow-lg">
+                                    Most Popular
+                                </div>
+                            )}
 
-                        <div className="space-y-8">
-                            <div className="space-y-4">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-2">Card Information (Mock)</label>
+                            {currentPlanId === tier.id && (
+                                <div className="absolute -top-5 right-8 bg-green-500 text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider shadow-lg flex items-center gap-2">
+                                    <CheckCircle2 size={14} />
+                                    Current Plan
+                                </div>
+                            )}
 
-                                <div className="space-y-4">
-                                    <div className="relative group">
-                                        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors">
-                                            <CreditCard size={18} />
+                            <div className="flex-1 space-y-6">
+                                <div>
+                                    <h3 className="text-3xl font-black text-slate-900 mb-2">{tier.name}</h3>
+                                    <p className="text-slate-500 font-medium">{tier.description}</p>
+                                </div>
+
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-5xl font-black text-slate-900">
+                                        {tier.id === 'free' ? '₹0' : `₹${tier.price}`}
+                                    </span>
+                                    {tier.id !== 'free' && (
+                                        <span className="text-slate-500 font-bold">/month</span>
+                                    )}
+                                </div>
+
+                                <div className="space-y-4 py-6">
+                                    {tier.features.map((feature, i) => (
+                                        <div key={i} className="flex items-start gap-3">
+                                            <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
+                                                <Check size={14} className="text-blue-600" />
+                                            </div>
+                                            <span className="text-slate-700 font-medium">{feature}</span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            placeholder="4242 4242 4242 4242"
-                                            value={cardDetails.number}
-                                            onChange={(e) => {
-                                                const val = e.target.value.replace(/\D/g, '').slice(0, 16);
-                                                const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
-                                                setCardDetails({ ...cardDetails, number: formatted });
-                                            }}
-                                            className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 pl-14 pr-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input
-                                            type="text"
-                                            placeholder="12 / 28"
-                                            value={cardDetails.expiry}
-                                            onChange={(e) => {
-                                                let val = e.target.value.replace(/\D/g, '').slice(0, 4);
-                                                if (val.length >= 2) val = val.slice(0, 2) + '/' + val.slice(2);
-                                                setCardDetails({ ...cardDetails, expiry: val });
-                                            }}
-                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="424"
-                                            value={cardDetails.cvv}
-                                            onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/\D/g, '').slice(0, 3) })}
-                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
-                                        />
-                                    </div>
+                                    ))}
                                 </div>
                             </div>
 
                             <button
-                                onClick={handleMockPayment}
-                                disabled={isProcessing}
-                                className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-5 rounded-[24px] font-black text-base shadow-xl shadow-slate-300/50 hover:from-black hover:to-slate-900 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+                                onClick={() => {
+                                    if (tier.id !== 'free') {
+                                        setSelectedTier(tier.id);
+                                        setShowPaymentForm(true);
+                                    }
+                                }}
+                                disabled={currentPlanId === tier.id || tier.id === 'free'}
+                                className={`w-full py-4 rounded-2xl font-black transition-all shadow-lg ${currentPlanId === tier.id || tier.id === 'free'
+                                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                                    : tier.popular
+                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-blue-200'
+                                        : 'bg-slate-900 text-white hover:bg-black shadow-slate-300'
+                                    }`}
                             >
-                                {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Zap size={18} className="fill-white" />}
-                                {isProcessing ? 'Verifying...' : 'Unlock Membership Now'}
+                                {currentPlanId === tier.id
+                                    ? 'Current Plan'
+                                    : tier.id === 'free'
+                                        ? 'Free Forever'
+                                        : `Get ${tier.name}`}
                             </button>
-
-                            <p className="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest leading-relaxed">
-                                Use any future date and 4242 pattern. No real charges.
-                            </p>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            )}
+            </div>
         </div>
     );
 }
