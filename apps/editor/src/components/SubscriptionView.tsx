@@ -279,7 +279,6 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                                 const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
                                                 setCardNumber(formatted);
                                             }}
-                                            className="pl-12 font-mono"
                                         />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
@@ -293,7 +292,6 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                                 if (val.length >= 2) val = val.slice(0, 2) + ' / ' + val.slice(2);
                                                 setExpiry(val);
                                             }}
-                                            className="font-mono"
                                         />
                                         <Input
                                             type="text"
@@ -301,7 +299,6 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                             placeholder="CVV"
                                             value={cvv}
                                             onChange={(e) => setCvv(e.target.value.replace(/\D/g, '').slice(0, 3))}
-                                            className="font-mono"
                                         />
                                     </div>
                                 </div>
@@ -336,7 +333,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                         placeholder="Account Number"
                                         value={accountNumber}
                                         onChange={(e) => setAccountNumber(e.target.value.replace(/\D/g, ''))}
-                                        className="font-mono"
+
                                     />
                                     <Input
                                         type="text"
@@ -344,7 +341,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                         placeholder="IFSC Code"
                                         value={ifscCode}
                                         onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
-                                        className="font-mono"
+
                                     />
                                 </div>
                             )}
