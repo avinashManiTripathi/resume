@@ -7,7 +7,8 @@ import {
     FileText,
     LogOut,
     ScanSearch,
-    CreditCard
+    CreditCard,
+    Trophy
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
@@ -44,7 +45,7 @@ export function EditorSidebar({ onTabChange, activeTab: propActiveTab }: EditorS
         {
             label: "Tailor",
             id: "tailor",
-            icon: Wand2,
+            icon: Trophy,
             href: "/tailor",
             onClick: () => router.push("/tailor")
         },
