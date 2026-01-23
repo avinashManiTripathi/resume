@@ -409,8 +409,9 @@ function ResumeEditor() {
     // Check if user is logged in
     if (!isLoggedIn) {
       sessionStorage.setItem('pending_download', format);
-      const isProd = window.location.hostname.endsWith('hirecta.com');
-      const authUrl = isProd ? 'https://auth.hirecta.com' : 'http://localhost:3001';
+      const authUrl = ENV.AUTH_URL || (typeof window !== 'undefined' && window.location.hostname.endsWith('hirecta.com')
+        ? 'https://auth.hirecta.com'
+        : 'https://auth.hirecta.com');
       window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
     }
@@ -427,7 +428,8 @@ function ResumeEditor() {
       sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
 
       // Redirect to subscription page instead of showing modal
-      router.push('/subscription?returnTo=editor');
+      const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+      router.push(`/subscription?returnTo=${currentUrl}`);
       return;
     }
 
@@ -455,10 +457,12 @@ function ResumeEditor() {
             docId
           };
           sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
-          router.push('/subscription?returnTo=editor');
+          const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
+          router.push(`/subscription?returnTo=${currentUrl}`);
         } else if (response && response.status === 401) {
-          const isProd = window.location.hostname.endsWith('hirecta.com');
-          const authUrl = isProd ? 'https://auth.hirecta.com' : 'http://localhost:3001';
+          const authUrl = ENV.AUTH_URL || (typeof window !== 'undefined' && window.location.hostname.endsWith('hirecta.com')
+            ? 'https://auth.hirecta.com'
+            : 'https://auth.hirecta.com');
           window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
         }
       } finally {

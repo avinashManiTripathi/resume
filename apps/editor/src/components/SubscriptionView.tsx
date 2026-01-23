@@ -21,7 +21,8 @@ import {
     Info,
     Rocket,
     ChevronRight,
-    Loader2
+    Loader2,
+    ArrowLeft
 } from "lucide-react";
 import { usePersistence } from "../app/hooks/usePersistence";
 import { ENV } from "../app/env";
@@ -107,8 +108,14 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                         onSuccess();
                     } else {
                         const returnTo = searchParams.get('returnTo');
-                        if (returnTo === 'editor') {
-                            router.push('/editor?fromSubscription=true');
+                        if (returnTo) {
+                            try {
+                                const decodedUrl = decodeURIComponent(returnTo);
+                                const safeUrl = decodedUrl.startsWith('/') ? decodedUrl : '/';
+                                router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}fromSubscription=true`);
+                            } catch {
+                                router.push('/editor?fromSubscription=true');
+                            }
                         } else {
                             setView('dashboard');
                         }
@@ -149,8 +156,8 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
     if (showSuccess) {
         return (
-            <div className="h-full bg-white flex items-center justify-center p-4">
-                <div className="bg-white border border-slate-100 rounded-[40px] p-12 max-w-lg w-full text-center shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] animate-in zoom-in duration-500">
+            <div className="h-full bg-[#F3F4F6] flex items-center justify-center p-4">
+                <div className="bg-white border border-slate-200 rounded-[40px] p-12 max-w-lg w-full text-center shadow-sm animate-in zoom-in duration-500">
                     <div className="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 ring-8 ring-emerald-50">
                         <CheckCircle2 size={48} className="text-emerald-500" />
                     </div>
@@ -173,25 +180,36 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
     const currentPlan = pricingTiers.find(t => t.id === currentPlanId);
 
     return (
-        <div className="h-full bg-slate-50/50 text-slate-900 overflow-y-auto custom-scrollbar">
-            <div className="max-w-7xl mx-auto px-6 py-12">
-                {/* Top Actions */}
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
-                    <div>
-                        <h1 className="text-4xl font-black text-slate-900 tracking-tight">Subscription</h1>
-                        <p className="text-slate-500 font-medium">Manage your professional workspace</p>
+        <div className="h-full bg-[#F3F4F6] text-slate-900 overflow-y-auto custom-scrollbar">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+                {/* Header with Back Button */}
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
+                    <div className="flex items-center gap-4">
+                        {!hideBack && onBack && (
+                            <button
+                                onClick={onBack}
+                                className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-600 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
+                        )}
+                        <div>
+                            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Subscription</h1>
+                            <p className="text-slate-500 font-medium mt-1">Manage your professional workspace</p>
+                        </div>
                     </div>
 
-                    <div className="flex bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/50 backdrop-blur-md">
+                    {/* View Toggle */}
+                    <div className="flex bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
                         <button
                             onClick={() => setView('dashboard')}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-white text-blue-600 shadow-lg shadow-slate-200/50 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-900'}`}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200/50' : 'text-slate-500 hover:text-slate-900'}`}
                         >
                             Overview
                         </button>
                         <button
                             onClick={() => setView('plans')}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'plans' ? 'bg-white text-blue-600 shadow-lg shadow-slate-200/50 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-900'}`}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${view === 'plans' ? 'bg-blue-600 text-white shadow-lg shadow-blue-200/50' : 'text-slate-500 hover:text-slate-900'}`}
                         >
                             Plans
                         </button>
@@ -202,7 +220,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                     <div className="grid lg:grid-cols-3 gap-8 items-start">
                         {/* Account Card */}
                         <div className="lg:col-span-2 space-y-8">
-                            <div className="bg-white border border-slate-100 rounded-[40px] p-8 lg:p-12 shadow-sm relative overflow-hidden group">
+                            <div className="bg-white border border-slate-200 rounded-[40px] p-8 lg:p-12 shadow-sm relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50/50 blur-[80px] -mr-32 -mt-32 rounded-full transition-all duration-700 group-hover:scale-110" />
 
                                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12 relative z-10">
@@ -222,19 +240,19 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="bg-slate-50 border border-slate-200/60 p-4 rounded-2xl text-center min-w-[120px]">
+                                    <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center min-w-[120px] shadow-sm">
                                         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-1">Status</span>
                                         <span className={`text-xs font-black uppercase tracking-widest ${subscription?.status === 'active' ? 'text-emerald-500' : 'text-slate-400'}`}>
-                                            {subscription?.status === 'active' ? 'Verified' : 'Limited'}
+                                            {subscription?.status === 'active' ? 'Active' : 'Limited'}
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="grid sm:grid-cols-2 gap-6 relative z-10">
-                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 group/card">
+                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 shadow-sm hover:shadow-md transition-shadow">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Membership</p>
                                         <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-lg shadow-blue-100">
                                                 <Crown size={24} />
                                             </div>
                                             <p className="text-xl font-black text-slate-900 capitalize tracking-tight">{currentPlan?.name}</p>
@@ -244,10 +262,10 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                         </div>
                                     </div>
 
-                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 group/card">
+                                    <div className="bg-slate-50/50 border border-slate-100 rounded-[32px] p-7 shadow-sm hover:shadow-md transition-shadow">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Billing Period</p>
                                         <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
+                                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-700 flex items-center justify-center text-white shadow-lg shadow-indigo-100">
                                                 <Calendar size={24} />
                                             </div>
                                             <p className="text-xl font-black text-slate-900 tracking-tight">
@@ -256,7 +274,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                         </div>
                                         <div className="text-xs text-slate-400 font-bold flex items-center gap-2">
                                             <Info size={14} className="text-slate-300" />
-                                            Renews automatically (Mock)
+                                            Renews automatically
                                         </div>
                                     </div>
                                 </div>
@@ -264,17 +282,17 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
                             {/* Upgrade Banner */}
                             {currentPlanId === 'free' && (
-                                <div className="bg-slate-900 rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group shadow-xl shadow-slate-200" onClick={() => setView('plans')}>
+                                <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-[32px] p-8 flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer group shadow-xl shadow-slate-300/20 hover:shadow-2xl hover:shadow-slate-300/30 transition-all" onClick={() => setView('plans')}>
                                     <div className="flex items-center gap-6 text-white text-left">
-                                        <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white group-hover:scale-110 transition-transform">
+                                        <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white group-hover:scale-110 transition-transform backdrop-blur-sm">
                                             <Rocket size={28} />
                                         </div>
                                         <div>
                                             <h3 className="text-xl font-black tracking-tight">Unlock Premium Features</h3>
-                                            <p className="text-slate-400 font-medium text-sm">Get unlimited downloads and AI assistance.</p>
+                                            <p className="text-slate-300 font-medium text-sm">Get unlimited downloads and AI assistance.</p>
                                         </div>
                                     </div>
-                                    <button className="bg-white text-slate-900 px-6 py-3.5 rounded-2xl font-black transition-colors hover:bg-slate-100 flex items-center gap-2 whitespace-nowrap">
+                                    <button className="bg-white text-slate-900 px-6 py-3.5 rounded-2xl font-black transition-all hover:bg-slate-50 shadow-lg shadow-white/20 flex items-center gap-2 whitespace-nowrap">
                                         Level Up
                                         <ChevronRight size={18} />
                                     </button>
@@ -282,14 +300,14 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                             )}
 
                             {currentPlanId !== 'free' && (
-                                <div className="p-8 border-2 border-dashed border-slate-200 rounded-[32px] flex items-center justify-between">
+                                <div className="p-8 border-2 border-dashed border-slate-200 rounded-[32px] flex items-center justify-between bg-white shadow-sm">
                                     <div>
                                         <h4 className="font-black text-slate-900">Manage Billing</h4>
                                         <p className="text-sm text-slate-500 font-medium">Update your preferences or cancel access.</p>
                                     </div>
                                     <button
                                         onClick={handleCancelSubscription}
-                                        className="text-red-500 font-bold text-xs bg-red-50 hover:bg-red-100 px-6 py-3 rounded-2xl transition-colors"
+                                        className="text-red-500 font-bold text-xs bg-red-50 hover:bg-red-100 px-6 py-3 rounded-2xl transition-colors border border-red-100"
                                     >
                                         Cancel Tier
                                     </button>
@@ -298,7 +316,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                         </div>
 
                         {/* Benefits Panel */}
-                        <div className="bg-white border border-slate-100 rounded-[40px] p-10 shadow-sm">
+                        <div className="bg-white border border-slate-200 rounded-[40px] p-10 shadow-sm">
                             <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Active Benefits</h3>
                             <div className="space-y-6">
                                 {(currentPlan?.features || pricingTiers[0].features).map((feature, i) => (
@@ -321,23 +339,24 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                             </p>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-6">
+                        <div className="grid md:grid-cols-3 gap-8">
                             {pricingTiers.map((tier) => (
                                 <div
                                     key={tier.id}
-                                    className={`relative group bg-white border-2 rounded-[48px] p-10 transition-all duration-300 flex flex-col h-full ${tier.popular ? "border-blue-600 shadow-2xl shadow-blue-100 scale-[1.03]" : "border-slate-100 hover:border-slate-200"
+                                    className={`relative group bg-white border-2 rounded-[40px] p-10 transition-all duration-300 flex flex-col h-full shadow-sm hover:shadow-xl ${tier.popular ? "border-blue-600 shadow-xl shadow-blue-100 scale-[1.03]" : "border-slate-200 hover:border-slate-300"
                                         }`}
                                 >
                                     {tier.popular && (
-                                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-6 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-200">
+                                        <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-blue-200">
                                             Top Recommended
                                         </div>
                                     )}
 
                                     <div className="mb-10 text-left">
                                         <h3 className="text-2xl font-black text-slate-900 mb-2 tracking-tight">{tier.name}</h3>
+                                        <p className="text-slate-500 text-sm font-medium mb-6">{tier.description}</p>
                                         <div className="flex items-baseline gap-1 mt-6">
-                                            <span className="text-4xl font-black text-slate-900 tracking-tighter">${tier.price}</span>
+                                            <span className="text-5xl font-black text-slate-900 tracking-tighter">${tier.price}</span>
                                             <span className="text-slate-400 font-bold text-sm">/{tier.period}</span>
                                         </div>
                                     </div>
@@ -356,11 +375,11 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                     <button
                                         onClick={() => handleTierSelect(tier.id)}
                                         disabled={currentPlanId === tier.id}
-                                        className={`w-full py-4.5 rounded-[28px] font-black transition-all ${currentPlanId === tier.id
-                                            ? "bg-slate-50 text-slate-400 cursor-not-allowed uppercase text-[10px] tracking-widest"
+                                        className={`w-full py-4 rounded-[24px] font-black transition-all shadow-sm ${currentPlanId === tier.id
+                                            ? "bg-slate-50 text-slate-400 cursor-not-allowed uppercase text-[10px] tracking-widest border border-slate-200"
                                             : tier.popular
-                                                ? "bg-blue-600 text-white hover:bg-blue-700 shadow-xl shadow-blue-200"
-                                                : "bg-slate-900 text-white hover:bg-black"
+                                                ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-xl shadow-blue-200"
+                                                : "bg-slate-900 text-white hover:bg-black shadow-lg shadow-slate-200"
                                             }`}
                                     >
                                         {currentPlanId === tier.id ? "Current Plan" : `Start with ${tier.name}`}
@@ -374,8 +393,8 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
 
             {/* Mock Payment Form Modal */}
             {showMockForm && selectedTier && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/30 backdrop-blur-xl animate-in fade-in duration-300">
-                    <div className="bg-white rounded-[48px] p-10 md:p-12 max-w-lg w-full shadow-2xl relative overflow-hidden">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-xl animate-in fade-in duration-300">
+                    <div className="bg-white rounded-[48px] p-10 md:p-12 max-w-lg w-full shadow-2xl relative overflow-hidden border border-slate-200">
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-indigo-700" />
 
                         <div className="flex justify-between items-start mb-10">
@@ -383,7 +402,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                 <h2 className="text-3xl font-black text-slate-900 tracking-tight">Simulate Payment</h2>
                                 <p className="text-slate-500 font-medium text-sm mt-2">Enter credentials to unlock {getTierDisplayName(selectedTier)}</p>
                             </div>
-                            <button onClick={() => setShowMockForm(false)} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900 transition-colors">
+                            <button onClick={() => setShowMockForm(false)} className="p-3 bg-slate-50 rounded-2xl text-slate-400 hover:text-slate-900 transition-colors hover:bg-slate-100">
                                 <XCircle size={24} />
                             </button>
                         </div>
@@ -406,7 +425,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                                 const formatted = val.match(/.{1,4}/g)?.join(' ') || val;
                                                 setCardDetails({ ...cardDetails, number: formatted });
                                             }}
-                                            className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4.5 pl-14 pr-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm"
+                                            className="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 pl-14 pr-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
                                         />
                                     </div>
 
@@ -420,14 +439,14 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                                 if (val.length >= 2) val = val.slice(0, 2) + '/' + val.slice(2);
                                                 setCardDetails({ ...cardDetails, expiry: val });
                                             }}
-                                            className="bg-slate-50 border-2 border-slate-100 rounded-2xl py-4.5 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm"
+                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
                                         />
                                         <input
                                             type="text"
                                             placeholder="424"
                                             value={cardDetails.cvv}
                                             onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value.replace(/\D/g, '').slice(0, 3) })}
-                                            className="bg-slate-50 border-2 border-slate-100 rounded-2xl py-4.5 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm"
+                                            className="bg-slate-50 border-2 border-slate-200 rounded-2xl py-4 px-6 font-mono font-bold text-slate-900 focus:border-blue-600 focus:bg-white transition-all outline-none text-sm shadow-sm"
                                         />
                                     </div>
                                 </div>
@@ -436,7 +455,7 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                             <button
                                 onClick={handleMockPayment}
                                 disabled={isProcessing}
-                                className="w-full bg-slate-900 text-white py-5 rounded-[24px] font-black text-base shadow-xl shadow-slate-200 hover:bg-black transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
+                                className="w-full bg-gradient-to-r from-slate-900 to-slate-800 text-white py-5 rounded-[24px] font-black text-base shadow-xl shadow-slate-300/50 hover:from-black hover:to-slate-900 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3"
                             >
                                 {isProcessing ? <Loader2 className="animate-spin" size={20} /> : <Zap size={18} className="fill-white" />}
                                 {isProcessing ? 'Verifying...' : 'Unlock Membership Now'}
