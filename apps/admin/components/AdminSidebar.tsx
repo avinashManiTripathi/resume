@@ -14,6 +14,7 @@ import {
   PenSquare,
   Mic2,
   Shield,
+  CreditCard,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -44,6 +45,7 @@ export function AdminSidebar() {
     { href: "/", label: "Dashboard", icon: Home },
     { href: "/users", label: "Users", icon: Users },
     { href: "/features", label: "Features", icon: Shield },
+    { href: "/plans", label: "Plans", icon: CreditCard },
     { href: "/templates", label: "Templates", icon: LayoutTemplate },
     { href: "/cover-letters", label: "Cover Letters", icon: FileText },
     { href: "/blog", label: "Publish Blog", icon: PenSquare },
