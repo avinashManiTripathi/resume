@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 const protectedRoutes = ['/', '/subscription'];
 
 // Routes that are public (don't require auth)
-const publicRoutes = ['/cover-letter/templates', '/editor'];
+const publicRoutes = ['/cover-letter/templates', '/editor', '/cover-letter/create'];
 
 export function middleware(request: NextRequest) {
     const { pathname, searchParams } = request.nextUrl;

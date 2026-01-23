@@ -2,12 +2,25 @@ import { ResumeData } from '../types/resume.types';
 import { RESUMES } from '../constant';
 import { Template } from '../models';
 
+import { LRUCache } from 'lru-cache';
+
+const templateCache = new LRUCache<string, string>({
+    max: 100,
+    ttl: 1000 * 60 * 5,
+});
+
 export class TemplateInjectorService {
 
     /**
      * Get template HTML by ID (fetch from database)
      */
     private async getTemplateById(templateId: string): Promise<string> {
+
+        const cachedHtml = templateCache.get(templateId);
+        if (cachedHtml) {
+            return cachedHtml;
+        }
+
         try {
             // Try to find template in database by _id or id
             const template = await Template.findById(templateId);
@@ -23,6 +36,7 @@ export class TemplateInjectorService {
         // Fallback to RESUMES constant if database lookup fails
         const template = RESUMES.find(r => r.id === templateId);
         if (template && template.html) {
+            templateCache.set(templateId, template.html);
             return template.html;
         }
 
