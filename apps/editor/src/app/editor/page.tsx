@@ -738,85 +738,24 @@ function ResumeEditor() {
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Neural Analysis Modal (Initial Loading) */}
         {isLoading && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white animate-in fade-in duration-500">
-            <div className="relative max-w-md w-full mx-4">
-              <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
-                {/* Animated Brain Icon */}
-                <div className="flex justify-center mb-10">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
-                    <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
-                      <Brain className="w-12 h-12 text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center mb-10">
-                  <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Neural Editor</h2>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="flex gap-1">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
-                      ))}
-                    </div>
-                    <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{loadingSteps[loadingStep]}</span>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
-                  <StepLoader
-                    steps={loadingSteps}
-                    currentStep={loadingStep}
-                    size="md"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <StepLoader
+            loading={isLoading}
+            message="Neural Editor"
+            subMessage={loadingSteps[loadingStep]}
+            logoSrc="/logo.png"
+            fullScreen={true}
+          />
         )}
 
         {/* Download Loader - similar style to loading screen */}
         {isDownloadingPdf && (
-          <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-[60] flex items-center justify-center animate-in fade-in duration-300">
-            <div className="relative">
-              {/* Background blobs */}
-              <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-              <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
-              <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000" />
-
-              <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
-                {/* Animated Brain Icon */}
-                <div className="flex justify-center mb-10">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
-                    <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
-                      <Brain className="w-12 h-12 text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-center mb-10">
-                  <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Generating Resume</h2>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="flex gap-1">
-                      {[1, 2, 3].map((i) => (
-                        <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
-                      ))}
-                    </div>
-                    <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{downloadingSteps[downloadingStep]}</span>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
-                  <StepLoader
-                    steps={downloadingSteps}
-                    currentStep={downloadingStep}
-                    size="md"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+          <StepLoader
+            loading={isDownloadingPdf}
+            message="Generating Resume"
+            subMessage={downloadingSteps[downloadingStep]}
+            logoSrc="/logo.png"
+            fullScreen={true}
+          />
         )}
         {/* Header */}
         <ProfileHeader
@@ -913,14 +852,13 @@ function ResumeEditor() {
                 </div>
               )}
               {/* Overlay when loading */}
-              {(isPdfGenerating) && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                  <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
-                    <p className="text-sm font-medium text-slate-600 animate-pulse">
-                      {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
-                    </p>
-                  </div>
+              {/* Small loader on canvas (top-right) */}
+              {isPdfGenerating && (
+                <div className="absolute top-4 right-8 z-10 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm border border-slate-200">
+                  <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                  <span className="text-xs font-medium text-slate-600">
+                    Saving...
+                  </span>
                 </div>
               )}
             </div>

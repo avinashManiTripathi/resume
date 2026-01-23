@@ -604,20 +604,13 @@ export default function ATSCheckerPage() {
                                             </div>
                                         </div>
 
-                                        <div className="bg-gray-50/50 rounded-3xl p-8 border border-gray-100/50">
-                                            <StepLoader
-                                                steps={[
-                                                    'Extracting text from resume...',
-                                                    'Analyzing content quality...',
-                                                    'Checking ATS compatibility...',
-                                                    'Evaluating keywords...',
-                                                    'Generating insights...'
-                                                ]}
-                                                currentStep={currentStageIndex}
-                                                size="md"
-                                                className="max-w-md mx-auto font-bold"
-                                            />
-                                        </div>
+                                        <StepLoader
+                                            loading={true}
+                                            message="AI Analysis in Progress"
+                                            subMessage={analysisStage || "Scanning your resume..."}
+                                            logoSrc="/logo.png"
+                                            fullScreen={true}
+                                        />
 
                                         <div className="text-center">
                                             <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest border border-blue-100/50 animate-pulse">

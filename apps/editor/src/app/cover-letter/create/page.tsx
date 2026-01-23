@@ -495,23 +495,13 @@ function CoverLetterCreateForm() {
 
     if (loading) {
         return (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/50 backdrop-blur-sm animate-in fade-in duration-500">
-                <div className="relative max-w-md w-full mx-4">
-                    <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
-                        <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative mb-8">
-                            <Brain size={32} className="text-blue-600 relative z-10" />
-                            <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
-                        </div>
-                        <div className="text-center mb-8">
-                            <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">AI Editor</h2>
-                            <p className="text-slate-500">Preparing your environment...</p>
-                        </div>
-                        <div className="flex justify-center">
-                            <StepLoader steps={loadingSteps} currentStep={loadingStep} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <StepLoader
+                loading={true}
+                message="AI Editor"
+                subMessage={loadingSteps[loadingStep]}
+                logoSrc="/logo.png"
+                fullScreen={true}
+            />
         );
     }
 
@@ -684,13 +674,11 @@ function CoverLetterCreateForm() {
 
                                         {/* Overlay when loading */}
                                         {(loading || isPdfGenerating) && (
-                                            <div className="absolute inset-0 bg-white/80 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                                                <div className="flex flex-col items-center gap-3">
-                                                    <Loader2 className="animate-spin text-blue-600 w-8 h-8" />
-                                                    <p className="text-sm font-medium text-slate-600 animate-pulse">
-                                                        {isPdfGenerating ? "Generating Preview..." : "Loading Template..."}
-                                                    </p>
-                                                </div>
+                                            <div className="absolute top-4 right-8 z-10 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm border border-slate-200">
+                                                <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                                                <span className="text-xs font-medium text-slate-600">
+                                                    Saving...
+                                                </span>
                                             </div>
                                         )}
                                     </main>
@@ -702,32 +690,13 @@ function CoverLetterCreateForm() {
 
                 {
                     generating && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white/50 backdrop-blur-sm">
-                            <div className="max-w-md w-full bg-white shadow-2xl rounded-3xl p-8 border border-gray-100 text-center space-y-6 animate-in zoom-in-95 duration-300">
-                                {generationStep === generationSteps.length ? (
-                                    <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
-                                        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-20" />
-                                        <CheckCircle2 size={42} className="text-blue-600 relative z-10 animate-in zoom-in spin-in-12 duration-500" />
-                                    </div>
-                                ) : (
-                                    <div className="w-20 h-20 mx-auto bg-blue-50 rounded-full flex items-center justify-center relative">
-                                        <Wand2 size={32} className="text-blue-600 relative z-10" />
-                                        <div className="absolute inset-0 bg-blue-100 rounded-full animate-ping opacity-50" />
-                                    </div>
-                                )}
-                                <div className="text-center mb-4">
-                                    <h3 className="text-2xl font-black text-gray-900 mb-2">
-                                        {generationStep === generationSteps.length ? "Download Complete!" : "Generating Cover Letter"}
-                                    </h3>
-                                    <p className="text-slate-500 text-sm">
-                                        {generationStep === generationSteps.length ? "Your file is ready." : "Please wait while we create your document..."}
-                                    </p>
-                                </div>
-                                <div className="flex justify-center text-left">
-                                    <StepLoader steps={generationSteps} currentStep={generationStep} />
-                                </div>
-                            </div>
-                        </div>
+                        <StepLoader
+                            loading={true}
+                            message={generationStep === generationSteps.length ? "Download Complete!" : "Generating Cover Letter"}
+                            subMessage={generationStep === generationSteps.length ? "Your file is ready." : "Please wait while we create your document..."}
+                            logoSrc="/logo.png"
+                            fullScreen={true}
+                        />
                     )
                 }
 

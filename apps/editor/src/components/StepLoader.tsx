@@ -1,32 +1,28 @@
-import React from "react";
+import React from 'react';
+import Image from 'next/image';
 
 // Simple utility to merge class names
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export interface StepLoaderProps {
-    loading?: boolean;
-    message?: string; // Main message e.g "Please wait a moment"
+interface StepLoaderProps {
+    loading: boolean;
+    message?: string; // Main main message e.g "Please wait a moment"
     subMessage?: string; // Smaller detail text
     logoSrc?: string;
     fullScreen?: boolean;
     className?: string;
-    // Legacy props for compatibility (optional/unused in new design but kept to avoid immediate breaking changes if stuck)
-    steps?: string[];
-    currentStep?: number;
-    size?: "sm" | "md" | "lg";
-    variant?: "card" | "transparent";
 }
 
-export const StepLoader = ({
-    loading = true,
+export function StepLoader({
+    loading,
     message = "Please wait a moment",
     subMessage = "Processing and analyzing your data...",
     logoSrc = "/logo.png",
     fullScreen = false,
-    className,
-}: StepLoaderProps) => {
+    className
+}: StepLoaderProps) {
     if (!loading) return null;
 
     // Container positioning
@@ -52,10 +48,11 @@ export const StepLoader = ({
                     <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-200 relative z-10 overflow-hidden">
                         {logoSrc ? (
                             <div className="relative w-8 h-8">
-                                <img
+                                <Image
                                     src={logoSrc}
                                     alt="Logo"
-                                    className="w-full h-full object-contain invert brightness-0 filter"
+                                    fill
+                                    className="object-contain invert brightness-0 filter"
                                 />
                             </div>
                         ) : (
@@ -78,4 +75,4 @@ export const StepLoader = ({
             </div>
         </div>
     );
-};
+}
