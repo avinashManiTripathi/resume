@@ -644,17 +644,40 @@ function ResumeEditor() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Refs to hold latest data for PDF generation without triggering re-renders of the callback
+  const latestDataRef = useRef({
+    resume: debouncedResume,
+    sectionLabels,
+    templateId,
+    fontFamily,
+    order: debouncedSectionOrder
+  });
+
+  // Update refs on every render
+  useEffect(() => {
+    latestDataRef.current = {
+      resume: debouncedResume,
+      sectionLabels,
+      templateId,
+      fontFamily,
+      order: debouncedSectionOrder
+    };
+  }, [debouncedResume, sectionLabels, templateId, fontFamily, debouncedSectionOrder]);
+
   // Render PDF with loading state and auto-cancellation - Memoized
+  // Now depends only on stable things + currentPage
   const renderPdf = useCallback(async (page = currentPage) => {
     if (!canvasRef.current || !mainRef.current) return;
 
     try {
+      const { resume, sectionLabels, templateId, fontFamily, order } = latestDataRef.current;
+
       const resumeData = {
         sectionLabels,
-        ...debouncedResume as any,
+        ...resume as any,
         templateId,
         fontFamily,
-        order: debouncedSectionOrder,
+        order,
         intent: 'preview'
       };
 
@@ -672,12 +695,14 @@ function ResumeEditor() {
         // router.push('/subscription?returnTo=editor');
       }
     }
-  }, [currentPage, templateId, sectionLabels, fontFamily, debouncedResume, debouncedSectionOrder, generatePDF, renderPDFPage]);
+  }, [currentPage, generatePDF, renderPDFPage]);
 
-  // Auto-render PDF when data changes - renderPdf is memoized
+  // Auto-render PDF when data changes
+  // Explicitly trigger on data changes, NOT on renderPdf function change
   useEffect(() => {
+    // We only want to auto-render when content changes, not when loading states change
     renderPdf();
-  }, [renderPdf]);
+  }, [debouncedResume, templateId, fontFamily, debouncedSectionOrder, renderPdf]); // Including renderPdf is safe now as it's stable
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
@@ -1045,7 +1070,14 @@ export default function ResumeLayout() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-gray-600">Loading editor...</div>
+        <div className="text-gray-600"></div>
+        <StepLoader
+          loading={true}
+          message="Loading editor..."
+          subMessage={'Loading Editor Workspaces...'}
+          logoSrc="/logo.png"
+          fullScreen={true}
+        />
       </div>
     }>
       <ResumeEditor />

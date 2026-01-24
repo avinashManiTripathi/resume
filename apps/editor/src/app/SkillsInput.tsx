@@ -262,7 +262,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                         if (inputValue) setShowSuggestions(true);
                     }}
                     placeholder={placeholderText}
-                    className="block w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all shadow-sm group-hover:border-slate-300"
+                    className="w-full px-5 py-3 pl-10 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                 />
 
                 {/* Suggestions Dropdown */}
@@ -307,7 +307,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                                     onChange={(e) => setEditName(e.target.value)}
                                     onBlur={handleEditSave}
                                     onKeyDown={(e) => e.key === 'Enter' && handleEditSave()}
-                                    className="text-sm font-semibold text-gray-900 bg-white border border-indigo-300 rounded-lg px-1 w-full outline-none focus:ring-2 focus:ring-indigo-100"
+                                    className="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400"
                                     onClick={(e) => e.stopPropagation()}
                                     onPointerDown={(e) => e.stopPropagation()}
                                     onMouseDown={(e) => e.stopPropagation()}

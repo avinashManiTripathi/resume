@@ -56,13 +56,6 @@ export function EditorSidebar({ onTabChange, activeTab: propActiveTab }: EditorS
             href: "/cover-letter",
             onClick: () => router.push("/cover-letter")
         },
-        {
-            label: "Subscription",
-            id: "subscription",
-            icon: CreditCard,
-            href: "/",
-            onClick: () => window.location.href = "/?tab=subscription"
-        }
     ];
 
     const isActive = (item: typeof menuItems[0]) => {

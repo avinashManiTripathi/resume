@@ -53,7 +53,7 @@ export function Footer() {
 
                     {/* Brand */}
                     <div className="lg:col-span-2">
-                        <Image src={brand.logo} alt={brand.name} width={158} height={36} />
+                        <Image src={brand.logo} alt={brand.name} width={120} height={30} className="object-contain" />
                         <p className="text-sm my-6 max-w-md">{brand.description}</p>
 
                         <div className="mt-6space-y-3 text-sm flex flex-col gap-4">

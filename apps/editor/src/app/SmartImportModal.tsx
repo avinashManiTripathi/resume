@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, Mic, MicOff, FileText, Loader2, Send, Target, Briefcase, MessageCircle, AlertCircle } from 'lucide-react';
+import { X, Sparkles, Mic, Loader2, Send, Target, Briefcase, MessageCircle, AlertCircle, StopCircle } from 'lucide-react';
 import { Button } from '@repo/ui/button';
 import { ENV } from './env';
 
@@ -9,17 +9,14 @@ interface SmartImportModalProps {
     isOpen: boolean;
     onClose: () => void;
     onApply: (data: any) => void;
-    mode?: 'voice' | 'text'
+    mode?: 'voice' | 'text' // Kept for backward compatibility but ignored logic-wise
 }
 
-export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onApply }: SmartImportModalProps) {
-    const [inputMode, setInputMode] = useState<'voice' | 'text'>(mode);
+export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImportModalProps) {
     const [isRecording, setIsRecording] = useState(false);
-    const [isPaused, setIsPaused] = useState(false);
     const [recordingTime, setRecordingTime] = useState(0);
     const [textInput, setTextInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
-    const [transcript, setTranscript] = useState('');
     const [error, setError] = useState<string | null>(null);
 
     const recognitionRef = useRef<any>(null);
@@ -28,7 +25,6 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
     const maxTime = 300; // 5 minutes max
 
     useEffect(() => {
-        setInputMode(mode);
         // Initialize Web Speech API
         if (typeof window !== 'undefined') {
             const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -39,17 +35,20 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                 recognitionRef.current.interimResults = true;
 
                 recognitionRef.current.onresult = (event: any) => {
+                    let interimTranscript = '';
                     let finalTranscript = '';
 
                     for (let i = event.resultIndex; i < event.results.length; i++) {
                         const transcript = event.results[i][0].transcript;
                         if (event.results[i].isFinal) {
                             finalTranscript += transcript + ' ';
+                        } else {
+                            interimTranscript += transcript;
                         }
                     }
 
                     if (finalTranscript) {
-                        setTranscript(prev => prev + finalTranscript);
+                        setTextInput(prev => prev + (prev.length > 0 && !prev.endsWith(' ') ? ' ' : '') + finalTranscript);
                     }
                 };
 
@@ -57,6 +56,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                     console.error('Speech recognition error:', event.error);
                     if (event.error === 'not-allowed') {
                         setError('Microphone access denied. Please allow microphone access.');
+                        stopRecording();
                     } else if (event.error === 'no-speech') {
                         // Ignore no-speech errors, just stay recording
                     } else {
@@ -65,7 +65,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                     }
                 };
             } else {
-                setError('Speech recognition is not supported in this browser.');
+                // Don't show error immediately, only if they try to record
             }
         }
 
@@ -91,27 +91,34 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
             if (!recognitionRef.current) {
                 // Try to initialize again if valid browser
                 const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                if (!SpeechRecognition) {
+                if (SpeechRecognition) {
+                    recognitionRef.current = new SpeechRecognition();
+                    // Re-attach listeners if needed, but simpler to rely on initial useEffect or re-init logic if complex.
+                    // For now, assuming basic support check:
+                } else {
                     setError('Voice input is not supported in this browser. Please try Chrome, Edge, or Safari.');
                     return;
                 }
             }
 
+            if (!recognitionRef.current) {
+                setError('Voice input is not supported in this browser.');
+                return;
+            }
+
             setIsRecording(true);
-            setRecordingTime(0);
-            setTranscript('');
+
+            // Don't clear textInput, we append to it
 
             // Start speech recognition
-            if (recognitionRef.current) {
-                try {
-                    recognitionRef.current.start();
-                } catch (e: any) {
-                    // unexpected error starting
-                    console.error("Failed to start recognition:", e);
-                    setError("Could not start microphone. Please refresh and try again.");
-                    setIsRecording(false);
-                    return;
-                }
+            try {
+                recognitionRef.current.start();
+            } catch (e: any) {
+                // unexpected error starting
+                console.error("Failed to start recognition:", e);
+                setError("Could not start microphone. Please refresh and try again.");
+                setIsRecording(false);
+                return;
             }
 
             // Start timer
@@ -133,7 +140,6 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
 
     const stopRecording = () => {
         setIsRecording(false);
-        setIsPaused(false);
 
         if (recognitionRef.current) {
             try {
@@ -147,50 +153,19 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
             clearInterval(timerRef.current);
             timerRef.current = null;
         }
+        setRecordingTime(0);
     };
 
-    const pauseRecording = () => {
-        setIsPaused(true);
-
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.stop();
-            } catch (e) {
-                // Ignore errors
-            }
+    const toggleRecording = () => {
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
         }
-
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-        }
-    };
-
-    const resumeRecording = () => {
-        setIsPaused(false);
-
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.start();
-            } catch (e) {
-                console.error('Error resuming recording:', e);
-            }
-        }
-
-        // Resume timer
-        timerRef.current = setInterval(() => {
-            setRecordingTime(prev => {
-                if (prev >= maxTime) {
-                    stopRecording();
-                    return prev;
-                }
-                return prev + 1;
-            });
-        }, 1000);
     };
 
     const handleExtract = async () => {
-        const content = inputMode === 'voice' ? transcript : textInput;
+        const content = textInput;
         if (!content.trim()) return;
 
         setIsProcessing(true);
@@ -222,7 +197,6 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
     const handleClose = () => {
         stopRecording();
         setTextInput('');
-        setTranscript('');
         setRecordingTime(0);
         onClose();
     };
@@ -283,9 +257,9 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                                         <MessageCircle className="w-4 h-4 text-emerald-500" />
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold text-slate-900 text-sm mb-0.5">Speak Naturally</h4>
+                                        <h4 className="font-semibold text-slate-900 text-sm mb-0.5">Speak Automatically</h4>
                                         <p className="text-xs text-slate-500 leading-relaxed group-hover:text-slate-600">
-                                            Just tell your story like you're talking to a colleague. We'll handle the formatting.
+                                            Use the microphone to dictate your experience. We'll capture it as text.
                                         </p>
                                     </div>
                                 </div>
@@ -342,44 +316,12 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                             Import Content
                         </h2>
                         <p className="text-slate-500 text-sm">
-                            Choose how you want to provide your details.
+                            Type or speak your professional details below.
                         </p>
                     </div>
 
-                    {/* Input Mode Toggle */}
-                    <div className="px-6 py-4 md:px-10 md:py-6 flex-shrink-0">
-                        <div className="flex items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl w-fit">
-                            <button
-                                onClick={() => {
-                                    setInputMode('voice');
-                                    setTextInput('');
-                                }}
-                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${inputMode === 'voice'
-                                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5'
-                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                                    }`}
-                            >
-                                <Mic className="w-4 h-4" />
-                                Voice Input
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setInputMode('text');
-                                    stopRecording();
-                                }}
-                                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${inputMode === 'text'
-                                    ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5'
-                                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-                                    }`}
-                            >
-                                <FileText className="w-4 h-4" />
-                                Text Input
-                            </button>
-                        </div>
-                    </div>
-
                     {/* Scrollable Content Area */}
-                    <div className="flex-1 overflow-y-auto px-6 pb-6 md:px-10 md:pb-6">
+                    <div className="flex-1 overflow-y-auto px-6 pb-6 md:px-10 md:pb-6 mt-4">
                         {/* Mobile Error Display */}
                         {error && (
                             <div className="md:hidden mb-4 bg-red-50 border border-red-100 rounded-2xl p-4 animate-in slide-in-from-bottom-2 shadow-sm">
@@ -396,70 +338,48 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                                 </div>
                             </div>
                         )}
-                        {inputMode === 'voice' ? (
-                            <div className="h-full flex flex-col relative group">
-                                <div className="relative flex-1">
-                                    <textarea
-                                        value={transcript}
-                                        onChange={(e) => setTranscript(e.target.value)}
-                                        placeholder={"Speak naturally about your career. Mention your roles, specific projects you've led, technologies you've used, and the impact you made.\n\nExample: \"I've been working as a Product Designer at Apple for the last 4 years. I led the redesign of the Maps app which increased user engagement by 15%...\""}
-                                        className="w-full h-full min-h-[300px] p-6 pb-24 bg-slate-50 border border-slate-200 rounded-3xl resize-none focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all placeholder:text-slate-400 text-slate-700 leading-relaxed custom-scrollbar"
-                                    />
 
-                                    {/* Floating Mic Button & Status */}
-                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20">
-                                        {/* Timer/Status Label */}
-                                        {isRecording && (
-                                            <div className="bg-slate-900/90 text-white text-xs font-mono py-1 px-3 rounded-full backdrop-blur-md animate-in slide-in-from-bottom-2 fade-in">
-                                                {formatTime(recordingTime)} • {isPaused ? 'PAUSED' : 'RECORDING'}
-                                            </div>
-                                        )}
+                        <div className="h-full flex flex-col relative">
+                            <div className="relative flex-1">
+                                <textarea
+                                    value={textInput}
+                                    onChange={(e) => setTextInput(e.target.value)}
+                                    placeholder={"Paste your existing resume content or describe your professional background.\n\nInclude details like:\n• Job titles and companies\n• Key achievements and metrics (e.g., 'Increased sales by 20%')\n• Technical skills and tools used\n• Education and certifications\n\nYou can also use the microphone button below to dictate."}
+                                    className="w-full h-full min-h-[300px] p-6 pb-20 bg-slate-50 border border-slate-200 rounded-3xl resize-none focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all placeholder:text-slate-400 text-slate-700 leading-relaxed custom-scrollbar"
+                                />
 
-                                        <button
-                                            onClick={isRecording ? stopRecording : startRecording}
-                                            className={`relative flex items-center justify-center w-16 h-16 rounded-full shadow-lg transition-all duration-300 ${isRecording
-                                                ? 'bg-red-500 hover:bg-red-600 text-white scale-110'
-                                                : 'bg-indigo-600 hover:bg-indigo-700 text-white hover:scale-105'
-                                                }`}
-                                        >
-                                            {/* Pulsing Rings when recording */}
-                                            {isRecording && !isPaused && (
-                                                <>
-                                                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 animate-ping" />
-                                                    <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-20 animate-pulse delay-75 scale-125" />
-                                                </>
-                                            )}
-
-                                            {isRecording ? (
-                                                <div className="w-6 h-6 rounded-md bg-white shadow-sm" />
-                                            ) : (
-                                                <Mic className="w-8 h-8" />
-                                            )}
-                                        </button>
-
-                                        {!isRecording && !transcript && (
-                                            <span className="text-xs font-medium text-slate-400 bg-white/50 px-2 py-1 rounded-md mt-1 backdrop-blur-sm">
-                                                Tap to Speak
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="h-full flex flex-col">
-                                <div className="relative flex-1">
-                                    <textarea
-                                        value={textInput}
-                                        onChange={(e) => setTextInput(e.target.value)}
-                                        placeholder={"Paste your existing resume content or describe your professional background.\n\nInclude details like:\n• Job titles and companies\n• Key achievements and metrics (e.g., 'Increased sales by 20%')\n• Technical skills and tools used\n• Education and certifications"}
-                                        className="w-full h-full min-h-[300px] p-6 bg-slate-50 border border-slate-200 rounded-3xl resize-none focus:bg-white focus:border-indigo-300 focus:ring-4 focus:ring-indigo-500/10 focus:outline-none transition-all placeholder:text-slate-400 text-slate-700 leading-relaxed custom-scrollbar"
-                                    />
-                                    <div className="absolute bottom-4 right-4 text-xs font-semibold text-slate-400 bg-slate-100/50 backdrop-blur px-2 py-1 rounded-lg border border-slate-200/50">
+                                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                                    <div className="text-xs font-semibold text-slate-400 bg-slate-100/50 backdrop-blur px-2 py-1 rounded-lg border border-slate-200/50">
                                         {textInput.length} chars
                                     </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={toggleRecording}
+                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm ${isRecording
+                                                ? 'bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 animate-pulse'
+                                                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
+                                                }`}
+                                        >
+                                            {isRecording ? (
+                                                <>
+                                                    <StopCircle className="w-4 h-4" />
+                                                    Stop ({formatTime(recordingTime)})
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Mic className="w-4 h-4" />
+                                                    Start Voice Input
+                                                </>
+                                            )}
+                                        </button>
+                                        {isRecording && (
+                                            <span className="text-xs font-medium text-blue-600 animate-pulse">Recording...</span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        )}
+                        </div>
                     </div>
 
                     {/* Footer - Main Action */}
@@ -473,7 +393,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                         </Button>
                         <Button
                             onClick={handleExtract}
-                            disabled={isProcessing || (inputMode === 'voice' ? !transcript.trim() : !textInput.trim())}
+                            disabled={isProcessing || !textInput.trim()}
                             variant='primary'
                             className={`min-w-[160px] ${isProcessing ? 'opacity-90' : ''}`}
                         >
@@ -501,13 +421,6 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
                         .custom-scrollbar::-webkit-scrollbar-thumb {
                             background-color: #cbd5e1;
                             border-radius: 20px;
-                        }
-                        @keyframes sound-wave {
-                            0%, 100% { height: 20%; }
-                            50% { height: 100%; }
-                        }
-                        .animate-sound-wave {
-                            animation: sound-wave 1s ease-in-out infinite;
                         }
                     `}</style>
                 </div>
