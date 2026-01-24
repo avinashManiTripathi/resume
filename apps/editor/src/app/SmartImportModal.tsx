@@ -30,31 +30,43 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
     useEffect(() => {
         setInputMode(mode);
         // Initialize Web Speech API
-        if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-            const SpeechRecognition = (window as any).webkitSpeechRecognition;
-            recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.continuous = true;
-            recognitionRef.current.interimResults = true;
+        if (typeof window !== 'undefined') {
+            const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-            recognitionRef.current.onresult = (event: any) => {
-                let finalTranscript = '';
+            if (SpeechRecognition) {
+                recognitionRef.current = new SpeechRecognition();
+                recognitionRef.current.continuous = true;
+                recognitionRef.current.interimResults = true;
 
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    const transcript = event.results[i][0].transcript;
-                    if (event.results[i].isFinal) {
-                        finalTranscript += transcript + ' ';
+                recognitionRef.current.onresult = (event: any) => {
+                    let finalTranscript = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript + ' ';
+                        }
                     }
-                }
 
-                if (finalTranscript) {
-                    setTranscript(prev => prev + finalTranscript);
-                }
-            };
+                    if (finalTranscript) {
+                        setTranscript(prev => prev + finalTranscript);
+                    }
+                };
 
-            recognitionRef.current.onerror = (event: any) => {
-                console.error('Speech recognition error:', event.error);
-                stopRecording();
-            };
+                recognitionRef.current.onerror = (event: any) => {
+                    console.error('Speech recognition error:', event.error);
+                    if (event.error === 'not-allowed') {
+                        setError('Microphone access denied. Please allow microphone access.');
+                    } else if (event.error === 'no-speech') {
+                        // Ignore no-speech errors, just stay recording
+                    } else {
+                        setError(`Speech recognition error: ${event.error}`);
+                        stopRecording();
+                    }
+                };
+            } else {
+                setError('Speech recognition is not supported in this browser.');
+            }
         }
 
         return () => {
@@ -73,13 +85,33 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
 
     const startRecording = async () => {
         try {
+            setError(null);
+
+            // Check if recognition is initialized
+            if (!recognitionRef.current) {
+                // Try to initialize again if valid browser
+                const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    setError('Voice input is not supported in this browser. Please try Chrome, Edge, or Safari.');
+                    return;
+                }
+            }
+
             setIsRecording(true);
             setRecordingTime(0);
             setTranscript('');
 
             // Start speech recognition
             if (recognitionRef.current) {
-                recognitionRef.current.start();
+                try {
+                    recognitionRef.current.start();
+                } catch (e: any) {
+                    // unexpected error starting
+                    console.error("Failed to start recognition:", e);
+                    setError("Could not start microphone. Please refresh and try again.");
+                    setIsRecording(false);
+                    return;
+                }
             }
 
             // Start timer
@@ -95,6 +127,7 @@ export default function SmartImportModal({ mode = 'voice', isOpen, onClose, onAp
         } catch (error) {
             console.error('Error starting recording:', error);
             setIsRecording(false);
+            setError("Failed to start recording.");
         }
     };
 
