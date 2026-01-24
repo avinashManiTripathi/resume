@@ -23,6 +23,7 @@ export async function extractTextFromPDF(file: Buffer): Promise<string> {
     }
 }
 
+
 /**
  * Extract text from DOCX file using mammoth
  * @param buffer - Buffer containing the DOCX file
