@@ -43,7 +43,8 @@ function CoverLetterCreateForm() {
 
     const [template, setTemplate] = useState<Template | null>(null);
     const [showTemplates, setShowTemplates] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [isTemplateChanging, setIsTemplateChanging] = useState(false);
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [format, setFormat] = useState<"pdf" | "docx">("pdf");
@@ -105,15 +106,22 @@ function CoverLetterCreateForm() {
     const [totalPages, setTotalPages] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
 
+    // Track if initial load has been completed to prevent re-initialization
+    const hasInitialized = useRef(false);
+
     // Rendering state
     const [isCanvasRendering, setIsCanvasRendering] = useState(false);
 
     // Fetch Template Info
-
-    // Fetch Template Info
-    const fetchTemplate = useCallback(async (id: string) => {
+    const fetchTemplate = useCallback(async (id: string, isInitial = false) => {
         try {
-            setLoading(true);
+            // Use different loading states for initial vs template change
+            if (isInitial) {
+                setIsInitialLoading(true);
+            } else {
+                setIsTemplateChanging(true);
+            }
+
             const response = await fetch(
                 `https://api.hirecta.com/api/cover-letter/templates/${id}`
             );
@@ -128,7 +136,11 @@ function CoverLetterCreateForm() {
             console.error("Error fetching template:", err);
             setError("Failed to load template");
         } finally {
-            setLoading(false);
+            if (isInitial) {
+                setIsInitialLoading(false);
+            } else {
+                setIsTemplateChanging(false);
+            }
         }
     }, []);
 
@@ -156,17 +168,20 @@ function CoverLetterCreateForm() {
     ];
 
     useEffect(() => {
-        if (loading && loadingStep < loadingSteps.length - 1) {
+        if (isInitialLoading && loadingStep < loadingSteps.length - 1) {
             const timer = setTimeout(() => {
                 setLoadingStep(prev => prev + 1);
             }, 800);
             return () => clearTimeout(timer);
         }
-    }, [loading, loadingStep, loadingSteps.length]);
+    }, [isInitialLoading, loadingStep, loadingSteps.length]);
 
 
     // Load existing document or initial template
     useEffect(() => {
+        // Only run initial load once
+        if (hasInitialized.current) return;
+
         const id = searchParams.get('id');
         if (id) {
             const loadDoc = async () => {
@@ -175,13 +190,16 @@ function CoverLetterCreateForm() {
                     setFormData(doc.data);
                     setDocId(doc.id);
                     if (doc.templateId) {
-                        fetchTemplate(doc.templateId);
+                        await fetchTemplate(doc.templateId, true);
+                        hasInitialized.current = true;
                     }
                 }
             };
             loadDoc();
         } else if (templateIdParam) {
-            fetchTemplate(templateIdParam);
+            fetchTemplate(templateIdParam, true).then(() => {
+                hasInitialized.current = true;
+            });
         } else {
             router.push("/cover-letter/templates");
         }
@@ -306,10 +324,10 @@ function CoverLetterCreateForm() {
         }
     }, [currentPage, template?.id, debouncedFormData, fontFamily, generatePDF, renderPDFPage]); // Removed isCanvasRendering from deps to avoid loop starter
 
-    // Cleanup scale on template change
+    // Cleanup scale on template change (similar to editor)
     useEffect(() => {
         scaleRef.current = null;
-    }, [template?.id]);
+    }, [template?.id, isTemplateChanging]);
 
     // Auto-render PDF when data changes - FIXED DEPENDENCIES
     useEffect(() => {
@@ -493,7 +511,7 @@ function CoverLetterCreateForm() {
         }
     };
 
-    if (loading) {
+    if (isInitialLoading) {
         return (
             <StepLoader
                 loading={true}
@@ -568,7 +586,7 @@ function CoverLetterCreateForm() {
                                             const url = new URL(window.location.href);
                                             url.searchParams.set('templateId', newTemplate.id);
                                             window.history.replaceState({}, '', url.toString());
-                                            fetchTemplate(newTemplate.id);
+                                            fetchTemplate(newTemplate.id, false); // Not initial load
                                             setShowTemplates(false);
                                         }
                                     }}
@@ -672,12 +690,12 @@ function CoverLetterCreateForm() {
                                             />
                                         </div>
 
-                                        {/* Overlay when loading */}
-                                        {(loading || isPdfGenerating) && (
+                                        {/* Overlay when loading - matches editor behavior */}
+                                        {(isTemplateChanging || isPdfGenerating) && (
                                             <div className="absolute top-4 right-8 z-10 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full shadow-sm border border-slate-200">
                                                 <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
                                                 <span className="text-xs font-medium text-slate-600">
-                                                    Saving...
+                                                    {isTemplateChanging ? 'Loading template...' : 'Saving...'}
                                                 </span>
                                             </div>
                                         )}
