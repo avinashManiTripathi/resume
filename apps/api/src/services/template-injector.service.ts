@@ -16,10 +16,7 @@ export class TemplateInjectorService {
      */
     private async getTemplateById(templateId: string): Promise<string> {
 
-        const cachedHtml = templateCache.get(templateId);
-        if (cachedHtml) {
-            return cachedHtml;
-        }
+
 
         try {
             // Try to find template in database by _id or id
@@ -36,7 +33,6 @@ export class TemplateInjectorService {
         // Fallback to RESUMES constant if database lookup fails
         const template = RESUMES.find(r => r.id === templateId);
         if (template && template.html) {
-            templateCache.set(templateId, template.html);
             return template.html;
         }
 
