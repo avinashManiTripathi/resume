@@ -57,7 +57,7 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
             ref={setNodeRef}
             style={style}
             onClick={() => setIsOpen(!isOpen)}
-            className="p-4 bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300"
+            className={'p-4 bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300 cursor-pointer ' + (!isOpen ? ' hover:bg-gray-50 transition-colors cursor-pointer group' : '')}
         >
             <div className={`flex items-center justify-between ${isOpen ? 'mb-4' : 'mb-0'} transition-all duration-300`}>
                 <div className="flex items-center gap-2">
