@@ -73,143 +73,117 @@ export function Navigation() {
                                     </button>
 
                                     {/* Mega Dropdown - Clean 3-Column Layout */}
-                                    <div className={`fixed left-0 right-0 top-[72px] pt-0 
+                                    {/* Mega Dropdown - Grona Style Layout */}
+                                    <div className={`fixed left-0 right-0 top-[72px]
                                         ${activeMenu === menuItem.id ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}
-                                        transition-all duration-200 ease-out z-50`}>
-                                        {/* Full-width container */}
-                                        <div className="bg-white shadow border-b border-gray-200">
-                                            <div className="max-w-7xl mx-auto px-16 py-10">
-                                                <div className="grid grid-cols-3 gap-16">
-                                                    {/* Left Column - WHY SEAMLESS */}
-                                                    <div>
-                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
-                                                            {menuItem.megaMenu.title}
-                                                        </h3>
-                                                        <div className="space-y-4">
-                                                            {menuItem.megaMenu.items.slice(0, 4).map((item, idx) => (
-                                                                <Link
-                                                                    key={idx}
-                                                                    href={item.href}
-                                                                    onClick={() => setActiveMenu(null)}
-                                                                    className="group/item block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
-                                                                >
-                                                                    <div className="flex items-start gap-4">
-                                                                        <div className="text-gray-600 text-xl mt-0.5 flex-shrink-0">
-                                                                            {item.icon}
-                                                                        </div>
-                                                                        <div>
-                                                                            <div className="font-semibold text-gray-900 text-sm mb-1.5 group-hover/item:text-purple-600">
-                                                                                {item.title}
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500 leading-relaxed">
-                                                                                {item.description}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Middle Column - RESOURCES */}
-                                                    <div>
-                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
-                                                            RESOURCES
-                                                        </h3>
-                                                        <div className="space-y-4">
-                                                            {menuItem.megaMenu.items.slice(4).map((item, idx) => (
-                                                                <Link
-                                                                    key={idx}
-                                                                    href={item.href}
-                                                                    onClick={() => setActiveMenu(null)}
-                                                                    className="group/item block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
-                                                                >
-                                                                    <div className="flex items-start gap-4">
-                                                                        <div className="text-gray-600 text-xl mt-0.5 flex-shrink-0">
-                                                                            {item.icon}
-                                                                        </div>
-                                                                        <div>
-                                                                            <div className="font-semibold text-gray-900 text-sm mb-1.5 group-hover/item:text-purple-600">
-                                                                                {item.title}
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500 leading-relaxed">
-                                                                                {item.description}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Right Column - EXPLORE */}
-                                                    <div className="bg-purple-50/30 rounded-2xl p-8">
-                                                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-6">
-                                                            EXPLORE
-                                                        </h3>
-                                                        <div className="space-y-4">
-                                                            {menuItem.megaMenu.featured.links.slice(0, 2).map((link, idx) => (
-                                                                <Link
-                                                                    key={idx}
-                                                                    href={link.href}
-                                                                    onClick={() => setActiveMenu(null)}
-                                                                    className="group/link block no-underline p-3 rounded-lg hover:bg-purple-50/30 transition-colors"
-                                                                >
-                                                                    <div className="flex items-start gap-4">
-                                                                        <div className="flex items-center gap-3">
-                                                                            <span className="text-sm font-semibold text-gray-400">0{idx + 1}</span>
-                                                                            <div className="w-12 h-12 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
-                                                                                <DockIcon className="w-5 h-5 text-gray-400" />
-                                                                            </div>
-                                                                            <span className="text-sm font-semibold text-gray-400">0{idx + 2}</span>
-                                                                        </div>
-                                                                        <div className="flex-1">
-                                                                            <div className="font-semibold text-gray-900 text-sm mb-2 group-hover/link:text-purple-600">
-                                                                                {link.text}
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500 leading-relaxed">
-                                                                                Learn about our latest features and updates to help you succeed.
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-
-                                                        {/* See All Link */}
-                                                        <Link
-                                                            href="#"
-                                                            onClick={() => setActiveMenu(null)}
-                                                            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 mt-6 no-underline group/all"
-                                                        >
-                                                            See All Product News
-                                                            <ArrowRight className="w-4 h-4 group-hover/all:translate-x-1 transition-transform" />
-                                                        </Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Bottom CTA Bar - Full Width Border */}
-                                            <div className="border-t border-gray-200">
-                                                <div className="max-w-7xl mx-auto px-16 py-6">
-                                                    <div className="flex w-full items-center justify-between">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
-                                                                <Sparkles className="w-5 h-5 text-white" />
+                                        transition-all duration-300 ease-out z-50`}>
+                                        <div className="max-w-7xl mx-auto px-8">
+                                            {/* White Container */}
+                                            <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+                                                <div className="flex min-h-[420px]">
+                                                    {/* Left Section - Content (65%) */}
+                                                    <div className="flex-1 p-8 flex flex-col justify-between">
+                                                        <div>
+                                                            {/* Header */}
+                                                            <div className="mb-6">
+                                                                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                                                    {menuItem.megaMenu.title}
+                                                                </h3>
+                                                                <p className="text-sm text-gray-600 max-w-lg">
+                                                                    {menuItem.megaMenu.description}
+                                                                </p>
                                                             </div>
-                                                            <div>
-                                                                <span className="text-sm font-semibold text-gray-900">Want Free Leads?</span>
-                                                                <span className="text-sm text-gray-500 ml-2">Take Seamless.AI for a Test Drive</span>
+
+                                                            {/* 3-Column Grid */}
+                                                            <div className="grid grid-cols-3 gap-x-6 gap-y-6">
+                                                                {menuItem.megaMenu.items.slice(0, 6).map((item, idx) => (
+                                                                    <div key={idx} className="group">
+                                                                        {/* Icon + Title */}
+                                                                        <div className="flex items-center gap-2 mb-1">
+                                                                            <div className="text-gray-700 text-lg">
+                                                                                {item.icon}
+                                                                            </div>
+                                                                            <h4 className="font-bold text-gray-900 text-sm">
+                                                                                {item.title}
+                                                                            </h4>
+                                                                        </div>
+
+                                                                        {/* Description */}
+                                                                        <p className="text-xs text-gray-500 mb-1 leading-tight line-clamp-2">
+                                                                            {item.description}
+                                                                        </p>
+
+                                                                        {/* Link */}
+                                                                        <Link
+                                                                            href={item.href}
+                                                                            onClick={() => setActiveMenu(null)}
+                                                                            className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-500 hover:text-blue-600 uppercase tracking-wide no-underline group-hover:gap-2 transition-all"
+                                                                        >
+                                                                            Learn More
+                                                                            <ArrowRight className="w-3 h-3" />
+                                                                        </Link>
+                                                                    </div>
+                                                                ))}
                                                             </div>
                                                         </div>
-                                                        <Link
-                                                            href={URLS.EDITOR}
-                                                            target="_blank"
-                                                            onClick={() => setActiveMenu(null)}
-                                                            className="px-6 py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors no-underline"
-                                                        >
-                                                            Get Started
-                                                        </Link>
+
+                                                        {/* Bottom CTA Button */}
+                                                        <div className="mt-6">
+                                                            <Link
+                                                                href={URLS.EDITOR}
+                                                                target="_blank"
+                                                                onClick={() => setActiveMenu(null)}
+                                                                className="inline-flex items-center gap-2 bg-[#00c58e] hover:bg-[#00b07e] text-white px-8 py-3 rounded-full font-bold text-sm transition-all no-underline shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                                                            >
+                                                                Explore Our Resume Builder
+                                                                <ArrowRight className="w-4 h-4" />
+                                                            </Link>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Right Section - Promotional Image (35%) */}
+                                                    <div className="w-[360px] bg-[#fdf8e9] relative overflow-hidden flex flex-col justify-center px-8">
+                                                        {/* Content Layer */}
+                                                        <div className="relative z-10">
+                                                            <div className="flex items-center gap-2 mb-4">
+                                                                <DockIcon className="w-8 h-8 text-white bg-orange-400 p-1.5 rounded-lg" />
+                                                                <span className="text-2xl font-bold text-gray-900">Hirecta</span>
+                                                            </div>
+
+                                                            <h3 className="text-4xl font-bold text-white mb-2 leading-tight drop-shadow-sm">
+                                                                Clean<br />& Professional
+                                                            </h3>
+                                                            <h3 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                                                                Templates
+                                                            </h3>
+
+                                                            <p className="text-gray-600 text-sm mb-8 opacity-80">
+                                                                Upcoming features and templates are coming soon.
+                                                            </p>
+
+                                                            <div className="inline-block bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+                                                                Coming Soon
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Illustration Placeholder - Mimicking the woman in the reference */}
+                                                        <div className="absolute bottom-0 right-0 h-[60%] w-[80%]">
+                                                            <div className="relative w-full h-full">
+                                                                {/* Painter Illustration Placeholder */}
+                                                                <div className="absolute bottom-0 right-0 w-full h-full bg-contain bg-no-repeat bg-bottom opacity-90"
+                                                                    style={{ backgroundImage: 'url(/assets/painter-placeholder.png)' }}>
+                                                                    {/* Fallback visual if image missing */}
+                                                                    <div className="w-full h-full flex items-end justify-center pb-10">
+                                                                        <div className="w-48 h-64 bg-gradient-to-t from-orange-200/50 to-transparent rounded-t-full relative">
+                                                                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-40 bg-orange-300/20 rounded-full blur-2xl"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Decorative Circle */}
+                                                        <div className="absolute top-10 right-[-50px] w-64 h-64 bg-white/40 rounded-full blur-3xl"></div>
                                                     </div>
                                                 </div>
                                             </div>
