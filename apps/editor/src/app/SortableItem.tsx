@@ -32,6 +32,11 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
         setMounted(true);
     }, []);
 
+    const handleRemove = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onRemove();
+    };
+
     useEffect(() => {
         if (isOpen) {
             const timer = setTimeout(() => setOverflow('visible'), 300); // Wait for transition
@@ -51,6 +56,7 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
         <div
             ref={setNodeRef}
             style={style}
+            onClick={() => setIsOpen(!isOpen)}
             className="p-5 bg-white rounded-2xl border border-slate-200 shadow-sm transition-all duration-300"
         >
             <div className={`flex items-center justify-between ${isOpen ? 'mb-4' : 'mb-0'} transition-all duration-300`}>
@@ -70,14 +76,13 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
                 </div>
                 <div className="flex items-center gap-2">
                     <button
-                        onClick={onRemove}
+                        onClick={handleRemove}
                         className="flex items-center gap-1 text-red-600 hover:text-red-700 text-xs font-medium px-2 py-1 rounded-md hover:bg-red-50 transition-colors"
                     >
                         <Trash2Icon className="w-3.5 h-3.5" />
                         <span>Delete</span>
                     </button>
                     <button
-                        onClick={() => setIsOpen(!isOpen)}
                         className="p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 rounded-md transition-colors"
                         title={isOpen ? "Collapse" : "Expand"}
                     >
