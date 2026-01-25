@@ -27,9 +27,9 @@ const upload = multer({
 
 /**
  * Check ATS score
- * POST /api/ats/check
+ * POST /api/ats/check requireSubscription(FeatureName.ATS_CHECK),
  */
-router.post('/check', optionalAuth, requireSubscription(FeatureName.ATS_CHECK), checkUsageLimit('ats'), upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/check', optionalAuth, checkUsageLimit('ats'), upload.single('resume'), async (req: Request, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });

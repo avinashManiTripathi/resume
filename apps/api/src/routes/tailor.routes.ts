@@ -14,9 +14,9 @@ const tailorService = new TailorService();
 
 /**
  * POST /api/tailor/analyze
- * Analyze resume against job description
+ * Analyze resume against job description requireSubscription(FeatureName.TAILOR)
  */
-router.post('/analyze', optionalAuth, requireSubscription(FeatureName.TAILOR), checkUsageLimit('tailor'), upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/analyze', optionalAuth, checkUsageLimit('tailor'), upload.single('resume'), async (req: Request, res: Response) => {
     try {
 
         const { jobDescription, jobTitle, company } = req.body;
