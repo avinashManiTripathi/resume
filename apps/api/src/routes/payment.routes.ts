@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import { razorpayService } from '../services/razorpay.service';
+import { config } from '../config';
 
 const router = Router();
 
@@ -109,19 +111,40 @@ router.post('/process-paypal', async (req: Request, res: Response) => {
  */
 router.post('/webhook', async (req: Request, res: Response) => {
     try {
+        const signature = req.headers['x-razorpay-signature'] as string;
+
+        // Use rawBody if available (from app.ts middleware), otherwise JSON.stringify (risky)
+        // Since we enabled rawBody in app.ts, we should use that.
+        const rawBody = (req as any).rawBody;
+
+        if (!signature || !rawBody) {
+            return res.status(400).json({ error: 'Missing signature or body' });
+        }
+
+        const isValid = razorpayService.verifyWebhookSignature(
+            rawBody,
+            signature,
+            config.razorpay.webhookSecret
+        );
+
+        if (!isValid) {
+            console.error('Invalid webhook signature');
+            return res.status(400).json({ error: 'Invalid signature' });
+        }
+
         const { event, data } = req.body;
 
-        console.log('Payment webhook received:', event, data);
+        console.log('Payment webhook received:', event); // Don't log full data for PII
 
         // Handle different webhook events
         switch (event) {
             case 'payment.succeeded':
                 // Update subscription status
-                console.log('Payment succeeded:', data);
+                // console.log('Payment succeeded:', data);
                 break;
             case 'payment.failed':
                 // Handle failed payment
-                console.log('Payment failed:', data);
+                // console.log('Payment failed:', data);
                 break;
             default:
                 console.log('Unknown webhook event:', event);

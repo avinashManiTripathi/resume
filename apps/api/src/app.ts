@@ -149,8 +149,13 @@ export class App {
             credentials: true,
         }));
 
-        // Body parser
-        this.app.use(bodyParser.json({ limit: '10mb' }));
+        // Body parser with raw body capture for webhooks
+        this.app.use(bodyParser.json({
+            limit: '10mb',
+            verify: (req: any, res, buf) => {
+                req.rawBody = buf;
+            }
+        }));
         this.app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
         // Cookie parser
