@@ -10,6 +10,7 @@ interface CustomSectionModalProps {
     isOpen: boolean;
     onClose: () => void;
     onAdd: (sectionName: string, sectionType: string) => void;
+    existingSections: string[];
 }
 
 const SECTION_TEMPLATES: Array<{
@@ -112,7 +113,7 @@ const SECTION_TEMPLATES: Array<{
         }
     ];
 
-export function CustomSectionModal({ isOpen, onClose, onAdd }: CustomSectionModalProps) {
+export function CustomSectionModal({ isOpen, onClose, onAdd, existingSections = [] }: CustomSectionModalProps) {
     const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
     const [mounted, setMounted] = useState(false);
 
@@ -161,35 +162,48 @@ export function CustomSectionModal({ isOpen, onClose, onAdd }: CustomSectionModa
                 {/* Content */}
                 <div className="px-8 pb-2 overflow-y-auto flex-1 custom-scrollbar">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 py-3">
-                        {SECTION_TEMPLATES.map((template) => (
-                            <button
-                                key={template.id}
-                                onClick={() => setSelectedTemplate(template.id)}
-                                className={`p-4 border-2 rounded-2xl text-left transition-all group relative overflow-hidden ${selectedTemplate === template.id
-                                    ? "border-blue-600 bg-blue-50/50 shadow-inner"
-                                    : "border-slate-100 bg-white hover:border-blue-200 hover:bg-slate-50/50"
-                                    }`}
-                            >
-                                {selectedTemplate === template.id && (
-                                    <div className="absolute top-3 right-3 text-blue-600">
-                                        <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
-                                            <Plus className="w-3 h-3 text-white rotate-45" />
+                        {SECTION_TEMPLATES.map((template) => {
+                            const isAdded = existingSections.includes(template.id);
+                            return (
+                                <button
+                                    key={template.id}
+                                    onClick={() => !isAdded && setSelectedTemplate(template.id)}
+                                    disabled={isAdded}
+                                    className={`p-4 border-2 rounded-2xl text-left transition-all group relative overflow-hidden ${selectedTemplate === template.id
+                                        ? "border-blue-600 bg-blue-50/50 shadow-inner"
+                                        : isAdded
+                                            ? "border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed"
+                                            : "border-slate-100 bg-white hover:border-blue-200 hover:bg-slate-50/50"
+                                        }`}
+                                >
+                                    {selectedTemplate === template.id && (
+                                        <div className="absolute top-3 right-3 text-blue-600">
+                                            <div className="w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                                                <Plus className="w-3 h-3 text-white rotate-45" />
+                                            </div>
+                                        </div>
+                                    )}
+                                    {isAdded && (
+                                        <div className="absolute top-3 right-3">
+                                            <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-full border border-green-200">
+                                                Added
+                                            </span>
+                                        </div>
+                                    )}
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-2xl shadow-sm transition-transform duration-300 ${!isAdded ? 'group-hover:scale-110' : ''} ${selectedTemplate === template.id ? 'bg-white shadow-md' : 'bg-slate-50'}`}>
+                                            {template.icon}
+                                        </div>
+                                        <div>
+                                            <span className={`block font-bold text-gray-900 text-sm ${selectedTemplate === template.id ? 'text-blue-700' : ''}`}>
+                                                {template.label}
+                                            </span>
+                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Template</span>
                                         </div>
                                     </div>
-                                )}
-                                <div className="flex items-center gap-3">
-                                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 ${selectedTemplate === template.id ? 'bg-white shadow-md' : 'bg-slate-50'}`}>
-                                        {template.icon}
-                                    </div>
-                                    <div>
-                                        <span className={`block font-bold text-gray-900 text-sm ${selectedTemplate === template.id ? 'text-blue-700' : ''}`}>
-                                            {template.label}
-                                        </span>
-                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Template</span>
-                                    </div>
-                                </div>
-                            </button>
-                        ))}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 

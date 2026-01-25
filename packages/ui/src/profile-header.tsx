@@ -179,10 +179,10 @@ export function ProfileHeader({
                             <button
                                 onClick={onSmartImport}
                                 className="px-3 h-10 flex items-center gap-2 justify-center bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl transition-all border border-indigo-100/50"
-                                title="Smart Import (AI)"
+                                title="Build with AI (AI)"
                             >
                                 <Sparkles size={18} />
-                                <span className="text-sm font-semibold hidden lg:inline">Smart Import</span>
+                                <span className="text-sm font-semibold hidden lg:inline">Build with AI</span>
                             </button>
                             <button
                                 onClick={onTemplateChange}

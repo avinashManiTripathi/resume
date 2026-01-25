@@ -313,7 +313,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
                     {/* Header */}
                     <div className="px-6 pt-6 pb-2 md:px-10 md:pt-10 md:pb-2 flex-shrink-0">
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">
-                            Import Content
+                            Build with AI
                         </h2>
                         <p className="text-slate-500 text-sm">
                             Type or speak your professional details below.

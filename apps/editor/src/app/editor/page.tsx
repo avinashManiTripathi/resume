@@ -986,7 +986,7 @@ function ResumeEditor() {
                       </svg>
                     </div>
                     <div className="flex-1 text-left">
-                      <div className="font-semibold text-gray-900">Smart Import</div>
+                      <div className="font-semibold text-gray-900">Build with AI</div>
                       <div className="text-xs text-gray-600">AI-powered data extraction</div>
                     </div>
                   </button>

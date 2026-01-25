@@ -271,9 +271,15 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
 
         // CRITICAL: Update the persistent sectionOrder in the data object
         newData.sectionOrder = newOrder;
-
         onChange(newData);
-    }, [data, onChange, sectionOrder, setSectionOrder]);
+
+        // CRITICAL FIX: Also remove from schema so it doesn't get re-added by the useEffect sync
+        if (onSchemaChange) {
+            const newSchema = { ...schema };
+            delete newSchema[sectionId];
+            onSchemaChange(newSchema);
+        }
+    }, [data, onChange, sectionOrder, setSectionOrder, schema, onSchemaChange]);
 
 
     return (
@@ -421,6 +427,7 @@ const GenericForm = ({ schema, data, onChange, onSchemaChange, onSectionNameChan
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onAdd={handleAddCustomSection}
+                existingSections={sectionOrder}
             />
 
             <Dialog
