@@ -537,7 +537,9 @@ function CoverLetterCreateForm() {
 
     return (
         <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
-            <EditorSidebar />
+            <div className="hidden lg:block">
+                <EditorSidebar />
+            </div>
             <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
                 {/* Header */}
                 <ProfileHeader
