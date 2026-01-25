@@ -12,14 +12,12 @@ import { sessionConfig, aiSettings, type SidebarConfig } from '../../config/sess
 import { getInterviewTypeById } from '../../config/interview-types.constants';
 import InterviewChat from '../../components/InterviewChat';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
-console.log('🌐 API_URL configured as:', API_URL);
-
-// Animated Avatar Component with realistic facial animations
+import { useAuth } from '../../hooks/useAuth';
 import { CodeEditor } from '../../components/CodeEditor';
 import { useProctoring } from '../../hooks/useProctoring';
 
-// ... (keep imports)
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+console.log('🌐 API_URL configured as:', API_URL);
 
 // Animated Avatar Component (Keep existing or import if moved. Assuming it stays for now as it wasn't extracted)
 function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; size?: 'small' | 'large' }) {
@@ -80,6 +78,7 @@ function SessionContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('id');
     const router = useRouter();
+    const { user } = useAuth(); // Get user details
 
     // Proctoring Hook
     const { stats: proctorStats, requestFullscreen, hasViolations } = useProctoring(true);
@@ -195,10 +194,8 @@ function SessionContent() {
             setIsSocketConnected(true);
             console.log('Socket connected');
 
-            // On connect, usually we might get an initial payload, or we can fetch session details via REST if not already done.
-            // For now, assuming session details come from somewhere or we can infer from localstorage/db.
-            // Let's actually fetch the session details to get the interviewTypeId since we need it for language.
-            fetch(`${API_URL}/api/interview/session/${sessionId}`)
+            // Fetch session details
+            fetch(`${API_URL}/api/interview/${sessionId}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.data) {
@@ -208,11 +205,16 @@ function SessionContent() {
                             interviewTypeData: iType
                         });
 
-                        // Set code only if it's currently default/empty to avoid overwriting user progress if they refresh
-                        // Simple check: if code is the default stub or empty
                         if (iType && code.includes('function solution()')) {
                             setCode(iType.defaultCode);
                         }
+
+                        // EMIT START INTERVIEW
+                        socket.emit('start-interview', {
+                            name: user?.name || 'Candidate',
+                            role: data.data.jdInfo?.role || 'Developer',
+                            sessionId
+                        });
                     }
                 })
                 .catch(err => console.error("Failed to fetch session details", err));
@@ -223,9 +225,11 @@ function SessionContent() {
         });
 
         socket.on('message', (data: any) => {
-            setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
-            if (data.speak) {
-                speak(data.message);
+            // Backend sends { content, timestamp }
+            const text = data.content || data.message;
+            if (text) {
+                setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+                speak(text);
             }
         });
 
@@ -234,7 +238,7 @@ function SessionContent() {
         return () => {
             socket.disconnect();
         };
-    }, [sessionId]);
+    }, [sessionId, user]); // Added user dependency
 
     // Submit Answer
     const submitAnswer = async () => {
@@ -246,21 +250,18 @@ function SessionContent() {
         setIsLoading(true);
 
         try {
-            // Emulate AI response for now if socket doesn't reply immediately
             if (socketRef.current?.connected) {
-                socketRef.current.emit('response', {
-                    sessionId,
-                    content,
-                    codeState: code
+                // Backend listens for 'send-message'
+                socketRef.current.emit('send-message', {
+                    content
                 });
             } else {
-                // Fallback / Mock
+                // Fallback
                 setTimeout(() => {
-                    const mockResponse = "That's an interesting approach. Can you explain the time complexity?";
+                    const mockResponse = "Connection lost. Please refresh.";
                     setMessages(prev => [...prev, { role: 'assistant', content: mockResponse }]);
-                    speak(mockResponse);
                     setIsLoading(false);
-                }, 1500);
+                }, 1000);
             }
         } catch (error) {
             console.error(error);

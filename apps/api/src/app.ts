@@ -105,6 +105,9 @@ export class App {
      */
 
     private initializeMiddlewares(): void {
+        // Trust Proxy (for Rate Limiting behind load balancers/proxies like Railway/Nginx)
+        this.app.set('trust proxy', 1);
+
         // Security headers
         this.app.use(helmet({
             crossOriginResourcePolicy: { policy: "cross-origin" } // Allow resources to be loaded cross-origin (e.g. PDFs)
