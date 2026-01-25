@@ -121,9 +121,9 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
    PUPPETEER BROWSER MANAGER (SCALABLE)
 ===================================================== */
 
-const MAX_CONCURRENT_PAGES = 10;
+const MAX_CONCURRENT_PAGES = 100;
 const MAX_REQUESTS_PER_BROWSER = 200;
-const QUEUE_TIMEOUT_MS = 30000; // 30s timeout for waiting in queue
+const QUEUE_TIMEOUT_MS = 60000; // 60s timeout for waiting in queue
 
 let puppeteerBrowser: Browser | null = null;
 let activePages = 0;
@@ -158,7 +158,7 @@ const acquirePageSlot = async (): Promise<void> => {
             // Remove from queue if timed out
             const index = requestQueue.findIndex(r => r.reject === reject);
             if (index !== -1) requestQueue.splice(index, 1);
-            reject(new Error('Server busy: PDF generation queue timeout'));
+            reject(new Error(`Server busy: PDF generation queue timeout. Active pages: ${activePages}`));
         }, QUEUE_TIMEOUT_MS);
 
         requestQueue.push({ resolve, reject, timer });

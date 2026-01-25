@@ -37,6 +37,15 @@ export class PdfController {
 
             // Pipe stream to response
             stream.pipe(res);
+
+            // Handle client disconnect to prevent zombie processes
+            res.on('close', () => {
+                const pdfStream = stream as any;
+                if (pdfStream && !pdfStream.destroyed) {
+                    console.log('Client disconnected, destroying PDF stream');
+                    pdfStream.destroy();
+                }
+            });
         } catch (error) {
             console.error('PDF generation error:', error);
 
