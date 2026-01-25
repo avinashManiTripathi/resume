@@ -280,7 +280,11 @@ ANALYSIS REQUIREMENTS (STRICT):
 3. **CONTACT INFO**:
    - Email (Critical).
    - Phone (Optional/Non-critical).
-   - LinkedIn/GitHub (Optional, accept plain text).
+   - LinkedIn/GitHub (Optional):
+     - **ACCEPT PLAIN TEXT**. If the text "LinkedIn" or "GitHub" or a username appears, mark as FOUND.
+     - **DO NOT** demand functional URLs.
+     - **DO NOT** flag "missing URL" as a weakness if the platform name/handle is visible.
+     - Only penalize if there is absolutely NO mention of these platforms.
 4. **DATES**: Consistent formats (YYYY-MM), present in Exp/Edu.
 5. **KEYWORDS**:
    - Industry terms/action verbs.
