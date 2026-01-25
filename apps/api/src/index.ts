@@ -16,11 +16,17 @@ console.log('GENAI_API_KEY:', process.env.GENAI_API_KEY ? '✅ Set' : '❌ NOT S
 console.log('PORT:', process.env.PORT || '4000 (default)');
 console.log('='.repeat(50) + '\n');
 
+import { preWarmPuppeteer } from '@repo/utils-server';
+
 // Create and start the application
 const app = new App();
 if (process.env.GENAI_API_KEY) {
     initAI(process.env.GENAI_API_KEY);
 }
+
+// Pre-warm puppeteer in background
+preWarmPuppeteer().catch(err => console.error("Failed to pre-warm puppeteer:", err));
+
 app.listen();
 
 
