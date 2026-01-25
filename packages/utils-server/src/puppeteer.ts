@@ -121,7 +121,7 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
    PUPPETEER BROWSER MANAGER (SCALABLE)
 ===================================================== */
 
-const MAX_CONCURRENT_PAGES = 100;
+const MAX_CONCURRENT_PAGES = 10;
 const MAX_REQUESTS_PER_BROWSER = 200;
 const QUEUE_TIMEOUT_MS = 60000; // 60s timeout for waiting in queue
 
@@ -150,10 +150,12 @@ const processQueue = () => {
 const acquirePageSlot = async (): Promise<void> => {
     if (activePages < MAX_CONCURRENT_PAGES) {
         activePages++;
+        // console.log(`🔹 Slot acquired. Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
         return;
     }
 
     return new Promise((resolve, reject) => {
+        // console.log(`⏳ Queueing request. Queue length: ${requestQueue.length + 1}`);
         const timer = setTimeout(() => {
             // Remove from queue if timed out
             const index = requestQueue.findIndex(r => r.reject === reject);
@@ -168,6 +170,8 @@ const acquirePageSlot = async (): Promise<void> => {
 // Release slot and process next
 const releasePageSlot = () => {
     activePages--;
+    // console.log(`🔸 Slot released. Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
+    if (activePages < 0) activePages = 0; // Safety
     processQueue();
 };
 
@@ -260,12 +264,30 @@ export const htmlToPdf = async (
         page = await browser.newPage();
         totalRequestsHandled++;
 
-        page.setDefaultTimeout(120000);
-        page.setDefaultNavigationTimeout(120000);
+        page.setDefaultTimeout(60000); // Reduced from 120000 since we're optimizing
+        page.setDefaultNavigationTimeout(60000);
+
+        // 🚀 Optimization: Block network requests to external resources
+        await page.setRequestInterception(true);
+        page.on('request', (req) => {
+            const resourceType = req.resourceType();
+            // Block images, stylesheets, media, fonts (we inject custom fonts), and analytics
+            if (['image', 'stylesheet', 'font', 'media', 'websocket', 'manifest'].includes(resourceType)) {
+                // Allow data protocols (base64 images/fonts)
+                if (req.url().startsWith('data:')) {
+                    req.continue();
+                } else {
+                    req.abort();
+                }
+            } else {
+                req.continue();
+            }
+        });
+
 
         await page.setContent(htmlContent, {
             waitUntil: 'domcontentloaded',
-            timeout: 120000,
+            timeout: 60000,
         });
 
         // 🔥 Inject Google Font via Node memory cache
@@ -323,12 +345,27 @@ export const htmlToPdfStream = async (
         page = await browser.newPage();
         totalRequestsHandled++;
 
-        page.setDefaultTimeout(120000);
-        page.setDefaultNavigationTimeout(120000);
+        page.setDefaultTimeout(60000);
+        page.setDefaultNavigationTimeout(60000);
+
+        // 🚀 Optimization: Block network requests
+        await page.setRequestInterception(true);
+        page.on('request', (req) => {
+            const resourceType = req.resourceType();
+            if (['image', 'stylesheet', 'font', 'media', 'websocket', 'manifest'].includes(resourceType)) {
+                if (req.url().startsWith('data:')) {
+                    req.continue();
+                } else {
+                    req.abort();
+                }
+            } else {
+                req.continue();
+            }
+        });
 
         await page.setContent(htmlContent, {
             waitUntil: 'domcontentloaded',
-            timeout: 120000,
+            timeout: 60000,
         });
 
         // 🔥 Inject Google Font
@@ -369,6 +406,7 @@ export const htmlToPdfStream = async (
 
         pdfStream.on('end', cleanup);
         pdfStream.on('error', cleanup);
+        pdfStream.on('close', cleanup);
 
         return pdfStream;
     } catch (error) {
