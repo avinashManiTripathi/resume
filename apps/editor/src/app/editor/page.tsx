@@ -796,7 +796,7 @@ function ResumeEditor() {
           onTemplateChange={() => setShowTemplates(true)}
           fontFamily={fontFamily}
           onFontChange={setFontFamily}
-          onTailor={() => router.push('/tailor')}
+          onTailor={() => router.push(`/tailor?id=${docId}`)}
         />
 
         {/* Main Content - Split Glass Content */}

@@ -31,7 +31,7 @@ export default function TailorResume() {
         description: "",
         type: "info"
     });
-    const { saveDocument } = usePersistence();
+    const { saveDocument, getDocument } = usePersistence();
 
     const tailoringStages = [
         'Uploading resume...',
@@ -99,17 +99,95 @@ export default function TailorResume() {
         setProgress(0);
         setCurrentStageIndex(0);
 
+        // Start progress simulation
+        const stageInterval = setInterval(() => {
+            setCurrentStageIndex(prev => {
+                if (prev < tailoringStages.length - 1) {
+                    setProgress(Math.min((prev + 1) * 20, 95));
+                    return prev + 1;
+                }
+                clearInterval(stageInterval);
+                return prev;
+            });
+        }, 1000);
+
         try {
+
+            if (resumeSource === 'current') {
+                // Check if we have a document ID
+                const docId = new URLSearchParams(window.location.search).get('id');
+                if (!docId) {
+                    setDialog({
+                        isOpen: true,
+                        title: "No Resume Selected",
+                        description: "Please open a resume in the editor first, or upload one here.",
+                        type: "warning"
+                    });
+                    setIsAnalyzing(false);
+                    return;
+                }
+
+                // Fetch document data
+                try {
+                    const doc = await getDocument(docId, 'resume');
+                    if (!doc || !doc.data) {
+                        throw new Error("Could not load resume data");
+                    }
+
+                    // Use structured data for analysis
+                    const payload = {
+                        resumeData: doc.data,
+                        jobDescription,
+                        jobTitle: jobTitle || undefined,
+                        company: company || undefined
+                    };
+
+                    const response = await fetch(`${ENV.API_URL}/api/tailor/analyze`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload),
+                        credentials: 'include',
+                    });
+
+                    clearInterval(stageInterval);
+                    setProgress(100);
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || 'Analysis failed');
+                    }
+
+                    const result = await response.json();
+
+                    // Save data for the results page
+                    sessionStorage.setItem('tailorResults', JSON.stringify(result));
+                    sessionStorage.setItem('tailorOriginalResume', JSON.stringify(doc.data));
+                    sessionStorage.setItem('tailorDocId', doc.id); // Save ID to update same doc later if needed
+
+                    router.push('/tailor/results');
+                    return;
+
+                } catch (err: any) {
+                    console.error("Analysis Error", err);
+                    setDialog({
+                        isOpen: true,
+                        title: "Analysis Failed",
+                        description: err.message || "Failed to analyze current resume.",
+                        type: "error"
+                    });
+                    setIsAnalyzing(false);
+                    return;
+                }
+            }
+
+            // Standard parse flow for Uploads
             const formData = new FormData();
             if (resumeSource === 'upload' && uploadedFile) {
                 formData.append('resume', uploadedFile);
             } else {
-                setDialog({
-                    isOpen: true,
-                    title: "Coming Soon",
-                    description: "Using your current resume is coming soon! For now, please upload a resume file.",
-                    type: "info"
-                });
+                // This block should be unreachable now given the logic above, but keeping safety
                 setIsAnalyzing(false);
                 return;
             }
@@ -118,17 +196,7 @@ export default function TailorResume() {
             if (jobTitle) formData.append('jobTitle', jobTitle);
             if (company) formData.append('company', company);
 
-            // Simulation for progress steps
-            const stageInterval = setInterval(() => {
-                setCurrentStageIndex(prev => {
-                    if (prev < tailoringStages.length - 1) {
-                        setProgress(Math.min((prev + 1) * 20, 95));
-                        return prev + 1;
-                    }
-                    clearInterval(stageInterval);
-                    return prev;
-                });
-            }, 1000);
+            // Progress simulation is already running from top of function
 
             const response = await fetch(`${ENV.API_URL}/api/tailor/parse`, {
                 method: 'POST',

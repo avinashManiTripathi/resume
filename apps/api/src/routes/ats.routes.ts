@@ -4,6 +4,7 @@ import { analyzeResumeWithAI } from '../services/ai-analysis.service';
 import { extractTextFromFile, extractTextFromDOCX } from '../utils/file-parser';
 import { optionalAuth, verifyToken, requireSubscription } from '../middleware/auth.middleware';
 import { FeatureName } from '../models';
+import { checkUsageLimit } from '../middleware/usage.middleware';
 
 const router = Router();
 
@@ -22,11 +23,13 @@ const upload = multer({
     }
 });
 
+
+
 /**
  * Check ATS score
  * POST /api/ats/check
  */
-router.post('/check', optionalAuth, requireSubscription(FeatureName.ATS_CHECK), upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/check', optionalAuth, requireSubscription(FeatureName.ATS_CHECK), checkUsageLimit('ats'), upload.single('resume'), async (req: Request, res: Response) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });

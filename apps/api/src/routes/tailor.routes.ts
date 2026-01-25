@@ -5,6 +5,7 @@ import { parseResumeWithAI } from '../services/ai-analysis.service';
 import { extractTextFromPDF } from '../utils/file-parser';
 import { optionalAuth, verifyToken, requireSubscription } from '../middleware/auth.middleware';
 import { FeatureName } from '../models';
+import { checkUsageLimit } from '../middleware/usage.middleware';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
@@ -15,7 +16,7 @@ const tailorService = new TailorService();
  * POST /api/tailor/analyze
  * Analyze resume against job description
  */
-router.post('/analyze', optionalAuth, requireSubscription(FeatureName.TAILOR), upload.single('resume'), async (req: Request, res: Response) => {
+router.post('/analyze', optionalAuth, requireSubscription(FeatureName.TAILOR), checkUsageLimit('tailor'), upload.single('resume'), async (req: Request, res: Response) => {
     try {
 
         const { jobDescription, jobTitle, company } = req.body;
@@ -24,13 +25,18 @@ router.post('/analyze', optionalAuth, requireSubscription(FeatureName.TAILOR), u
             return res.status(400).json({ error: 'Job description is required' });
         }
 
-        // For now, use mock resume data if no file uploaded
-        // In production, extract text from uploaded file
-        const resumeText = req.file
-            ? await extractTextFromPDF(req.file.buffer)
-            : getMockResumeText();
+        // Check for file upload first, then structured data, then fallback
+        let resumeInput: string | any;
 
-        const analysis = await tailorService.analyzeResume(resumeText, jobDescription, {
+        if (req.file) {
+            resumeInput = await extractTextFromPDF(req.file.buffer);
+        } else if (req.body.resumeData) {
+            resumeInput = req.body.resumeData;
+        } else {
+            resumeInput = getMockResumeText();
+        }
+
+        const analysis = await tailorService.analyzeResume(resumeInput, jobDescription, {
             jobTitle,
             company
         });

@@ -70,19 +70,70 @@ export default function TailorResults() {
         });
     };
 
-    const applyAllSuggestions = () => {
+    const applyAllSuggestions = async () => {
         if (!analysis) return;
-        const allIds = new Set(analysis.suggestions.map(s => s.id));
-        setAppliedSuggestions(allIds);
 
-        // TODO: Actually apply to resume
-        setDialog({
-            isOpen: true,
-            title: "Suggestions Applied",
-            description: "All suggestions have been applied! Redirecting to the editor...",
-            type: "success"
-        });
-        setTimeout(() => router.push('/editor'), 2000);
+        try {
+            const originalResumeStr = sessionStorage.getItem('tailorOriginalResume');
+            if (!originalResumeStr) {
+                throw new Error("Original resume data missing");
+            }
+            const originalResume = JSON.parse(originalResumeStr);
+
+            const allIds = analysis.suggestions.map(s => s.id);
+            setAppliedSuggestions(new Set(allIds));
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/tailor/apply-suggestions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    resumeData: originalResume,
+                    suggestions: analysis.suggestions // Send full suggestion objects
+                }),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.message || "Failed to apply suggestions");
+            }
+
+            const result = await response.json();
+
+            if (result.success && result.resume) {
+                // Save updated resume for Editor to load
+                // We use 'redirect_resume_data' which Editor checks on mount (fromSubscription logic reused)
+                // OR 'parsedResumeData' like the Upload flow.
+                // Let's use 'parsedResumeData' and 'fromTailor' flag as it's cleaner
+                sessionStorage.setItem('parsedResumeData', JSON.stringify(result.resume));
+
+                // Also update the Doc ID if we have it, so auto-save works on the correct doc
+                const docId = sessionStorage.getItem('tailorDocId');
+                if (docId) {
+                    // Start saving immediately? No, let editor handle it.
+                }
+
+                setDialog({
+                    isOpen: true,
+                    title: "Suggestions Applied",
+                    description: "Resume updated successfully! Redirecting to editor...",
+                    type: "success"
+                });
+
+                setTimeout(() => {
+                    router.push('/editor?fromTailor=true');
+                }, 1500);
+            }
+
+        } catch (error: any) {
+            console.error("Apply Error", error);
+            setDialog({
+                isOpen: true,
+                title: "Application Failed",
+                description: `Failed to apply suggestions: ${error.message}`,
+                type: "error"
+            });
+        }
     };
 
     if (!analysis) {

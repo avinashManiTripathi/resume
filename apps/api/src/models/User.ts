@@ -7,6 +7,11 @@ export interface IUser extends Document {
     picture?: string;
     role: 'user' | 'admin';
     subscription?: mongoose.Types.ObjectId;
+    dailyUsage?: {
+        date: Date;
+        tailorCount: number;
+        atsCount: number;
+    };
     createdAt: Date;
     updatedAt: Date;
 }
@@ -41,6 +46,20 @@ const UserSchema: Schema = new Schema(
         subscription: {
             type: Schema.Types.ObjectId,
             ref: 'Subscription',
+        },
+        dailyUsage: {
+            date: {
+                type: Date,
+                default: Date.now
+            },
+            tailorCount: {
+                type: Number,
+                default: 0
+            },
+            atsCount: {
+                type: Number,
+                default: 0
+            }
         },
     },
     {

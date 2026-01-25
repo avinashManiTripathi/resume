@@ -30,10 +30,18 @@ export class TailorService {
      * Analyze resume against job description
      */
     async analyzeResume(
-        resumeText: string,
+        resume: string | any,
         jobDescription: string,
         options: AnalysisOptions = {}
     ): Promise<AnalysisResult> {
+        let resumeText = '';
+
+        if (typeof resume === 'string') {
+            resumeText = resume;
+        } else {
+            resumeText = this.convertResumeJsonToText(resume);
+        }
+
         // Extract keywords from job description
         const jdKeywords = this.extractKeywords(jobDescription);
         const resumeKeywords = this.extractKeywords(resumeText);
@@ -76,6 +84,74 @@ export class TailorService {
             weaknesses
         };
     }
+
+    /**
+     * Convert Resume JSON to text for analysis
+     */
+    private convertResumeJsonToText(resume: any): string {
+        const parts: string[] = [];
+
+        // Basics
+        if (resume.personalInfo) {
+            const { firstName, lastName, jobTitle, summary } = resume.personalInfo;
+            if (firstName) parts.push(firstName);
+            if (lastName) parts.push(lastName);
+            if (jobTitle) parts.push(jobTitle);
+            if (summary) parts.push(summary);
+        }
+
+        if (resume.basics) { // Handle standard JSON Resume format too
+            const { name, label, summary } = resume.basics;
+            if (name) parts.push(name);
+            if (label) parts.push(label);
+            if (summary) parts.push(summary);
+        }
+
+        // Experience
+        if (Array.isArray(resume.experience)) {
+            parts.push('EXPERIENCE');
+            resume.experience.forEach((exp: any) => {
+                if (exp.jobTitle || exp.position) parts.push(exp.jobTitle || exp.position);
+                if (exp.company || exp.name) parts.push(exp.company || exp.name);
+                if (exp.description || exp.summary) parts.push(exp.description || exp.summary);
+            });
+        }
+
+        if (Array.isArray(resume.work)) { // Standard JSON Resume
+            parts.push('EXPERIENCE');
+            resume.work.forEach((exp: any) => {
+                if (exp.position) parts.push(exp.position);
+                if (exp.name) parts.push(exp.name);
+                if (exp.summary) parts.push(exp.summary);
+                if (Array.isArray(exp.highlights)) parts.push(...exp.highlights);
+            });
+        }
+
+        // Education
+        if (Array.isArray(resume.education)) {
+            parts.push('EDUCATION');
+            resume.education.forEach((edu: any) => {
+                if (edu.institution || edu.school) parts.push(edu.institution || edu.school);
+                if (edu.degree || edu.area) parts.push(edu.degree || edu.area);
+            });
+        }
+
+        // Skills
+        if (Array.isArray(resume.skills)) {
+            parts.push('SKILLS');
+            resume.skills.forEach((skill: any) => {
+                if (typeof skill === 'string') parts.push(skill);
+                else if (skill.name) parts.push(skill.name);
+
+                if (Array.isArray(skill.keywords)) {
+                    parts.push(...skill.keywords);
+                }
+            });
+        }
+
+        return parts.join('\n');
+    }
+
 
     /**
      * Extract keywords from text
@@ -281,9 +357,66 @@ export class TailorService {
     /**
      * Apply suggestions to resume
      */
-    async applySuggestions(resumeData: any, suggestionIds: string[]): Promise<any> {
-        // TODO: Implement actual suggestion application logic
-        // This would modify the resume data based on selected suggestions
-        return resumeData;
+    async applySuggestions(resumeData: any, suggestions: Suggestion[]): Promise<any> {
+        const updatedResume = JSON.parse(JSON.stringify(resumeData)); // Deep clone
+
+        for (const suggestion of suggestions) {
+            // keywords suggestion
+            if (suggestion.id.startsWith('kw-')) {
+                const keywordsToAdd = suggestion.suggested
+                    .replace('Add these keywords: ', '')
+                    .split(', ')
+                    .map(k => k.trim());
+
+                // Initialize skills array if missing
+                if (!updatedResume.skills) {
+                    updatedResume.skills = [];
+                }
+
+                // Identify if 'Skills' section exists in structured format or it's a simple list
+                // Assuming standard JSON Resume schema or internal format
+                // Case 1: Simple array of strings (legacy/simple) - unlikely for this app but covering bases
+                if (Array.isArray(updatedResume.skills) && typeof updatedResume.skills[0] === 'string') {
+                    const existing = new Set(updatedResume.skills.map((s: string) => s.toLowerCase()));
+                    keywordsToAdd.forEach(kw => {
+                        if (!existing.has(kw.toLowerCase())) {
+                            updatedResume.skills.push(kw);
+                        }
+                    });
+                }
+                // Case 2: Array of objects { name, keywords[] } (JSON Resume standard)
+                else if (Array.isArray(updatedResume.skills)) {
+                    // Find or create a "Technical Skills" or generic category
+                    let skillGroup = updatedResume.skills.find((s: any) =>
+                        /technical|skills|technologies/i.test(s.name || '')
+                    );
+
+                    if (!skillGroup) {
+                        skillGroup = { name: 'Technical Skills', keywords: [] };
+                        updatedResume.skills.push(skillGroup);
+                    }
+
+                    if (!skillGroup.keywords) skillGroup.keywords = [];
+
+                    const existing = new Set(skillGroup.keywords.map((k: string) => k.toLowerCase()));
+                    keywordsToAdd.forEach(kw => {
+                        if (!existing.has(kw.toLowerCase())) {
+                            skillGroup.keywords.push(kw);
+                        }
+                    });
+                }
+            }
+
+            // Summary suggestion
+            if (suggestion.id.startsWith('content-1')) {
+                if (!updatedResume.basics) updatedResume.basics = {};
+
+                // Only update if current is empty or user explicitly requested (which they did by clicking apply)
+                // We overwrite the summary with the optimized one
+                updatedResume.basics.summary = suggestion.suggested;
+            }
+        }
+
+        return updatedResume;
     }
 }

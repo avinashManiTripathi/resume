@@ -30,6 +30,8 @@ import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
 import { configurePassport } from './config/passport';
 import { setupInterviewSocket } from './sockets/interview.socket';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -101,7 +103,25 @@ export class App {
     /**
      * Initialize middlewares
      */
+
     private initializeMiddlewares(): void {
+        // Security headers
+        this.app.use(helmet({
+            crossOriginResourcePolicy: { policy: "cross-origin" } // Allow resources to be loaded cross-origin (e.g. PDFs)
+        }));
+
+        // Rate limiting
+        const limiter = rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            max: 300, // Limit each IP to 300 requests per windowMs
+            standardHeaders: true,
+            legacyHeaders: false,
+            message: 'Too many requests from this IP, please try again after 15 minutes'
+        });
+
+        // Apply rate limiting to API routes only
+        this.app.use('/api', limiter);
+
         // CORS
         const allowedOrigins = [
             'https://hirecta.com',
