@@ -12,6 +12,7 @@ import { HowToGuide } from "@/components/HowToGuide";
 import { FAQSection } from "@/components/FAQSection";
 import { URLS } from "@/constants/urls";
 
+
 export const metadata: Metadata = {
   title: 'Free Resume Builder 2026 | Create a Professional Resume with AI',
   description: 'Build a job-winning resume in minutes with our 100% free AI resume builder. 20+ ATS-friendly templates, expert writing tips, and instant PDF download. No sign-up required.',
