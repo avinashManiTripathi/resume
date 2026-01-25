@@ -472,9 +472,26 @@ export default function ATSCheckerPage() {
                                                 </div>
                                             </div>
                                             {error && (
-                                                <div className="mt-6 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 font-bold text-sm flex items-center justify-center gap-2 animate-in fade-in slide-in-from-top-2">
-                                                    <XCircle size={18} />
-                                                    {error}
+                                                <div className="mt-6 p-4 bg-rose-50 border border-rose-100 rounded-2xl animate-in fade-in slide-in-from-top-2">
+                                                    <div className="flex items-start gap-3">
+                                                        <XCircle size={20} className="text-rose-600 mt-0.5 flex-shrink-0" />
+                                                        <div className="flex-1 space-y-2">
+                                                            <h4 className="font-bold text-rose-700 text-sm">Analysis Failed</h4>
+                                                            <p className="text-sm text-rose-600/80 leading-relaxed font-medium">
+                                                                {error.includes("extract")
+                                                                    ? "We couldn't read the text from your file. Please try converting it to a standard PDF or checking for corruption."
+                                                                    : error.includes("AI")
+                                                                        ? "Our AI service is currently busy or encountered an error. Please try again in a moment."
+                                                                        : error}
+                                                            </p>
+                                                            <button
+                                                                onClick={analyzeResume}
+                                                                className="text-xs font-bold bg-white text-rose-600 px-3 py-1.5 rounded-lg border border-rose-200 hover:bg-rose-50 transition-colors shadow-sm mt-1"
+                                                            >
+                                                                Try Again
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             )}
 

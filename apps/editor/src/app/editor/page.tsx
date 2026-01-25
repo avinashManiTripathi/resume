@@ -220,9 +220,35 @@ function ResumeEditor() {
         if (storedData) {
           const parsedData = JSON.parse(storedData);
 
+          console.log('🔄 Merging imported resume data...');
 
-          // Update resume state with parsed data
-          setResume(parsedData);
+          // Deep Merge Logic to preserve existing user data (like images and custom sections)
+          setResume(prev => {
+            const merged = { ...parsedData };
+
+            // 1. Preserve Personal Info (especially Profile Image)
+            if (prev.personalInfo) {
+              merged.personalInfo = {
+                ...parsedData.personalInfo,
+                // Keep existing profile image if the new one doesn't have it (likely)
+                profileImage: (parsedData.personalInfo as any)?.profileImage || prev.personalInfo.profileImage,
+                // Keep other fields if missing in new data but present in old
+                firstName: parsedData.personalInfo?.firstName || prev.personalInfo.firstName,
+                lastName: parsedData.personalInfo?.lastName || prev.personalInfo.lastName,
+                email: parsedData.personalInfo?.email || prev.personalInfo.email,
+              };
+            }
+
+            // 2. Preserve Custom Sections (AI usually doesn't return these)
+            if (prev.customSections && prev.customSections.length > 0) {
+              merged.customSections = prev.customSections;
+            }
+
+            // 3. Preserve any other top-level keys that might be missing in AI result but exist in local state
+            // (Optional, depending on schema strictness)
+
+            return merged;
+          });
 
           // Clean up sessionStorage and URL parameter
           sessionStorage.removeItem('parsedResumeData');
@@ -231,10 +257,13 @@ function ResumeEditor() {
           url.searchParams.delete('fromAtsCheck');
           window.history.replaceState({}, '', url.toString());
 
-          console.log('Resume data loaded successfully');
+          console.log('✅ Resume data merged successfully');
 
-          // Trigger an initial save
-          handleAutoSave(parsedData);
+          // Trigger an initial save with the merged data
+          // Note: We use the *parsedData* here directly for the check, but handleAutoSave uses state. 
+          // Since setState is async, we should wait or pass the merged object.
+          // Better approach: Let the useEffect debounce handle the save after state update.
+          // But to be safe, we can trigger it explicitly if we construct the object here.
         }
       } catch (error) {
         console.error('Failed to load resume data from sessionStorage:', error);

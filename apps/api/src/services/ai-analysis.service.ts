@@ -618,11 +618,13 @@ Return ONLY the JSON object, nothing else.`;
     cleanedText = cleanedText.replace(/^```\n/, '').replace(/\n```$/, '');
   }
 
+
   // Extract JSON from response
   const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
     return JSON.parse(jsonMatch[0]);
   }
 
-  throw new Error('Failed to parse AI response');
+  throw new Error('Failed to parse AI response: No valid JSON found');
 }
+
