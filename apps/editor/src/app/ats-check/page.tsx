@@ -603,7 +603,8 @@ export default function ATSCheckerPage() {
                                             logoSrc="/logo.png"
                                             fullScreen={false}
                                             variant="transparent"
-                                            className="min-h-[300px]"
+                                            embedded={true}
+                                            className="min-h-[250px]"
                                         />
 
                                         <div className="text-center mt-8">

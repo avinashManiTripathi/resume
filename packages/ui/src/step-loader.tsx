@@ -17,6 +17,7 @@ export interface StepLoaderProps {
     currentStep?: number;
     size?: "sm" | "md" | "lg";
     variant?: "card" | "transparent";
+    embedded?: boolean;
 }
 
 export const StepLoader = ({
@@ -27,6 +28,7 @@ export const StepLoader = ({
     fullScreen = false,
     className,
     variant = "card",
+    embedded = false,
 }: StepLoaderProps) => {
     if (!loading) return null;
 
@@ -34,7 +36,7 @@ export const StepLoader = ({
     const containerClass = cn(
         "flex flex-col items-center justify-center z-[100]",
         variant === "transparent" ? "bg-transparent" : "bg-white",
-        fullScreen ? "fixed inset-0" : "absolute inset-0",
+        embedded ? "relative w-full h-full" : (fullScreen ? "fixed inset-0" : "absolute inset-0"),
         className
     );
 
