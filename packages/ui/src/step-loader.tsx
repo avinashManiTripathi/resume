@@ -12,6 +12,7 @@ export interface StepLoaderProps {
     logoSrc?: string;
     fullScreen?: boolean;
     className?: string;
+    theme?: "light" | "dark";
     // Legacy props for compatibility (optional/unused in new design but kept to avoid immediate breaking changes if stuck)
     steps?: string[];
     currentStep?: number;
@@ -29,6 +30,7 @@ export const StepLoader = ({
     className,
     variant = "card",
     embedded = false,
+    theme = "light",
 }: StepLoaderProps) => {
     if (!loading) return null;
 
@@ -70,11 +72,17 @@ export const StepLoader = ({
 
                 {/* Text Content */}
                 <div className="text-center space-y-3 max-w-sm px-4">
-                    <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+                    <h2 className={cn(
+                        "text-2xl font-bold tracking-tight",
+                        theme === "dark" ? "text-white" : "text-slate-900"
+                    )}>
                         {message}
                     </h2>
                     {subMessage && (
-                        <p className="text-slate-500 font-medium">
+                        <p className={cn(
+                            "font-medium",
+                            theme === "dark" ? "text-slate-400" : "text-slate-500"
+                        )}>
                             {subMessage}
                         </p>
                     )}

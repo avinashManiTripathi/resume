@@ -11,6 +11,8 @@ export interface InterviewType {
     description: string;
     icon: string;
     requiresJD: boolean; // Whether job description is required
+    language: 'javascript' | 'python' | 'java' | 'typescript'; // Language for the code editor
+    defaultCode: string; // Starting code template
 }
 
 export const INTERVIEW_TYPES: InterviewType[] = [
@@ -21,7 +23,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'custom',
         description: 'Tailored questions based on your specific JD',
         icon: 'FileText',
-        requiresJD: true
+        requiresJD: true,
+        language: 'javascript',
+        defaultCode: '// Write your solution here\nfunction solution() {\n  // Implementation\n}'
     },
     {
         id: 'react-junior',
@@ -30,7 +34,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'junior',
         description: 'Fundamentals, hooks, components, props & state',
         icon: 'Code2',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: 'import React from "react";\n\nexport default function App() {\n  return (\n    <div>Hello World</div>\n  );\n}'
     },
     {
         id: 'react-mid',
@@ -39,7 +45,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'mid',
         description: 'Advanced hooks, performance, state management',
         icon: 'Code2',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: 'import React, { useState, useEffect } from "react";\n\nexport const CustomHook = () => {\n  // Implement logic\n};'
     },
     {
         id: 'react-senior',
@@ -48,7 +56,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'senior',
         description: 'Architecture, optimization, design patterns',
         icon: 'Code2',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: '// Implement a higher-order component or performance optimization\n'
     },
     {
         id: 'python-junior',
@@ -57,7 +67,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'junior',
         description: 'Basics, data structures, functions & OOP',
         icon: 'Zap',
-        requiresJD: false
+        requiresJD: false,
+        language: 'python',
+        defaultCode: 'def solution():\n    # Write your python code here\n    pass\n\nif __name__ == "__main__":\n    print("Hello Python")'
     },
     {
         id: 'python-mid',
@@ -66,7 +78,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'mid',
         description: 'Advanced OOP, decorators, generators, async',
         icon: 'Zap',
-        requiresJD: false
+        requiresJD: false,
+        language: 'python',
+        defaultCode: 'class solution:\n    def __init__(self):\n        pass\n\n    def process(self):\n        pass'
     },
     {
         id: 'python-senior',
@@ -75,7 +89,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'senior',
         description: 'Design patterns, performance, concurrency',
         icon: 'Zap',
-        requiresJD: false
+        requiresJD: false,
+        language: 'python',
+        defaultCode: 'import asyncio\n\nasync def main():\n    # Implement async logic\n    pass'
     },
     {
         id: 'fullstack-mid',
@@ -84,7 +100,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'mid',
         description: 'Frontend, backend, databases & deployment',
         icon: 'Layers',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: '// Fullstack challenge\n// Can treat this area as backend logic (Node.js)'
     },
     {
         id: 'fullstack-senior',
@@ -93,7 +111,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'senior',
         description: 'System design, architecture, scalability',
         icon: 'Layers',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: '// Architecture design logic'
     },
     {
         id: 'nodejs-mid',
@@ -102,7 +122,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'mid',
         description: 'Express, APIs, databases & authentication',
         icon: 'Database',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: 'const express = require("express");\nconst app = express();\n\napp.get("/", (req, res) => {\n  res.send("Hello");\n});'
     },
     {
         id: 'nodejs-senior',
@@ -111,7 +133,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'senior',
         description: 'Microservices, scaling, performance tuning',
         icon: 'Database',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript',
+        defaultCode: '// Microservice logic\n'
     },
     {
         id: 'dsa-mid',
@@ -120,7 +144,9 @@ export const INTERVIEW_TYPES: InterviewType[] = [
         level: 'mid',
         description: 'Arrays, trees, graphs, dynamic programming',
         icon: 'Boxes',
-        requiresJD: false
+        requiresJD: false,
+        language: 'javascript', // Default to JS for DSA, user can switch conceptually
+        defaultCode: 'function solve(input) {\n  // Write algorithm here\n  return input;\n}'
     }
 ];
 
