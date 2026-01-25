@@ -17,13 +17,13 @@ export function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const [user, setUser] = useState<User | null>(null);
     const network = useAppNetwork();
-    const isProd = window.location.hostname.endsWith('hirecta.com');
 
     // Initial check for auth status
     useEffect(() => {
         const checkAuth = async () => {
             // Capture token from URL if present (from auth app redirect)
             if (typeof window !== 'undefined') {
+                const isProd = window.location.hostname.endsWith('hirecta.com');
                 const params = new URLSearchParams(window.location.search);
                 const tokenFromUrl = params.get('token');
 
@@ -62,6 +62,7 @@ export function useAuth() {
 
     const logout = useCallback(async () => {
         try {
+            const isProd = typeof window !== 'undefined' ? window.location.hostname.endsWith('hirecta.com') : false;
             await network.post(API_ENDPOINTS.AUTH.LOGOUT);
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;" + (isProd ? '; domain=.hirecta.com' : 'domain=localhost');
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";

@@ -8,12 +8,12 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "build:auth": "npm --workspace apps/auth run build",
-    "build:editor": "npm --workspace apps/editor run build",
-    "build:landing": "npm --workspace apps/landing run build",
-    "build:api": "npm --workspace apps/api run build",
-    "build:admin": "npm --workspace apps/admin run build",
-    "build:interview": "npm --workspace apps/interview run build"
+    "build:auth": "turbo run build --filter=auth...",
+    "build:editor": "turbo run build --filter=editor...",
+    "build:landing": "turbo run build --filter=landing...",
+    "build:api": "turbo run build --filter=api...",
+    "build:admin": "turbo run build --filter=admin...",
+    "build:interview": "turbo run build --filter=interview..."
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
