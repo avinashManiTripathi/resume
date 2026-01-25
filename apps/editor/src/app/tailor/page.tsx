@@ -7,6 +7,7 @@ import { Button } from '@repo/ui/button';
 import { Dialog } from '@repo/ui/dialog';
 import { StepLoader } from '@repo/ui/step-loader';
 import { usePersistence } from '../hooks/usePersistence';
+import { ENV } from '../env';
 
 export default function TailorResume() {
     const router = useRouter();
@@ -129,7 +130,7 @@ export default function TailorResume() {
                 });
             }, 1000);
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/tailor/parse`, {
+            const response = await fetch(`${ENV.API_URL}/api/tailor/parse`, {
                 method: 'POST',
                 body: formData,
             });
