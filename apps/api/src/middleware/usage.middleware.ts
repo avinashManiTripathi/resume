@@ -15,7 +15,11 @@ export const checkUsageLimit = (feature: 'tailor' | 'ats') => {
                 return next();
             }
 
-            const userId = (req.user as IUser)._id;
+            // Cast as any or import JWTPayload effectively
+            // Based on auth.middleware.ts, req.user has userId
+            const authUser = req.user as any;
+            const userId = authUser.userId || authUser._id || authUser.id;
+
             const user = await User.findById(userId);
 
             if (!user) {
@@ -35,15 +39,15 @@ export const checkUsageLimit = (feature: 'tailor' | 'ats') => {
             const lastUsageDate = new Date(user.dailyUsage.date);
 
             // Check if it's a new day (simple check: different date string)
-            // Or more robust: check if difference is > 24h OR if just the day changed.
-            // Let's use simpler day string comparison for local daily reset logic
             const isNewDay = now.toDateString() !== lastUsageDate.toDateString();
 
             if (isNewDay) {
                 // Reset counts
-                user.dailyUsage.date = now;
-                user.dailyUsage.tailorCount = 0;
-                user.dailyUsage.atsCount = 0;
+                user.dailyUsage = {
+                    date: now,
+                    tailorCount: 0,
+                    atsCount: 0
+                };
             }
 
             // Check specific limit
@@ -54,7 +58,7 @@ export const checkUsageLimit = (feature: 'tailor' | 'ats') => {
                     error: 'Daily limit exceeded',
                     message: `You have reached your daily limit of ${DAILY_LIMIT} ${feature === 'ats' ? 'ATS checks' : 'Tailor generations'} for today. Please try again tomorrow.`,
                     limit: DAILY_LIMIT,
-                    resetTime: 'Tomorrow' // Could be specific UTC midnight
+                    resetTime: 'Tomorrow'
                 });
             }
 
@@ -65,7 +69,8 @@ export const checkUsageLimit = (feature: 'tailor' | 'ats') => {
                 user.dailyUsage.atsCount += 1;
             }
 
-            // Save user
+            // Save user - explicitly mark modified to ensure persistence of nested updates
+            user.markModified('dailyUsage');
             await user.save();
 
             // Proceed
