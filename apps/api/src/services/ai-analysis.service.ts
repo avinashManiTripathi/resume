@@ -289,7 +289,8 @@ Perform detailed checks across ALL of the following areas and be STRICT in your 
    - Validate logical order and completeness
 
 3. **CONTACT INFORMATION QUALITY**:
-   - Ensure email, phone number are clearly present
+   - Ensure email is clearly present (Critical)
+   - **PHONE NUMBER**: Check for presence but DO NOT penalize if missing or formatted unconventionally. It is NOT a critical error.
    - Check for LinkedIn and GitHub presence with tolerance:
      - Accept full URLs, usernames/handles, OR plain text labels (e.g., "LinkedIn", "GitHub")
      - Plain text labels without URLs or usernames must NOT be treated as errors
@@ -307,7 +308,10 @@ Perform detailed checks across ALL of the following areas and be STRICT in your 
    - Identify relevant industry-specific keywords and technical skills
    - Check for action verbs (led, managed, developed, implemented, etc.)
    - Assess keyword density and natural integration
-   - Identify commonly expected keywords that are MISSING for the industry
+   - **MISSING KEYWORDS**: Identify commonly expected keywords that are MISSING.
+     - **CRITICAL RULE**: Do NOT list missing keywords as a "Weakness" or "Critical Issue".
+     - **CRITICAL RULE**: Do NOT heavily penalize the score for missing keywords alone if the experience description is strong.
+     - Just list them in the \`keywords.missing\` array for user awareness.
 
 6. **QUANTIFIABLE ACHIEVEMENTS**:
    - Count presence of numbers, percentages, and metrics
@@ -350,9 +354,10 @@ FALSE POSITIVE PREVENTION RULE (CRITICAL):
 Do NOT flag the following as errors or weaknesses:
 - "LinkedIn" or "GitHub" mentioned without URL or username
 - Partial or unformatted professional profile references
+- Missing phone number
 
 These should be treated as OPTIONAL IMPROVEMENTS only and must NOT:
-- Reduce scores
+- Reduce scores significantly
 - Appear as critical issues
 - Appear as ATS-breaking problems
 
@@ -362,7 +367,7 @@ Provide your analysis in this JSON format:
   "score": <number between 0-100, be STRICT>,
   "feedback": {
     "strengths": [<array of 4-6 specific strength points with examples>],
-    "weaknesses": [<array of 4-6 specific weakness points with examples>],
+    "weaknesses": [<array of 4-6 specific weakness points with examples. DO NOT INCLUDE MISSING KEYWORDS HERE.>],
     "suggestions": [<array of 6-8 actionable improvement suggestions>]
   },
   "keywords": {
@@ -424,6 +429,12 @@ If an issue appears in the analysis:
 - The fixedData output must explicitly resolve it.
 - No known issue should remain unfixed in fixedData.
 
+**KEYWORD INJECTION RULE (STRICT):**
+- Identify the top **4-5** (maximum) most relevant keywords from your "missing" list that would have the highest impact.
+- **Naturally integrate** these 4-5 keywords into the 'Experience' descriptions or 'Skills' section.
+- **DO NOT** add more than 5 new keywords. Avoid keyword stuffing.
+- Ensure the integration feels organic and justified by the context.
+
 Examples of mandatory fixes:
 - Missing or weak quantification → rewrite bullets with implied or contextual impact (without fabricating data)
 - Non-standard section headers → normalize to ATS-friendly headers
@@ -431,6 +442,7 @@ Examples of mandatory fixes:
 - Poor skills organization → restructure into categorized, ATS-optimized skills
 - Missing soft skills → explicitly add relevant soft skills
 - Missing or partial profile links → include URLs IF present or normalize safely without inventing data
+
 
 
 
