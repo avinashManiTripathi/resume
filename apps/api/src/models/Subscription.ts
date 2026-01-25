@@ -83,8 +83,6 @@ const SubscriptionSchema: Schema = new Schema(
 );
 
 // Indexes
-SubscriptionSchema.index({ userId: 1 });
 SubscriptionSchema.index({ status: 1 });
-SubscriptionSchema.index({ stripeCustomerId: 1 }, { sparse: true });
 
 export const Subscription = mongoose.model<ISubscription>('Subscription', SubscriptionSchema);

@@ -17,7 +17,6 @@ const UserSchema: Schema = new Schema(
             type: String,
             required: true,
             unique: true,
-            index: true,
         },
         email: {
             type: String,
@@ -50,7 +49,5 @@ const UserSchema: Schema = new Schema(
 );
 
 // Indexes for better query performance
-UserSchema.index({ email: 1 });
-UserSchema.index({ googleId: 1 });
 
 export const User = mongoose.model<IUser>('User', UserSchema);

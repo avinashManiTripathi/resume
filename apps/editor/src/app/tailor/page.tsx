@@ -133,6 +133,7 @@ export default function TailorResume() {
             const response = await fetch(`${ENV.API_URL}/api/tailor/parse`, {
                 method: 'POST',
                 body: formData,
+                credentials: 'include',
             });
 
             clearInterval(stageInterval);

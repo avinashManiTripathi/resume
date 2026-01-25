@@ -8,6 +8,7 @@ import { KeywordBanner } from "./KeywordBanner";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { usePersistence } from "../hooks/usePersistence";
+import { ENV } from "../env";
 
 
 interface ATSResult {
@@ -228,9 +229,10 @@ export default function ATSCheckerPage() {
                 }
             }, 800);
 
-            const response = await fetch("https://api.hirecta.com/api/ats/check", {
+            const response = await fetch(`${ENV.API_URL}/api/ats/check`, {
                 method: "POST",
                 body: formData,
+                credentials: 'include',
             });
 
             clearInterval(stageInterval);

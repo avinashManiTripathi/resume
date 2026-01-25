@@ -62,6 +62,5 @@ const CoverLetterTemplateSchema: Schema = new Schema(
 );
 
 // Indexes
-CoverLetterTemplateSchema.index({ category: 1 });
 
 export const CoverLetterTemplate = mongoose.model<ICoverLetterTemplate>('CoverLetterTemplate', CoverLetterTemplateSchema);
