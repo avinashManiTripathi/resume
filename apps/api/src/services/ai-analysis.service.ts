@@ -268,348 +268,87 @@ Return ONLY the JSON object, nothing else.`;
 export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
 
   const prompt = `
-You are an expert ATS (Applicant Tracking System) analyzer and career coach. Perform a STRICT and COMPREHENSIVE analysis of the following resume.
+You are an expert ATS (Applicant Tracking System) analyzer. Perform a STRICT analysis of the resume.
 
 Resume Content:
 ${resumeText}
 
-CRITICAL ANALYSIS REQUIREMENTS:
+ANALYSIS REQUIREMENTS (STRICT):
 
-Perform detailed checks across ALL of the following areas and be STRICT in your evaluation:
+1. **FORMAT**: Check for tables, columns, text boxes, headers/footers, wild formatting.
+2. **STRUCTURE**: Verify standard sections (Contact, Summary, Experience, Education, Skills).
+3. **CONTACT INFO**:
+   - Email (Critical).
+   - Phone (Optional/Non-critical).
+   - LinkedIn/GitHub (Optional, accept plain text).
+4. **DATES**: Consistent formats (YYYY-MM), present in Exp/Edu.
+5. **KEYWORDS**:
+   - Industry terms/action verbs.
+   - **MISSING KEYWORDS**: List missing ones in \`keywords.missing\` ONLY. DO NOT subtract score or list as "Weakness".
+6. **QUANTIFICATION**: Metrics/numbers in achievements.
+7. **CONTENT**: Clarity, length, grammar.
+8. **SKILLS**: Tech/Soft skills relevance.
+9. **EXPERIENCE**: Bullet points, responsibilities + achievements.
+10. **READABILITY**: ATS parsability.
 
-1. **FORMAT COMPATIBILITY** (Critical for ATS):
-   - Check if content suggests use of tables, columns, or text boxes (ATS often can't parse these)
-   - Detect potential headers/footers that ATS may skip
-   - Identify if special formatting (graphs, charts, images) is mentioned
-   - Check for non-standard characters that may cause parsing errors
+SCORING (Strict, 60-80 range typical):
+- Format (15%), Structure (10%), Contact (10%), Keywords (25%), Quantifiable (15%), Content (15%), Skills (10%).
 
-2. **SECTION STRUCTURE**:
-   - Verify presence of standard sections: Contact Info, Summary/Objective, Experience, Education, Skills
-   - Check if section headers use standard names (not creative alternatives)
-   - Validate logical order and completeness
+CRITICAL RULES:
+- **FALSE POSITIVES**: Do NOT flag missing phone, plain text LinkedIn/GitHub, or partial URLs as errors/weaknesses. Treat as optimizations.
+- **OUTPUT**: JSON ONLY. No markdown.
 
-3. **CONTACT INFORMATION QUALITY**:
-   - Ensure email is clearly present (Critical)
-   - **PHONE NUMBER**: Check for presence but DO NOT penalize if missing or formatted unconventionally. It is NOT a critical error.
-   - Check for LinkedIn and GitHub presence with tolerance:
-     - Accept full URLs, usernames/handles, OR plain text labels (e.g., "LinkedIn", "GitHub")
-     - Plain text labels without URLs or usernames must NOT be treated as errors
-     - Do NOT deduct score for plain text labels
-     - If present only as plain text, classify as an OPTIONAL SUGGESTION
-     - Penalize score ONLY if professional links are entirely absent (no mention at all)
-   - Verify location/address information
-
-4. **DATE FORMATTING**:
-   - Check for consistent date formats across all sections
-   - Ensure dates are clearly present for experience and education
-   - Flag inconsistent or missing dates
-
-5. **KEYWORDS AND INDUSTRY TERMS**:
-   - Identify relevant industry-specific keywords and technical skills
-   - Check for action verbs (led, managed, developed, implemented, etc.)
-   - Assess keyword density and natural integration
-   - **MISSING KEYWORDS**: Identify commonly expected keywords that are MISSING.
-     - **CRITICAL RULE**: Do NOT list missing keywords as a "Weakness" or "Critical Issue".
-     - **CRITICAL RULE**: Do NOT heavily penalize the score for missing keywords alone if the experience description is strong.
-     - Just list them in the \`keywords.missing\` array for user awareness.
-
-6. **QUANTIFIABLE ACHIEVEMENTS**:
-   - Count presence of numbers, percentages, and metrics
-   - Assess if accomplishments are measurable
-   - Check for impact-driven language
-
-7. **CONTENT QUALITY**:
-   - Evaluate clarity and conciseness
-   - Check for appropriate length (not too short or too verbose)
-   - Assess professional language use
-   - Identify any spelling/grammar issues evident in the text
-
-8. **SKILLS SECTION**:
-   - Verify presence of both technical and soft skills
-   - Check if skills are relevant and current
-   - Assess organization and presentation
-
-9. **EXPERIENCE DESCRIPTIONS**:
-   - Check if roles have clear, descriptive bullet points
-   - Verify presence of responsibilities AND achievements
-   - Assess if descriptions are ATS-friendly (no excessive jargon or special characters)
-
-10. **OVERALL ATS READABILITY**:
-    - Assess overall parsability by standard ATS systems
-    - Check for red flags that would cause ATS rejection
-    - Evaluate professional presentation
-
-SCORING CRITERIA (Be strict - most resumes should score 60-80):
-- Format Compatibility (15%): Clean, parsable format without tables/columns
-- Section Structure (10%): Standard sections with clear headers
-- Contact Information (10%): Complete and professional
-- Keywords (25%): Industry-specific terms and action verbs
-- Quantifiable Achievements (15%): Numbers, metrics, impact
-- Content Quality (15%): Clear, professional, error-free
-- Skills Section (10%): Relevant, organized, comprehensive
-
-
-FALSE POSITIVE PREVENTION RULE (CRITICAL):
-
-Do NOT flag the following as errors or weaknesses:
-- "LinkedIn" or "GitHub" mentioned without URL or username
-- Partial or unformatted professional profile references
-- Missing phone number
-
-These should be treated as OPTIONAL IMPROVEMENTS only and must NOT:
-- Reduce scores significantly
-- Appear as critical issues
-- Appear as ATS-breaking problems
-
-
-Provide your analysis in this JSON format:
+JSON STRUCTURE:
 {
-  "score": <number between 0-100, be STRICT>,
+  "score": <0-100>,
   "feedback": {
-    "strengths": [<array of 4-6 specific strength points with examples>],
-    "weaknesses": [<array of 4-6 specific weakness points with examples. DO NOT INCLUDE MISSING KEYWORDS HERE.>],
-    "suggestions": [<array of 6-8 actionable improvement suggestions>]
+    "strengths": [<4-6 items>],
+    "weaknesses": [<4-6 items, NO missing keywords here>],
+    "suggestions": [<6-8 items>]
   },
   "keywords": {
-    "found": [<array of 8-12 important keywords/skills found>],
-    "missing": [<array of 6-10 commonly expected keywords that are missing>]
+    "found": [<8-12 items>],
+    "missing": [<6-10 items>]
   },
-  "formatting": {
-    "score": <number between 0-100>,
-    "issues": [<array of specific formatting issues, be detailed>]
-  },
+  "formatting": { "score": <0-100>, "issues": [<array>] },
   "detailedAnalysis": {
-    "contactInfo": {
-      "score": <number 0-100>,
-      "issues": [<array of issues>]
-    },
-    "sectionStructure": {
-      "score": <number 0-100>,
-      "issues": [<array of issues>]
-    },
-    "achievements": {
-      "score": <number 0-100>,
-      "quantifiableCount": <number of quantifiable achievements found>,
-      "issues": [<array of issues>]
-    },
-    "atsCompatibility": {
-      "score": <number 0-100>,
-      "criticalIssues": [<array of ATS-breaking issues>],
-      "warnings": [<array of potential issues>]
-    }
+    "contactInfo": { "score": <0-100>, "issues": [<array>] },
+    "sectionStructure": { "score": <0-100>, "issues": [<array>] },
+    "achievements": { "score": <0-100>, "quantifiableCount": <number>, "issues": [<array>] },
+    "atsCompatibility": { "score": <0-100>, "criticalIssues": [<array>], "warnings": [<array>] }
   }
 }
 
-BE STRICT AND THOROUGH. Most resumes have issues. Provide specific, actionable feedback with examples from the resume text when possible.
+ADDITIONAL TASK: RESUME FIXING & NORMALIZATION
+1. ANALYZE issues.
+2. FIX content professionally.
+3. NORMALIZE into "fixedData".
 
-ADDITIONAL RESPONSIBILITY: RESUME FIXING AND NORMALIZATION
-
-After completing the ATS analysis, you must also:
-
-1. ANALYZE the resume issues identified in your own feedback
-2. FIX the resume content logically and professionally
-3. IMPROVE clarity, ATS-friendliness, keywords, and structure
-4. NORMALIZE the improved resume into a structured JSON object called "fixedData"
-
-
-MANDATORY FIX APPLICATION RULE (CRITICAL):
-
-Treat ALL items listed under:
-- feedback.weaknesses
-- feedback.suggestions
-- formatting.issues
-- detailedAnalysis.*.issues
-
-as REQUIRED FIXES.
-
-You must NOT merely suggest improvements.
-You must APPLY every fix directly when generating "fixedData".
-
-If an issue appears in the analysis:
-- The fixedData output must explicitly resolve it.
-- No known issue should remain unfixed in fixedData.
-
-**KEYWORD INJECTION RULE (STRICT):**
-- Identify the top **4-5** (maximum) most relevant keywords from your "missing" list that would have the highest impact.
-- **Naturally integrate** these 4-5 keywords into the 'Experience' descriptions or 'Skills' section.
-- **DO NOT** add more than 5 new keywords. Avoid keyword stuffing.
-- Ensure the integration feels organic and justified by the context.
-
-Examples of mandatory fixes:
-- Missing or weak quantification → rewrite bullets with implied or contextual impact (without fabricating data)
-- Non-standard section headers → normalize to ATS-friendly headers
-- Missing education dates → add approximate start dates if implied or leave empty ONLY if truly unavailable
-- Poor skills organization → restructure into categorized, ATS-optimized skills
-- Missing soft skills → explicitly add relevant soft skills
-- Missing or partial profile links → include URLs IF present or normalize safely without inventing data
-
-
-
-
-IMPORTANT RULES:
-- DO NOT modify, remove, or rename any existing ATS analysis keys
-- "fixedData" must be appended as a NEW root-level key
-- The fixed version must be based ONLY on resume content + reasonable professional improvements
-- Do NOT fabricate companies, degrees, or experience
-- You MAY:
-  - Rewrite summaries
-  - Improve bullet points
-  - Add missing metrics where implied (but not fake numbers)
-  - Normalize job titles
-  - Infer skill levels conservatively
-- If any field is missing in the resume, return:
-  - "" for strings
-  - [] for arrays
-  - false for booleans
-- All dates must be normalized to YYYY-MM
-- Descriptions must be ATS-safe and concise
-- HTML formatting is allowed ONLY where explicitly required
+MANDATORY FIX RULES:
+- APPLY ALL fixes for weaknesses, suggestions, and formatting issues directly in "fixedData".
+- **KEYWORD INJECTION**: Identify top **4-5** missing keywords. Naturally integrate them into Experience/Skills. MAX 5 keywords.
+- Normalize dates to YYYY-MM.
+- Normalize headers.
+- Rewrite bullets for impact.
 
 "fixedData": {
-  "personalInfo": {
-    "firstName": "",
-    "lastName": "",
-    "email": "",
-    "phone": "",
-    "city": "",
-    "pincode": "",
-    "country": "",
-    "state": "",
-    "jobTitle": "",
-    "summary": "2–3 improved, ATS-optimized sentences tailored to the candidate’s role",
-    "linkedin": "",
-    "github": ""
-  },
-  "summary": {
-    "content": "2–3 improved, ATS-optimized sentences tailored to the candidate's role"
-  },
-  "experience": [
-    {
-      "jobTitle": "",
-      "company": "",
-      "startDate": "",
-      "endDate": "",
-      "description": "<ul><li>Improved, action-oriented, ATS-safe bullet points</li></ul>"
-    }
-  ],
-  "education": [
-    {
-      "degree": "",
-      "institution": "",
-      "startDate": "",
-      "endDate": ""
-    }
-  ],
-  "skills": [
-    {
-      "name": "",
-      "level": "Beginner|Intermediate|Advanced|Expert"
-    }
-  ],
-  "languages": [
-    {
-      "language": "",
-      "proficiency": "Native|Fluent|Proficient|Intermediate|Basic"
-    }
-  ],
-  "achievements": [
-    {
-      "title": "",
-      "description": "Impact-focused rewritten achievement",
-      "date": ""
-    }
-  ],
-  "certifications": [
-    {
-      "name": "",
-      "issuer": "",
-      "date": "",
-      "expiryDate": "",
-      "credentialId": "",
-      "url": ""
-    }
-  ],
-  "awards": [
-    {
-      "title": "",
-      "issuer": "",
-      "date": "",
-      "description": ""
-    }
-  ],
-  "publications": [
-    {
-      "title": "",
-      "publisher": "",
-      "date": "",
-      "url": "",
-      "description": ""
-    }
-  ],
-  "volunteer": [
-    {
-      "role": "",
-      "organization": "",
-      "startDate": "",
-      "endDate": "",
-      "currentlyVolunteering": false,
-      "description": ""
-    }
-  ],
-  "interests": [
-    {
-      "name": "",
-      "description": ""
-    }
-  ],
-  "references": [
-    {
-      "name": "",
-      "jobTitle": "",
-      "company": "",
-      "email": "",
-      "phone": ""
-    }
-  ],
-  "projects": [
-    {
-      "name": "",
-      "startDate": "",
-      "endDate": "",
-      "description": "<ul><li>Improved project description aligned with job role</li></ul>"
-    }
-  ]
+  "personalInfo": { "firstName": "", "lastName": "", "email": "", "phone": "", "city": "", "pincode": "", "country": "", "state": "", "jobTitle": "", "summary": "Optimized summary", "linkedin": "", "github": "" },
+  "summary": { "content": "Optimized summary" },
+  "experience": [{ "jobTitle": "", "company": "", "startDate": "", "endDate": "", "description": "<ul><li>Optimized bullets</li></ul>" }],
+  "education": [{ "degree": "", "institution": "", "startDate": "", "endDate": "" }],
+  "skills": [{ "name": "", "level": "Beginner|Intermediate|Advanced|Expert" }],
+  "languages": [{ "language": "", "proficiency": "" }],
+  "achievements": [{ "title": "", "description": "", "date": "" }],
+  "certifications": [{ "name": "", "issuer": "", "date": "", "expiryDate": "", "credentialId": "", "url": "" }],
+  "awards": [{ "title": "", "issuer": "", "date": "", "description": "" }],
+  "publications": [{ "title": "", "publisher": "", "date": "", "url": "", "description": "" }],
+  "volunteer": [{ "role": "", "organization": "", "startDate": "", "endDate": "", "currentlyVolunteering": false, "description": "" }],
+  "interests": [{ "name": "", "description": "" }],
+  "references": [{ "name": "", "jobTitle": "", "company": "", "email": "", "phone": "" }],
+  "projects": [{ "name": "", "startDate": "", "endDate": "", "description": "<ul><li>Description</li></ul>" }]
 }
 
-
-
-IMPROVEMENT LOGIC (CRITICAL):
-
-Derive "Areas to Improve" internally using:
-- feedback.weaknesses
-- feedback.suggestions
-- formatting issues
-- missing keywords
-
-Then APPLY these improvements directly when generating "fixedData".
-
-Do NOT output a separate "Areas to Improve" section.
-All improvements must be reflected in:
-- rewritten summary
-- improved experience bullet points
-- optimized skills list
-- normalized job titles
-- ATS-friendly structure
-
-
-Return ONLY one valid JSON object that includes:
-
-1) The complete ATS analysis JSON (unchanged)
-2) The appended "fixedData" object containing the IMPROVED resume
-
-Do NOT return explanations, markdown, or additional text.
-
-Return ONLY the JSON object, nothing else.`;
+Return ONLY the JSON object (Analysis + fixedData keys).`;
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",

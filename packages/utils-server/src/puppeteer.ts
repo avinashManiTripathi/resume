@@ -113,13 +113,70 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
 }
 
 /* =====================================================
-   PUPPETEER BROWSER (REUSED)
+   PUPPETEER BROWSER MANAGER (SCALABLE)
 ===================================================== */
 
+const MAX_CONCURRENT_PAGES = 10;
+const MAX_REQUESTS_PER_BROWSER = 200;
+const QUEUE_TIMEOUT_MS = 30000; // 30s timeout for waiting in queue
+
 let puppeteerBrowser: Browser | null = null;
+let activePages = 0;
+let totalRequestsHandled = 0;
+const requestQueue: Array<{
+    resolve: () => void;
+    reject: (err: Error) => void;
+    timer: NodeJS.Timeout;
+}> = [];
+
+// Check queue and process next request if slot available
+const processQueue = () => {
+    if (activePages >= MAX_CONCURRENT_PAGES || requestQueue.length === 0) return;
+
+    const nextRequest = requestQueue.shift();
+    if (nextRequest) {
+        clearTimeout(nextRequest.timer);
+        activePages++;
+        nextRequest.resolve();
+    }
+};
+
+// Acquire a slot (wait if queue full)
+const acquirePageSlot = async (): Promise<void> => {
+    if (activePages < MAX_CONCURRENT_PAGES) {
+        activePages++;
+        return;
+    }
+
+    return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+            // Remove from queue if timed out
+            const index = requestQueue.findIndex(r => r.reject === reject);
+            if (index !== -1) requestQueue.splice(index, 1);
+            reject(new Error('Server busy: PDF generation queue timeout'));
+        }, QUEUE_TIMEOUT_MS);
+
+        requestQueue.push({ resolve, reject, timer });
+    });
+};
+
+// Release slot and process next
+const releasePageSlot = () => {
+    activePages--;
+    processQueue();
+};
 
 const getBrowser = async (): Promise<Browser> => {
+    // restart browser if limit reached and no active pages
+    if (puppeteerBrowser && totalRequestsHandled >= MAX_REQUESTS_PER_BROWSER && activePages === 0) {
+        console.log('♻️ Restarting Puppeteer browser to free memory...');
+        await puppeteerBrowser.close();
+        puppeteerBrowser = null;
+        totalRequestsHandled = 0;
+    }
+
     if (!puppeteerBrowser || !puppeteerBrowser.isConnected()) {
+        console.log('🚀 Launching new Puppeteer instance...');
         puppeteerBrowser = await puppeteer.launch({
             headless: true,
             protocolTimeout: 120000,
@@ -131,11 +188,53 @@ const getBrowser = async (): Promise<Browser> => {
                 '--disable-gpu',
                 '--single-process',
                 '--no-zygote',
+                // Performance Flags
+                '--disable-extensions',
+                '--mute-audio',
+                '--disable-background-networking',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-breakpad',
+                '--disable-component-extensions-with-background-pages',
+                '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+                '--disable-ipc-flooding-protection',
+                '--disable-renderer-backgrounding',
             ],
         });
     }
 
     return puppeteerBrowser;
+};
+
+/**
+ * Pre-warm browser and fonts to reduce latency on first request
+ */
+export const preWarmPuppeteer = async () => {
+    console.log('🔥 Pre-warming Puppeteer and Fonts...');
+    try {
+        // 1. Launch Browser
+        await getBrowser();
+
+        // 2. Pre-fetch common fonts
+        const commonFonts = ['Inter', 'Roboto', 'Open Sans'];
+        await Promise.all(commonFonts.map(async (font) => {
+            try {
+                const css = await fetchGoogleFontCSS(font);
+                const fonts = extractWoff2(css);
+                // Fetch only the normal weight (400) to save time, or all if critical
+                const normalFont = fonts.find(f => f.weight === 400);
+                if (normalFont) {
+                    await fetchFontBase64(normalFont.url);
+                }
+            } catch (e) {
+                console.warn(`Failed to pre-warm font ${font}`, e);
+            }
+        }));
+
+        console.log('✅ Puppeteer pre-warmed successfully');
+    } catch (error) {
+        console.error('❌ Failed to pre-warm Puppeteer:', error);
+    }
 };
 
 /* =====================================================
@@ -147,10 +246,15 @@ export const htmlToPdf = async (
     outputPath: string,
     jsonData: any
 ) => {
-    const browser = await getBrowser();
-    const page = await browser.newPage();
+    await acquirePageSlot(); // Wait for slot
+
+    let page: Page | null = null;
 
     try {
+        const browser = await getBrowser();
+        page = await browser.newPage();
+        totalRequestsHandled++;
+
         page.setDefaultTimeout(120000);
         page.setDefaultNavigationTimeout(120000);
 
@@ -188,8 +292,9 @@ export const htmlToPdf = async (
         console.error('PDF generation failed:', error);
         throw error;
     } finally {
-        if (!page.isClosed()) {
-            await page.close();
+        if (page && !page.isClosed()) {
+            await page.close().catch(e => console.error("Error closing page:", e));
         }
+        releasePageSlot(); // Release slot for next request
     }
 };

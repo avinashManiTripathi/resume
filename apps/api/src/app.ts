@@ -9,6 +9,7 @@ import passport from 'passport';
 import { config } from './config';
 import dotenv from 'dotenv';
 import { initAI } from './services/ai-analysis.service';
+import { preWarmPuppeteer } from '@repo/utils-server';
 import { initAI as initInterviewAI } from './services/interview.service';
 import { database } from './config/database';
 import pdfRoutes from './routes/pdf.routes';
@@ -169,6 +170,9 @@ export class App {
         if (process.env.GENAI_API_KEY) {
             initAI(process.env.GENAI_API_KEY);
             initInterviewAI(process.env.GENAI_API_KEY);
+
+            // Pre-warm Puppeteer in background
+            preWarmPuppeteer().catch((err: any) => console.error('Puppeteer pre-warm failed', err));
         }
 
         // Session
