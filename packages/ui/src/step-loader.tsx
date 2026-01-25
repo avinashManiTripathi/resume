@@ -26,12 +26,14 @@ export const StepLoader = ({
     logoSrc = "/logo.png",
     fullScreen = false,
     className,
+    variant = "card",
 }: StepLoaderProps) => {
     if (!loading) return null;
 
     // Container positioning
     const containerClass = cn(
-        "flex flex-col items-center justify-center z-[100] bg-white",
+        "flex flex-col items-center justify-center z-[100]",
+        variant === "transparent" ? "bg-transparent" : "bg-white",
         fullScreen ? "fixed inset-0" : "absolute inset-0",
         className
     );

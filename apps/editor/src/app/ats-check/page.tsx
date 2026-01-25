@@ -594,27 +594,19 @@ export default function ATSCheckerPage() {
 
                             {/* Modal Overlay for Analyzing */}
                             {currentStep === 'analyzing' && (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/10 backdrop-blur-sm animate-in fade-in duration-300">
-                                    <div className="max-w-xl w-full bg-white border border-gray-100 rounded-[3rem] p-10 md:p-14 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.15)] space-y-10 animate-in zoom-in slide-in-from-bottom-4 duration-300">
-                                        <div className="space-y-4 text-center">
-                                            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl shadow-blue-200 animate-bounce">
-                                                <Brain size={32} />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <h3 className="text-3xl font-black text-gray-900 leading-tight">AI Analysis in Progress</h3>
-                                                <p className="text-gray-500 font-medium">Scanning your resume for maximum compatibility</p>
-                                            </div>
-                                        </div>
-
+                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                                    <div className="max-w-xl w-full bg-white border border-gray-100 rounded-[3rem] p-10 md:p-14 shadow-2xl relative overflow-hidden animate-in zoom-in slide-in-from-bottom-4 duration-300">
                                         <StepLoader
                                             loading={true}
                                             message="AI Analysis in Progress"
                                             subMessage={analysisStage || "Scanning your resume..."}
                                             logoSrc="/logo.png"
-                                            fullScreen={true}
+                                            fullScreen={false}
+                                            variant="transparent"
+                                            className="min-h-[300px]"
                                         />
 
-                                        <div className="text-center">
+                                        <div className="text-center mt-8">
                                             <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-blue-50 text-blue-600 rounded-full text-xs font-black uppercase tracking-widest border border-blue-100/50 animate-pulse">
                                                 <Loader className="w-3.5 h-3.5 animate-spin" />
                                                 {progress}% Complete

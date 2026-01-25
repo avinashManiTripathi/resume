@@ -402,26 +402,17 @@ export default function TailorResume() {
 
                     {/* Analyzing Modal Overlay */}
                     {isAnalyzing && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white animate-in fade-in duration-300">
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
                             <div className="max-w-xl w-full bg-white border border-slate-100 rounded-[3rem] p-10 md:p-14 shadow-2xl space-y-10 animate-in zoom-in slide-in-from-bottom-4 duration-300">
-                                <div className="space-y-4 text-center">
-                                    <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center text-white mx-auto shadow-xl shadow-indigo-200 animate-bounce">
-                                        <Brain size={32} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h3 className="text-3xl font-black text-slate-900 leading-tight">Tailoring Your Story</h3>
-                                        <p className="text-slate-500 font-medium">Matching your skills with the job description</p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-slate-50/50 rounded-3xl p-8 border border-slate-100">
-                                    <StepLoader
-                                        steps={tailoringStages}
-                                        currentStep={currentStageIndex}
-                                        size="md"
-                                        className="max-w-md mx-auto font-bold"
-                                    />
-                                </div>
+                                <StepLoader
+                                    loading={true}
+                                    message="Tailoring Your Story"
+                                    subMessage={tailoringStages[currentStageIndex] || "Matching your skills..."}
+                                    logoSrc="/logo.png"
+                                    fullScreen={false}
+                                    variant="transparent"
+                                    className="min-h-[300px]"
+                                />
 
                                 <div className="text-center">
                                     <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-indigo-50 text-indigo-600 rounded-full text-xs font-black uppercase tracking-widest border border-indigo-100/50 animate-pulse">
