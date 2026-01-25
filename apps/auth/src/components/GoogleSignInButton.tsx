@@ -1,18 +1,20 @@
 "use client";
 
+import { ENV } from "@/app/env";
+import { API_ENDPOINTS } from "@repo/utils-client";
 import { useState } from "react";
+import { useAppNetwork } from "../hooks/useAppNetwork";
 
 export default function GoogleSignInButton() {
     const [isLoading, setIsLoading] = useState(false);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.hirecta.com";
+    const network = useAppNetwork();
 
     const handleSignIn = async () => {
         try {
             setIsLoading(true);
 
             // Call backend to get Google OAuth URL
-            const response = await fetch(`${API_URL}/api/auth/google/url?state=${JSON.stringify(window.location.search)}`);
-            const data = await response.json();
+            const data = await network.get(`${API_ENDPOINTS.AUTH.GOOGLE_URL}?state=${JSON.stringify(window.location.search)}`);
 
             if (data.url) {
                 // Redirect to Google OAuth URL

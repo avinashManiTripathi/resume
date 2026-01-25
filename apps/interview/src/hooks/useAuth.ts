@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { ENV } from '../config/env';
+import { useAppNetwork, API_ENDPOINTS } from './useAppNetwork';
 
 const API_BASE = ENV.API_URL;
 
@@ -15,6 +16,8 @@ export interface User {
 export function useAuth() {
     const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const [user, setUser] = useState<User | null>(null);
+    const network = useAppNetwork();
+    const isProd = window.location.hostname.endsWith('hirecta.com');
 
     // Initial check for auth status
     useEffect(() => {
@@ -25,8 +28,8 @@ export function useAuth() {
                 const tokenFromUrl = params.get('token');
 
                 if (tokenFromUrl) {
-                    const isProd = window.location.hostname.endsWith('hirecta.com');
-                    const domain = isProd ? '; domain=.hirecta.com' : '';
+
+                    const domain = isProd ? '; domain=.hirecta.com' : 'domain=localhost';
                     const secure = isProd ? '; secure' : '';
                     document.cookie = `token=${tokenFromUrl}; path=/; max-age=${7 * 24 * 60 * 60}${domain}${secure}; samesite=lax`;
                     localStorage.setItem("authToken", tokenFromUrl);
@@ -41,13 +44,8 @@ export function useAuth() {
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/auth/user`, {
-                    headers: { 'Accept': 'application/json' },
-                    credentials: 'include'
-                });
-
-                if (response.ok) {
-                    const userData = await response.json();
+                const userData = await network.get<User>(API_ENDPOINTS.AUTH.USER);
+                if (userData) {
                     setUser(userData);
                     setIsLoggedIn(true);
                 } else {
@@ -60,15 +58,12 @@ export function useAuth() {
         };
 
         checkAuth();
-    }, []);
+    }, [network]);
 
     const logout = useCallback(async () => {
         try {
-            await fetch(`${API_BASE}/api/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.hirecta.com";
+            await network.post(API_ENDPOINTS.AUTH.LOGOUT);
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;" + (isProd ? '; domain=.hirecta.com' : 'domain=localhost');
             document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
             localStorage.removeItem("authToken");
             window.location.href = ENV.AUTH_URL;
@@ -77,7 +72,7 @@ export function useAuth() {
         } catch (error) {
             console.error('Logout failed:', error);
         }
-    }, []);
+    }, [network]);
 
     return {
         isLoggedIn,

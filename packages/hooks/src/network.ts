@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNetwork } from '@repo/utils-client';
 
 /**
  * Type definitions for network hooks
@@ -22,85 +23,43 @@ export interface MutationState<T> {
 }
 
 /**
- * useFetch - Generic hook for fetching data
- * 
- * @param url - The URL to fetch from
- * @param options - Fetch options including skip flag
- * @returns Object with data, loading, error, and refetch function
- * 
- * @example
- * const { data, loading, error, refetch } = useFetch<User>('/api/user');
+ * useFetch - Generic hook for fetching data using useNetwork
  */
 export function useFetch<T = any>(
     url: string,
     options: FetchOptions = {}
 ): FetchState<T> & { refetch: () => void } {
-    const [state, setState] = useState<FetchState<T>>({
-        data: null,
-        loading: !options.skip,
-        error: null,
-    });
-
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const { get, loading, error } = useNetwork();
+    const [data, setData] = useState<T | null>(null);
+    const [shouldFetch, setShouldFetch] = useState(!options.skip);
 
     const fetchData = useCallback(async () => {
-        if (options.skip) return;
-
-        // Cancel previous request
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-        }
-
-        abortControllerRef.current = new AbortController();
-
-        setState(prev => ({ ...prev, loading: true, error: null }));
+        if (!shouldFetch && options.skip) return;
 
         try {
-            const response = await fetch(url, {
-                ...options,
-                credentials: 'include',
-                signal: abortControllerRef.current.signal,
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setState({ data, loading: false, error: null });
-        } catch (error) {
-            if (error instanceof Error && error.name === 'AbortError') {
-                return; // Request was cancelled
-            }
-            setState({ data: null, loading: false, error: error as Error });
+            const result = await get<T>(url, options);
+            setData(result);
+        } catch (err) {
+            // Error is handled by useNetwork and set in error state
         }
-    }, [url, options.skip]);
+    }, [url, options.skip, shouldFetch, get]); // Removed 'options' from deps to avoid loop if object literal passed
 
     useEffect(() => {
-        fetchData();
-
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
-    }, [fetchData]);
+        if (!options.skip) {
+            fetchData();
+        }
+    }, [fetchData, options.skip]);
 
     return {
-        ...state,
+        data,
+        loading: loading && !data && !error, // Only loading if no data/error yet (or effectively re-fetching)
+        error,
         refetch: fetchData,
     };
 }
 
 /**
  * useGet - Hook for GET requests
- * 
- * @param url - The URL to fetch from
- * @param options - Fetch options
- * @returns Object with data, loading, error, and refetch function
- * 
- * @example
- * const { data, loading, error } = useGet<User[]>('/api/users');
  */
 export function useGet<T = any>(
     url: string,
@@ -111,76 +70,37 @@ export function useGet<T = any>(
 
 /**
  * usePost - Hook for POST requests
- * 
- * @param url - The URL to post to
- * @returns Object with execute function, data, loading, and error
- * 
- * @example
- * const { execute, data, loading, error } = usePost<User>('/api/users');
- * await execute({ name: 'John Doe' });
  */
 export function usePost<T = any>(url: string): MutationState<T> {
-    const [state, setState] = useState<FetchState<T>>({
-        data: null,
-        loading: false,
-        error: null,
-    });
-
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const { post, loading, error: networkError } = useNetwork();
+    const [data, setData] = useState<T | null>(null);
+    const [localError, setLocalError] = useState<Error | null>(null);
 
     const execute = useCallback(
         async (body?: any): Promise<T | null> => {
-            // Cancel previous request
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-
-            abortControllerRef.current = new AbortController();
-            setState({ data: null, loading: true, error: null });
-
+            setLocalError(null);
+            setData(null);
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: body ? JSON.stringify(body) : undefined,
-                    credentials: 'include',
-                    signal: abortControllerRef.current.signal,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setState({ data, loading: false, error: null });
-                return data;
-            } catch (error) {
-                if (error instanceof Error && error.name === 'AbortError') {
-                    return null;
-                }
-                setState({ data: null, loading: false, error: error as Error });
+                const result = await post<T>(url, body);
+                setData(result);
+                return result;
+            } catch (err) {
+                setLocalError(err instanceof Error ? err : new Error(String(err)));
                 return null;
             }
         },
-        [url]
+        [url, post]
     );
 
     const reset = useCallback(() => {
-        setState({ data: null, loading: false, error: null });
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
+        setData(null);
+        setLocalError(null);
     }, []);
 
     return {
-        ...state,
+        data,
+        loading,
+        error: localError || networkError,
         execute,
         reset,
     };
@@ -188,75 +108,37 @@ export function usePost<T = any>(url: string): MutationState<T> {
 
 /**
  * usePut - Hook for PUT requests
- * 
- * @param url - The URL to put to
- * @returns Object with execute function, data, loading, and error
- * 
- * @example
- * const { execute, loading } = usePut<User>('/api/user/123');
- * await execute({ name: 'Jane Doe' });
  */
 export function usePut<T = any>(url: string): MutationState<T> {
-    const [state, setState] = useState<FetchState<T>>({
-        data: null,
-        loading: false,
-        error: null,
-    });
-
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const { put, loading, error: networkError } = useNetwork();
+    const [data, setData] = useState<T | null>(null);
+    const [localError, setLocalError] = useState<Error | null>(null);
 
     const execute = useCallback(
         async (body?: any): Promise<T | null> => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-
-            abortControllerRef.current = new AbortController();
-            setState({ data: null, loading: true, error: null });
-
+            setLocalError(null);
+            setData(null);
             try {
-                const response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: body ? JSON.stringify(body) : undefined,
-                    credentials: 'include',
-                    signal: abortControllerRef.current.signal,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setState({ data, loading: false, error: null });
-                return data;
-            } catch (error) {
-                if (error instanceof Error && error.name === 'AbortError') {
-                    return null;
-                }
-                setState({ data: null, loading: false, error: error as Error });
+                const result = await put<T>(url, body);
+                setData(result);
+                return result;
+            } catch (err) {
+                setLocalError(err instanceof Error ? err : new Error(String(err)));
                 return null;
             }
         },
-        [url]
+        [url, put]
     );
 
     const reset = useCallback(() => {
-        setState({ data: null, loading: false, error: null });
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
+        setData(null);
+        setLocalError(null);
     }, []);
 
     return {
-        ...state,
+        data,
+        loading,
+        error: localError || networkError,
         execute,
         reset,
     };
@@ -264,15 +146,17 @@ export function usePut<T = any>(url: string): MutationState<T> {
 
 /**
  * usePatch - Hook for PATCH requests
- * 
- * @param url - The URL to patch
- * @returns Object with execute function, data, loading, and error
- * 
- * @example
- * const { execute, loading } = usePatch<User>('/api/user/123');
- * await execute({ email: 'newemail@example.com' });
+ * Note: useNetwork might not expose patch directly, so using request if available or implementing via custom params if needed.
+ * useNetwork exports get, post, put, del. We'll use 'put' as a fallback or assume extended useNetwork.
+ * Actually, let's implement it using the same pattern but check if useNetwork supports it.
+ * useNetwork.ts provided shows get, post, put, del. No patch.
+ * We will extend usage here or map to PUT if acceptable, OR (better) adding PATCH support to useNetwork later.
+ * For now, we will use a raw fetch fallback for PATCH to maintain functionality, or better yet, assume we can update useNetwork too.
+ * Let's stick to matching the interface but using 'post' with method override if supported, or just keep raw implementation for PATCH.
+ * Wait, sticking to raw implementation for PATCH is safer if useNetwork doesn't support it.
  */
 export function usePatch<T = any>(url: string): MutationState<T> {
+    // keeping original implementation for PATCH as useNetwork doesn't support it yet
     const [state, setState] = useState<FetchState<T>>({
         data: null,
         loading: false,
@@ -340,100 +224,51 @@ export function usePatch<T = any>(url: string): MutationState<T> {
 
 /**
  * useDelete - Hook for DELETE requests
- * 
- * @param url - The URL to delete
- * @returns Object with execute function, data, loading, and error
- * 
- * @example
- * const { execute, loading } = useDelete('/api/user/123');
- * await execute();
  */
 export function useDelete<T = any>(url: string): MutationState<T> {
-    const [state, setState] = useState<FetchState<T>>({
-        data: null,
-        loading: false,
-        error: null,
-    });
-
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const { del, loading, error: networkError } = useNetwork();
+    const [data, setData] = useState<T | null>(null);
+    const [localError, setLocalError] = useState<Error | null>(null);
 
     const execute = useCallback(
         async (body?: any): Promise<T | null> => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-
-            abortControllerRef.current = new AbortController();
-            setState({ data: null, loading: true, error: null });
-
+            setLocalError(null);
             try {
-                const response = await fetch(url, {
-                    method: 'DELETE',
-                    headers: body ? {
-                        'Content-Type': 'application/json',
-                    } : undefined,
-                    body: body ? JSON.stringify(body) : undefined,
-                    credentials: 'include',
-                    signal: abortControllerRef.current.signal,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // DELETE might not return JSON
-                let data: T | null = null;
-                const text = await response.text();
-                if (text) {
-                    try {
-                        data = JSON.parse(text);
-                    } catch {
-                        // Response is not JSON
-                    }
-                }
-
-                setState({ data, loading: false, error: null });
-                return data;
-            } catch (error) {
-                if (error instanceof Error && error.name === 'AbortError') {
-                    return null;
-                }
-                setState({ data: null, loading: false, error: error as Error });
+                // useNetwork.del doesn't strictly support body in signature but underlying fetch does.
+                // However, useNetwork del signature is (endpoint, options).
+                // We'll pass body in options if needed, though DELETE with body is rare/discouraged.
+                const options = body ? { body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } } : {};
+                const result = await del<T>(url, options);
+                setData(result);
+                return result;
+            } catch (err) {
+                setLocalError(err instanceof Error ? err : new Error(String(err)));
                 return null;
             }
         },
-        [url]
+        [url, del]
     );
 
     const reset = useCallback(() => {
-        setState({ data: null, loading: false, error: null });
-    }, []);
-
-    useEffect(() => {
-        return () => {
-            if (abortControllerRef.current) {
-                abortControllerRef.current.abort();
-            }
-        };
+        setData(null);
+        setLocalError(null);
     }, []);
 
     return {
-        ...state,
+        data,
+        loading,
+        error: localError || networkError,
         execute,
-        reset,
+        reset
     };
 }
 
 /**
- * usePostArrayBuffer - Hook for POST requests that return ArrayBuffer (e.g., PDF generation)
- * Includes automatic request cancellation via AbortController
- * 
- * @param url - The URL to post to
- * @returns Object with execute function, loading state, and error
- * 
- * @example
- * const { execute, loading, error } = usePostArrayBuffer('/api/pdf/generate');
- * const pdfData = await execute({ resumeData });
+ * usePostArrayBuffer - Hook for POST requests that return ArrayBuffer
+ * useNetwork supports 'blob' or 'text' or 'json' via responseType. ArrayBuffer not explicitly exposed but Blob is close.
+ * We'll keep the custom implementation to ensure ArrayBuffer return type specifically, 
+ * OR update it to use network.post with responseType='blob' and convert.
+ * Let's keep custom implementation for max safety on this specific utility for now.
  */
 export function usePostArrayBuffer(url: string) {
     const [loading, setLoading] = useState(false);
@@ -443,7 +278,6 @@ export function usePostArrayBuffer(url: string) {
 
     const execute = useCallback(
         async (body?: any): Promise<ArrayBuffer | null> => {
-            // Cancel previous request if still pending
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort();
             }
@@ -472,7 +306,6 @@ export function usePostArrayBuffer(url: string) {
                 return data;
             } catch (error) {
                 if (error instanceof Error && error.name === 'AbortError') {
-                    // Request was cancelled - this is expected behavior
                     return null;
                 }
                 setError(error as Error);
@@ -490,7 +323,6 @@ export function usePostArrayBuffer(url: string) {
 
     useEffect(() => {
         return () => {
-            // Cleanup: cancel any pending request on unmount
             if (abortControllerRef.current) {
                 abortControllerRef.current.abort();
             }
@@ -504,3 +336,4 @@ export function usePostArrayBuffer(url: string) {
         reset,
     };
 }
+

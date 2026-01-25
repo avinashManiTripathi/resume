@@ -5,6 +5,8 @@ import { Upload, File, FileText, CheckCircle, XCircle, AlertCircle, TrendingUp, 
 import { Button } from "@repo/ui/button";
 import { KeywordBanner } from "./KeywordBanner";
 import { ENV } from "../../env";
+import { API_ENDPOINTS } from "@repo/utils-client";
+import { useAppNetwork } from "../../../hooks/useAppNetwork";
 
 export interface ATSResult {
     score: number;
@@ -46,6 +48,7 @@ export interface ATSResult {
 export type Step = 'upload' | 'analyzing' | 'results';
 
 export function ATSCheckerCheckContent() {
+    const network = useAppNetwork();
     const [currentStep, setCurrentStep] = useState<Step>('upload');
     const [file, setFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -116,23 +119,16 @@ export function ATSCheckerCheckContent() {
                 }
             }, 800);
 
-            const response = await fetch(`${ENV.API_URL}/api/ats/check`, {
-                method: "POST",
-                body: formData,
-            });
+            const response = await network.post(API_ENDPOINTS.ATS.CHECK, formData);
 
             clearInterval(stageInterval);
             setProgress(100);
             setAnalysisStage('Analysis complete!');
 
-            if (!response.ok) {
-                throw new Error("Failed to analyze resume");
-            }
-
-            const data = await response.json();
+            // Added artificial delay for UX
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            setResult(data);
+            setResult(response);
             setCurrentStep('results');
         } catch (err) {
             setError(err instanceof Error ? err.message : "An error occurred");

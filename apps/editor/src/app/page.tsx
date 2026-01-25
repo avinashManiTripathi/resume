@@ -34,6 +34,7 @@ import Image from "next/image";
 import { usePersistence, SavedDocument } from "./hooks/usePersistence";
 import { Dialog } from "@repo/ui/dialog";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ENV } from "./env";
 
 
 interface UserProfile {
@@ -490,7 +491,7 @@ function DashboardContent() {
                     </Link>
                   )}
                   {activeToolView === 'mock-interview' && (
-                    <a href="https://interview.hirecta.com" target="_blank" rel="noreferrer" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-sm transition-all flex items-center gap-2">
+                    <a href={ENV.INTERVIEW_URL} target="_blank" rel="noreferrer" className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg shadow-sm transition-all flex items-center gap-2">
                       <Plus size={18} /> Start New Interview
                     </a>
                   )}
@@ -697,7 +698,7 @@ function DashboardContent() {
                       </div>
                       <p className="text-slate-900 font-bold text-lg mb-2">No Practice Sessions Yet</p>
                       <p className="text-slate-500 text-sm mb-6">Practice your interview skills with our AI-powered mock interviewer.</p>
-                      <a href="https://interview.hirecta.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg transition-all">
+                      <a href={ENV.INTERVIEW_URL} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm rounded-lg transition-all">
                         Start Your First Interview <ArrowRight size={16} />
                       </a>
                     </div>
@@ -728,7 +729,7 @@ function DashboardContent() {
                           </div>
                           <div className="flex items-center gap-2 ml-4">
                             <a
-                              href={`https://interview.hirecta.com/session/${session.id}`}
+                              href={ENV.INTERVIEW_URL + `/session/${session.id}`}
                               target="_blank"
                               rel="noreferrer"
                               className="px-4 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 font-bold text-sm rounded-lg transition-all opacity-0 group-hover:opacity-100 flex items-center gap-2"
@@ -873,7 +874,7 @@ function DashboardContent() {
                   </div>
 
                   {/* Mock Interview Quick Link */}
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-emerald-300 transition-all" onClick={() => window.open('https://interview.hirecta.com', '_blank')}>
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 group cursor-pointer hover:border-emerald-300 transition-all" onClick={() => window.open(ENV.INTERVIEW_URL, '_blank')}>
                     <div className="flex items-start gap-4">
                       <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600">
                         <Video size={20} />
@@ -1041,7 +1042,7 @@ function DashboardContent() {
                         <Video size={20} className="text-indigo-600" /> Mock Interview Sessions
                       </h3>
                       <a
-                        href="https://interview.hirecta.com"
+                        href={ENV.INTERVIEW_URL}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-sm hover:shadow-indigo-200"
@@ -1057,7 +1058,7 @@ function DashboardContent() {
                         </div>
                         <p className="text-slate-900 font-bold mb-1">No Practice Sessions Yet</p>
                         <p className="text-slate-500 text-xs mb-4">Practice your interview skills with our AI interviewer.</p>
-                        <a href="https://interview.hirecta.com" target="_blank" rel="noreferrer" className="text-xs font-bold text-indigo-600 hover:underline">
+                        <a href={ENV.INTERVIEW_URL} target="_blank" rel="noreferrer" className="text-xs font-bold text-indigo-600 hover:underline">
                           Start Your First Session
                         </a>
                       </div>
@@ -1082,7 +1083,7 @@ function DashboardContent() {
                               </div>
                             </div>
                             <a
-                              href={`https://interview.hirecta.com/session/${session.id}`}
+                              href={`${ENV.INTERVIEW_URL}/session/${session.id}`}
                               target="_blank"
                               rel="noreferrer"
                               className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all hover:bg-indigo-100"

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { ENV } from '../env';
+import { useAppNetwork, API_ENDPOINTS } from './useAppNetwork';
 
 const LOCAL_STORAGE_KEY = 'profresume_saved_documents';
 const API_BASE = ENV.API_URL;
@@ -22,6 +23,9 @@ export function usePersistence() {
     const [subscription, setSubscription] = useState<any>(null);
     const [showPersistencePopup, setShowPersistencePopup] = useState(false);
 
+    const { get, post, del } = useAppNetwork();
+
+
     // Initial check for auth status
     useEffect(() => {
         const checkAuth = async () => {
@@ -32,7 +36,7 @@ export function usePersistence() {
 
                 if (tokenFromUrl) {
                     const isProd = window.location.hostname.endsWith('hirecta.com');
-                    const domain = isProd ? '; domain=.hirecta.com' : '';
+                    const domain = isProd ? '; domain=.hirecta.com' : 'domain=localhost';
                     const secure = isProd ? '; secure' : '';
                     document.cookie = `token=${tokenFromUrl}; path=/; max-age=${7 * 24 * 60 * 60}${domain}${secure}; samesite=lax`;
                     localStorage.setItem("authToken", tokenFromUrl);
@@ -47,31 +51,16 @@ export function usePersistence() {
             }
 
             try {
-                const response = await fetch(`${API_BASE}/api/auth/user`, {
-                    headers: { 'Accept': 'application/json' },
-                    credentials: 'include'
-                });
+                const userData = await get(API_ENDPOINTS.AUTH.USER);
+                setUser(userData);
+                setIsLoggedIn(true);
 
-                if (response.ok) {
-                    const userData = await response.json();
-                    setUser(userData);
-                    setIsLoggedIn(true);
-
-                    // Also fetch subscription status
-                    try {
-                        const subResponse = await fetch(`${API_BASE}/api/subscription/status`, {
-                            headers: { 'Accept': 'application/json' },
-                            credentials: 'include'
-                        });
-                        if (subResponse.ok) {
-                            const subData = await subResponse.json();
-                            setSubscription(subData.subscription);
-                        }
-                    } catch (subError) {
-                        console.error('Failed to fetch subscription status:', subError);
-                    }
-                } else {
-                    setIsLoggedIn(false);
+                // Also fetch subscription status
+                try {
+                    const subData = await get<{ subscription: any }>(API_ENDPOINTS.SUBSCRIPTION.STATUS);
+                    setSubscription(subData.subscription);
+                } catch (subError) {
+                    console.error('Failed to fetch subscription status:', subError);
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
@@ -80,7 +69,7 @@ export function usePersistence() {
         };
 
         checkAuth();
-    }, []);
+    }, [get]);
 
     const saveToLocalStorage = useCallback((doc: Omit<SavedDocument, 'lastModified'>) => {
         try {
@@ -106,31 +95,21 @@ export function usePersistence() {
 
     const saveToBackend = useCallback(async (doc: Omit<SavedDocument, 'lastModified'>) => {
         try {
-            const endpoint = doc.type === 'resume' ? '/api/resume' : '/api/cover-letter/save';
-            const response = await fetch(`${API_BASE}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    id: doc.id.startsWith('guest_') ? undefined : doc.id,
-                    title: doc.title,
-                    template: doc.templateId, // Backend uses 'template' for resume
-                    templateId: doc.templateId, // Backend uses 'templateId' for cover letter
-                    data: doc.data
-                })
+            const endpoint = doc.type === 'resume' ? API_ENDPOINTS.RESUME.SAVE : API_ENDPOINTS.COVER_LETTER.SAVE;
+            const result = await post<{ data: any }>(endpoint, {
+                id: doc.id.startsWith('guest_') ? undefined : doc.id,
+                title: doc.title,
+                template: doc.templateId, // Backend uses 'template' for resume
+                templateId: doc.templateId, // Backend uses 'templateId' for cover letter
+                data: doc.data
             });
 
-            if (!response.ok) throw new Error('Backend save failed');
-
-            const result = await response.json();
             return result.data?._id || result.data?.id;
         } catch (error) {
             console.error('Failed to save to backend:', error);
             return null;
         }
-    }, []);
+    }, [post]);
 
     const saveDocument = useCallback(async (doc: Omit<SavedDocument, 'lastModified' | 'id'> & { id?: string }) => {
         // If no ID, generate a temporary one
@@ -167,27 +146,26 @@ export function usePersistence() {
 
         if (isLoggedIn) {
             try {
-                const endpoint = type === 'resume' ? `/api/resume/${id}` : `/api/cover-letter/${id}`;
-                const response = await fetch(`${API_BASE}${endpoint}`, {
-                    credentials: 'include'
-                });
-                if (response.ok) {
-                    const result = await response.json();
-                    return {
-                        id: result.data._id || result.data.id,
-                        title: result.data.title,
-                        type,
-                        templateId: result.data.template || result.data.templateId,
-                        data: result.data.data,
-                        lastModified: result.data.updatedAt
-                    } as SavedDocument;
-                }
+                const endpoint = type === 'resume'
+                    ? API_ENDPOINTS.RESUME.GET(id)
+                    : API_ENDPOINTS.COVER_LETTER.GET(id);
+
+                const result = await get<{ data: any }>(endpoint);
+
+                return {
+                    id: result.data._id || result.data.id,
+                    title: result.data.title,
+                    type,
+                    templateId: result.data.template || result.data.templateId,
+                    data: result.data.data,
+                    lastModified: result.data.updatedAt
+                } as SavedDocument;
             } catch (error) {
                 console.error('Failed to fetch document:', error);
             }
         }
         return null;
-    }, [isLoggedIn]);
+    }, [isLoggedIn, get]);
 
     const getDocuments = useCallback(async () => {
         let backendDocs: any[] = [];
@@ -203,25 +181,22 @@ export function usePersistence() {
 
         if (isLoggedIn) {
             try {
-                const [resumesRes, lettersRes, interviewsRes] = await Promise.all([
-                    fetch(`${API_BASE}/api/resume`, { credentials: 'include' }),
-                    fetch(`${API_BASE}/api/cover-letter`, { credentials: 'include' }),
-                    fetch(`${API_BASE}/api/interview/sessions`, { credentials: 'include' })
+                const [resumesData, lettersData, interviewsData] = await Promise.all([
+                    get<{ data: any[] }>(API_ENDPOINTS.RESUME.BASE).catch(() => ({ data: [] })),
+                    get<{ data: any[] }>(API_ENDPOINTS.COVER_LETTER.BASE).catch(() => ({ data: [] })),
+                    get<{ data: any[] }>(API_ENDPOINTS.INTERVIEW.SESSIONS).catch(() => ({ data: [] }))
                 ]);
 
-                if (resumesRes.ok) {
-                    const data = await resumesRes.json();
-                    backendDocs = [...backendDocs, ...data.data.map((d: any) => ({ ...d, type: 'resume' }))];
+                if (resumesData?.data) {
+                    backendDocs = [...backendDocs, ...resumesData.data.map((d: any) => ({ ...d, type: 'resume' }))];
                 }
 
-                if (lettersRes.ok) {
-                    const data = await lettersRes.json();
-                    backendDocs = [...backendDocs, ...data.data.map((d: any) => ({ ...d, type: 'cover-letter' }))];
+                if (lettersData?.data) {
+                    backendDocs = [...backendDocs, ...lettersData.data.map((d: any) => ({ ...d, type: 'cover-letter' }))];
                 }
 
-                if (interviewsRes.ok) {
-                    const data = await interviewsRes.json();
-                    backendDocs = [...backendDocs, ...data.data.map((d: any) => ({
+                if (interviewsData?.data) {
+                    backendDocs = [...backendDocs, ...interviewsData.data.map((d: any) => ({
                         id: d._id,
                         _id: d._id,
                         title: d.jdInfo?.jobTitle ? `${d.jdInfo.jobTitle} @ ${d.jdInfo.company}` : "Mock Interview",
@@ -237,7 +212,7 @@ export function usePersistence() {
         }
 
         return { backendDocs, localDocs };
-    }, [isLoggedIn]);
+    }, [isLoggedIn, get]);
 
     const deleteDocument = useCallback(async (id: string, type: 'resume' | 'cover-letter' | 'ats-scan' | 'tailor-history' | 'interview-session') => {
         if (id.startsWith('doc_')) {
@@ -255,28 +230,25 @@ export function usePersistence() {
         }
         if (isLoggedIn) {
             try {
-                const endpoint = type === 'resume' ? `/api/resume/${id}` : `/api/cover-letter/${id}`;
-                const response = await fetch(`${API_BASE}${endpoint}`, {
-                    method: 'DELETE',
-                    credentials: 'include'
-                });
-                return response.ok;
+                const endpoint = type === 'resume'
+                    ? API_ENDPOINTS.RESUME.DELETE(id)
+                    : API_ENDPOINTS.COVER_LETTER.DELETE(id);
+
+                await del(endpoint);
+                return true;
             } catch (error) {
                 console.error('Failed to delete from backend:', error);
                 return false;
             }
         }
         return false;
-    }, [isLoggedIn]);
+    }, [isLoggedIn, del]);
 
     const logout = useCallback(async () => {
         try {
-            await fetch(`${API_BASE}/api/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=.hirecta.com";
-            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            await post(API_ENDPOINTS.AUTH.LOGOUT);
+            const isProd = window.location.hostname.endsWith('hirecta.com');
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;" + (isProd ? '; domain=.hirecta.com' : 'domain=localhost');
             localStorage.removeItem("authToken");
             window.location.href = ENV.AUTH_URL;
             setIsLoggedIn(false);
@@ -284,7 +256,7 @@ export function usePersistence() {
         } catch (error) {
             console.error('Logout failed:', error);
         }
-    }, []);
+    }, [post]);
 
     return {
         isLoggedIn,

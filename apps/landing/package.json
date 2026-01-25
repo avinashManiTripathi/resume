@@ -12,9 +12,12 @@
     "@repo/fonts": "*",
     "@repo/hooks": "*",
     "@repo/tailwind-config": "*",
-    "@repo/ui": "*",
+    "@repo/utils-client": "*",
+    "@repo/utils-server": "*",
     "lucide-react": "^0.562.0",
     "next": "16.0.7",
+    "react-markdown": "^9.0.1",
+    "react-syntax-highlighter": "^15.5.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "styled-jsx": "^5.1.7"

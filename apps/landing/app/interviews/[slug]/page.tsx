@@ -1,39 +1,49 @@
 import { notFound } from "next/navigation";
+import Link from 'next/link';
+import { Button } from '@repo/ui/button';
+import { ArrowLeft, Calendar, Clock, BookOpen, Share2, MessageSquare, ChevronRight, User } from 'lucide-react';
 import { ENV } from "../../env";
+import { API_ENDPOINTS } from "@repo/utils-client";
+import { serverNetwork } from '@repo/utils-server';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 interface InterviewData {
     _id: string;
     slug: string;
     title: string;
-    description: string;
-    heroBadge: string;
-    category: string;
-    tags: string[];
     content: string;
+    category: string;
+    description: string;
+    heroBadge?: string;
+    image?: string;
     featuredImage?: string;
-    publishDate: string;
-    relatedArticles?: Array<{ _id: string; slug: string; title: string; heroBadge: string }>;
+    tags: string[];
     author: {
         name: string;
-        email: string;
+        avatar?: string;
+        role?: string;
+        email?: string;
     };
+    publishDate: string;
+    publishedAt?: string; // keeping as optional alias if API returns different
+    readTime?: string;
+    difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+    relatedInterviews?: { slug: string; title: string }[];
 }
 
 async function getInterview(slug: string): Promise<InterviewData | null> {
     try {
         // Interview questions are stored in the Blog model with category "Interview"
-        const response = await fetch(`${ENV.API_URL}/api/blog/slug/${slug}`, {
-            next: { revalidate: 60 } // Revalidate every 60 seconds
+        const response = await serverNetwork.get<InterviewData | null>(`${ENV.API_URL}${API_ENDPOINTS.BLOG.SLUG(slug)}`, {
+            next: { revalidate: 60 }, // Revalidate every 60 seconds
         });
 
-        if (!response.ok) {
-            return null;
-        }
-
-        return response.json();
+        return response;
     } catch (error) {
-        console.error('Error fetching interview:', error);
-        return null;
+        console.error(`Failed to fetch interview ${slug}:`, error);
+        return null; // Return null to trigger notFound()
     }
 }
 
@@ -416,7 +426,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                                             },
                                             {
                                                 condition: true, // Always show
-                                                href: `${ENV.INTERVIEW_URL || 'https://interview.hirecta.com'}`,
+                                                href: ENV.INTERVIEW_URL,
                                                 title: 'Practice Mock Interview'
                                             },
                                         ]

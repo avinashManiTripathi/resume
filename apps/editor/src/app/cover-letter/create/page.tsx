@@ -15,6 +15,10 @@ import { mapFormDataToStructured } from "../../../libs/cover-letter-utils";
 import TemplateSelector from "../../TemplateSelector";
 import SmartImportModal from "../../SmartImportModal";
 import { RichTextEditor } from "@repo/ui/rich-text-editor";
+import { ENV } from "@/app/env";
+
+import { useAppNetwork } from "../../../hooks/useAppNetwork";
+import { API_ENDPOINTS } from "@repo/utils-client";
 
 interface Template {
     id: string;
@@ -39,7 +43,10 @@ function CoverLetterCreateForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const templateIdParam = searchParams.get("templateId");
-    const API_BASE = "https://api.hirecta.com";
+    const network = useAppNetwork();
+
+    // Kept for direct fetch calls (blobs) and image URL construction
+    const API_BASE = ENV.API_URL
 
     const [template, setTemplate] = useState<Template | null>(null);
     const [showTemplates, setShowTemplates] = useState(false);
@@ -51,6 +58,8 @@ function CoverLetterCreateForm() {
     const [fontFamily, setFontFamily] = useState('Inter');
     const [showSmartImport, setShowSmartImport] = useState(false);
     const [smartImportMode, setSmartImportMode] = useState<'voice' | 'text'>('voice');
+
+    const apiUrl = ENV.API_URL
 
     // Persistence
     const { saveDocument, getDocument } = usePersistence();
@@ -94,7 +103,7 @@ function CoverLetterCreateForm() {
 
 
     // Initialize PDF generation hook for preview
-    const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer('https://api.hirecta.com/api/cover-letter/pdf-preview');
+    const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(apiUrl + API_ENDPOINTS.COVER_LETTER.PDF_PREVIEW);
 
     // Canvas refs
     const mainRef = useRef<HTMLDivElement>(null);
@@ -122,10 +131,7 @@ function CoverLetterCreateForm() {
                 setIsTemplateChanging(true);
             }
 
-            const response = await fetch(
-                `https://api.hirecta.com/api/cover-letter/templates/${id}`
-            );
-            const data = await response.json();
+            const data: any = await network.get(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${id}`);
 
             if (data.success) {
                 setTemplate(data.template);
@@ -142,7 +148,7 @@ function CoverLetterCreateForm() {
                 setIsTemplateChanging(false);
             }
         }
-    }, []);
+    }, [network]);
 
     // Calculate progress based on form completion
     const calculateProgress = () => {
@@ -460,34 +466,18 @@ function CoverLetterCreateForm() {
                 setGenerationStep(prev => prev < generationSteps.length - 1 ? prev + 1 : prev);
             }, 800);
 
-            const response = await fetch("https://api.hirecta.com/api/cover-letter/generate", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    templateId: template?.id || templateIdParam,
-                    userData: { ...formData, fontFamily }, // Pass fontFamily with userData
-                    format,
-                }),
+            const blob = await network.post<Blob>(API_ENDPOINTS.COVER_LETTER.GENERATE, {
+                templateId: template?.id || templateIdParam,
+                userData: { ...formData, fontFamily }, // Pass fontFamily with userData
+                format,
+            }, {
+                responseType: 'blob'
             });
 
             clearInterval(interval);
             setGenerationStep(generationSteps.length - 1); // Set to "Download Complete" (active)
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Failed to generate cover letter");
-            }
-
-            const contentDisposition = response.headers.get("Content-Disposition");
-            let fileName = `cover-letter-${template?.id}-${Date.now()}.${format}`;
-            if (contentDisposition) {
-                const match = contentDisposition.match(/filename="(.+)"/);
-                if (match) fileName = match[1];
-            }
-
-            const blob = await response.blob();
+            const fileName = `cover-letter-${template?.id}-${Date.now()}.${format}`;
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
@@ -580,7 +570,7 @@ function CoverLetterCreateForm() {
                             {showTemplates ? (
                                 <TemplateSelector
                                     apiBase={API_BASE}
-                                    endpoint="/api/cover-letter-templates"
+                                    endpoint={API_ENDPOINTS.COVER_LETTER.TEMPLATES}
                                     selectedTemplateId={template?.id || templateIdParam || ''}
                                     onBack={() => setShowTemplates(false)}
                                     onSelectTemplate={(newTemplate: any) => {

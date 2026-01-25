@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
+import { ENV } from "@/app/env";
 
 interface EditorSidebarProps {
     onTabChange?: (tab: string) => void;
@@ -32,8 +33,8 @@ export function EditorSidebar({ onTabChange, activeTab: propActiveTab }: EditorS
             label: "Dashboard",
             id: "dashboard",
             icon: LayoutGrid,
-            href: "https://editor.hirecta.com",
-            onClick: () => window.location.href = "https://editor.hirecta.com"
+            href: ENV.EDITOR_URL,
+            onClick: () => window.location.href = ENV.EDITOR_URL
         },
         {
             label: "ATS Check",

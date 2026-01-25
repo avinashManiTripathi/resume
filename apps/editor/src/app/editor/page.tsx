@@ -2,14 +2,15 @@
 
 
 import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback, Suspense } from "react";
-import { useDebounce, exportToDoc, canDownload, type SubscriptionTier } from "@repo/utils-client";
+import { useDebounce, exportToDoc, canDownload, type SubscriptionTier, API_ENDPOINTS } from "@repo/utils-client";
 import { useTemplates } from "@repo/hooks/useTemplate";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
 import { FormSchema } from "../FieldRenderer";
 import GenericForm from "../GenericForm";
 import TemplateSelector from "../TemplateSelector";
-import { downloadPdf } from "@repo/utils-client";
+import { saveBlobAsPdf } from "@repo/utils-client";
+import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
 import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
@@ -44,8 +45,10 @@ function ResumeEditor() {
   const [resume, setResume] = useState(dummyData);
   const debouncedResume = useDebounce(resume, 500);
 
+  // Auto-save hook
+  const network = useAppNetwork();
   // Initialize PDF generation hook with auto-cancellation
-  const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(`${API_BASE}/convert-html-to-pdf`);
+  const { execute: generatePDF, loading: isPdfGenerating } = usePostArrayBuffer(`${API_BASE}${API_ENDPOINTS.PDF.CONVERT}`);
 
   // Profile image
   const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D");
@@ -438,9 +441,7 @@ function ResumeEditor() {
     // Check if user is logged in
     if (!isLoggedIn) {
       sessionStorage.setItem('pending_download', format);
-      const authUrl = ENV.AUTH_URL || (typeof window !== 'undefined' && window.location.hostname.endsWith('hirecta.com')
-        ? 'https://auth.hirecta.com'
-        : 'https://auth.hirecta.com');
+      const authUrl = ENV.AUTH_URL;
       window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
       return;
     }
@@ -474,9 +475,19 @@ function ResumeEditor() {
       setIsDownloadingPdf(true);
       setDownloadingStep(0);
       try {
-        const response = await downloadPdf(apiUrl, fileName, resumeData);
+        const blob = await network.post<Blob>(API_ENDPOINTS.PDF.CONVERT, resumeData, {
+          responseType: 'blob'
+        });
+        saveBlobAsPdf(blob, fileName);
 
-        if (response && response.status === 403) {
+      } catch (error: any) {
+        console.error("PDF download error:", error);
+
+        // Handle 403/401 errors
+        // Check typically error.status or error.response.status depending on the network client implementation
+        const status = error?.status || error?.response?.status;
+
+        if (status === 403) {
           // Save state for return
           const stateToSave = {
             resume,
@@ -488,10 +499,8 @@ function ResumeEditor() {
           sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
           const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
           router.push(`/subscription?returnTo=${currentUrl}`);
-        } else if (response && response.status === 401) {
-          const authUrl = ENV.AUTH_URL || (typeof window !== 'undefined' && window.location.hostname.endsWith('hirecta.com')
-            ? 'https://auth.hirecta.com'
-            : 'https://auth.hirecta.com');
+        } else if (status === 401) {
+          const authUrl = ENV.AUTH_URL;
           window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
         }
       } finally {
@@ -842,7 +851,7 @@ function ResumeEditor() {
             <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
               {showTemplates ? (
                 <TemplateSelector
-                  apiBase={API_BASE || 'https://api.hirecta.com'}
+                  apiBase={API_BASE}
                   selectedTemplateId={templateId || ''}
                   onBack={() => setShowTemplates(false)}
                   onSelectTemplate={(template) => {

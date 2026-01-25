@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useAppNetwork, API_ENDPOINTS } from '@/hooks/useAppNetwork';
 
 interface NavItem {
   icon: string;
@@ -39,10 +40,10 @@ interface NavigationData {
 export function Navigation() {
   const [navData, setNavData] = useState<NavigationData | null>(null);
   const [loading, setLoading] = useState(true);
+  const network = useAppNetwork();
 
   useEffect(() => {
-    fetch('https://api.hirecta.com/api/landing/navigation')
-      .then(res => res.json())
+    network.get<NavigationData>(API_ENDPOINTS.LANDING.NAVIGATION)
       .then(data => {
         setNavData(data);
         setLoading(false);
@@ -51,7 +52,7 @@ export function Navigation() {
         console.error('Failed to load navigation:', err);
         setLoading(false);
       });
-  }, []);
+  }, [network]);
 
   if (loading || !navData) {
     return (

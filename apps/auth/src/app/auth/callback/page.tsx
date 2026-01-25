@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { ENV } from "@/app/env";
 
 function CallbackContent() {
     const router = useRouter();
@@ -26,7 +27,7 @@ function CallbackContent() {
             // Determine editor URL based on environment
             const isProd = window.location.hostname.endsWith('hirecta.com');
             const editorBaseUrl = isProd
-                ? 'https://editor.hirecta.com'
+                ? ENV.EDITOR_URL
                 : 'http://localhost:3002';
 
             // Construct redirect URL to editor with user info

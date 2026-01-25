@@ -44,10 +44,6 @@ export interface SessionUIConfig {
     controls: VideoControlButton[];
     sidebar: SidebarConfig;
     ai: AISettings;
-    apiEndpoints: {
-        fetchSession: string;
-        submitAnswer: string;
-    };
 }
 
 // Default Sidebar Configuration
@@ -106,11 +102,7 @@ export const SESSION_CONFIG: SessionUIConfig = {
     },
     controls: VIDEO_CONTROLS,
     sidebar: DEFAULT_SIDEBAR_CONFIG,
-    ai: AI_SETTINGS,
-    apiEndpoints: {
-        fetchSession: '/api/interview',
-        submitAnswer: '/api/interview/answer'
-    }
+    ai: AI_SETTINGS
 };
 
 // Export individual configs for direct access

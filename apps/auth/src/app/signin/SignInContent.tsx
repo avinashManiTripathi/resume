@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Sparkles, TrendingUp, Award, Briefcase } from "lucide-react";
 import Image from "next/image";
+import { ENV } from "../env";
 
 export default function SignInContent() {
     const searchParams = useSearchParams();
@@ -13,7 +14,7 @@ export default function SignInContent() {
         setIsLoading(true);
         // Get the state parameter correctly - remove the leading ? if present
         const stateParam = searchParams.toString();
-        window.location.href = `https://api.hirecta.com/api/auth/google${stateParam ? `?state=${encodeURIComponent(stateParam)}` : ''}`;
+        window.location.href = ENV.API_URL + `/api/auth/google${stateParam ? `?state=${encodeURIComponent(stateParam)}` : ''}`;
     };
 
     useEffect(() => {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { ENV } from './app/env';
 
 // Routes that require authentication
 const protectedRoutes = ['/', '/subscription', '/ats-check', '/tailor'];
@@ -33,7 +34,7 @@ export function middleware(request: NextRequest) {
 
     // If no token, redirect to auth
     if (!token) {
-        const authUrl = new URL('https://auth.hirecta.com');
+        const authUrl = new URL(ENV.AUTH_URL);
         // Add current URL as redirect parameter
         let str = ''
         if (entries.length) {
@@ -41,7 +42,7 @@ export function middleware(request: NextRequest) {
                 str += `${entries[i][0]}=${entries[i][1]}&`
             }
         }
-        authUrl.searchParams.set('redirect', "https://editor.hirecta.com" + pathname + (str ? "?" + str : ""));
+        authUrl.searchParams.set('redirect', ENV.EDITOR_URL + pathname + (str ? "?" + str : ""));
         return NextResponse.redirect(authUrl);
     }
 

@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { usePersistence } from "../hooks/usePersistence";
 import { ENV } from "../env";
+import { API_ENDPOINTS } from "@repo/utils-client";
+import { useAppNetwork } from "../hooks/useAppNetwork";
 
 
 interface ATSResult {
@@ -165,6 +167,7 @@ export default function ATSCheckerPage() {
     const [result, setResult] = useState<ATSResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const { saveDocument } = usePersistence();
+    const network = useAppNetwork();
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -229,21 +232,7 @@ export default function ATSCheckerPage() {
                 }
             }, 800);
 
-            const response = await fetch(`${ENV.API_URL}/api/ats/check`, {
-                method: "POST",
-                body: formData,
-                credentials: 'include',
-            });
-
-            clearInterval(stageInterval);
-            setProgress(100);
-            setAnalysisStage('Analysis complete!');
-
-            if (!response.ok) {
-                throw new Error("Failed to analyze resume");
-            }
-
-            const data = await response.json();
+            const data = await network.post(API_ENDPOINTS.ATS.CHECK, formData);
             await new Promise(resolve => setTimeout(resolve, 500));
 
             setResult(data);

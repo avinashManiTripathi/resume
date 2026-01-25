@@ -13,6 +13,7 @@
     "@repo/hooks": "*",
     "@repo/tailwind-config": "*",
     "@repo/ui": "*",
+    "@repo/utils-client": "*",
     "lucide-react": "^0.562.0",
     "next": "16.0.7",
     "react": "19.2.0",

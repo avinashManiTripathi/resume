@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Sparkles, FileText, CheckCircle, Star, Palette, Zap, LayoutGrid, Shield } from "lucide-react";
 import { ENV } from "@/app/env";
 
+import { API_ENDPOINTS } from "@repo/utils-client";
+import { useAppNetwork } from "../../../hooks/useAppNetwork";
+
 interface Template {
     id: string;
     _id: string;
@@ -26,7 +29,9 @@ export default function TemplatesPage() {
     const [templates, setTemplates] = useState<Template[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const network = useAppNetwork();
 
+    const apiUrl = ENV.API_URL
     useEffect(() => {
         fetchTemplates();
     }, []);
@@ -34,8 +39,7 @@ export default function TemplatesPage() {
     const fetchTemplates = async () => {
         try {
             setLoading(true);
-            const response = await fetch("https://api.hirecta.com/api/cover-letter-templates");
-            const data = await response.json();
+            const data: any = await network.get(API_ENDPOINTS.COVER_LETTER.TEMPLATES);
 
             if (data.templates) {
                 setTemplates(data.templates);

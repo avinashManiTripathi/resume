@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
 import RichTextEditor from "@/components/RichTextEditor";
+import { useAppNetwork, API_ENDPOINTS } from "@/hooks/useAppNetwork";
 
 interface BlogPost {
     _id: string;
@@ -25,7 +26,8 @@ interface BlogPost {
     author: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+// API_BASE Removed as we use useAppNetwork
+// const API_BASE = ENV.API_URL;
 
 export default function BlogPage() {
     const [isCreating, setIsCreating] = useState(false);
@@ -34,6 +36,7 @@ export default function BlogPage() {
     const [loading, setLoading] = useState(true);
     const [savingLoading, setSavingLoading] = useState(false);
     const [selectedRelatedArticles, setSelectedRelatedArticles] = useState<string[]>([]);
+    const network = useAppNetwork();
 
     const [formData, setFormData] = useState({
         title: "",
@@ -51,21 +54,13 @@ export default function BlogPage() {
     // Fetch blogs from API
     useEffect(() => {
         fetchBlogs();
-    }, []);
+    }, [network]);
 
     const fetchBlogs = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_BASE}/api/blog`, {
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setBlogPosts(data);
-            } else {
-                console.error('Failed to fetch blogs');
-            }
+            const data = await network.get<BlogPost[]>(API_ENDPOINTS.BLOG.BASE);
+            setBlogPosts(data || []);
         } catch (error) {
             console.error('Error fetching blogs:', error);
         } finally {
@@ -97,51 +92,47 @@ export default function BlogPage() {
         setSavingLoading(true);
         try {
             const url = editingBlog
-                ? `${API_BASE}/api/blog/${editingBlog}`
-                : `${API_BASE}/api/blog`;
-            const method = editingBlog ? 'PUT' : 'POST';
+                ? `${API_ENDPOINTS.BLOG.BASE}/${editingBlog}`
+                : API_ENDPOINTS.BLOG.BASE;
 
-            const response = await fetch(url, {
-                method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    ...formData,
-                    tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-                    relatedArticles: selectedRelatedArticles,
-                    status,
-                }),
-            });
+            const payload = {
+                ...formData,
+                tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+                relatedArticles: selectedRelatedArticles,
+                status,
+            };
 
-            if (response.ok) {
-                const data = await response.json();
-                alert(`Blog post ${status === 'draft' ? 'saved as draft' : 'published'} successfully!`);
-                setIsCreating(false);
-                setEditingBlog(null);
-                // Reset form
-                setFormData({
-                    title: "",
-                    slug: "",
-                    description: "",
-                    heroBadge: "",
-                    category: "",
-                    tags: "",
-                    content: "",
-                    featuredImage: "",
-                    relatedArticles: "",
-                    publishDate: new Date().toISOString().split("T")[0],
-                });
-                // Refresh blog list
-                fetchBlogs();
+            let data;
+            if (editingBlog) {
+                // PUT
+                data = await network.put<any>(url, payload);
             } else {
-                const error = await response.json();
-                alert(`Error: ${error.error || 'Failed to save blog post'}`);
+                // POST
+                data = await network.post<any>(url, payload);
             }
-        } catch (error) {
+
+            alert(`Blog post ${status === 'draft' ? 'saved as draft' : 'published'} successfully!`);
+            setIsCreating(false);
+            setEditingBlog(null);
+            // Reset form
+            setFormData({
+                title: "",
+                slug: "",
+                description: "",
+                heroBadge: "",
+                category: "",
+                tags: "",
+                content: "",
+                featuredImage: "",
+                relatedArticles: "",
+                publishDate: new Date().toISOString().split("T")[0],
+            });
+            // Refresh blog list
+            fetchBlogs();
+
+        } catch (error: any) {
             console.error('Error saving blog:', error);
-            alert('Failed to save blog post. Please try again.');
+            alert(`Failed to save blog post: ${error.message || 'Unknown error'}`);
         } finally {
             setSavingLoading(false);
         }
@@ -171,21 +162,12 @@ export default function BlogPage() {
         }
 
         try {
-            const response = await fetch(`${API_BASE}/api/blog/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                alert('Blog post deleted successfully!');
-                fetchBlogs();
-            } else {
-                const error = await response.json();
-                alert(`Error: ${error.error || 'Failed to delete blog post'}`);
-            }
-        } catch (error) {
+            await network.del(`${API_ENDPOINTS.BLOG.BASE}/${id}`);
+            alert('Blog post deleted successfully!');
+            fetchBlogs();
+        } catch (error: any) {
             console.error('Error deleting blog:', error);
-            alert('Failed to delete blog post. Please try again.');
+            alert(`Failed to delete blog post: ${error.message || 'Unknown error'}`);
         }
     };
 

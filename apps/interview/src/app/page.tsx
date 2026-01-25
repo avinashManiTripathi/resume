@@ -7,7 +7,9 @@ import Image from 'next/image';
 import InterviewTypeDropdown from '../components/InterviewTypeDropdown';
 import { INTERVIEW_TYPES, DEFAULT_INTERVIEW_TYPE, InterviewType } from '../config/interview-types.constants';
 import { useAuth } from '../hooks/useAuth';
+import { useAppNetwork, API_ENDPOINTS } from '../hooks/useAppNetwork';
 import { StepLoader } from '@repo/ui/step-loader';
+import { ENV } from './env';
 
 export default function InterviewLandingPage() {
     const [jd, setJd] = useState('');
@@ -19,6 +21,9 @@ export default function InterviewLandingPage() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const router = useRouter();
     const { user, isLoggedIn, logout } = useAuth();
+    const network = useAppNetwork();
+
+    const apiUrl = ENV.API_URL
 
     // Session management state
     const [previousSessions, setPreviousSessions] = useState<any[]>([]);
@@ -46,19 +51,13 @@ export default function InterviewLandingPage() {
         const fetchData = async () => {
             try {
                 // Fetch previous sessions
-                const sessionsRes = await fetch('https://api.hirecta.com/api/interview/sessions', {
-                    credentials: 'include'
-                });
-                const sessionsData = await sessionsRes.json();
+                const sessionsData = await network.get<{ success: boolean, data: any[] }>(API_ENDPOINTS.INTERVIEW.SESSIONS);
                 if (sessionsData.success) {
                     setPreviousSessions(sessionsData.data || []);
                 }
 
                 // Check if user can start new interview today
-                const canStartRes = await fetch('https://api.hirecta.com/api/interview/can-start', {
-                    credentials: 'include'
-                });
-                const canStartData = await canStartRes.json();
+                const canStartData = await network.get<{ success: boolean, canStart: boolean }>(API_ENDPOINTS.INTERVIEW.CAN_START);
                 if (canStartData.success) {
                     setCanStartNewInterview(canStartData.canStart);
                 }
@@ -107,38 +106,30 @@ Output the JD in a well-structured, professional format.`
         setIsLoading(true);
         setLoadingStep(0);
         try {
-            const response = await fetch('https://api.hirecta.com/api/interview/start', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    jobDescription: modifiedJd ? modifiedJd : jd,
-                    interviewType: selectedInterviewType.id,
-                    interviewLevel: selectedInterviewType.level,
-                    technology: selectedInterviewType.technology
-                }),
+            const result = await network.post<{ success: boolean, data: { _id: string }, message?: string }>(API_ENDPOINTS.INTERVIEW.START, {
+                jobDescription: modifiedJd ? modifiedJd : jd,
+                interviewType: selectedInterviewType.id,
+                interviewLevel: selectedInterviewType.level,
+                technology: selectedInterviewType.technology
             });
 
-            const result = await response.json();
             if (result.success) {
                 router.push(`/session?id=${result.data._id}`);
             } else {
-                if (response.status === 401) {
-                    alert('Session expired or not logged in. Redirecting to sign in...');
-                    window.location.href = 'http://localhost:3001/signin';
-                } else {
-                    alert(result.message || 'Failed to start interview. Please try again.');
-                    setIsLoading(false);
-                    setLoadingStep(0);
-                }
+                alert(result.message || 'Failed to start interview. Please try again.');
+                setIsLoading(false);
+                setLoadingStep(0);
             }
-        } catch (err) {
-            console.error('Start Interview Error:', err);
-            alert('Failed to connect to the server. Please ensure the backend is running.');
-            setIsLoading(false);
-            setLoadingStep(0);
+        } catch (err: any) {
+            if (err?.message?.includes('401')) {
+                alert('Session expired or not logged in. Redirecting to sign in...');
+                window.location.href = 'http://localhost:3001/signin';
+            } else {
+                console.error('Start Interview Error:', err);
+                alert('Failed to connect to the server. Please ensure the backend is running.');
+                setIsLoading(false);
+                setLoadingStep(0);
+            }
         }
     };
 
@@ -238,11 +229,11 @@ Output the JD in a well-structured, professional format.`
                                     </div>
 
                                     <div className="py-1">
-                                        <a href="https://editor.hirecta.com" className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors">
+                                        <a href={ENV.EDITOR_URL} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors">
                                             <User className="w-4 h-4" />
                                             <span>Profile</span>
                                         </a>
-                                        <a href="https://editor.hirecta.com" className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors">
+                                        <a href={ENV.EDITOR_URL} className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-700/50 hover:text-white transition-colors">
                                             <Settings className="w-4 h-4" />
                                             <span>Settings</span>
                                         </a>

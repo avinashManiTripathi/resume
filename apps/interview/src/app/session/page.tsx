@@ -13,10 +13,12 @@ import { getInterviewTypeById } from '../../config/interview-types.constants';
 import InterviewChat from '../../components/InterviewChat';
 
 import { useAuth } from '../../hooks/useAuth';
+import { useAppNetwork, API_ENDPOINTS } from '../../hooks/useAppNetwork';
 import { CodeEditor } from '../../components/CodeEditor';
 import { useProctoring } from '../../hooks/useProctoring';
+import { ENV } from '../env';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+const API_URL = ENV.API_URL
 console.log('🌐 API_URL configured as:', API_URL);
 
 // Animated Avatar Component (Keep existing or import if moved. Assuming it stays for now as it wasn't extracted)
@@ -74,16 +76,21 @@ function AnimatedAvatar({ isSpeaking, size = 'large' }: { isSpeaking: boolean; s
     );
 }
 
+
+
+// ... imports remain the same, just adding useAppNetwork ...
+
 function SessionContent() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get('id');
     const router = useRouter();
     const { user } = useAuth(); // Get user details
+    const network = useAppNetwork();
 
     // Proctoring Hook
     const { stats: proctorStats, requestFullscreen, hasViolations } = useProctoring(true);
 
-    // Session state
+    // ... state ...
     const [session, setSession] = useState<any>(null);
     const [messages, setMessages] = useState<any[]>([]);
 
@@ -109,7 +116,8 @@ function SessionContent() {
     const [timeRemaining, setTimeRemaining] = useState(3600);
     const [timerStarted, setTimerStarted] = useState(false);
 
-    // Speech Synthesis
+    // ... helpers ...
+
     const speak = (text: string) => {
         if (!window.speechSynthesis) return;
         window.speechSynthesis.cancel();
@@ -195,8 +203,7 @@ function SessionContent() {
             console.log('Socket connected');
 
             // Fetch session details
-            fetch(`${API_URL}/api/interview/${sessionId}`)
-                .then(res => res.json())
+            network.get<{ success: boolean, data: any }>(API_ENDPOINTS.INTERVIEW.SESSION(sessionId))
                 .then(data => {
                     if (data.success && data.data) {
                         const iType = getInterviewTypeById(data.data.interviewDetails?.typeId || 'react-junior');

@@ -13,40 +13,42 @@ export class PdfController {
     /**
      * Handle PDF generation request
      */
+    /**
+     * Handle PDF generation request
+     */
     public generatePdf = async (req: Request, res: Response): Promise<void> => {
         try {
             const resumeData: ResumeData = req.body;
 
-            // Generate PDF
-            const pdfBuffer = await this.pdfService.generatePdf(resumeData, {
+            // Generate PDF Stream
+            const { stream, filename } = await this.pdfService.generatePdfStream(resumeData, {
                 inline: true,
             });
-
-            // Get metadata
-            const metadata = this.pdfService.getPdfMetadata(resumeData);
 
             // Set response headers
             res.set({
                 'Content-Type': 'application/pdf',
-                'Content-Length': pdfBuffer.length,
-                'Content-Disposition': `inline; filename="${metadata.filename}"`,
+                // 'Content-Length': unknown for stream
+                'Content-Disposition': `inline; filename="${filename}"`,
                 'Cache-Control': 'no-cache, no-store, must-revalidate',
                 'Pragma': 'no-cache',
                 'Expires': '0',
             });
 
-            // Send PDF
-            res.send(pdfBuffer);
+            // Pipe stream to response
+            stream.pipe(res);
         } catch (error) {
             console.error('PDF generation error:', error);
 
             const errorMessage = error instanceof Error ? error.message : 'PDF generation failed';
             const statusCode = errorMessage.includes('required') || errorMessage.includes('must be') ? 400 : 500;
 
-            res.status(statusCode).json({
-                error: errorMessage,
-                timestamp: new Date().toISOString(),
-            });
+            if (!res.headersSent) {
+                res.status(statusCode).json({
+                    error: errorMessage,
+                    timestamp: new Date().toISOString(),
+                });
+            }
         }
     };
 

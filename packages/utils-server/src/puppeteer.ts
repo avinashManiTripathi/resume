@@ -66,7 +66,12 @@ async function fetchFontBase64(url: string): Promise<string> {
     }
 
     console.log('⬇️ Downloading font:', url);
-    const res = await fetch(url);
+    const res = await fetch(url, {
+        headers: {
+            'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120',
+        },
+    });
     if (!res.ok) throw new Error('Font download failed');
 
     const buffer = Buffer.from(await res.arrayBuffer());
@@ -296,5 +301,82 @@ export const htmlToPdf = async (
             await page.close().catch(e => console.error("Error closing page:", e));
         }
         releasePageSlot(); // Release slot for next request
+    }
+};
+
+import { Readable } from 'stream';
+
+/**
+ * Stream PDF generation to memory efficiency
+ */
+export const htmlToPdfStream = async (
+    htmlContent: string,
+    jsonData: any
+): Promise<Readable> => {
+    await acquirePageSlot(); // Wait for slot
+
+    let page: Page | null = null;
+    let browser: Browser | null = null;
+
+    try {
+        browser = await getBrowser();
+        page = await browser.newPage();
+        totalRequestsHandled++;
+
+        page.setDefaultTimeout(120000);
+        page.setDefaultNavigationTimeout(120000);
+
+        await page.setContent(htmlContent, {
+            waitUntil: 'domcontentloaded',
+            timeout: 120000,
+        });
+
+        // 🔥 Inject Google Font
+        if (jsonData?.fontFamily) {
+            await injectGoogleFont(page, jsonData.fontFamily);
+        }
+
+        // Optional hydration
+        await page.evaluate(async (data) => {
+            if ((window as any).hydrate) {
+                await (window as any).hydrate(data);
+            }
+        }, jsonData);
+
+        const pdfStreamWeb = await page.createPDFStream({
+            format: 'A4',
+            printBackground: true,
+            preferCSSPageSize: true,
+            margin: {
+                top: '10mm',
+                bottom: '10mm',
+                left: '5mm',
+                right: '5mm',
+            },
+            timeout: 120000
+        });
+
+        // Convert Web Stream to Node Stream for piping
+        const pdfStream = Readable.fromWeb(pdfStreamWeb as any);
+
+        // Hook into stream end/error to cleanup page slot
+        const cleanup = async () => {
+            if (page && !page.isClosed()) {
+                await page.close().catch(e => console.error("Error closing page stream:", e));
+            }
+            releasePageSlot();
+        };
+
+        pdfStream.on('end', cleanup);
+        pdfStream.on('error', cleanup);
+
+        return pdfStream;
+    } catch (error) {
+        console.error('PDF stream generation failed:', error);
+        if (page && !page.isClosed()) {
+            await page.close().catch(e => console.error("Error closing page on fail:", e));
+        }
+        releasePageSlot();
+        throw error;
     }
 };

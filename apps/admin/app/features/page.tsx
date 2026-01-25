@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { Search, Shield, ShieldAlert, ShieldCheck, Save, RefreshCw } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
+import { ENV } from "../env";
+import { useAppNetwork, API_ENDPOINTS } from "@/hooks/useAppNetwork";
 
 interface FeatureSetting {
     _id: string;
@@ -12,7 +14,7 @@ interface FeatureSetting {
     updatedAt: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+
 
 export default function FeaturesPage() {
     const [features, setFeatures] = useState<FeatureSetting[]>([]);
@@ -20,13 +22,12 @@ export default function FeaturesPage() {
     const [searchQuery, setSearchQuery] = useState("");
     const [savingId, setSavingId] = useState<string | null>(null);
 
+    const network = useAppNetwork();
+
     const fetchFeatures = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE}/api/admin/feature-settings`, {
-                credentials: 'include',
-            });
-            const data = await response.json();
+            const data = await network.get<{ success: boolean, settings: FeatureSetting[] }>(API_ENDPOINTS.ADMIN.FEATURE_SETTINGS);
             if (data.success) {
                 setFeatures(data.settings);
             }
@@ -39,21 +40,13 @@ export default function FeaturesPage() {
 
     useEffect(() => {
         fetchFeatures();
-    }, []);
+    }, [network]);
 
     const togglePremium = async (name: string, currentStatus: boolean, id: string) => {
         try {
             setSavingId(id);
-            const response = await fetch(`${API_BASE}/api/admin/feature-settings`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name, isPremium: !currentStatus }),
-                credentials: 'include',
-            });
+            const data = await network.post<{ success: boolean, setting: FeatureSetting }>(API_ENDPOINTS.ADMIN.FEATURE_SETTINGS, { name, isPremium: !currentStatus });
 
-            const data = await response.json();
             if (data.success) {
                 setFeatures(features.map(f => f.name === name ? data.setting : f));
             }

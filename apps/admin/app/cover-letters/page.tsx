@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Search, Plus, Eye, Edit3, Trash2, X, Save, FileText, Upload, Filter, Code } from "lucide-react";
+import { ENV } from "../env";
+import { useAppNetwork, API_ENDPOINTS } from "@/hooks/useAppNetwork";
 
 interface CoverLetterTemplate {
     _id?: string;
@@ -42,15 +44,17 @@ export default function CoverLetterTemplatesPage() {
         templateBody: "",
     });
 
-    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
+    const network = useAppNetwork();
+
+    // ENV.API_URL is still needed for image preview and upload fetch
+    const API_BASE = ENV.API_URL;
 
     useEffect(() => { fetchTemplates(); }, []);
 
     const fetchTemplates = async () => {
         try {
             setIsLoading(true);
-            const response = await fetch(`${API_BASE}/api/cover-letter-templates`);
-            const data = await response.json();
+            const data = await network.get<{ templates: CoverLetterTemplate[] }>(API_ENDPOINTS.COVER_LETTER.TEMPLATES);
             setTemplates(data.templates || []);
         } catch (error) {
             console.error("Error fetching templates:", error);
@@ -108,25 +112,18 @@ export default function CoverLetterTemplatesPage() {
             }
 
             const url = isEditing
-                ? `${API_BASE}/api/cover-letter-templates/${formData._id || formData.type}`
-                : `${API_BASE}/api/cover-letter-templates`;
+                ? `${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${formData._id || formData.type}`
+                : API_ENDPOINTS.COVER_LETTER.TEMPLATES;
 
-            const method = isEditing ? "PUT" : "POST";
-
-            const response = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                console.error("Server error:", error);
-                alert(`Failed to save template: ${error.details || error.error || "Unknown error"}`);
-                return;
+            let result;
+            if (isEditing) {
+                // PUT
+                result = await network.put<any>(url, formData);
+            } else {
+                // POST
+                result = await network.post<any>(url, formData);
             }
 
-            const result = await response.json();
             // Use the _id from the result (for new templates) or the existing _id (for updates)
             // Note: Our upload route can look up by 'type' as well, so formData.type is safe if unique
             const idForUpload = result.template?._id || result.template?.type || formData.type;
@@ -136,15 +133,7 @@ export default function CoverLetterTemplatesPage() {
                 const imageFormData = new FormData();
                 imageFormData.append('image', uploadedFile);
 
-                const uploadResponse = await fetch(`${API_BASE}/api/cover-letter-templates/upload/${idForUpload}`, {
-                    method: 'POST',
-                    body: imageFormData,
-                });
-
-                if (!uploadResponse.ok) {
-                    console.error("Image upload failed");
-                    alert("Template saved but image upload failed");
-                }
+                await network.post(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/upload/${idForUpload}`, imageFormData);
             }
 
             await fetchTemplates();
@@ -152,20 +141,18 @@ export default function CoverLetterTemplatesPage() {
             setImagePreview("");
             setUploadedFile(null);
             alert(`Template ${isEditing ? "updated" : "added"} successfully!`);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error saving template:", error);
-            alert("Error saving template");
+            alert(`Failed to save template: ${error.message || "Unknown error"}`);
         }
     };
 
     const handleDelete = async (type: string) => {
         if (!confirm("Are you sure you want to delete this template?")) return;
         try {
-            const response = await fetch(`${API_BASE}/api/cover-letter-templates/${type}`, { method: "DELETE" });
-            if (response.ok) {
-                await fetchTemplates();
-                alert("Template deleted successfully!");
-            }
+            await network.del(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${type}`);
+            await fetchTemplates();
+            alert("Template deleted successfully!");
         } catch (error) {
             console.error("Error deleting template:", error);
         }

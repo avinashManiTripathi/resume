@@ -7,6 +7,7 @@ import {
     TrendingUp, FileText, Sparkles, Check, X, ChevronDown, ChevronUp
 } from 'lucide-react';
 import { Dialog } from '@repo/ui/dialog';
+import { useAppNetwork } from '../../../hooks/useAppNetwork';
 
 interface Suggestion {
     id: string;
@@ -32,6 +33,7 @@ interface AnalysisResults {
 
 export default function TailorResults() {
     const router = useRouter();
+    const network = useAppNetwork();
     const [analysis, setAnalysis] = useState<AnalysisResults | null>(null);
     const [appliedSuggestions, setAppliedSuggestions] = useState<Set<string>>(new Set());
     const [expandedSuggestion, setExpandedSuggestion] = useState<string | null>(null);
@@ -83,22 +85,10 @@ export default function TailorResults() {
             const allIds = analysis.suggestions.map(s => s.id);
             setAppliedSuggestions(new Set(allIds));
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/tailor/apply-suggestions`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    resumeData: originalResume,
-                    suggestions: analysis.suggestions // Send full suggestion objects
-                }),
-                credentials: 'include'
+            const result = await network.post<{ success: boolean, resume?: any }>(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/tailor/apply-suggestions`, {
+                resumeData: originalResume,
+                suggestions: analysis.suggestions // Send full suggestion objects
             });
-
-            if (!response.ok) {
-                const err = await response.json();
-                throw new Error(err.message || "Failed to apply suggestions");
-            }
-
-            const result = await response.json();
 
             if (result.success && result.resume) {
                 // Save updated resume for Editor to load

@@ -5,6 +5,9 @@ import { X, Sparkles, Mic, Loader2, Send, Target, Briefcase, MessageCircle, Aler
 import { Button } from '@repo/ui/button';
 import { ENV } from './env';
 
+import { API_ENDPOINTS } from '@repo/utils-client';
+import { useAppNetwork } from '../hooks/useAppNetwork';
+
 interface SmartImportModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -18,6 +21,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
     const [textInput, setTextInput] = useState('');
     const [isProcessing, setIsProcessing] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const network = useAppNetwork();
 
     const recognitionRef = useRef<any>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -171,13 +175,7 @@ export default function SmartImportModal({ isOpen, onClose, onApply }: SmartImpo
         setIsProcessing(true);
         setError(null);
         try {
-            const response = await fetch(`${ENV.API_URL}/api/resume/extract`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: content })
-            });
-
-            const result = await response.json();
+            const result: any = await network.post(API_ENDPOINTS.RESUME.EXTRACT, { text: content });
 
             if (result.success) {
                 onApply(result.data);

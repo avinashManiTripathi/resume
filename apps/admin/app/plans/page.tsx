@@ -16,6 +16,8 @@ import {
     Save
 } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
+import { ENV } from "../env";
+import { useAppNetwork, API_ENDPOINTS } from "@/hooks/useAppNetwork";
 
 interface Plan {
     _id: string;
@@ -31,7 +33,6 @@ interface Plan {
     updatedAt: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.hirecta.com';
 
 export default function PlansPage() {
     const [plans, setPlans] = useState<Plan[]>([]);
@@ -41,13 +42,12 @@ export default function PlansPage() {
     const [editingPlan, setEditingPlan] = useState<Partial<Plan> | null>(null);
     const [saving, setSaving] = useState(false);
 
+    const network = useAppNetwork();
+
     const fetchPlans = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE}/api/admin/plans`, {
-                credentials: 'include',
-            });
-            const data = await response.json();
+            const data = await network.get<{ success: boolean, plans: Plan[] }>(API_ENDPOINTS.ADMIN.PLANS);
             if (data.success) {
                 setPlans(data.plans);
             }
@@ -60,7 +60,7 @@ export default function PlansPage() {
 
     useEffect(() => {
         fetchPlans();
-    }, []);
+    }, [network]);
 
     const handleSave = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,17 +70,16 @@ export default function PlansPage() {
             setSaving(true);
             const isEditing = !!editingPlan._id;
             const url = isEditing
-                ? `${API_BASE}/api/admin/plans/${editingPlan._id}`
-                : `${API_BASE}/api/admin/plans`;
+                ? `${API_ENDPOINTS.ADMIN.PLANS}/${editingPlan._id}`
+                : API_ENDPOINTS.ADMIN.PLANS;
 
-            const response = await fetch(url, {
-                method: isEditing ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(editingPlan),
-                credentials: 'include',
-            });
+            let data;
+            if (isEditing) {
+                data = await network.put<{ success: boolean, plan: Plan }>(url, editingPlan);
+            } else {
+                data = await network.post<{ success: boolean, plan: Plan }>(url, editingPlan);
+            }
 
-            const data = await response.json();
             if (data.success) {
                 if (isEditing) {
                     setPlans(plans.map(p => p._id === data.plan._id ? data.plan : p));
@@ -101,11 +100,7 @@ export default function PlansPage() {
         if (!confirm("Are you sure you want to delete this plan?")) return;
 
         try {
-            const response = await fetch(`${API_BASE}/api/admin/plans/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-            const data = await response.json();
+            const data = await network.del<{ success: boolean }>(`${API_ENDPOINTS.ADMIN.PLANS}/${id}`);
             if (data.success) {
                 setPlans(plans.filter(p => p._id !== id));
             }
@@ -116,13 +111,7 @@ export default function PlansPage() {
 
     const toggleStatus = async (plan: Plan) => {
         try {
-            const response = await fetch(`${API_BASE}/api/admin/plans/${plan._id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ isActive: !plan.isActive }),
-                credentials: 'include',
-            });
-            const data = await response.json();
+            const data = await network.put<{ success: boolean, plan: Plan }>(`${API_ENDPOINTS.ADMIN.PLANS}/${plan._id}`, { isActive: !plan.isActive });
             if (data.success) {
                 setPlans(plans.map(p => p._id === plan._id ? data.plan : p));
             }

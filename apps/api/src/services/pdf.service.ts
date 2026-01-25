@@ -58,6 +58,36 @@ export class PdfService {
     }
 
     /**
+     * Generate PDF Stream from resume data
+     */
+    public async generatePdfStream(
+        resumeData: ResumeData,
+        options: PdfGenerationOptions = {}
+    ): Promise<{ stream: NodeJS.ReadableStream, filename: string }> {
+        try {
+            // Validate input
+            this.validateResumeData(resumeData);
+
+            // Extract section labels if provided
+            const sectionLabels = (resumeData as any).sectionLabels as Record<string, string> | undefined;
+
+            // Generate HTML using template injector
+            const html = await this.templateInjectorService.generateHTML(resumeData, sectionLabels);
+
+            // Generate filename
+            const filename = options.filename || this.generateFilename(resumeData);
+
+            // Convert to PDF Stream
+            const stream = await import('@repo/utils-server').then(m => m.htmlToPdfStream(html, resumeData));
+
+            return { stream, filename };
+        } catch (error) {
+            console.error('PDF stream generation error:', error);
+            throw new Error(`Failed to generate PDF stream: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    }
+
+    /**
      * Generate filename from resume data
      */
     private generateFilename(resumeData: ResumeData): string {

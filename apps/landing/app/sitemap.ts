@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { ENV } from './env'
+import { API_ENDPOINTS } from '@repo/utils-client'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = ENV.BASE_URL
@@ -132,7 +133,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     let interviewPages: any[] = []
     try {
         // Fetch interview articles from Blog API (filter by category if needed)
-        const response = await fetch(`${ENV.API_URL}/api/blog?limit=100`, {
+        const response = await fetch(`${ENV.API_URL}${API_ENDPOINTS.BLOG.BASE}?limit=100`, {
             next: { revalidate: 3600 } // Cache for 1 hour
         })
 

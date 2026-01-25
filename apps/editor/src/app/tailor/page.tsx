@@ -9,6 +9,9 @@ import { StepLoader } from '@repo/ui/step-loader';
 import { usePersistence } from '../hooks/usePersistence';
 import { ENV } from '../env';
 
+import { API_ENDPOINTS } from '@repo/utils-client';
+import { useAppNetwork } from '../../hooks/useAppNetwork';
+
 export default function TailorResume() {
     const router = useRouter();
     const [resumeSource, setResumeSource] = useState<'current' | 'upload'>('upload');
@@ -32,6 +35,7 @@ export default function TailorResume() {
         type: "info"
     });
     const { saveDocument, getDocument } = usePersistence();
+    const network = useAppNetwork();
 
     const tailoringStages = [
         'Uploading resume...',
@@ -142,24 +146,10 @@ export default function TailorResume() {
                         company: company || undefined
                     };
 
-                    const response = await fetch(`${ENV.API_URL}/api/tailor/analyze`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(payload),
-                        credentials: 'include',
-                    });
+                    const result = await network.post(API_ENDPOINTS.TAILOR.ANALYZE, payload);
 
                     clearInterval(stageInterval);
                     setProgress(100);
-
-                    if (!response.ok) {
-                        const error = await response.json();
-                        throw new Error(error.message || 'Analysis failed');
-                    }
-
-                    const result = await response.json();
 
                     // Save data for the results page
                     sessionStorage.setItem('tailorResults', JSON.stringify(result));
@@ -198,21 +188,10 @@ export default function TailorResume() {
 
             // Progress simulation is already running from top of function
 
-            const response = await fetch(`${ENV.API_URL}/api/tailor/parse`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include',
-            });
+            const result = await network.post<{ success: boolean, data: any }>(API_ENDPOINTS.TAILOR.PARSE, formData);
 
             clearInterval(stageInterval);
             setProgress(100);
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to parse resume');
-            }
-
-            const result = await response.json();
             if (result.success && result.data) {
                 // Save Tailor History
                 const historyDoc = {

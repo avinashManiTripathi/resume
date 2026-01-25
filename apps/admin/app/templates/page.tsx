@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Search, Plus, Eye, Edit3, Trash2, X, Save, FileText, Upload, Filter, Star } from "lucide-react";
+import { ENV } from "../env";
+import { useAppNetwork, API_ENDPOINTS } from "@/hooks/useAppNetwork";
 
 interface Template {
   _id?: string;
@@ -35,6 +37,7 @@ export default function TemplatesPage() {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
+
   const [formData, setFormData] = useState<Template>({
     name: "", type: "modern", category: "general", description: "", htmlContent: "",
     cssContent: "", thumbnail: "", isPremium: false, isActive: true, sortOrder: 0, tags: [],
@@ -42,11 +45,17 @@ export default function TemplatesPage() {
 
   useEffect(() => { fetchTemplates(); }, []);
 
+  const network = useAppNetwork();
+
+  // Keep apiUrl for images and uploads
+  const apiUrl = ENV.API_URL
+
+  useEffect(() => { fetchTemplates(); }, []);
+
   const fetchTemplates = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("https://api.hirecta.com/api/templates");
-      const data = await response.json();
+      const data = await network.get<{ templates: Template[] }>(API_ENDPOINTS.ADMIN.TEMPLATES);
       setTemplates(data.templates || []);
     } catch (error) {
       console.error("Error fetching templates:", error);
@@ -85,7 +94,7 @@ export default function TemplatesPage() {
     const thumbnailUrl = template.thumbnail?.startsWith('data:')
       ? template.thumbnail
       : template.thumbnail
-        ? `https://api.hirecta.com${template.thumbnail}`
+        ? `${apiUrl}${template.thumbnail}`
         : "";
     setImagePreview(thumbnailUrl);
     setFormData({ ...template, htmlContent: template.htmlContent || template.html || "" });
@@ -105,8 +114,6 @@ export default function TemplatesPage() {
         return;
       }
 
-      const url = isEditing ? `https://api.hirecta.com/api/templates/${formData._id || formData.id}` : "https://api.hirecta.com/api/templates";
-
       // Clean up the data - remove thumbnail from main save (will be uploaded separately)
       const cleanData = {
         ...formData,
@@ -116,20 +123,14 @@ export default function TemplatesPage() {
         tags: formData.tags.filter(tag => tag.trim()),
       };
 
-      const response = await fetch(url, {
-        method: isEditing ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cleanData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error("Server error:", error);
-        alert(`Failed to save template: ${error.details || error.error || "Unknown error"}`);
-        return;
+      let result;
+      if (isEditing) {
+        const url = `${API_ENDPOINTS.ADMIN.TEMPLATES}/${formData._id || formData.id}`;
+        result = await network.put<any>(url, cleanData);
+      } else {
+        result = await network.post<any>(API_ENDPOINTS.ADMIN.TEMPLATES, cleanData);
       }
 
-      const result = await response.json();
       const templateId = result.template._id || result.template.id;
 
       // Upload image if file was selected
@@ -137,15 +138,7 @@ export default function TemplatesPage() {
         const imageFormData = new FormData();
         imageFormData.append('image', uploadedFile);
 
-        const uploadResponse = await fetch(`https://api.hirecta.com/api/templates/upload/${templateId}`, {
-          method: 'POST',
-          body: imageFormData,
-        });
-
-        if (!uploadResponse.ok) {
-          console.error("Image upload failed");
-          alert("Template saved but image upload failed");
-        }
+        await network.post(`${API_ENDPOINTS.ADMIN.TEMPLATES}/upload/${templateId}`, imageFormData);
       }
 
       await fetchTemplates();
@@ -153,20 +146,18 @@ export default function TemplatesPage() {
       setUploadedFile(null);
       setImagePreview("");
       alert(`Template ${isEditing ? "updated" : "added"} successfully!`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving template:", error);
-      alert("Error saving template");
+      alert(`Failed to save template: ${error.message || "Unknown error"}`);
     }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this template?")) return;
     try {
-      const response = await fetch(`https://api.hirecta.com/api/templates/${id}`, { method: "DELETE" });
-      if (response.ok) {
-        await fetchTemplates();
-        alert("Template deleted successfully!");
-      }
+      await network.del(`${API_ENDPOINTS.ADMIN.TEMPLATES}/${id}`);
+      await fetchTemplates();
+      alert("Template deleted successfully!");
     } catch (error) {
       console.error("Error deleting template:", error);
     }
@@ -257,7 +248,7 @@ export default function TemplatesPage() {
               <div className="aspect-[8.5/11] bg-gray-100 relative overflow-hidden rounded-t-lg">
                 {template.thumbnail ? (
                   <img
-                    src={template.thumbnail.startsWith('data:') ? template.thumbnail : `https://api.hirecta.com${template.thumbnail}`}
+                    src={template.thumbnail.startsWith('data:') ? template.thumbnail : apiUrl + `${template.thumbnail}`}
                     alt={template.name}
                     className="w-full h-full object-cover"
                   />

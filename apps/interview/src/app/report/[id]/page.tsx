@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { useAppNetwork, API_ENDPOINTS } from '../../../hooks/useAppNetwork';
 import {
     Award, TrendingUp, CheckCircle, AlertCircle,
     Share2, Download, ChevronRight, Star, Target,
@@ -16,14 +17,12 @@ export default function InterviewReportPage() {
     const id = (Array.isArray(params.id) ? params.id[0] : params.id) as string;
     const [report, setReport] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const network = useAppNetwork();
 
     useEffect(() => {
         const fetchReport = async () => {
             try {
-                const response = await fetch(`http://localhost:4000/api/interview/${id}`, {
-                    credentials: 'include'
-                });
-                const result = await response.json();
+                const result = await network.get<{ success: boolean, data: any }>(API_ENDPOINTS.INTERVIEW.SESSION(id));
                 if (result.success) {
                     setReport(result.data);
                 }
@@ -34,7 +33,7 @@ export default function InterviewReportPage() {
             }
         };
         fetchReport();
-    }, [id]);
+    }, [id, network]);
 
     if (isLoading) {
         return (
