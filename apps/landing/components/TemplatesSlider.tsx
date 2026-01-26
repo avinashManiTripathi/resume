@@ -8,6 +8,7 @@ import { ENV } from "@/app/env";
 interface Template {
     _id: string;
     name: string;
+    image: string | null;
     thumbnail: string | null;
 }
 
@@ -75,14 +76,14 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
             <div
                 ref={sliderRef}
                 id="templates-slider"
-                className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+                className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4 px-4 md:px-8"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', minHeight: '500px' }}
             >
                 {templates.map((template) => (
                     <Link
                         key={template._id}
-                        href={`${ENV.EDITOR_URL}/editor?templateId=${template._id}`}
-                        className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 transition-all hover:shadow-2xl relative"
+                        href={`${ENV.EDITOR_URL}?templateId=${template._id}`}
+                        className="flex-shrink-0 w-80 group bg-white overflow-hidden border-2 border-gray-200 transition-all hover:shadow-sm relative"
                     >
                         <div className="relative pt-6 px-3 pb-3">
                             <div className="bg-white aspect-[8.5/11] relative overflow-hidden">

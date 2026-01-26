@@ -15,11 +15,12 @@ interface Template {
     image: string;
     description: string;
     category: string;
+    thumbnail: string;
 }
 
 async function getTemplates() {
     try {
-        const response = await serverNetwork.get<{ templates: Template[] }>(`${ENV.API_URL}/api/templates?isFeatured=true&limit=4`, {
+        const response = await serverNetwork.get<{ templates: Template[] }>(`${ENV.API_URL}/api/templates?isFeatured=true&limit=8`, {
             next: { revalidate: 300 } // 5 minutes cache
         });
         return response?.templates || [];
@@ -31,10 +32,12 @@ async function getTemplates() {
 
 export async function TemplatesSection() {
     const templates = await getTemplates();
+    console.log({ templates })
 
     if (!templates.length) return null;
 
     return (
+
         <section className="py-24 bg-slate-50 relative overflow-hidden">
             {/* Background Decorations */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -63,42 +66,12 @@ export async function TemplatesSection() {
                         </Button>
                     </Link>
                 </div>
+            </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {templates.map((template: Template) => (
-                        <Link
-                            key={template._id}
-                            href={`${ENV.EDITOR_URL}?templateId=${template._id}`}
-                            className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 ring-1 ring-slate-200 hover:ring-blue-500 hover:-translate-y-1"
-                        >
-                            <div className="aspect-[210/297] bg-slate-100 relative overflow-hidden">
-                                {template.image ? (
-                                    <Image
-                                        src={`${ENV.API_URL}${template.image}`}
-                                        alt={template.name}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-slate-400">
-                                        No Preview
-                                    </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                                    <Button className="w-full bg-white text-slate-900 hover:bg-blue-50">
-                                        Use This Template
-                                    </Button>
-                                </div>
-                            </div>
-                            <div className="p-4 border-t border-slate-100">
-                                <h3 className="font-semibold text-slate-900 mb-1 truncate">{template.name}</h3>
-                                <p className="text-sm text-slate-500 capitalize">{template.category}</p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+            <div className="relative z-10 w-full">
+                <TemplatesSlider templates={templates} />
             </div>
         </section>
     );
+
 }
