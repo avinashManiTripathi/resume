@@ -67,7 +67,9 @@ export function useNetwork(defaultBaseUrl: string = '') {
                 } catch (e) {
                     // parsing failed, use default message
                 }
-                throw new Error(errorMessage);
+                const error: any = new Error(errorMessage);
+                error.status = response.status;
+                throw error;
             }
 
             // Check for empty response (e.g. 204 No Content)
