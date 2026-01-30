@@ -446,6 +446,12 @@ function ResumeEditor() {
       return;
     }
     // Check subscription before allowing download
+    console.log('[Download] Checking subscription:', {
+      subscription,
+      canDownload: canDownload(subscription),
+      bypassEnabled: ENV.BY_PASS_SUBSCRIPTION
+    });
+
     if (!canDownload(subscription) && ENV.BY_PASS_SUBSCRIPTION === 'false') {
       // Save current state to sessionStorage before redirecting
       const stateToSave = {

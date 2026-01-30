@@ -26,8 +26,38 @@ export function hasActiveSubscription(subscription: SubscriptionStatus | null): 
 /**
  * Check if user can download based on their subscription tier
  */
-export function canDownload(subscription: SubscriptionStatus | null): boolean {
-    return hasActiveSubscription(subscription);
+export function canDownload(subscription: any): boolean {
+    if (!subscription) {
+        return false;
+    }
+
+    // Handle both old format (tier, active, expiryDate) and new format (plan, status, endDate)
+    const plan = subscription.plan || subscription.tier;
+    const status = subscription.status;
+    const endDate = subscription.endDate || subscription.expiryDate;
+
+    // Check if plan is pro or premium (not free or lower)
+    const isPremiumTier = plan === 'pro' || plan === 'premium';
+
+    if (!isPremiumTier) {
+        return false;
+    }
+
+    // Check if subscription is active
+    if (status && status !== 'active') {
+        return false;
+    }
+
+    // Check if subscription hasn't expired (if endDate is set)
+    if (endDate) {
+        const expiryDate = new Date(endDate);
+        const now = new Date();
+        if (expiryDate < now) {
+            return false; // Subscription has expired
+        }
+    }
+
+    return true;
 }
 
 /**
