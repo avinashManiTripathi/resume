@@ -166,14 +166,15 @@ function ResumeEditor() {
           if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
           if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
 
-          // Update URL to match restored state
+          console.log('[Editor] Resume state restored');
+          sessionStorage.removeItem('redirect_resume_data');
+
+          // Update URL to match restored state but KEEP subscribed param
+          // The download useEffect needs to see it
           const url = new URL(window.location.href);
-          url.searchParams.delete('subscribed');
           if (parsed.docId) url.searchParams.set('id', parsed.docId);
           if (parsed.templateId) url.searchParams.set('templateId', parsed.templateId);
           window.history.replaceState({}, '', url.toString());
-
-          sessionStorage.removeItem('redirect_resume_data');
         }
       } catch (e) {
         console.error("Failed to restore resume data", e);
@@ -186,11 +187,6 @@ function ResumeEditor() {
         // Don't trigger here - let the download happen via the existing useEffect that watches isLoggedIn
         // Just log for debugging
       }
-
-      // Cleanup URL parameter
-      const url = new URL(window.location.href);
-      url.searchParams.delete('subscribed');
-      window.history.replaceState({}, '', url.toString());
     }
   }, [searchParams]);
 
@@ -533,6 +529,14 @@ function ResumeEditor() {
         const subscribed = searchParams.get('subscribed');
         const pendingFormat = sessionStorage.getItem('pending_download');
 
+        console.log('[Editor] Download check:', {
+          isLoggedIn,
+          subscribed,
+          pendingFormat,
+          subscription: subscription?.plan,
+          subscriptionStatus: subscription?.status
+        });
+
         if (pendingFormat) {
           console.log('[Editor] Processing pending download:', pendingFormat);
 
@@ -542,16 +546,33 @@ function ResumeEditor() {
             await refreshSubscription();
             // Small delay to ensure state update propagates
             await new Promise(resolve => setTimeout(resolve, 500));
+            console.log('[Editor] Subscription refreshed, subscription is now:', subscription);
           }
 
           sessionStorage.removeItem('pending_download');
+          console.log('[Editor] Triggering download for format:', pendingFormat);
           handleExport(pendingFormat as "pdf" | "doc");
+
+          // Clean up URL after processing download
+          if (subscribed === 'true') {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('subscribed');
+            window.history.replaceState({}, '', url.toString());
+            console.log('[Editor] Cleaned up subscribed parameter from URL');
+          }
+        } else if (subscribed === 'true') {
+          // If we have subscribed param but no pending download, just clean up URL
+          console.log('[Editor] No pending download, cleaning up URL');
+          const url = new URL(window.location.href);
+          url.searchParams.delete('subscribed');
+          window.history.replaceState({}, '', url.toString());
         }
       }
     };
 
     handlePendingDownload();
-  }, [isLoggedIn, searchParams, handleExport, refreshSubscription]);
+  }, [isLoggedIn, searchParams, handleExport, refreshSubscription, subscription]);
+
 
 
   // Auto-populate form schema with custom sections when data exists
