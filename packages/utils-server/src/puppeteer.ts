@@ -121,7 +121,7 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
    PUPPETEER BROWSER MANAGER (SCALABLE)
 ===================================================== */
 
-const MAX_CONCURRENT_PAGES = 10;
+const MAX_CONCURRENT_PAGES = 20;
 const MAX_REQUESTS_PER_BROWSER = 200;
 const QUEUE_TIMEOUT_MS = 60000; // 60s timeout for waiting in queue
 
@@ -397,7 +397,11 @@ export const htmlToPdfStream = async (
         const pdfStream = Readable.fromWeb(pdfStreamWeb as any);
 
         // Hook into stream end/error to cleanup page slot
+        let cleanupCalled = false;
         const cleanup = async () => {
+            if (cleanupCalled) return;
+            cleanupCalled = true;
+
             if (page && !page.isClosed()) {
                 await page.close().catch(e => console.error("Error closing page stream:", e));
             }
