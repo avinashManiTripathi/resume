@@ -454,6 +454,10 @@ function ResumeEditor() {
     });
 
     if (!canDownload(subscription) && ENV.BY_PASS_SUBSCRIPTION === 'false') {
+      // Save download intent so we can auto-download after subscription
+      sessionStorage.setItem('pending_download', format);
+      console.log('[Download] Saved pending download:', format);
+
       // Save current state to sessionStorage before redirecting
       const stateToSave = {
         resume,

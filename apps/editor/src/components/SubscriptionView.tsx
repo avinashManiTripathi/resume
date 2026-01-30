@@ -152,13 +152,20 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                 onSuccess();
                             } else {
                                 const returnTo = searchParams.get('returnTo');
+                                console.log('[SubscriptionView] Redirecting after payment, returnTo:', returnTo);
+
                                 if (returnTo) {
                                     try {
                                         const decodedUrl = decodeURIComponent(returnTo);
                                         const safeUrl = decodedUrl.startsWith('/') ? decodedUrl : '/';
-                                        // Add subscribed=true to trigger auto-download
-                                        router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}subscribed=true`);
-                                    } catch {
+                                        const separator = safeUrl.includes('?') ? '&' : '?';
+                                        const finalUrl = `${safeUrl}${separator}subscribed=true`;
+
+                                        console.log('[SubscriptionView] Navigating to:', finalUrl);
+                                        router.push(finalUrl);
+                                    } catch (error) {
+                                        console.error('[SubscriptionView] Error decoding returnTo:', error);
+                                        console.log('[SubscriptionView] Fallback: navigating to /editor?subscribed=true');
                                         router.push('/editor?subscribed=true');
                                     }
                                 } else {
