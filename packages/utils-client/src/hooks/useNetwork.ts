@@ -126,5 +126,5 @@ export function useNetwork(defaultBaseUrl: string = '') {
         del,
         loading,
         error
-    }), [get, post, put, del, loading, error]);
+    }), [get, post, put, del]);
 }
