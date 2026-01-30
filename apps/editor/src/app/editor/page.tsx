@@ -36,7 +36,7 @@ function ResumeEditor() {
 
 
   // Persistence
-  const { saveDocument, getDocument, isLoggedIn, subscription, setSubscription } = usePersistence();
+  const { saveDocument, getDocument, isLoggedIn, subscription, setSubscription, refreshSubscription } = usePersistence();
   const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
@@ -140,55 +140,60 @@ function ResumeEditor() {
 
   // Handle voice/text import from URL
   useEffect(() => {
-    const fromSubscription = searchParams.get('fromSubscription');
-
     const voice = searchParams.get('voice');
     const text = searchParams.get('text');
     if (voice === 'true' || text == 'true') {
       setShowSmartImport(true);
       setMode(text === 'true' ? 'text' : 'voice');
     }
+  }, [searchParams]);
 
+  // Handle return from subscription page with auto-download
+  useEffect(() => {
+    const subscribed = searchParams.get('subscribed');
 
-    // Skip check if user just came from subscription page
-    if (fromSubscription === 'true') {
+    if (subscribed === 'true') {
+      console.log('[Editor] Returned from subscription page');
+
       // Restore data from sessionStorage if available
       try {
         const storedData = sessionStorage.getItem('redirect_resume_data');
         if (storedData) {
           const parsed = JSON.parse(storedData);
           if (parsed.resume) setResume(parsed.resume);
-
-          // Restore ID and Template
           if (parsed.docId) setDocId(parsed.docId);
           if (parsed.templateId) setTemplateId(parsed.templateId);
-
           if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
           if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
 
           // Update URL to match restored state
           const url = new URL(window.location.href);
-          url.searchParams.delete('fromSubscription');
+          url.searchParams.delete('subscribed');
           if (parsed.docId) url.searchParams.set('id', parsed.docId);
           if (parsed.templateId) url.searchParams.set('templateId', parsed.templateId);
           window.history.replaceState({}, '', url.toString());
 
-          // Clear storage
           sessionStorage.removeItem('redirect_resume_data');
-          return;
         }
       } catch (e) {
         console.error("Failed to restore resume data", e);
       }
 
-      // Fallback cleanup if no data restored
-      const url = new URL(window.location.href);
-      url.searchParams.delete('fromSubscription');
-      window.history.replaceState({}, '', url.toString());
-      return;
-    }
+      // Check for pending download action
+      const pendingDownload = sessionStorage.getItem('pending_download');
+      if (pendingDownload) {
+        console.log('[Editor] Pending download found:', pendingDownload);
+        // Don't trigger here - let the download happen via the existing useEffect that watches isLoggedIn
+        // Just log for debugging
+      }
 
-  }, [router, searchParams]);
+      // Cleanup URL parameter
+      const url = new URL(window.location.href);
+      url.searchParams.delete('subscribed');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [searchParams]);
+
 
   // Load existing document if ID is provided
   const urlDocId = searchParams.get('id');
@@ -521,16 +526,33 @@ function ResumeEditor() {
     }
   }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 
-  // Handle pending download on return from login
+  // Handle pending download on return from login or subscription
   useEffect(() => {
-    if (isLoggedIn === true) {
-      const pendingFormat = sessionStorage.getItem('pending_download');
-      if (pendingFormat) {
-        sessionStorage.removeItem('pending_download');
-        handleExport(pendingFormat as "pdf" | "doc");
+    const handlePendingDownload = async () => {
+      if (isLoggedIn === true) {
+        const subscribed = searchParams.get('subscribed');
+        const pendingFormat = sessionStorage.getItem('pending_download');
+
+        if (pendingFormat) {
+          console.log('[Editor] Processing pending download:', pendingFormat);
+
+          // If user just subscribed, refresh subscription first
+          if (subscribed === 'true' && refreshSubscription) {
+            console.log('[Editor] Refreshing subscription before download...');
+            await refreshSubscription();
+            // Small delay to ensure state update propagates
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+
+          sessionStorage.removeItem('pending_download');
+          handleExport(pendingFormat as "pdf" | "doc");
+        }
       }
-    }
-  }, [isLoggedIn, handleExport]);
+    };
+
+    handlePendingDownload();
+  }, [isLoggedIn, searchParams, handleExport, refreshSubscription]);
+
 
   // Auto-populate form schema with custom sections when data exists
   useEffect(() => {

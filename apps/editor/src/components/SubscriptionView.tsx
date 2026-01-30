@@ -45,7 +45,7 @@ interface SubscriptionViewProps {
 }
 
 export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionViewProps) {
-    const { user, subscription, setSubscription } = usePersistence();
+    const { user, subscription, setSubscription, refreshSubscription } = usePersistence();
     const searchParams = useSearchParams();
     const router = useRouter();
     const API_BASE = ENV.API_URL;
@@ -137,8 +137,15 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                             billingCycle
                         });
 
+
                         setSubscription(data.subscription);
+
+                        // Immediately refresh subscription to ensure state is updated everywhere
+                        console.log('[Payment] Success! Subscription updated:', data.subscription);
+                        await refreshSubscription();
+
                         setShowSuccess(true);
+
                         setTimeout(() => {
                             setShowSuccess(false);
                             if (onSuccess) {
@@ -149,12 +156,14 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
                                     try {
                                         const decodedUrl = decodeURIComponent(returnTo);
                                         const safeUrl = decodedUrl.startsWith('/') ? decodedUrl : '/';
-                                        router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}fromSubscription=true`);
+                                        // Add subscribed=true to trigger auto-download
+                                        router.push(`${safeUrl}${safeUrl.includes('?') ? '&' : '?'}subscribed=true`);
                                     } catch {
-                                        router.push('/editor?fromSubscription=true');
+                                        router.push('/editor?subscribed=true');
                                     }
                                 } else {
                                     setShowPaymentForm(false);
+                                    router.push('/editor?subscribed=true');
                                 }
                             }
                         }, 2500);

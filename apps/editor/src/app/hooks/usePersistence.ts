@@ -258,11 +258,25 @@ export function usePersistence() {
         }
     }, [post]);
 
+    const refreshSubscription = useCallback(async () => {
+        try {
+            console.log('[Subscription] Refreshing subscription status...');
+            const subData = await get<{ subscription: any }>(API_ENDPOINTS.SUBSCRIPTION.STATUS);
+            setSubscription(subData.subscription);
+            console.log('[Subscription] Updated:', subData.subscription);
+            return subData.subscription;
+        } catch (error) {
+            console.error('Failed to refresh subscription status:', error);
+            return null;
+        }
+    }, [get]);
+
     return {
         isLoggedIn,
         user,
         subscription,
         setSubscription,
+        refreshSubscription,
         logout,
         saveDocument,
         deleteDocument,
