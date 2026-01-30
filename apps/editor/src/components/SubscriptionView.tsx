@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getTierDisplayName } from "@repo/utils-client";
 import {
@@ -59,24 +59,25 @@ export function SubscriptionView({ onBack, hideBack, onSuccess }: SubscriptionVi
     const [loadingPlans, setLoadingPlans] = useState(true);
     const network = useAppNetwork();
 
-    useEffect(() => {
-        const fetchPlans = async () => {
-            try {
-                const data = await network.get<{ success: boolean, plans: Plan[] }>('/api/plans');
-                if (data.success) {
-                    setPlans(data.plans);
-                    // Select first non-free plan by default if available
-                    const firstPremium = data.plans.find((p: Plan) => p.planId !== 'free');
-                    if (firstPremium) setSelectedTier(firstPremium.planId);
-                }
-            } catch (error) {
-                console.error("Error fetching plans:", error);
-            } finally {
-                setLoadingPlans(false);
+    const fetchPlans = useCallback(async () => {
+        try {
+            const data = await network.get<{ success: boolean, plans: Plan[] }>('/api/plans');
+            if (data.success) {
+                setPlans(data.plans);
+                // Select first non-free plan by default if available
+                const firstPremium = data.plans.find((p: Plan) => p.planId !== 'free');
+                if (firstPremium) setSelectedTier(firstPremium.planId);
             }
-        };
+        } catch (error) {
+            console.error("Error fetching plans:", error);
+        } finally {
+            setLoadingPlans(false);
+        }
+    }, [])
+
+    useEffect(() => {
         fetchPlans();
-    }, [network.get]);
+    }, []);
 
     const currentPlanId = subscription?.plan || 'free';
     const selectedPlan = plans.find(t => t.planId === selectedTier);
