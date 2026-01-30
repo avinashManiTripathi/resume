@@ -1,8 +1,8 @@
+import type { Metadata } from "next";
+
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award, Bell, X, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import type { Metadata } from "next";
-import { ENV } from "./env";
 import { TemplatesSection } from "@/components/TemplatesSection";
 import { VoiceDemo } from "@/components/VoiceDemo";
 import { ProductSchema } from "@/components/ProductSchema";
