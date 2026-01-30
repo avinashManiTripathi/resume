@@ -1164,16 +1164,65 @@ function DashboardContent() {
   );
 }
 
-export default function DashboardPage() {
+function WorkspaceLoader() {
+  const [loadingStep, setLoadingStep] = useState(0);
+  const loadingSteps = [
+    "Loading Hirecta...",
+    "Syncing profile...",
+    "Fetching documents..."
+  ];
+
+  useEffect(() => {
+    if (loadingStep < loadingSteps.length - 1) {
+      const timer = setTimeout(() => {
+        setLoadingStep(prev => prev + 1);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [loadingStep, loadingSteps.length]);
+
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-500 font-medium animate-pulse">Loading Workspace...</p>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/90 backdrop-blur-sm animate-in fade-in duration-500">
+      <div className="relative max-w-md w-full mx-4">
+        <div className="relative bg-white border border-slate-100 p-12 rounded-[40px] shadow-2xl overflow-hidden">
+          {/* Animated Icon */}
+          <div className="flex justify-center mb-10">
+            <div className="relative">
+              <div className="absolute inset-0 bg-indigo-500/10 blur-2xl rounded-full animate-pulse" />
+              <div className="relative w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center shadow-xl animate-bounce">
+                <Layout className="w-12 h-12 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">Hirecta Workspace</h2>
+            <div className="flex items-center justify-center gap-2">
+              <div className="flex gap-1">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="w-1.5 h-1.5 bg-indigo-600 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                ))}
+              </div>
+              <span className="text-indigo-600 font-bold text-sm uppercase tracking-widest">{loadingSteps[loadingStep]}</span>
+            </div>
+          </div>
+
+          <div className="bg-slate-50/50 rounded-3xl p-6 border border-slate-100">
+            <StepLoader
+              steps={loadingSteps}
+              currentStep={loadingStep}
+              size="md"
+            />
+          </div>
         </div>
       </div>
-    }>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<WorkspaceLoader />}>
       <DashboardContent />
     </Suspense>
   );
