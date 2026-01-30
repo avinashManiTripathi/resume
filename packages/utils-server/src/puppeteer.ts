@@ -121,9 +121,10 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
    PUPPETEER BROWSER MANAGER (SCALABLE)
 ===================================================== */
 
-const MAX_CONCURRENT_PAGES = 20;
-const MAX_REQUESTS_PER_BROWSER = 200;
+const MAX_CONCURRENT_PAGES = 50; // Increased from 20 to handle more load
+const MAX_REQUESTS_PER_BROWSER = 500; // Increased capacity
 const QUEUE_TIMEOUT_MS = 60000; // 60s timeout for waiting in queue
+const PAGE_GENERATION_TIMEOUT_MS = 90000; // 90s max for any single PDF generation
 
 let puppeteerBrowser: Browser | null = null;
 let activePages = 0;
@@ -150,17 +151,18 @@ const processQueue = () => {
 const acquirePageSlot = async (): Promise<void> => {
     if (activePages < MAX_CONCURRENT_PAGES) {
         activePages++;
-        // console.log(`🔹 Slot acquired. Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
+        console.log(`🔹 Slot acquired. Active: ${activePages}/${MAX_CONCURRENT_PAGES}, Queue: ${requestQueue.length}`);
         return;
     }
 
     return new Promise((resolve, reject) => {
-        // console.log(`⏳ Queueing request. Queue length: ${requestQueue.length + 1}`);
+        console.log(`⏳ Queueing request. Queue length: ${requestQueue.length + 1}, Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
         const timer = setTimeout(() => {
             // Remove from queue if timed out
             const index = requestQueue.findIndex(r => r.reject === reject);
             if (index !== -1) requestQueue.splice(index, 1);
-            reject(new Error(`Server busy: PDF generation queue timeout. Active pages: ${activePages}`));
+            console.error(`❌ Queue timeout! Active: ${activePages}, Queue: ${requestQueue.length}`);
+            reject(new Error(`Server busy: PDF generation queue timeout. Active pages: ${activePages}, Queue: ${requestQueue.length}`));
         }, QUEUE_TIMEOUT_MS);
 
         requestQueue.push({ resolve, reject, timer });
@@ -170,15 +172,18 @@ const acquirePageSlot = async (): Promise<void> => {
 // Release slot and process next
 const releasePageSlot = () => {
     activePages--;
-    // console.log(`🔸 Slot released. Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
-    if (activePages < 0) activePages = 0; // Safety
+    console.log(`🔸 Slot released. Active: ${activePages}/${MAX_CONCURRENT_PAGES}, Queue: ${requestQueue.length}`);
+    if (activePages < 0) {
+        console.warn('⚠️ Active pages went negative, resetting to 0');
+        activePages = 0;
+    }
     processQueue();
 };
 
 const getBrowser = async (): Promise<Browser> => {
-    // restart browser if limit reached and no active pages
-    if (puppeteerBrowser && totalRequestsHandled >= MAX_REQUESTS_PER_BROWSER && activePages === 0) {
-        console.log('♻️ Restarting Puppeteer browser to free memory...');
+    // restart browser if limit reached and activity is low (not just 0)
+    if (puppeteerBrowser && totalRequestsHandled >= MAX_REQUESTS_PER_BROWSER && activePages < 3) {
+        console.log(`♻️ Restarting Puppeteer browser to free memory... (Handled: ${totalRequestsHandled} requests, Active: ${activePages})`);
         await puppeteerBrowser.close();
         puppeteerBrowser = null;
         totalRequestsHandled = 0;
@@ -250,6 +255,37 @@ export const preWarmPuppeteer = async () => {
    HTML → PDF
 ===================================================== */
 
+/**
+ * Wrap any async operation with a timeout that forcefully closes the page if exceeded
+ */
+const withPageTimeout = async <T>(
+    promise: Promise<T>,
+    page: Page,
+    timeoutMs: number,
+    operationName: string
+): Promise<T> => {
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(async () => {
+            console.error(`⏱️ ${operationName} timeout exceeded (${timeoutMs}ms), force-closing page`);
+            if (page && !page.isClosed()) {
+                await page.close().catch(e => console.error("Error force-closing page:", e));
+            }
+            reject(new Error(`${operationName} timeout after ${timeoutMs}ms`));
+        }, timeoutMs);
+    });
+
+    try {
+        const result = await Promise.race([promise, timeoutPromise]);
+        if (timeoutId) clearTimeout(timeoutId);
+        return result;
+    } catch (error) {
+        if (timeoutId) clearTimeout(timeoutId);
+        throw error;
+    }
+};
+
 export const htmlToPdf = async (
     htmlContent: string,
     outputPath: string,
@@ -302,17 +338,23 @@ export const htmlToPdf = async (
             }
         }, jsonData);
 
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            printBackground: true,
-            preferCSSPageSize: true,
-            margin: {
-                top: '10mm',
-                bottom: '10mm',
-                left: '5mm',
-                right: '5mm',
-            },
-        });
+
+        const pdfBuffer = await withPageTimeout(
+            page.pdf({
+                format: 'A4',
+                printBackground: true,
+                preferCSSPageSize: true,
+                margin: {
+                    top: '10mm',
+                    bottom: '10mm',
+                    left: '5mm',
+                    right: '5mm',
+                },
+            }),
+            page,
+            PAGE_GENERATION_TIMEOUT_MS,
+            'PDF generation (htmlToPdf)'
+        );
 
         return pdfBuffer;
     } catch (error) {
@@ -380,18 +422,24 @@ export const htmlToPdfStream = async (
             }
         }, jsonData);
 
-        const pdfStreamWeb = await page.createPDFStream({
-            format: 'A4',
-            printBackground: true,
-            preferCSSPageSize: true,
-            margin: {
-                top: '10mm',
-                bottom: '10mm',
-                left: '5mm',
-                right: '5mm',
-            },
-            timeout: 120000
-        });
+
+        const pdfStreamWeb = await withPageTimeout(
+            page.createPDFStream({
+                format: 'A4',
+                printBackground: true,
+                preferCSSPageSize: true,
+                margin: {
+                    top: '10mm',
+                    bottom: '10mm',
+                    left: '5mm',
+                    right: '5mm',
+                },
+                timeout: 120000
+            }),
+            page,
+            PAGE_GENERATION_TIMEOUT_MS,
+            'PDF stream generation (htmlToPdfStream)'
+        );
 
         // Convert Web Stream to Node Stream for piping
         const pdfStream = Readable.fromWeb(pdfStreamWeb as any);
