@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 interface NetworkOptions extends RequestInit {
     baseUrl?: string;
@@ -119,12 +119,12 @@ export function useNetwork(defaultBaseUrl: string = '') {
         return request<T>(endpoint, { ...options, method: 'DELETE' });
     }, [request]);
 
-    return {
+    return useMemo(() => ({
         get,
         post,
         put,
         del,
         loading,
         error
-    };
+    }), [get, post, put, del, loading, error]);
 }

@@ -93,7 +93,7 @@ router.post('/verify', verifyToken, async (req: Request, res: Response) => {
         }
 
         // Validate plan value
-        const validPlans = ['free', 'pro', 'premium'];
+        const validPlans = Object.values(SubscriptionPlan).map(p => p.toString());
         if (!plan || !validPlans.includes(plan.toLowerCase())) {
             console.error('Invalid plan value:', { plan, validPlans });
             return res.status(400).json({
