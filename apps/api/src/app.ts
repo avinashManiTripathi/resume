@@ -114,17 +114,17 @@ export class App {
             crossOriginResourcePolicy: { policy: "cross-origin" } // Allow resources to be loaded cross-origin (e.g. PDFs)
         }));
 
-        // Rate limiting
-        const limiter = rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 minutes
-            max: 300, // Limit each IP to 300 requests per windowMs
-            standardHeaders: true,
-            legacyHeaders: false,
-            message: 'Too many requests from this IP, please try again after 15 minutes'
-        });
+        // // Rate limiting
+        // const limiter = rateLimit({
+        //     windowMs: 15 * 60 * 1000, // 15 minutes
+        //     max: 300, // Limit each IP to 300 requests per windowMs
+        //     standardHeaders: true,
+        //     legacyHeaders: false,
+        //     message: 'Too many requests from this IP, please try again after 15 minutes'
+        // });
 
-        // Apply rate limiting to API routes only
-        this.app.use('/api', limiter);
+        // // Apply rate limiting to API routes only
+        // this.app.use('/api', limiter);
 
         // CORS
         const allowedOrigins = [
