@@ -92,6 +92,27 @@ router.post('/verify', verifyToken, async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Missing payment details' });
         }
 
+        // Validate plan value
+        const validPlans = ['free', 'pro', 'premium'];
+        if (!plan || !validPlans.includes(plan.toLowerCase())) {
+            console.error('Invalid plan value:', { plan, validPlans });
+            return res.status(400).json({
+                error: 'Invalid plan value',
+                details: `Plan must be one of: ${validPlans.join(', ')}. Received: ${plan}`
+            });
+        }
+
+        // Normalize plan to lowercase
+        const normalizedPlan = plan.toLowerCase();
+
+        console.log('Payment verification request:', {
+            userId,
+            plan: normalizedPlan,
+            billingCycle,
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id
+        });
+
         // Verify signature
         const isValid = razorpayService.verifySignature(
             razorpay_order_id,
@@ -116,7 +137,7 @@ router.post('/verify', verifyToken, async (req: Request, res: Response) => {
         let subscription = await Subscription.findOne({ userId });
 
         if (subscription) {
-            subscription.plan = plan as SubscriptionPlan;
+            subscription.plan = normalizedPlan as SubscriptionPlan;
             subscription.status = SubscriptionStatus.ACTIVE;
             subscription.startDate = startDate;
             subscription.endDate = endDate;
@@ -127,7 +148,7 @@ router.post('/verify', verifyToken, async (req: Request, res: Response) => {
         } else {
             subscription = await Subscription.create({
                 userId,
-                plan: plan as SubscriptionPlan,
+                plan: normalizedPlan as SubscriptionPlan,
                 status: SubscriptionStatus.ACTIVE,
                 startDate,
                 endDate,
