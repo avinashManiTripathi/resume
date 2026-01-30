@@ -144,11 +144,32 @@ export class App {
             origin: (origin, callback) => {
                 // Allow requests with no origin (like mobile apps or curl)
                 if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.hirecta.com')) {
-                    callback(null, true);
-                } else {
-                    callback(new Error('Not allowed by CORS'));
+
+                // Check allowed origins list
+                if (allowedOrigins.indexOf(origin) !== -1) {
+                    return callback(null, true);
                 }
+
+                // Check dynamic patterns
+                if (
+                    origin.endsWith('.hirecta.com') ||     // Production subdomains
+                    origin.endsWith('.up.railway.app') ||  // Railway deployments
+                    origin.match(/^http:\/\/localhost:\d+$/) // Any localhost port
+                ) {
+                    return callback(null, true);
+                }
+
+                // Check environment config
+                if (config.corsOrigin === '*') {
+                    return callback(null, true);
+                }
+
+                if (config.corsOrigin && config.corsOrigin.split(',').includes(origin)) {
+                    return callback(null, true);
+                }
+
+                console.error('CORS blocked origin:', origin);
+                callback(new Error('Not allowed by CORS'));
             },
             credentials: true,
         }));
