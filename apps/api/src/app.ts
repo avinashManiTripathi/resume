@@ -193,7 +193,7 @@ export class App {
             initInterviewAI(process.env.GENAI_API_KEY);
 
             // Pre-warm Puppeteer in background
-            preWarmPuppeteer().catch((err: any) => console.error('Puppeteer pre-warm failed', err));
+            preWarmPuppeteer().catch((err: any) => console.error('Puppeteer pre-warm failed:', err));
         }
 
         // Session
