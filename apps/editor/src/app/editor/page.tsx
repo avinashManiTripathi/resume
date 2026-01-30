@@ -538,8 +538,17 @@ function ResumeEditor() {
           subscribed,
           pendingFormat,
           subscription: subscription?.plan,
-          subscriptionStatus: subscription?.status
+          subscriptionStatus: subscription?.status,
+          subscriptionLoaded: subscription !== undefined
         });
+
+        // CRITICAL: Don't process pending download until subscription data has loaded
+        // subscription === null means loaded but no subscription
+        // subscription === undefined means not loaded yet
+        if (subscription === undefined) {
+          console.log('[Editor] Waiting for subscription to load...');
+          return; // Exit early, will retry when subscription loads
+        }
 
         if (pendingFormat) {
           console.log('[Editor] Processing pending download:', pendingFormat);
