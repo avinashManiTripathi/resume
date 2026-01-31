@@ -122,9 +122,10 @@ async function injectGoogleFont(page: Page, fontFamily: string) {
 ===================================================== */
 
 const MAX_CONCURRENT_PAGES = 50; // Increased from 20 to handle more load
-const MAX_REQUESTS_PER_BROWSER = 500; // Increased capacity
-const QUEUE_TIMEOUT_MS = 60000; // 60s timeout for waiting in queue
-const PAGE_GENERATION_TIMEOUT_MS = 90000; // 90s max for any single PDF generation
+const MAX_REQUESTS_PER_BROWSER = 200; // Restart browser more frequently to prevent memory leaks
+const QUEUE_TIMEOUT_MS = 30000; // 30s timeout - fail fast
+const PAGE_GENERATION_TIMEOUT_MS = 30000; // 30s max for any single PDF - aggressive timeout
+const MAX_QUEUE_SIZE = 20; // Reject requests if queue too long
 
 let puppeteerBrowser: Browser | null = null;
 let activePages = 0;
@@ -155,6 +156,11 @@ const acquirePageSlot = async (): Promise<void> => {
         return;
     }
 
+    // Reject immediately if queue too long
+    if (requestQueue.length >= MAX_QUEUE_SIZE) {
+        throw new Error(`Server overloaded: Queue full (${requestQueue.length} waiting). Please try again later.`);
+    }
+
     return new Promise((resolve, reject) => {
         console.log(`⏳ Queueing request. Queue length: ${requestQueue.length + 1}, Active: ${activePages}/${MAX_CONCURRENT_PAGES}`);
         const timer = setTimeout(() => {
@@ -180,13 +186,25 @@ const releasePageSlot = () => {
     processQueue();
 };
 
+// Health check: Force cleanup if all slots stuck for too long
+setInterval(() => {
+    if (activePages >= MAX_CONCURRENT_PAGES && requestQueue.length > 5) {
+        console.error(`⚠️ CRITICAL: All ${activePages} pages stuck, ${requestQueue.length} in queue. Consider restart!`);
+    }
+}, 10000);
+
 const getBrowser = async (): Promise<Browser> => {
-    // restart browser if limit reached and activity is low (not just 0)
-    if (puppeteerBrowser && totalRequestsHandled >= MAX_REQUESTS_PER_BROWSER && activePages < 3) {
+    // Aggressive browser restart
+    if (puppeteerBrowser && totalRequestsHandled >= MAX_REQUESTS_PER_BROWSER && activePages < 5) {
         console.log(`♻️ Restarting Puppeteer browser to free memory... (Handled: ${totalRequestsHandled} requests, Active: ${activePages})`);
-        await puppeteerBrowser.close();
+        try {
+            await puppeteerBrowser.close();
+        } catch (e) {
+            console.error('Error closing browser:', e);
+        }
         puppeteerBrowser = null;
         totalRequestsHandled = 0;
+        activePages = 0; // Reset counter on restart
     }
 
     if (!puppeteerBrowser || !puppeteerBrowser.isConnected()) {
@@ -345,10 +363,10 @@ export const htmlToPdf = async (
                 printBackground: true,
                 preferCSSPageSize: true,
                 margin: {
-                    top: '10mm',
-                    bottom: '10mm',
-                    left: '5mm',
-                    right: '5mm',
+                    top: '48px',
+                    bottom: '48px',
+                    left: '48px',
+                    right: '48px',
                 },
             }),
             page,
@@ -429,10 +447,10 @@ export const htmlToPdfStream = async (
                 printBackground: true,
                 preferCSSPageSize: true,
                 margin: {
-                    top: '10mm',
-                    bottom: '10mm',
-                    left: '5mm',
-                    right: '5mm',
+                    top: '48px',
+                    bottom: '48px',
+                    left: '48px',
+                    right: '48px',
                 },
                 timeout: 120000
             }),

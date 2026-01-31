@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { PdfService } from '../services/pdf.service';
 import { ResumeData } from '../types/resume.types';
 import { RESUMES } from '../constant';
+import {
+    generatePdfCacheKey,
+    getCachedPdf,
+    cachePdfStream
+} from '../services/pdf-cache.service';
+import { Readable } from 'stream';
 
 export class PdfController {
     private pdfService: PdfService;
@@ -11,46 +17,62 @@ export class PdfController {
     }
 
     /**
-     * Handle PDF generation request
-     */
-    /**
-     * Handle PDF generation request
+     * Handle PDF generation request with caching
      */
     public generatePdf = async (req: Request, res: Response): Promise<void> => {
         try {
             const resumeData: ResumeData = req.body;
 
-            // Generate PDF Stream
+            // Generate cache key
+            const cacheKey = generatePdfCacheKey(resumeData);
+
+
+            // Check cache
+            const cachedPdf = await getCachedPdf(cacheKey);
+
+            if (cachedPdf) {
+                // Cache HIT - serve immediately
+                const filename = `${resumeData.personalInfo?.firstName}_${resumeData.personalInfo?.lastName} _Resume.pdf`
+                    .replace(/\s+/g, '_');
+
+                res.set({
+                    'Content-Type': 'application/pdf',
+                    'Content-Length': cachedPdf.length.toString(),
+                    'Content-Disposition': `inline; filename = "${filename}"`,
+                    'X-Cache': 'HIT',
+                    'Cache-Control': 'public, max-age=3600',
+                });
+
+                res.send(cachedPdf);
+                return;
+            }
+
+            // 4. Cache MISS - generate PDF
             const { stream, filename } = await this.pdfService.generatePdfStream(resumeData, {
                 inline: true,
             });
 
-            // Set response headers
+            // 5. Cache the PDF while streaming to client
+            const pdfBuffer = await cachePdfStream(cacheKey, stream as Readable, 3600);
+
+            // 6. Send to client
             res.set({
                 'Content-Type': 'application/pdf',
-                // 'Content-Length': unknown for stream
-                'Content-Disposition': `inline; filename="${filename}"`,
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0',
+                'Content-Length': pdfBuffer.length.toString(),
+                'Content-Disposition': `inline; filename = "${filename}"`,
+                'X-Cache': 'MISS',
+                'Cache-Control': 'public, max-age=3600',
             });
 
-            // Pipe stream to response
-            stream.pipe(res);
+            res.send(pdfBuffer);
 
-            // Handle client disconnect to prevent zombie processes
-            res.on('close', () => {
-                const pdfStream = stream as any;
-                if (pdfStream && !pdfStream.destroyed) {
-                    console.log('Client disconnected, destroying PDF stream');
-                    pdfStream.destroy();
-                }
-            });
         } catch (error) {
             console.error('PDF generation error:', error);
 
             const errorMessage = error instanceof Error ? error.message : 'PDF generation failed';
-            const statusCode = errorMessage.includes('required') || errorMessage.includes('must be') ? 400 : 500;
+            const statusCode = errorMessage.includes('required') || errorMessage.includes('must be') ? 400
+                : errorMessage.includes('overloaded') || errorMessage.includes('Queue full') ? 503
+                    : 500;
 
             if (!res.headersSent) {
                 res.status(statusCode).json({
@@ -60,6 +82,7 @@ export class PdfController {
             }
         }
     };
+
 
     /**
      * Get all resumes

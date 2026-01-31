@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{firstName}} {{lastName}} - Resume</title>
+
+    <style>
+        /* Reset & Base */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff;
+            color: #333;
+            line-height: 1.5;
+            font-size: 10pt;
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            max-width: 950px;
+            margin: 0 auto;
+            /* Fix: 48px space from each side */
+            padding: 48px;
+            background: #fff;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Layout Wrappers created by JS */
+        #content-wrapper {
+            display: flex;
+            gap: 40px;
+        }
+
+        #col-left {
+            flex: 0 0 60%;
+        }
+
+        #col-right {
+            flex: 1;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 16px;
+            position: relative;
+            min-height: 150px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        #header-text-container {
+            width: 75%;
+        }
+
+        #full-name {
+            font-size: 36pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #000;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        #job-title {
+            font-size: 14pt;
+            color: #2E86C1;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #333;
+            font-weight: 700;
+            gap: 8px;
+        }
+
+        .contact-info span {
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Photo */
+        .profile-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #e0e0e0;
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 14pt;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #000;
+            border-bottom: 3px solid #000;
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+            margin-top: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Global Section Spacing */
+        section {
+            /* Fix: 16px gap between each section */
+            margin-bottom: 16px;
+        }
+
+        /* Left Column Content */
+        .experience-item,
+        .project-item,
+        .volunteer-item {
+            /* Fix: 8px gap for inner items */
+            margin-bottom: 8px;
+        }
+
+        .exp-job-title,
+        .proj-name,
+        .vol-role {
+            /* Font check: mark bold */
+            font-weight: 800;
+            font-size: 13pt;
+            color: #000;
+            margin: 0;
+        }
+
+        .exp-company,
+        .vol-organization {
+            color: #2E86C1;
+            /* Font check: mark bold */
+            font-weight: 700;
+            font-size: 11pt;
+            margin: 0;
+        }
+
+        .text-muted {
+            color: #555;
+            font-size: 0.9em;
+            /* Font check: mark bold */
+            font-weight: 600;
+        }
+
+        .exp-description,
+        .proj-description {
+            /* Fix: 8px inner gap from title/date */
+            margin-top: 4px;
+        }
+
+        section#section-summary p {
+            font-size: 10.5pt;
+            color: #444;
+            margin: 0;
+        }
+
+        /* Right Column Content */
+        #skills-list>div {
+            display: inline-block !important;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            /* Fix: 8px inner vertical padding */
+            padding: 4px 0;
+            margin: 0 !important;
+            /* Font check: mark bold */
+            font-weight: 700;
+            color: #444;
+        }
+
+        .edu-degree,
+        .cert-name,
+        .award-title,
+        .ref-name {
+            /* Font check: mark bold */
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .achievement-item {
+            /* Fix: 8px inner gap */
+            margin-bottom: 8px;
+        }
+
+        .achievement-title {
+            /* Font check: mark bold */
+            font-weight: 800;
+            font-size: 11pt;
+            color: #000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .achievement-title::before {
+            content: "★";
+            color: #2E86C1;
+            font-size: 1.2em;
+        }
+
+        /* Languages - with Dots */
+        #languages-list {
+            display: flex;
+            flex-direction: column;
+            /* Fix: 8px gap for inner items */
+            gap: 8px;
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .lang-name {
+            /* Font check: mark bold */
+            font-weight: 700;
+            font-size: 10.5pt;
+        }
+
+        /* Custom Dots Visual */
+        .lang-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .lang-dot {
+            width: 10px;
+            height: 10px;
+            background: #2E86C1;
+            border-radius: 50%;
+        }
+
+        .lang-dot.empty {
+            background: #e0e0e0;
+        }
+
+        /* Utility list gaps */
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gap-4 {
+            /* Fix: 8px gap for inner list elements */
+            gap: 8px;
+        }
+
+        /* Lists */
+        ul {
+            margin: 5px 0 0 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 3px;
+        }
+
+        /* Print adjustments */
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        [data-template] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main id="resume-root">
+        <header id="section-personalInfo">
+            <div id="header-text-container">
+                <h1 id="full-name">{{firstName}} {{lastName}}</h1>
+                <h3 id="job-title">{{jobTitle}}</h3>
+                <div class="contact-info">
+                    <span id="address">Seoul, South Korea</span>
+                    <span id="email">{{email}}</span>
+                    <span id="phone">{{phone}}</span>
+                    <a id="linkedin-link" href="#" target="_blank" style="display:none;">LinkedIn</a>
+                    <a id="github-link" href="#" target="_blank" style="display:none;">GitHub</a>
+                </div>
+            </div>
+        </header>
+
+        <div id="content-wrapper">
+            <div id="col-left">
+                <section id="section-summary" style="display:none;">
+                    <h2>Professional Summary</h2>
+                    <div id="summary-text">{{summary}}</div>
+                </section>
+
+                <section id="section-experience" style="display:none;">
+                    <h2>Professional Experience</h2>
+                    <div id="experience-list" class="flex-col gap-4"></div>
+                    <div class="experience-item item-template" data-template="experience">
+                        <h3 class="exp-job-title">{{experience.jobTitle}}</h3>
+                        <p class="exp-company">{{experience.company}}</p>
+                        <p class="text-muted">
+                            <span class="exp-start-date">{{experience.startDate}}</span> –
+                            <span class="exp-end-date">{{experience.endDate}}</span>
+                        </p>
+                        <div class="exp-description"></div>
+                    </div>
+                </section>
+
+                <section id="section-projects" style="display:none;">
+                    <h2>Projects</h2>
+                    <div id="projects-list" class="flex-col gap-4"></div>
+                    <div class="project-item item-template" data-template="projects">
+                        <h3 class="proj-name">{{projects.name}}</h3>
+                        <p class="text-muted">
+                            <span class="proj-start-date">{{projects.startDate}}</span> –
+                            <span class="proj-end-date">{{projects.endDate}}</span>
+                        </p>
+                        <div class="proj-description"></div>
+                    </div>
+                </section>
+
+                <section id="section-volunteer" style="display:none;">
+                    <h2>Volunteer Experience</h2>
+                    <div id="volunteer-list" class="flex-col gap-4"></div>
+                    <div class="volunteer-item item-template" data-template="volunteer">
+                        <h3 class="vol-role">{{volunteer.role}}</h3>
+                        <p class="vol-organization">{{volunteer.organization}}</p>
+                        <p class="text-muted">
+                            <span class="vol-start-date">{{volunteer.startDate}}</span> –
+                            <span class="vol-end-date">{{volunteer.endDate}}</span>
+                        </p>
+                        <p class="vol-description">{{volunteer.description}}</p>
+                    </div>
+                </section>
+            </div>
+
+            <div id="col-right">
+                <section id="section-education" style="display:none;">
+                    <h2>Education</h2>
+                    <div id="education-list" class="flex-col gap-4"></div>
+                    <div class="education-item item-template" data-template="education">
+                        <p class="edu-degree">{{education.degree}}</p>
+                        <p class="text-muted">
+                            <span class="edu-institution">{{education.institution}}</span><br>
+                            <span class="edu-end-date">{{education.endDate}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <section id="section-skills" style="display:none;">
+                    <h2>Skills</h2>
+                    <div id="skills-list"></div>
+                    <div class="skill-item item-template" data-template="skills">
+                        <span class="skill-name">{{skills.name}}</span>
+                    </div>
+                </section>
+
+                <section id="section-achievements" style="display:none;">
+                    <h2>Key Strengths</h2>
+                    <div id="achievements-list" class="flex-col gap-4"></div>
+                    <div class="achievement-item item-template" data-template="achievements">
+                        <h3 class="achievement-title">{{achievement.title}}</h3>
+                        <p class="achievement-description">{{achievement.description}}</p>
+                    </div>
+                </section>
+
+                <section id="section-languages" style="display:none;">
+                    <h2>Languages</h2>
+                    <div id="languages-list"></div>
+                    <div class="language-item item-template" data-template="languages">
+                        <span class="lang-name">{{language.language}}</span>
+                        <div class="lang-dots">
+                            <div class="lang-dot"></div>
+                            <div class="lang-dot"></div>
+                            <div class="lang-dot"></div>
+                            <div class="lang-dot"></div>
+                            <div class="lang-dot empty"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-awards" style="display:none;">
+                    <h2>Awards</h2>
+                    <div id="awards-list" class="flex-col gap-4"></div>
+                    <div class="award-item item-template" data-template="awards">
+                        <h3 class="award-title">{{award.title}}</h3>
+                        <p class="text-muted">
+                            <span class="award-issuer">{{award.issuer}}</span> ·
+                            <span class="award-date">{{award.date}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <section id="section-certifications" style="display:none;">
+                    <h2>Certifications</h2>
+                    <div id="certifications-list" class="flex-col gap-4"></div>
+                    <div class="certification-item item-template" data-template="certifications">
+                        <h3 class="cert-name">{{certification.name}}</h3>
+                        <p class="text-muted">
+                            <span class="cert-issuer">{{certification.issuer}}</span> ·
+                            <span class="cert-date">{{certification.date}}</span>
+                        </p>
+                    </div>
+                </section>
+
+                <section id="section-interests" style="display:none;">
+                    <h2>Interests</h2>
+                    <div id="interests-list"></div>
+                    <div class="interest-item item-template" data-template="interests">
+                        <span class="interest-name">{{interest.name}}</span>
+                    </div>
+                </section>
+
+                <section id="section-references" style="display:none;">
+                    <h2>References</h2>
+                    <div id="references-list" class="flex-col gap-4"></div>
+                    <div class="reference-item item-template" data-template="references">
+                        <h3 class="ref-name">{{reference.name}}</h3>
+                        <p class="text-muted ref-company">{{reference.company}}</p>
+                        <p class="text-muted ref-email">{{reference.email}}</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script>
+
+        const json = {
+            "sectionLabels": {
+                "personalInfo": "Personal Info",
+                "summary": "Professional Summary",
+                "experience": "Employment History",
+                "education": "Education",
+                "projects": "Projects",
+                "skills": "Skills",
+                "languages": "Languages",
+                "interests": "Interests & Hobbies",
+                "achievements": "Achievements",
+                "awards": "Awards & Honors",
+                "certifications": "Certifications",
+                "publications": "Publications",
+                "references": "References"
+            },
+            "personalInfo": {
+                "firstName": "Avinash Mani",
+                "lastName": "Tripathi",
+                "jobTitle": "Senior Frontend Engineer ",
+                "email": "john.doe@email.com",
+                "phone": "+91 6393177038",
+                "city": "Maharajganj",
+                "state": "Uttar Pradesh",
+                "pincode": "273303",
+                "country": "India",
+                "linkedin": "https://www.linkedin.com/avinashdev",
+                "github": "https://www.github.com/avinashdev"
+            },
+            "summary": {
+                "content": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers."
+            },
+            "experience": [
+                {
+                    "jobTitle": "Senior Software Engineer",
+                    "company": "Tech Solutions Inc.",
+                    "startDate": "2021-01",
+                    "endDate": "",
+                    "description": "Led development of enterprise web applications using React and Node.js. Optimized system performance by 30%, mentored 5 junior developers, and collaborated with product teams to deliver new features. Implemented CI/CD pipelines and improved code quality through testing."
+                },
+                {
+                    "jobTitle": "Software Engineer",
+                    "company": "Digital Labs",
+                    "startDate": "2018-06",
+                    "endDate": "2020-12",
+                    "description": "Developed REST APIs and microservices, implemented responsive UI components using React, and improved code quality through unit testing and peer reviews. Reduced API response time by 40% through optimization."
+                }
+            ],
+            "education": [
+                {
+                    "degree": "Master of Science in Computer Science",
+                    "institution": "Stanford University",
+                    "startDate": "2016-09",
+                    "endDate": "2018-05"
+                },
+                {
+                    "degree": "Bachelor of Technology in Computer Engineering",
+                    "institution": "University of California, Berkeley",
+                    "startDate": "2012-08",
+                    "endDate": "2016-05"
+                }
+            ],
+            "projects": [
+                {
+                    "name": "Resume Builder Platform",
+                    "startDate": "2023-03",
+                    "endDate": "2023-08",
+                    "description": "Built a dynamic resume builder with multiple templates, real-time preview, and PDF export using React, Next.js, and Tailwind CSS. Implemented drag-and-drop functionality and template customization features."
+                },
+                {
+                    "name": "E-Commerce Dashboard",
+                    "startDate": "2022-01",
+                    "endDate": "2022-05",
+                    "description": "Designed and developed an admin dashboard with analytics, order management, and role-based access control using React, TypeScript, and Chart.js. Integrated with REST APIs and implemented real-time updates."
+                }
+            ],
+            "skills": [
+                {
+                    "name": "JavaScript",
+                    "level": "Expert"
+                },
+                {
+                    "name": "TypeScript",
+                    "level": "Advanced"
+                },
+                {
+                    "name": "React",
+                    "level": "Expert"
+                },
+                {
+                    "name": "Node.js",
+                    "level": "Advanced"
+                },
+                {
+                    "name": "Next.js",
+                    "level": "Advanced"
+                },
+                {
+                    "name": "Tailwind CSS",
+                    "level": "Advanced"
+                },
+                {
+                    "name": "MongoDB",
+                    "level": "Intermediate"
+                },
+                {
+                    "name": "PostgreSQL",
+                    "level": "Intermediate"
+                },
+                {
+                    "name": "Docker",
+                    "level": "Intermediate"
+                },
+                {
+                    "name": "AWS",
+                    "level": "Intermediate"
+                }
+            ],
+            "certifications": [
+                {
+                    "name": "Microsoft Excel",
+                    "issuer": "Microsoft",
+                    "date": "2026-11",
+                    "expiryDate": "2026-12",
+                    "credentialId": "63dcdc44nfejfsfdfdvk"
+                }
+            ],
+            "languages": [
+                {
+                    "language": "Hindi ",
+                    "proficiency": "Native"
+                },
+                {
+                    "language": "English",
+                    "proficiency": "Advanced"
+                },
+                {
+                    "language": "French",
+                    "proficiency": "Basic"
+                }
+            ],
+            "awards": [
+                {
+                    "title": "Employee Of the Year",
+                    "issuer": "Satschel",
+                    "date": "2026-11"
+                },
+                {
+                    "title": "Performace of Excellence",
+                    "issuer": "Compliance Innovation",
+                    "date": "2026-12"
+                },
+                {
+                    "title": "Unsung Hero",
+                    "issuer": "Speckyfox Technologies Pvt. Ltd",
+                    "date": "2026-12"
+                }
+            ],
+            "customSections": [
+                {
+                    "id": "languages",
+                    "label": "Languages",
+                    "icon": "🌍",
+                    "items": [
+                        {
+                            "id": "languages-0",
+                            "fields": {
+                                "language": {
+                                    "label": "Language",
+                                    "value": "Hindi ",
+                                    "type": "text"
+                                },
+                                "proficiency": {
+                                    "label": "Proficiency",
+                                    "value": "Native",
+                                    "type": "select"
+                                }
+                            }
+                        },
+                        {
+                            "id": "languages-1",
+                            "fields": {
+                                "language": {
+                                    "label": "Language",
+                                    "value": "English",
+                                    "type": "text"
+                                },
+                                "proficiency": {
+                                    "label": "Proficiency",
+                                    "value": "Advanced",
+                                    "type": "select"
+                                }
+                            }
+                        },
+                        {
+                            "id": "languages-2",
+                            "fields": {
+                                "language": {
+                                    "label": "Language",
+                                    "value": "French",
+                                    "type": "text"
+                                },
+                                "proficiency": {
+                                    "label": "Proficiency",
+                                    "value": "Basic",
+                                    "type": "select"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "language": {
+                            "label": "Language",
+                            "type": "text"
+                        },
+                        "proficiency": {
+                            "label": "Proficiency",
+                            "type": "select",
+                            "options": [
+                                "Native",
+                                "Fluent",
+                                "Advanced",
+                                "Intermediate",
+                                "Basic"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "id": "achievements",
+                    "label": "Achievements",
+                    "icon": "🏆",
+                    "items": [
+                        {
+                            "id": "achievements-0",
+                            "fields": {
+                                "title": {
+                                    "label": "Achievement Title",
+                                    "value": "Hounred By St Joseph School",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Date",
+                                    "value": "2019-01",
+                                    "type": "month"
+                                },
+                                "organization": {
+                                    "label": "Organization",
+                                    "value": "Babu Banarasi Das University",
+                                    "type": "text"
+                                },
+                                "description": {
+                                    "label": "Description",
+                                    "value": "oftware engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers.",
+                                    "type": "richtext"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "title": {
+                            "label": "Achievement Title",
+                            "type": "text"
+                        },
+                        "date": {
+                            "label": "Date",
+                            "type": "month"
+                        },
+                        "organization": {
+                            "label": "Organization",
+                            "type": "text"
+                        },
+                        "description": {
+                            "label": "Description",
+                            "type": "richtext",
+                            "className": "w-full"
+                        }
+                    }
+                },
+                {
+                    "id": "interests",
+                    "label": "Interests & Hobbies",
+                    "icon": "🎯",
+                    "items": [
+                        {
+                            "id": "interests-0",
+                            "fields": {
+                                "name": {
+                                    "label": "Interest/Hobby",
+                                    "value": "PLaying Chess",
+                                    "type": "text"
+                                }
+                            }
+                        },
+                        {
+                            "id": "interests-1",
+                            "fields": {
+                                "name": {
+                                    "label": "Interest/Hobby",
+                                    "value": "Playing Cricket",
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "name": {
+                            "label": "Interest/Hobby",
+                            "type": "text"
+                        }
+                    }
+                },
+                {
+                    "id": "awards",
+                    "label": "Awards & Honors",
+                    "icon": "🥇",
+                    "items": [
+                        {
+                            "id": "awards-0",
+                            "fields": {
+                                "title": {
+                                    "label": "Award Title",
+                                    "value": "Employee Of the Year",
+                                    "type": "text"
+                                },
+                                "issuer": {
+                                    "label": "Awarded By",
+                                    "value": "Satschel",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Date",
+                                    "value": "2026-11",
+                                    "type": "month"
+                                }
+                            }
+                        },
+                        {
+                            "id": "awards-1",
+                            "fields": {
+                                "title": {
+                                    "label": "Award Title",
+                                    "value": "Performace of Excellence",
+                                    "type": "text"
+                                },
+                                "issuer": {
+                                    "label": "Awarded By",
+                                    "value": "Compliance Innovation",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Date",
+                                    "value": "2026-12",
+                                    "type": "month"
+                                }
+                            }
+                        },
+                        {
+                            "id": "awards-2",
+                            "fields": {
+                                "title": {
+                                    "label": "Award Title",
+                                    "value": "Unsung Hero",
+                                    "type": "text"
+                                },
+                                "issuer": {
+                                    "label": "Awarded By",
+                                    "value": "Speckyfox Technologies Pvt. Ltd",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Date",
+                                    "value": "2026-12",
+                                    "type": "month"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "title": {
+                            "label": "Award Title",
+                            "type": "text"
+                        },
+                        "issuer": {
+                            "label": "Awarded By",
+                            "type": "text"
+                        },
+                        "date": {
+                            "label": "Date",
+                            "type": "month"
+                        },
+                        "description": {
+                            "label": "Description",
+                            "type": "richtext",
+                            "className": "w-full"
+                        }
+                    }
+                },
+                {
+                    "id": "certifications",
+                    "label": "Certifications",
+                    "icon": "📜",
+                    "items": [
+                        {
+                            "id": "certifications-0",
+                            "fields": {
+                                "name": {
+                                    "label": "Certification Name",
+                                    "value": "Microsoft Excel",
+                                    "type": "text"
+                                },
+                                "issuer": {
+                                    "label": "Issuing Organization",
+                                    "value": "Microsoft",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Issue Date",
+                                    "value": "2026-11",
+                                    "type": "month"
+                                },
+                                "expiryDate": {
+                                    "label": "Expiry Date",
+                                    "value": "2026-12",
+                                    "type": "month"
+                                },
+                                "credentialId": {
+                                    "label": "Credential ID",
+                                    "value": "63dcdc44nfejfsfdfdvk",
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "name": {
+                            "label": "Certification Name",
+                            "type": "text"
+                        },
+                        "issuer": {
+                            "label": "Issuing Organization",
+                            "type": "text"
+                        },
+                        "date": {
+                            "label": "Issue Date",
+                            "type": "month"
+                        },
+                        "expiryDate": {
+                            "label": "Expiry Date",
+                            "type": "month"
+                        },
+                        "credentialId": {
+                            "label": "Credential ID",
+                            "type": "text"
+                        }
+                    }
+                },
+                {
+                    "id": "publications",
+                    "label": "Publications",
+                    "icon": "📚",
+                    "items": [
+                        {
+                            "id": "publications-0",
+                            "fields": {
+                                "title": {
+                                    "label": "Publication Title",
+                                    "value": "E Book Shop",
+                                    "type": "text"
+                                },
+                                "publisher": {
+                                    "label": "Publisher",
+                                    "value": "Avinash Mani",
+                                    "type": "text"
+                                },
+                                "date": {
+                                    "label": "Publication Date",
+                                    "value": "2026-06",
+                                    "type": "month"
+                                },
+                                "url": {
+                                    "label": "URL",
+                                    "value": "https://www.sheltershymphoney.com/2bhk-flat",
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "title": {
+                            "label": "Publication Title",
+                            "type": "text"
+                        },
+                        "publisher": {
+                            "label": "Publisher",
+                            "type": "text"
+                        },
+                        "date": {
+                            "label": "Publication Date",
+                            "type": "month"
+                        },
+                        "url": {
+                            "label": "URL",
+                            "type": "text"
+                        },
+                        "description": {
+                            "label": "Description",
+                            "type": "richtext",
+                            "className": "w-full"
+                        }
+                    }
+                },
+                {
+                    "id": "references",
+                    "label": "References",
+                    "icon": "👤",
+                    "items": [
+                        {
+                            "id": "references-0",
+                            "fields": {
+                                "name": {
+                                    "label": "Name",
+                                    "value": "Prateek Singh",
+                                    "type": "text"
+                                },
+                                "title": {
+                                    "label": "Title",
+                                    "value": "Senior Product Designer",
+                                    "type": "text"
+                                },
+                                "company": {
+                                    "label": "Company",
+                                    "value": "Compliance Innovation",
+                                    "type": "text"
+                                },
+                                "email": {
+                                    "label": "Email",
+                                    "value": "avinashtiwari0555999@gmail.com",
+                                    "type": "email"
+                                },
+                                "phone": {
+                                    "label": "Phone",
+                                    "value": "06393177038",
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    ],
+                    "fieldDefinitions": {
+                        "name": {
+                            "label": "Name",
+                            "type": "text"
+                        },
+                        "title": {
+                            "label": "Title",
+                            "type": "text"
+                        },
+                        "company": {
+                            "label": "Company",
+                            "type": "text"
+                        },
+                        "email": {
+                            "label": "Email",
+                            "type": "email"
+                        },
+                        "phone": {
+                            "label": "Phone",
+                            "type": "text"
+                        }
+                    }
+                }
+            ],
+            "achievements": [
+                {
+                    "title": "Hounred By St Joseph School",
+                    "date": "2019-01",
+                    "organization": "Babu Banarasi Das University",
+                    "description": "oftware engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers."
+                }
+            ],
+            "interests": [
+                {
+                    "name": "PLaying Chess"
+                },
+                {
+                    "name": "Playing Cricket"
+                }
+            ],
+            "publications": [
+                {
+                    "title": "E Book Shop",
+                    "publisher": "Avinash Mani",
+                    "date": "2026-06",
+                    "url": "https://www.sheltershymphoney.com/2bhk-flat"
+                }
+            ],
+            "references": [
+                {
+                    "name": "Prateek Singh",
+                    "title": "Senior Product Designer",
+                    "company": "Compliance Innovation",
+                    "email": "avinashtiwari0555999@gmail.com",
+                    "phone": "06393177038"
+                }
+            ],
+            "order": [
+                "personalInfo",
+                "summary",
+                "experience",
+                "education",
+                "projects",
+                "skills",
+                "languages",
+                "interests",
+                "achievements",
+                "awards",
+                "certifications",
+                "publications",
+                "references"
+            ],
+            "fontFamily": "Merriweather",
+            "templateId": "696e14fce15299e55244d1ce",
+            "intent": "preview"
+        }
+        // JSON data removed during migration
+        window.hydrate = function (data) {
+            // Helper to set text content safely
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value || '';
+            };
+
+            // Helper to handle links
+            const setLink = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (value) {
+                        el.href = value;
+                        el.style.display = 'inline';
+                    } else {
+                        el.style.display = 'none';
+                    }
+                }
+            };
+
+            // Helper to show/hide sections
+            const toggleSection = (id, show) => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = show ? 'block' : 'none';
+            };
+
+            // --- Update Section Labels ---
+            if (data.sectionLabels) {
+                Object.keys(data.sectionLabels).forEach(key => {
+                    const sectionId = 'section-' + key;
+                    const label = data.sectionLabels[key];
+                    const sectionEl = document.getElementById(sectionId);
+                    if (sectionEl && label) {
+                        const heading = sectionEl.querySelector('h2');
+                        if (heading) heading.textContent = label;
+                    }
+                });
+            }
+
+            // --- Personal Info ---
+            if (data.personalInfo) {
+                const p = data.personalInfo;
+                document.title = `${p.firstName} ${p.lastName} - Resume`;
+                setText('full-name', `${p.firstName} ${p.lastName}`);
+                setText('job-title', p.jobTitle);
+                setText('email', p.email);
+                setText('phone', p.phone);
+                setText('address', [p.city, p.state, p.country].filter(Boolean).join(', '));
+
+                setLink('linkedin-link', p.linkedin);
+                setLink('github-link', p.github);
+
+            }
+            if (data.summary.content) {
+                document.getElementById("summary-text").innerHTML = data.summary.content
+                toggleSection('section-summary', true);
+            }
+
+
+            // --- Lists Rendering Helper ---
+            const renderList = (listId, items, templateSelector, callback) => {
+                const container = document.getElementById(listId);
+                const template = document.querySelector(templateSelector);
+                const sectionId = listId.replace('-list', '');
+
+                if (!container || !template) return;
+
+                container.innerHTML = '';
+
+                if (items && items.length > 0) {
+                    const sectionEl = document.getElementById('section-' + listId.replace('-list', ''));
+                    if (sectionEl) sectionEl.style.display = 'block';
+
+                    items.forEach(item => {
+                        const clone = template.cloneNode(true);
+                        clone.classList.remove('item-template');
+                        clone.style.display = 'block';
+                        clone.removeAttribute('data-template');
+
+                        callback(clone, item);
+                        container.appendChild(clone);
+                    });
+                } else {
+                    const sectionEl = document.getElementById('section-' + listId.replace('-list', ''));
+                    if (sectionEl) sectionEl.style.display = 'none';
+                }
+            };
+
+            // --- Experience ---
+            renderList('experience-list', data.experience, '[data-template="experience"]', (el, item) => {
+                const companyEl = el.querySelector('.exp-company');
+                if (companyEl) companyEl.textContent = item.company || '';
+
+                const jobTitleEl = el.querySelector('.exp-job-title');
+                if (jobTitleEl) jobTitleEl.textContent = item.jobTitle || '';
+
+                const startDateEl = el.querySelector('.exp-start-date');
+                if (startDateEl) startDateEl.textContent = item.startDate || '';
+
+                const endDateEl = el.querySelector('.exp-end-date');
+                if (endDateEl) endDateEl.textContent = item.endDate || 'Present';
+
+                const descEl = el.querySelector('.exp-description');
+                if (descEl) descEl.innerHTML = item.description || '';
+            });
+
+            // --- Projects ---
+            renderList('projects-list', data.projects, '[data-template="projects"]', (el, item) => {
+                const nameEl = el.querySelector('.proj-name');
+                if (nameEl) nameEl.textContent = item.name || '';
+
+                const startDateEl = el.querySelector('.proj-start-date');
+                if (startDateEl) startDateEl.textContent = item.startDate || '';
+
+                const endDateEl = el.querySelector('.proj-end-date');
+                if (endDateEl) endDateEl.textContent = item.endDate || 'Present';
+
+                const descEl = el.querySelector('.proj-description');
+                if (descEl) descEl.innerHTML = item.description || '';
+            });
+
+            // --- Education ---
+            renderList('education-list', data.education, '[data-template="education"]', (el, item) => {
+                const degreeEl = el.querySelector('.edu-degree');
+                if (degreeEl) degreeEl.textContent = item.degree || '';
+
+                const instEl = el.querySelector('.edu-institution');
+                if (instEl) instEl.textContent = item.institution || '';
+
+                const endDateEl = el.querySelector('.edu-end-date');
+                if (endDateEl) endDateEl.textContent = item.endDate || '';
+            });
+
+            // --- Skills ---
+            if (data.skills && typeof data.skills === 'string') {
+                const container = document.getElementById('skills-list');
+                const section = document.getElementById('section-skills');
+                if (container && section) {
+                    if (data.skills.trim()) {
+                        container.innerHTML = data.skills;
+                        container.className = 'rich-text-content';
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                }
+            } else {
+                renderList('skills-list', data.skills, '[data-template="skills"]', (el, item) => {
+                    const nameEl = el.querySelector('.skill-name');
+                    if (nameEl) nameEl.textContent = item.name || item;
+
+                    el.style.display = 'inline-block';
+                });
+            }
+
+            // --- Languages ---
+            renderList('languages-list', data.languages, '[data-template="languages"]', (el, item) => {
+                const nameEl = el.querySelector('.lang-name');
+                if (nameEl) nameEl.textContent = item.language || item.name || '';
+
+                const profEl = el.querySelector('.lang-proficiency');
+                if (profEl) profEl.textContent = item.proficiency || '';
+            });
+
+            // --- Certifications ---
+            renderList('certifications-list', data.certifications, '[data-template="certifications"]', (el, item) => {
+                const nameEl = el.querySelector('.cert-name');
+                if (nameEl) nameEl.textContent = item.name || '';
+
+                const issuerEl = el.querySelector('.cert-issuer');
+                if (issuerEl) issuerEl.textContent = item.issuer || '';
+
+                const dateEl = el.querySelector('.cert-date');
+                if (dateEl) dateEl.textContent = item.date || '';
+            });
+
+            // --- Awards ---
+            renderList('awards-list', data.awards, '[data-template="awards"]', (el, item) => {
+                const titleEl = el.querySelector('.award-title');
+                if (titleEl) titleEl.textContent = item.title || '';
+
+                const issuerEl = el.querySelector('.award-issuer');
+                if (issuerEl) issuerEl.textContent = item.issuer || '';
+
+                const dateEl = el.querySelector('.award-date');
+                if (dateEl) dateEl.textContent = item.date || '';
+
+                const descEl = el.querySelector('.award-description');
+                if (descEl) descEl.textContent = item.description || '';
+            });
+
+            // --- Achievements ---
+            renderList('achievements-list', data.achievements, '[data-template="achievements"]', (el, item) => {
+                const titleEl = el.querySelector('.achievement-title');
+                if (titleEl) titleEl.textContent = item.title || '';
+
+                const dateEl = el.querySelector('.achievement-date');
+                if (dateEl) dateEl.textContent = item.date || '';
+
+                const descEl = el.querySelector('.achievement-description');
+                if (descEl) descEl.textContent = item.description || '';
+            });
+
+            // --- Publications ---
+            renderList('publications-list', data.publications, '[data-template="publications"]', (el, item) => {
+                const titleEl = el.querySelector('.pub-title');
+                if (titleEl) titleEl.textContent = item.title || '';
+
+                const pubEl = el.querySelector('.pub-publisher');
+                if (pubEl) pubEl.textContent = item.publisher || '';
+
+                const dateEl = el.querySelector('.pub-date');
+                if (dateEl) dateEl.textContent = item.date || '';
+
+                const descEl = el.querySelector('.pub-description');
+                if (descEl) descEl.textContent = item.description || '';
+            });
+
+            // --- Volunteer ---
+            renderList('volunteer-list', data.volunteer, '[data-template="volunteer"]', (el, item) => {
+                const orgEl = el.querySelector('.vol-organization');
+                if (orgEl) orgEl.textContent = item.organization || '';
+
+                const roleEl = el.querySelector('.vol-role');
+                if (roleEl) roleEl.textContent = item.role || '';
+
+                const startEl = el.querySelector('.vol-start-date');
+                if (startEl) startEl.textContent = item.startDate || '';
+
+                const endEl = el.querySelector('.vol-end-date');
+                if (endEl) endEl.textContent = item.endDate || 'Present';
+
+                const descEl = el.querySelector('.vol-description');
+                if (descEl) descEl.textContent = item.description || '';
+            });
+
+            // --- Interests ---
+            if (data.interests && typeof data.interests === 'string') {
+                const container = document.getElementById('interests-list');
+                const section = document.getElementById('section-interests');
+                if (container && section) {
+                    if (data.interests.trim()) {
+                        container.innerHTML = data.interests;
+                        container.className = 'rich-text-content';
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                }
+            } else {
+                renderList('interests-list', data.interests, '[data-template="interests"]', (el, item) => {
+                    const nameEl = el.querySelector('.interest-name');
+                    if (nameEl) nameEl.textContent = item.name || '';
+
+                    el.style.display = 'inline-block';
+                });
+            }
+
+            // --- References ---
+            renderList('references-list', data.references, '[data-template="references"]', (el, item) => {
+                const nameEl = el.querySelector('.ref-name');
+                if (nameEl) nameEl.textContent = item.name || '';
+
+                const jobEl = el.querySelector('.ref-job-title');
+                if (jobEl) jobEl.textContent = item.jobTitle || '';
+
+                const compEl = el.querySelector('.ref-company');
+                if (compEl) compEl.textContent = item.company || '';
+
+                const emailEl = el.querySelector('.ref-email');
+                if (emailEl) emailEl.textContent = item.email || '';
+
+                const phoneEl = el.querySelector('.ref-phone');
+                if (phoneEl) phoneEl.textContent = item.phone || '';
+            });
+
+            // --- Section Reordering ---
+            if (data.order && Array.isArray(data.order)) {
+                const main = document.getElementById('resume-root');
+                const sections = Array.from(main.children);
+
+                const orderMap = {};
+                data.order.forEach((key, index) => {
+                    orderMap['section-' + key] = index;
+                });
+
+                sections.sort((a, b) => {
+                    if (a.id === 'section-personalInfo') return -1;
+                    if (b.id === 'section-personalInfo') return 1;
+
+                    const indexA = orderMap[a.id] !== undefined ? orderMap[a.id] : 9999;
+                    const indexB = orderMap[b.id] !== undefined ? orderMap[b.id] : 9999;
+
+                    return indexA - indexB;
+                });
+
+                sections.forEach(sec => main.appendChild(sec));
+            }
+
+        };
+
+        window.onload = () => hydrate(json);
+    </script>
+</body>
+
+</html>

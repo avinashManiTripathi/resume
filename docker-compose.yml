@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile.next
       args:
         APP_NAME: landing
-        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        NEXT_PUBLIC_API_URL: https://api.hirecta.com/api
         NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ""
     ports:
       - "3001:3000"
@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile.next
       args:
         APP_NAME: admin
-        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        NEXT_PUBLIC_API_URL: https://api.hirecta.com/api
     ports:
       - "3002:3000"
 
@@ -37,7 +37,7 @@ services:
       dockerfile: Dockerfile.next
       args:
         APP_NAME: auth
-        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        NEXT_PUBLIC_API_URL: https://api.hirecta.com/api
     ports:
       - "3003:3000"
 
@@ -47,7 +47,7 @@ services:
       dockerfile: Dockerfile.next
       args:
         APP_NAME: editor
-        NEXT_PUBLIC_API_BASE: http://localhost:4000
+        NEXT_PUBLIC_API_BASE: https://api.hirecta.com
     ports:
       - "3004:3000"
 
@@ -57,6 +57,6 @@ services:
       dockerfile: Dockerfile.next
       args:
         APP_NAME: interview
-        NEXT_PUBLIC_API_URL: http://localhost:4000/api
+        NEXT_PUBLIC_API_URL: https://api.hirecta.com/api
     ports:
       - "3005:3000"
