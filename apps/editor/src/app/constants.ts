@@ -12,7 +12,8 @@ export const dummyData = {
     "pincode": "273303",
     "country": "India",
     "linkedin": "https://www.linkedin.com/avinashdev",
-    "github": "https://www.github.com/avinashdev"
+    "github": "https://www.github.com/avinashdev",
+    "profileImage": ""
   },
   "summary": {
     "content": "Experienced software engineer with 8+ years of expertise in building scalable web applications, leading cross-functional teams, and delivering high-quality products using modern technologies. Passionate about clean code, system architecture, and mentoring junior developers."

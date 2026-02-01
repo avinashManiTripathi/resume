@@ -443,7 +443,7 @@ function ResumeEditor() {
     if (!isLoggedIn) {
       sessionStorage.setItem('pending_download', format);
       const authUrl = ENV.AUTH_URL;
-      window.location.href = `${authUrl}/signin?returnTo=${encodeURIComponent(window.location.href)}`;
+      window.location.href = `${authUrl}?redirect=${encodeURIComponent(window.location.href)}`;
       return;
     }
     // Check subscription before allowing download
