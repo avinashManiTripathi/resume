@@ -46,30 +46,33 @@ export async function TemplatesSection() {
             </div>
 
             <div className="container px-4 mx-auto relative z-10">
-                <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+                <div className="flex flex-col items-center justify-center mb-12 gap-6 text-center">
                     <div className="max-w-2xl">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6">
                             <Sparkles className="w-4 h-4" />
                             <span>Premium Quality</span>
                         </div>
                         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                            Professional Templates for Every Role
+                            Build Your Resume for Any Career
                         </h2>
                         <p className="text-lg text-slate-600">
                             Choose from our collection of ATS-friendly templates designed to help you stand out.
                         </p>
                     </div>
-                    <Link href="/templates">
-                        <Button variant="outline" className="group h-11 px-8 text-base">
-                            View All Templates
-                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                    </Link>
                 </div>
             </div>
 
             <div className="relative z-10 w-full">
                 <TemplatesSlider templates={templates} />
+            </div>
+
+            <div className="container px-4 mx-auto relative z-10 mt-12 flex justify-center">
+                <Link href="/templates">
+                    <Button variant="outline" className="group h-11 px-8 text-base">
+                        View All Templates
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                </Link>
             </div>
         </section>
     );
