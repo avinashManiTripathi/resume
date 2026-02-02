@@ -17,6 +17,7 @@ import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLef
 import { dummyData, ResumeFormSchema } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
+import { useResumeDownload } from "../hooks/useResumeDownload";
 import { ENV } from "../env";
 import { StepLoader } from '@repo/ui/step-loader';
 import { EditorSidebar } from "../../components/EditorSidebar";
@@ -526,67 +527,15 @@ function ResumeEditor() {
     }
   }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
 
-  // Ref to track if we're currently processing a pending download to prevent duplicates
-  const processingDownloadRef = useRef(false);
 
-  // Handle pending download on return from login or subscription
-  useEffect(() => {
-    const handlePendingDownload = async () => {
-      // If already processing or not in a valid state, skip
-      if (processingDownloadRef.current || !isLoggedIn || subscription === undefined) {
-        return;
-      }
-
-      const subscribed = searchParams.get('subscribed');
-      const pendingFormat = sessionStorage.getItem('pending_download');
-
-      if (pendingFormat && subscribed === 'true') {
-        console.log('[Editor] Processing pending download:', pendingFormat);
-
-        // Mark as processing to prevent race conditions/duplicates
-        processingDownloadRef.current = true;
-
-        try {
-          // If user just subscribed, refresh subscription first
-          if (refreshSubscription) {
-            console.log('[Editor] Refreshing subscription before download...');
-            await refreshSubscription();
-            // Small delay to ensure state update propagates
-            await new Promise(resolve => setTimeout(resolve, 500));
-            console.log('[Editor] Subscription refreshed, subscription is now:', subscription);
-          }
-
-          // Clear pending download flag immediately
-          sessionStorage.removeItem('pending_download');
-          console.log('[Editor] Triggering download for format:', pendingFormat);
-
-          await handleExport(pendingFormat as "pdf" | "doc");
-
-          // Clean up URL after processing download
-          const url = new URL(window.location.href);
-          url.searchParams.delete('subscribed');
-          window.history.replaceState({}, '', url.toString());
-          console.log('[Editor] Cleaned up subscribed parameter from URL');
-
-        } catch (error) {
-          console.error('[Editor] Error processing pending download:', error);
-        } finally {
-          // Reset processing flag after a delay to ensure no double-fires
-          setTimeout(() => {
-            processingDownloadRef.current = false;
-          }, 2000);
-        }
-      } else if (subscribed === 'true') {
-        // If we have subscribed param but no pending download, just clean up URL
-        console.log('[Editor] No pending download, cleaning up URL');
-        const url = new URL(window.location.href);
-        url.searchParams.delete('subscribed');
-        window.history.replaceState({}, '', url.toString());
-      }
-    };
-
-    handlePendingDownload();
-  }, [isLoggedIn, searchParams, handleExport, refreshSubscription, subscription]);
+  // Auto-download hook - Encapsulated logic for performance
+  useResumeDownload({
+    isLoggedIn: isLoggedIn ?? false,
+    subscription,
+    refreshSubscription,
+    handleExport,
+    canDownload
+  });
 
 
 
