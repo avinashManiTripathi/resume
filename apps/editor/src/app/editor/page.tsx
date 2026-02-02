@@ -525,7 +525,7 @@ function ResumeEditor() {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${fileName}.doc`);
     }
-  }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl]);
+  }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl, subscription]);
 
 
   // Auto-download hook - Encapsulated logic for performance
