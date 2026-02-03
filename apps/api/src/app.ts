@@ -26,6 +26,7 @@ import interviewRoutes from './routes/interview.routes';
 import blogRoutes from './routes/blog.routes';
 import coverLetterTemplateRoutes from './routes/cover-letter-template.routes';
 import adminRoutes from './routes/admin.routes';
+import adminTemplateRoutes from './routes/admin-template.routes';
 import plansRoutes from './routes/plans.routes';
 import { errorHandler, notFoundHandler } from './middleware/error.middleware';
 import { requestLogger } from './middleware/logger.middleware';
@@ -287,6 +288,7 @@ export class App {
         this.app.use('/api/cover-letter-templates', coverLetterTemplateRoutes);
 
         // General Admin routes
+        this.app.use('/api/admin/templates', adminTemplateRoutes);
         this.app.use('/api/admin', adminRoutes);
 
         // Legacy route (for backward compatibility)

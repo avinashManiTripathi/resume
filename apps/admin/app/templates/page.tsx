@@ -50,7 +50,7 @@ export default function TemplatesPage() {
   // Keep apiUrl for images and uploads
   const apiUrl = ENV.API_URL
 
-  useEffect(() => { fetchTemplates(); }, []);
+
 
   const fetchTemplates = async () => {
     try {
