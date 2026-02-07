@@ -230,7 +230,8 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
             "datePublished": interview.publishDate,
             "author": {
                 "@type": "Person",
-                "name": interview.author.name
+                "name": interview.author.name,
+                "url": ENV.BASE_URL
             },
             "acceptedAnswer": {
                 "@type": "Answer",
@@ -240,7 +241,8 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                 "upvoteCount": 0,
                 "author": {
                     "@type": "Person",
-                    "name": interview.author.name
+                    "name": interview.author.name,
+                    "url": ENV.BASE_URL
                 }
             }
         } : undefined

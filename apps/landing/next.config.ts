@@ -79,30 +79,37 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'storage.googleapis.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.hirecta.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'media.licdn.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
-      },
-      {
-        protocol: apiUrl.startsWith('https') ? 'https' : 'http',
-        hostname: apiHostname,
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'media.istockphoto.com',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
+        pathname: '/**',
       },
     ],
   },
