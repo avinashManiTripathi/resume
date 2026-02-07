@@ -221,16 +221,27 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
         "@type": "QAPage",
         "name": interview.title,
         "description": interview.description,
-        "about": {
-            "@type": "Thing",
-            "name": interview.category
-        },
         "mainEntity": questions.length > 0 ? {
             "@type": "Question",
             "name": questions[0].question,
+            "text": questions[0].question,
+            "answerCount": 1,
+            "upvoteCount": 0,
+            "datePublished": interview.publishDate,
+            "author": {
+                "@type": "Person",
+                "name": interview.author.name
+            },
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": questions[0].answer
+                "text": questions[0].answer,
+                "datePublished": interview.publishDate,
+                "url": `${ENV.BASE_URL}/interviews/${slug}`,
+                "upvoteCount": 0,
+                "author": {
+                    "@type": "Person",
+                    "name": interview.author.name
+                }
             }
         } : undefined
     };
