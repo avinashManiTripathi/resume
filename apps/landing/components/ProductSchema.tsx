@@ -47,6 +47,10 @@ export function ProductSchema() {
             "priceValidUntil": "2026-12-31",
             "shippingDetails": {
                 "@type": "OfferShippingDetails",
+                "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "US"
+                },
                 "shippingRate": {
                     "@type": "MonetaryAmount",
                     "value": "0",
