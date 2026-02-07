@@ -2,7 +2,30 @@ import { ENV } from "@/app/env";
 import Script from "next/script";
 
 export function ProductSchema() {
-    const baseUrl = ENV.BASE_URL
+    const baseUrl = ENV.BASE_URL;
+
+    // Organization Schema for Brand Recognition
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Hirecta",
+        "url": baseUrl,
+        "logo": `${baseUrl}/logo.png`,
+        "description": "Free AI-powered resume builder helping job seekers create professional, ATS-friendly resumes in minutes.",
+        "foundingDate": "2024",
+        "email": "support@hirecta.com",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Support",
+            "email": "support@hirecta.com"
+        },
+        "sameAs": [
+            "https://twitter.com/hirecta",
+            "https://linkedin.com/company/hirecta",
+            "https://github.com/hirecta"
+        ]
+    };
+
     const schema = {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -103,9 +126,15 @@ export function ProductSchema() {
     };
 
     return (
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+            />
+        </>
     );
 }
