@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ENV } from "@/app/env";
 import { motion, AnimatePresence } from "framer-motion";
 
+
 export default function TemplatesPageClient() {
     const { templates, loading, error, isCached } = useTemplates({ apiUrl: ENV.API_URL });
 
