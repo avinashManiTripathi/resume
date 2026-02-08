@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { ENV } from './env'
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = ENV.BASE_URL
+    const baseUrl = ENV.BASE_URL.replace(/^http:\/\//, 'https://')
 
     return {
         rules: [
