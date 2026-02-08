@@ -1,6 +1,7 @@
 import { ENV } from "@/app/env";
 import { URLS } from "./urls";
 
+
 export const NAVIGATION = {
     logo: { text: "Prof", accent: "Resume" },
     menuItems: [

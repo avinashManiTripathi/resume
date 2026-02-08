@@ -1,8 +1,8 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npx turbo run build --filter=editor..."
+buildCommand = "npm run build --workspace=editor"
 
 [deploy]
-startCommand = "cd apps/editor && npm start"
+startCommand = "npm run start --workspace=editor"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
