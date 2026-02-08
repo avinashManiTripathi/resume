@@ -77,10 +77,16 @@ export function usePersistence() {
             const documents: SavedDocument[] = stored ? JSON.parse(stored) : [];
 
             const now = new Date().toISOString();
-            const existingIndex = documents.findIndex(d => d.id === doc.id);
+
+            // For resumes, we upsert by templateId. For others, keep using ID.
+            const existingIndex = doc.type === 'resume'
+                ? documents.findIndex(d => d.type === 'resume' && d.templateId === doc.templateId)
+                : documents.findIndex(d => d.id === doc.id);
 
             if (existingIndex > -1) {
-                documents[existingIndex] = { ...doc, lastModified: now };
+                // Keep the existing ID if it exists, but update content
+                const existingId = documents[existingIndex].id;
+                documents[existingIndex] = { ...doc, id: existingId, lastModified: now };
             } else {
                 documents.push({ ...doc, lastModified: now });
             }
@@ -96,13 +102,19 @@ export function usePersistence() {
     const saveToBackend = useCallback(async (doc: Omit<SavedDocument, 'lastModified'>) => {
         try {
             const endpoint = doc.type === 'resume' ? API_ENDPOINTS.RESUME.SAVE : API_ENDPOINTS.COVER_LETTER.SAVE;
-            const result = await post<{ data: any }>(endpoint, {
-                id: doc.id.startsWith('guest_') ? undefined : doc.id,
+
+            // For resumes, we rely on the backend's template-based upsert logic
+            // We don't strictly need to send ID, but sending it doesn't hurt.
+            // Critical part is sending template/templateId correctly.
+            const payload = {
+                id: doc.id.startsWith('guest_') || doc.id.startsWith('doc_') ? undefined : doc.id,
                 title: doc.title,
                 template: doc.templateId, // Backend uses 'template' for resume
                 templateId: doc.templateId, // Backend uses 'templateId' for cover letter
                 data: doc.data
-            });
+            };
+
+            const result = await post<{ data: any }>(endpoint, payload);
 
             return result.data?._id || result.data?.id;
         } catch (error) {

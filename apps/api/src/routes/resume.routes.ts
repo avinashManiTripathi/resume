@@ -136,8 +136,42 @@ router.get('/', verifyToken, async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/resume/by-template/:templateId
+ * Get resume for a specific template
+ */
+router.get('/by-template/:templateId', verifyToken, async (req: Request, res: Response) => {
+    try {
+        const authReq = req as AuthRequest;
+        const userId = authReq.user?.userId;
+        const { templateId } = req.params;
+
+        const resume = await Resume.findOne({ userId, template: templateId });
+
+        if (!resume) {
+            // Return null instead of 404 - frontend will handle empty state
+            return res.json({
+                success: true,
+                data: null,
+                message: 'No data for this template yet'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: resume
+        });
+    } catch (error: any) {
+        console.error('Error fetching resume by template:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch resume'
+        });
+    }
+});
+
+/**
  * GET /api/resume/:id
- * Get a specific resume
+ * Get a specific resume by ID (kept for backward compatibility)
  */
 router.get('/:id', verifyToken, async (req: Request, res: Response) => {
     try {
@@ -170,44 +204,36 @@ router.get('/:id', verifyToken, async (req: Request, res: Response) => {
 
 /**
  * POST /api/resume/
- * Save or update a resume
+ * Save or update a resume (upsert by template)
  */
 router.post('/', verifyToken, async (req: Request, res: Response) => {
     try {
         const authReq = req as AuthRequest;
         const userId = authReq.user?.userId;
-        const { id, title, template, data } = req.body;
+        const { title, template, data } = req.body;
 
-        if (!title || !template || !data) {
+        if (!template || !data) {
             return res.status(400).json({
                 success: false,
-                message: 'Title, template, and data are required'
+                message: 'Template and data are required'
             });
         }
 
-        let resume;
-
-        if (id && mongoose.Types.ObjectId.isValid(id)) {
-            // Update existing
-            resume = await Resume.findOneAndUpdate(
-                { _id: id, userId },
-                { title, template, data },
-                { new: true }
-            );
-
-            if (!resume) {
-                return res.status(404).json({ success: false, message: 'Resume not found or unauthorized' });
-            }
-        } else {
-            // Create new
-            resume = new Resume({
+        // Upsert by userId + template (one resume per template)
+        const resume = await Resume.findOneAndUpdate(
+            { userId, template }, // Find by userId + template
+            {
                 userId,
-                title,
                 template,
-                data
-            });
-            await resume.save();
-        }
+                data,
+                title: title || 'My Resume' // Optional title
+            },
+            {
+                new: true, // Return updated document
+                upsert: true, // Create if doesn't exist
+                setDefaultsOnInsert: true
+            }
+        );
 
         res.json({
             success: true,
@@ -216,6 +242,15 @@ router.post('/', verifyToken, async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         console.error('Error saving resume:', error);
+
+        // Handle unique constraint violation (shouldn't happen with upsert, but just in case)
+        if (error.code === 11000) {
+            return res.status(409).json({
+                success: false,
+                message: 'Resume for this template already exists'
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to save resume'

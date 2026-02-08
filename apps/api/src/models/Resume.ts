@@ -42,5 +42,7 @@ const ResumeSchema: Schema = new Schema(
 // Indexes
 ResumeSchema.index({ userId: 1, createdAt: -1 });
 ResumeSchema.index({ title: 'text' });
+// Unique constraint: one resume per template per user
+ResumeSchema.index({ userId: 1, template: 1 }, { unique: true });
 
 export const Resume = mongoose.model<IResume>('Resume', ResumeSchema);

@@ -37,12 +37,12 @@ function ResumeEditor() {
 
 
   // Persistence
+  // Persistence - TemplateId is now the key
   const { saveDocument, getDocument, isLoggedIn, subscription, setSubscription, refreshSubscription } = usePersistence();
-  const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   // Track if data has been loaded from the backend/local storage to prevent overwriting with empty state
-  const [isLoaded, setIsLoaded] = useState(!searchParams.get('id'));
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
@@ -166,7 +166,6 @@ function ResumeEditor() {
         if (storedData) {
           const parsed = JSON.parse(storedData);
           if (parsed.resume) setResume(parsed.resume);
-          if (parsed.docId) setDocId(parsed.docId);
           if (parsed.templateId) setTemplateId(parsed.templateId);
           if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
           if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
@@ -175,9 +174,7 @@ function ResumeEditor() {
           sessionStorage.removeItem('redirect_resume_data');
 
           // Update URL to match restored state but KEEP subscribed param
-          // The download useEffect needs to see it
           const url = new URL(window.location.href);
-          if (parsed.docId) url.searchParams.set('id', parsed.docId);
           if (parsed.templateId) url.searchParams.set('templateId', parsed.templateId);
           window.history.replaceState({}, '', url.toString());
         }
@@ -196,31 +193,61 @@ function ResumeEditor() {
   }, [searchParams]);
 
 
-  // Load existing document if ID is provided
-  const urlDocId = searchParams.get('id');
+  // Load data by templateId (not by docId)
   useEffect(() => {
-    if (urlDocId) {
-      setIsLoaded(false); // Ensure we block saving while loading
-      const loadDoc = async () => {
-        const doc = await getDocument(urlDocId, 'resume');
-        if (doc) {
-          setResume(doc.data);
-          if (doc.data?.personalInfo?.profileImage) {
-            setProfileImage(doc.data.personalInfo.profileImage);
+    const loadData = async () => {
+      setIsLoaded(false);
+
+      // Always load by current templateId
+      if (templateId && isLoggedIn) {
+        try {
+          const response = await network.get<{ data: any }>(`/api/resume/by-template/${templateId}`);
+
+          if (response.data) {
+            const resumeData = response.data;
+            console.log('[Editor] Loaded data for template:', templateId);
+            setResume(resumeData.data || {});
+            if (resumeData.data?.personalInfo?.profileImage) {
+              setProfileImage(resumeData.data.personalInfo.profileImage);
+            }
+            if (resumeData.data?.fontFamily) {
+              setFontFamily(resumeData.data.fontFamily);
+            }
+          } else {
+            // No data for this template - start fresh
+            console.log('[Editor] No data for template:', templateId, '- starting fresh');
+            setResume({});
           }
-          if (doc.data?.fontFamily) {
-            setFontFamily(doc.data.fontFamily);
-          }
-          setTemplateId(doc.templateId);
-          setDocId(doc.id);
+        } catch (error) {
+          console.error('Failed to load template data:', error);
+          setResume({});
         }
-        setIsLoaded(true); // Enable saving after load complete
-      };
-      loadDoc();
-    } else {
+      } else if (templateId) {
+        // Not logged in - check template-specific sessionStorage
+        try {
+          const cacheKey = `editor_draft_${templateId}`;
+          const cached = sessionStorage.getItem(cacheKey);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            console.log('[Editor] Recovered draft for template:', templateId);
+            if (parsed.resume && Object.keys(parsed.resume).length > 0) setResume(parsed.resume);
+            if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+            if (parsed.profileImage) setProfileImage(parsed.profileImage);
+          } else {
+            // No draft, start fresh
+            setResume({});
+          }
+        } catch (e) {
+          console.error('Failed to load cached draft:', e);
+          setResume({});
+        }
+      }
+
       setIsLoaded(true);
-    }
-  }, [urlDocId, getDocument]);
+    };
+
+    loadData();
+  }, [templateId, isLoggedIn, network]);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -286,37 +313,29 @@ function ResumeEditor() {
     }
   }, [searchParams]);
 
-  // Auto-save logic
+  // Auto-save logic - uses templateId as key (not docId)
   const handleAutoSave = useCallback(async (dataToSave: Partial<ResumeData>) => {
-    if (!dataToSave) return;
+    if (!dataToSave || !templateId) return;
     setIsSaving(true);
     const title = `${dataToSave.personalInfo?.firstName || 'Untitled'} ${dataToSave.personalInfo?.lastName || 'Resume'}`.trim();
 
     const result = await saveDocument({
-      id: docId || undefined,
       title,
       type: 'resume',
-      templateId: templateId || defaultTemplateId,
+      templateId: templateId, // Template is the key
       data: { ...dataToSave, fontFamily: fontFamily || 'Inter' }
     });
 
-    if (result.success && result.id) {
-      if (!docId || docId !== result.id) {
-        setDocId(result.id);
-        const url = new URL(window.location.href);
-        url.searchParams.set('id', result.id);
-        window.history.replaceState({}, '', url.toString());
-
-        if (result.storage === 'local' && !sessionStorage.getItem('persistence_popup_shown')) {
-          sessionStorage.setItem('persistence_popup_shown', 'true');
-        } else if (result.storage === 'cloud' && !sessionStorage.getItem('persistence_popup_shown')) {
-          sessionStorage.setItem('persistence_popup_shown', 'true');
-        }
-      }
+    if (result.success) {
       setLastSaved(new Date());
+      // No need to update URL or docId anymore
+
+      if (result.storage === 'local' && !sessionStorage.getItem('persistence_popup_shown')) {
+        sessionStorage.setItem('persistence_popup_shown', 'true');
+      }
     }
     setIsSaving(false);
-  }, [docId, templateId, saveDocument, defaultTemplateId, fontFamily]);
+  }, [templateId, saveDocument, fontFamily]);
 
   // Debounced auto-save
   useEffect(() => {
@@ -485,8 +504,7 @@ function ResumeEditor() {
         resume,
         templateId,
         fontFamily,
-        sectionOrder,
-        docId
+        sectionOrder
       };
       sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
 
@@ -526,8 +544,7 @@ function ResumeEditor() {
             resume,
             templateId,
             fontFamily,
-            sectionOrder,
-            docId
+            sectionOrder
           };
           sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
           const currentUrl = encodeURIComponent(window.location.pathname + window.location.search);
@@ -875,7 +892,7 @@ function ResumeEditor() {
           onTemplateChange={() => setShowTemplates(true)}
           fontFamily={fontFamily}
           onFontChange={setFontFamily}
-          onTailor={() => router.push(`/tailor?id=${docId}`)}
+          onTailor={() => router.push(`/tailor`)}
         />
 
         {/* Main Content - Split Glass Content */}
