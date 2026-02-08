@@ -44,6 +44,10 @@ function ResumeEditor() {
   // Track if data has been loaded from the backend/local storage to prevent overwriting with empty state
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Track last saved state to prevent auto-saving on load
+  const lastSavedDataRef = useRef<string>(JSON.stringify({}));
+  const lastSavedFontRef = useRef<string>('Inter');
+
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
   // State
@@ -210,8 +214,15 @@ function ResumeEditor() {
             console.log('[Editor] Recovered draft for template:', templateId);
             if (parsed.resume && Object.keys(parsed.resume).length > 0) {
               setResume(parsed.resume);
-              if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+              if (parsed.fontFamily) {
+                setFontFamily(parsed.fontFamily);
+                lastSavedFontRef.current = parsed.fontFamily;
+              }
               if (parsed.profileImage) setProfileImage(parsed.profileImage);
+
+              // Set reference to loaded data so we don't auto-save it immediately
+              lastSavedDataRef.current = JSON.stringify(parsed.resume);
+
               setIsLoaded(true);
               return;
             }
@@ -228,7 +239,11 @@ function ResumeEditor() {
             }
             if (savedDoc.data?.fontFamily) {
               setFontFamily(savedDoc.data.fontFamily);
+              lastSavedFontRef.current = savedDoc.data.fontFamily;
             }
+
+            // Set reference to loaded data so we don't auto-save it immediately
+            lastSavedDataRef.current = JSON.stringify(savedDoc.data || {});
           } else {
             console.log('[Editor] No data found for template:', templateId, '- starting fresh');
             // Only start fresh if we truly found nothing
@@ -336,12 +351,22 @@ function ResumeEditor() {
 
   // Debounced auto-save
   useEffect(() => {
-    // Prevent saving if we haven't loaded the initial data yet (prevents overwriting with empty state)
+    // Prevent saving if we haven't loaded the initial data yet
     if (!isLoaded) return;
 
-    // Save when content changes (debounced) OR when metadata changes (immediately via handleAutoSave recreation)
-    if (debouncedResume !== dummyData || fontFamily !== 'Inter' || templateId !== urlTemplateId) {
+    // Check if data has actually changed from what we last loaded/saved
+    const currentDataString = JSON.stringify(debouncedResume);
+    const hasDataChanged = currentDataString !== lastSavedDataRef.current;
+    const hasFontChanged = fontFamily !== lastSavedFontRef.current;
+
+    // Only save if there's a real change
+    if (hasDataChanged || hasFontChanged) {
+      console.log('[AutoSave] Changes detected, saving...');
       handleAutoSave(debouncedResume);
+
+      // Update refs to current state
+      lastSavedDataRef.current = currentDataString;
+      lastSavedFontRef.current = fontFamily;
     }
   }, [debouncedResume, fontFamily, templateId, handleAutoSave, isLoaded]);
 
