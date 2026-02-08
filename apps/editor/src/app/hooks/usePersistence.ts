@@ -179,6 +179,28 @@ export function usePersistence() {
         return null;
     }, [isLoggedIn, get]);
 
+    const getResumeByTemplate = useCallback(async (templateId: string) => {
+        if (isLoggedIn) {
+            try {
+                const result = await get<{ data: any }>(`/api/resume/by-template/${templateId}`);
+                return result.data;
+            } catch (error) {
+                console.error('Failed to get resume by template from backend:', error);
+                return null;
+            }
+        } else {
+            // Check local storage for guest users
+            try {
+                const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+                const documents: SavedDocument[] = stored ? JSON.parse(stored) : [];
+                return documents.find(d => d.type === 'resume' && d.templateId === templateId) || null;
+            } catch (error) {
+                console.error('Failed to get resume from local storage:', error);
+                return null;
+            }
+        }
+    }, [isLoggedIn, get]);
+
     const getDocuments = useCallback(async () => {
         let backendDocs: any[] = [];
         let localDocs: SavedDocument[] = [];
@@ -294,6 +316,7 @@ export function usePersistence() {
         deleteDocument,
         getDocuments,
         getDocument,
+        getResumeByTemplate,
         showPersistencePopup,
         setShowPersistencePopup
     };

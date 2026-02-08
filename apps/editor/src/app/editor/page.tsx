@@ -38,7 +38,7 @@ function ResumeEditor() {
 
   // Persistence
   // Persistence - TemplateId is now the key
-  const { saveDocument, getDocument, isLoggedIn, subscription, setSubscription, refreshSubscription } = usePersistence();
+  const { saveDocument, getDocument, getResumeByTemplate, isLoggedIn, subscription, setSubscription, refreshSubscription } = usePersistence();
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   // Track if data has been loaded from the backend/local storage to prevent overwriting with empty state
@@ -199,46 +199,43 @@ function ResumeEditor() {
       setIsLoaded(false);
 
       // Always load by current templateId
-      if (templateId && isLoggedIn) {
+      if (templateId) {
         try {
-          const response = await network.get<{ data: any }>(`/api/resume/by-template/${templateId}`);
+          // First check sessionStorage for unsaved drafts (highest priority for recovery)
+          const cacheKey = `editor_draft_${templateId}`;
+          const cached = sessionStorage.getItem(cacheKey);
 
-          if (response.data) {
-            const resumeData = response.data;
-            console.log('[Editor] Loaded data for template:', templateId);
-            setResume(resumeData.data || {});
-            if (resumeData.data?.personalInfo?.profileImage) {
-              setProfileImage(resumeData.data.personalInfo.profileImage);
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            console.log('[Editor] Recovered draft for template:', templateId);
+            if (parsed.resume && Object.keys(parsed.resume).length > 0) {
+              setResume(parsed.resume);
+              if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+              if (parsed.profileImage) setProfileImage(parsed.profileImage);
+              setIsLoaded(true);
+              return;
             }
-            if (resumeData.data?.fontFamily) {
-              setFontFamily(resumeData.data.fontFamily);
+          }
+
+          // If no draft, check backend/localStorage via persistence hook
+          const savedDoc = await getResumeByTemplate(templateId);
+
+          if (savedDoc) {
+            console.log('[Editor] Loaded saved data for template:', templateId);
+            setResume(savedDoc.data || {});
+            if (savedDoc.data?.personalInfo?.profileImage) {
+              setProfileImage(savedDoc.data.personalInfo.profileImage);
+            }
+            if (savedDoc.data?.fontFamily) {
+              setFontFamily(savedDoc.data.fontFamily);
             }
           } else {
-            // No data for this template - start fresh
-            console.log('[Editor] No data for template:', templateId, '- starting fresh');
+            console.log('[Editor] No data found for template:', templateId, '- starting fresh');
+            // Only start fresh if we truly found nothing
             setResume({});
           }
         } catch (error) {
           console.error('Failed to load template data:', error);
-          setResume({});
-        }
-      } else if (templateId) {
-        // Not logged in - check template-specific sessionStorage
-        try {
-          const cacheKey = `editor_draft_${templateId}`;
-          const cached = sessionStorage.getItem(cacheKey);
-          if (cached) {
-            const parsed = JSON.parse(cached);
-            console.log('[Editor] Recovered draft for template:', templateId);
-            if (parsed.resume && Object.keys(parsed.resume).length > 0) setResume(parsed.resume);
-            if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
-            if (parsed.profileImage) setProfileImage(parsed.profileImage);
-          } else {
-            // No draft, start fresh
-            setResume({});
-          }
-        } catch (e) {
-          console.error('Failed to load cached draft:', e);
           setResume({});
         }
       }
