@@ -47,6 +47,8 @@ function ResumeEditor() {
   // Track last saved state to prevent auto-saving on load
   const lastSavedDataRef = useRef<string>(JSON.stringify({}));
   const lastSavedFontRef = useRef<string>('Inter');
+  // Track last saved template to detect switches
+  const lastSavedTemplateIdRef = useRef<string | null>(null);
 
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
@@ -204,6 +206,10 @@ function ResumeEditor() {
 
       // Always load by current templateId
       if (templateId) {
+        // If we already loaded data and just switched templates, DON'T fetch fresh data.
+        // We want to carry over the existing data to the new template.
+        if (isLoaded) return;
+
         try {
           // First check sessionStorage for unsaved drafts (highest priority for recovery)
           const cacheKey = `editor_draft_${templateId}`;
@@ -244,6 +250,8 @@ function ResumeEditor() {
 
             // Set reference to loaded data so we don't auto-save it immediately
             lastSavedDataRef.current = JSON.stringify(savedDoc.data || {});
+            // Set initial template ref so we know if it changes later
+            lastSavedTemplateIdRef.current = templateId;
           } else {
             console.log('[Editor] No data found for template:', templateId, '- starting fresh');
             // Only start fresh if we truly found nothing
@@ -259,7 +267,7 @@ function ResumeEditor() {
     };
 
     loadData();
-  }, [templateId, isLoggedIn, network]);
+  }, [templateId, isLoggedIn, network, isLoaded]);
 
   // Check for resume data from tailor page
   useEffect(() => {
@@ -358,15 +366,17 @@ function ResumeEditor() {
     const currentDataString = JSON.stringify(debouncedResume);
     const hasDataChanged = currentDataString !== lastSavedDataRef.current;
     const hasFontChanged = fontFamily !== lastSavedFontRef.current;
+    const hasTemplateChanged = templateId !== lastSavedTemplateIdRef.current;
 
-    // Only save if there's a real change
-    if (hasDataChanged || hasFontChanged) {
-      console.log('[AutoSave] Changes detected, saving...');
+    // Only save if there's a real change OR template changed (cloning data to new template)
+    if (hasDataChanged || hasFontChanged || hasTemplateChanged) {
+      console.log('[AutoSave] Changes detected (Data/Font/Template), saving...');
       handleAutoSave(debouncedResume);
 
       // Update refs to current state
       lastSavedDataRef.current = currentDataString;
       lastSavedFontRef.current = fontFamily;
+      lastSavedTemplateIdRef.current = templateId || null;
     }
   }, [debouncedResume, fontFamily, templateId, handleAutoSave, isLoaded]);
 
