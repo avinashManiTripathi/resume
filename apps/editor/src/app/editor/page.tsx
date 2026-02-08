@@ -43,7 +43,9 @@ function ResumeEditor() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // State
-  const [resume, setResume] = useState(dummyData);
+  // const [resume, setResume] = useState(dummyData);
+  // State
+  const [resume, setResume] = useState({});
   const debouncedResume = useDebounce(resume, 500);
 
   // Auto-save hook
