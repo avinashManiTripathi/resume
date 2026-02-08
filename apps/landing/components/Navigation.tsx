@@ -43,7 +43,7 @@ export function Navigation() {
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
                             <Image
-                                src="/logo.png"
+                                src="/logo.avif"
                                 alt="Hirecta Logo"
                                 width={120}   // w-15 → 60px
                                 height={30}  // h-9 → 36px

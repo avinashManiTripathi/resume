@@ -5,6 +5,7 @@ const apiUrl = ENV.API_URL;
 const apiHostname = new URL(apiUrl).hostname;
 
 const nextConfig: NextConfig = {
+  compress: true,
   // Security & SEO Headers
   async headers() {
     return [
@@ -54,7 +55,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/(.*).(png|jpg|jpeg|gif|svg|ico|json|webp)',
+        source: '/(.*).(png|jpg|jpeg|gif|svg|ico|json|webp|avif)',
         headers: [
           {
             key: 'Cache-Control',
@@ -109,6 +110,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
         pathname: '/**',
       },
     ],

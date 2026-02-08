@@ -12,7 +12,7 @@ export const FOOTER = {
 
     brand: {
         name: "Hirecta",
-        logo: "/logo.png",
+        logo: "/logo.avif",
         description:
             "Build professional, ATS-friendly resumes that get you hired. Join 50,000+ job seekers who landed their dream jobs with our AI-powered resume builder.",
         phone: "+91 6393177038",

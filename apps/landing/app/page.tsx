@@ -10,6 +10,8 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { ComparisonSection } from "@/components/ComparisonSection";
 import { HowToGuide } from "@/components/HowToGuide";
 import { FAQSection } from "@/components/FAQSection";
+import { Suspense } from "react";
+import { TemplatesSkeleton } from "@/components/TemplatesSkeleton";
 import { URLS } from "@/constants/urls";
 
 
@@ -766,7 +768,9 @@ export default async function LandingPage() {
       </section>
 
       {/* Tested Templates Section */}
-      <TemplatesSection />
+      <Suspense fallback={<TemplatesSkeleton />}>
+        <TemplatesSection />
+      </Suspense>
 
       {/* ATS Score Checker Section with Image */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 to-red-50">

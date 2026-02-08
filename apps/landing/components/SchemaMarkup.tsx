@@ -51,7 +51,7 @@ export function GlobalSchema() {
         "brand": {
             "@type": "Brand",
             "name": "Hirecta",
-            "logo": `${baseUrl}/logo.png`
+            "logo": `${baseUrl}/logo.avif`
         }
     }
 
