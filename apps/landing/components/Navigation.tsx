@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import logo from '@/assets/logo.png';
+
 
 import { NAVIGATION } from '@/constants/navigation';
 import { URLS } from '@/constants/urls';
@@ -43,13 +43,13 @@ export function Navigation() {
                         {/* Logo */}
                         <Link href="/" className="flex items-center gap-2.5 no-underline group">
                             <Image
-                                src={logo}
+                                src="/logo.png"
                                 alt="Hirecta Logo"
                                 width={120}   // w-15 → 60px
                                 height={30}  // h-9 → 36px
                                 className="transition-transform object-contain"
                                 priority
-                                placeholder="blur"
+                                unoptimized
                             />
                         </Link>
                         {/* Desktop Navigation */}

@@ -41,6 +41,8 @@ function ResumeEditor() {
   const [docId, setDocId] = useState<string | null>(searchParams.get('id'));
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  // Track if data has been loaded from the backend/local storage to prevent overwriting with empty state
+  const [isLoaded, setIsLoaded] = useState(!searchParams.get('id'));
 
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
@@ -198,6 +200,7 @@ function ResumeEditor() {
   const urlDocId = searchParams.get('id');
   useEffect(() => {
     if (urlDocId) {
+      setIsLoaded(false); // Ensure we block saving while loading
       const loadDoc = async () => {
         const doc = await getDocument(urlDocId, 'resume');
         if (doc) {
@@ -211,8 +214,11 @@ function ResumeEditor() {
           setTemplateId(doc.templateId);
           setDocId(doc.id);
         }
+        setIsLoaded(true); // Enable saving after load complete
       };
       loadDoc();
+    } else {
+      setIsLoaded(true);
     }
   }, [urlDocId, getDocument]);
 
@@ -314,11 +320,14 @@ function ResumeEditor() {
 
   // Debounced auto-save
   useEffect(() => {
+    // Prevent saving if we haven't loaded the initial data yet (prevents overwriting with empty state)
+    if (!isLoaded) return;
+
     // Save when content changes (debounced) OR when metadata changes (immediately via handleAutoSave recreation)
     if (debouncedResume !== dummyData || fontFamily !== 'Inter' || templateId !== urlTemplateId) {
       handleAutoSave(debouncedResume);
     }
-  }, [debouncedResume, fontFamily, templateId, handleAutoSave]);
+  }, [debouncedResume, fontFamily, templateId, handleAutoSave, isLoaded]);
 
   // Memoize section labels computation - used in multiple places
   const sectionLabels = useMemo(() => {
