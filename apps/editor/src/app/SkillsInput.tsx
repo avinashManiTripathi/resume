@@ -150,14 +150,13 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                 <div className="flex justify-end">
                     <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
                         <button
-                            onClick={() => mode !== 'builder' && toggleMode()}
+                            onClick={toggleMode}
                             className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${mode === 'builder' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <Tags className="w-3 h-3" />
                             Builder
                         </button>
                         <button
-                            onClick={() => mode !== 'richtext' && toggleMode()}
                             className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${mode === 'richtext' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <Type className="w-3 h-3" />
@@ -225,14 +224,13 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                     {/* Mode Toggle */}
                     <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
                         <button
-                            onClick={() => mode !== 'builder' && toggleMode()}
                             className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${mode === 'builder' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <Tags className="w-3 h-3" />
                             Builder
                         </button>
                         <button
-                            onClick={() => mode !== 'richtext' && toggleMode()}
+                            onClick={toggleMode}
                             className={`flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-md transition-all ${mode === 'richtext' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                         >
                             <Type className="w-3 h-3" />
