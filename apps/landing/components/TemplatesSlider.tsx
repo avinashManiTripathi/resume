@@ -123,11 +123,6 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                     </Link>
                 ))}
             </div>
-            <style jsx>{`
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-            `}</style>
         </div>
     );
 }

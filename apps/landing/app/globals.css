@@ -77,39 +77,46 @@ a {
   button {
     min-height: 44px;
     min-width: 44px;
-  }
-}
 
-@layer utilities {
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
+    @layer utilities {
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
 
-  .animate-float-slow {
-    animation: float 8s ease-in-out infinite;
-  }
-}
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
 
-@keyframes float {
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
 
-  0%,
-  100% {
-    transform: translateY(0);
-  }
+      .animate-float-slow {
+        animation: float 8s ease-in-out infinite;
+      }
+    }
 
-  50% {
-    transform: translateY(-20px);
-  }
-}
+    @keyframes float {
 
-@keyframes float-slow {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
 
-  0%,
-  100% {
-    transform: translateY(0);
-  }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
 
-  50% {
-    transform: translateY(-10px);
-  }
-}
+    @keyframes float-slow {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }

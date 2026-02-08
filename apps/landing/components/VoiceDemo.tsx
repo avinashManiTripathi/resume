@@ -12,7 +12,7 @@ export function VoiceDemo() {
             <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-purple-500/30 rounded-full blur-[100px] pointer-events-none"></div>
 
             {/* Grid Pattern Overlay */}
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
+            <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none"></div>
 
             <div className="grid lg:grid-cols-2 gap-16 items-center relative z-10">
                 {/* Left: Content */}
@@ -104,7 +104,7 @@ export function VoiceDemo() {
                                 </div>
                                 <div className="space-y-2">
                                     <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                                        <div className="h-full w-[90%] bg-green-400 rounded-full animate-dash"></div>
+                                        <div className="h-full w-[80%] bg-green-400 rounded-full origin-left animate-dash"></div>
                                     </div>
                                     <div className="flex justify-between text-[10px] text-blue-100/60 font-mono">
                                         <span>Clarity</span>
@@ -119,8 +119,7 @@ export function VoiceDemo() {
                                 <div className="flex items-center gap-3 mb-3">
                                     <div className="flex gap-1 items-end h-4">
                                         {[1, 2, 3, 4, 5].map(i => (
-                                            <div key={i} className="w-1 bg-blue-400 rounded-full" style={{
-                                                height: `${Math.random() * 100}%`,
+                                            <div key={i} className="w-1 h-full bg-blue-400 rounded-full origin-bottom" style={{
                                                 animation: `wave 1s ease-in-out infinite ${i * 0.1}s`
                                             }}></div>
                                         ))}
@@ -153,12 +152,12 @@ export function VoiceDemo() {
 
             <style jsx>{`
                 @keyframes wave {
-                    0%, 100% { height: 20%; }
-                    50% { height: 100%; }
+                    0%, 100% { transform: scaleY(0.2); }
+                    50% { transform: scaleY(1); }
                 }
                 @keyframes dash {
-                    0% { width: 0%; }
-                    100% { width: 80%; }
+                    0% { transform: scaleX(0); }
+                    100% { transform: scaleX(1); }
                 }
             `}</style>
         </div>
