@@ -267,7 +267,7 @@ function ResumeEditor() {
     };
 
     loadData();
-  }, [templateId, isLoggedIn, network, isLoaded]);
+  }, [templateId, isLoggedIn, network]);
 
   // Check for resume data from tailor page
   useEffect(() => {
