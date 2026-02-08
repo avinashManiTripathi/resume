@@ -202,14 +202,17 @@ function ResumeEditor() {
   // Load data by templateId (not by docId)
   useEffect(() => {
     const loadData = async () => {
+      // If we already loaded data and existng, and just switched templates, DON'T fetch fresh data.
+      // We want to carry over the existing data to the new template.
+      if (templateId && isLoaded) {
+        console.log('[Editor] Template switch detected, preserving current data.');
+        return;
+      }
+
       setIsLoaded(false);
 
       // Always load by current templateId
       if (templateId) {
-        // If we already loaded data and just switched templates, DON'T fetch fresh data.
-        // We want to carry over the existing data to the new template.
-        if (isLoaded) return;
-
         try {
           // First check sessionStorage for unsaved drafts (highest priority for recovery)
           const cacheKey = `editor_draft_${templateId}`;
