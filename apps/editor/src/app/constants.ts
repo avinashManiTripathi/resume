@@ -1,6 +1,142 @@
 import { FormSchema } from "./FieldRenderer"
 
-export const dummyData = {
+export interface PersonalInfo {
+  firstName?: string;
+  lastName?: string;
+  jobTitle?: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  country?: string;
+  linkedin?: string;
+  github?: string;
+  profileImage?: string;
+}
+
+export interface Summary {
+  content?: string;
+}
+
+export interface ExperienceItem {
+  jobTitle?: string;
+  company?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+}
+
+export interface EducationItem {
+  degree?: string;
+  institution?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+}
+
+export interface ProjectItem {
+  name?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+}
+
+export interface SkillItem {
+  name?: string;
+  level?: string;
+}
+
+export interface CertificationItem {
+  name?: string;
+  issuer?: string;
+  date?: string;
+  expiryDate?: string;
+  credentialId?: string;
+}
+
+export interface LanguageItem {
+  language?: string;
+  proficiency?: string;
+}
+
+export interface AwardItem {
+  title?: string;
+  issuer?: string;
+  date?: string;
+}
+
+export interface AchievementItem {
+  title?: string;
+  date?: string;
+  organization?: string;
+  description?: string;
+}
+
+export interface InterestItem {
+  name?: string;
+}
+
+export interface PublicationItem {
+  title?: string;
+  publisher?: string;
+  date?: string;
+  url?: string;
+}
+
+export interface ReferenceItem {
+  name?: string;
+  title?: string;
+  company?: string;
+  email?: string;
+  phone?: string;
+}
+
+export interface CustomField {
+  label: string;
+  value: string;
+  type: string;
+}
+
+export interface CustomItem {
+  id: string;
+  fields: Record<string, CustomField>;
+}
+
+export interface CustomFieldDefinition {
+  label: string;
+  type: string;
+  className?: string;
+  options?: string[];
+}
+
+export interface CustomSection {
+  id: string;
+  label: string;
+  icon: string;
+  items: CustomItem[];
+  fieldDefinitions: Record<string, CustomFieldDefinition>;
+}
+
+export interface ResumeData {
+  personalInfo?: PersonalInfo;
+  summary?: Summary;
+  experience?: ExperienceItem[];
+  education?: EducationItem[];
+  projects?: ProjectItem[];
+  skills?: SkillItem[];
+  certifications?: CertificationItem[];
+  languages?: LanguageItem[];
+  awards?: AwardItem[];
+  customSections?: CustomSection[];
+  achievements?: AchievementItem[];
+  interests?: InterestItem[];
+  publications?: PublicationItem[];
+  references?: ReferenceItem[];
+  order?: string[];
+}
+
+export const dummyData: ResumeData = {
   "personalInfo": {
     "firstName": "John",
     "lastName": "Doe",

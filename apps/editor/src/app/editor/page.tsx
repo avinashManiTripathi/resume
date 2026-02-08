@@ -6,7 +6,7 @@ import { useDebounce, exportToDoc, canDownload, type SubscriptionTier, API_ENDPO
 import { useTemplates } from "@repo/hooks/useTemplate";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ProfileHeader } from "@repo/ui/profile-header";
-import { FormSchema } from "../FieldRenderer";
+import { FormSchema, SectionSchema, BaseField } from "../FieldRenderer";
 import GenericForm from "../GenericForm";
 import TemplateSelector from "../TemplateSelector";
 import { saveBlobAsPdf } from "@repo/utils-client";
@@ -14,7 +14,7 @@ import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
 import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
-import { dummyData, ResumeFormSchema } from "../constants";
+import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
 import { useResumeDownload } from "../hooks/useResumeDownload";
@@ -43,9 +43,9 @@ function ResumeEditor() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   // State
-  // const [resume, setResume] = useState(dummyData);
+  // const [resume, setResume] = useState<ResumeData>(dummyData);
   // State
-  const [resume, setResume] = useState({});
+  const [resume, setResume] = useState<Partial<ResumeData>>({});
   const debouncedResume = useDebounce(resume, 500);
 
   // Auto-save hook
@@ -235,14 +235,16 @@ function ResumeEditor() {
 
             // 1. Preserve Personal Info (especially Profile Image)
             if (prev.personalInfo) {
+              const prevPersonal = prev.personalInfo;
+              const newPersonal = parsedData.personalInfo || {};
               merged.personalInfo = {
-                ...parsedData.personalInfo,
+                ...newPersonal,
                 // Keep existing profile image if the new one doesn't have it (likely)
-                profileImage: (parsedData.personalInfo as any)?.profileImage || prev.personalInfo.profileImage,
+                profileImage: newPersonal.profileImage || prevPersonal.profileImage,
                 // Keep other fields if missing in new data but present in old
-                firstName: parsedData.personalInfo?.firstName || prev.personalInfo.firstName,
-                lastName: parsedData.personalInfo?.lastName || prev.personalInfo.lastName,
-                email: parsedData.personalInfo?.email || prev.personalInfo.email,
+                firstName: newPersonal.firstName || prevPersonal.firstName,
+                lastName: newPersonal.lastName || prevPersonal.lastName,
+                email: newPersonal.email || prevPersonal.email,
               };
             }
 
@@ -279,7 +281,7 @@ function ResumeEditor() {
   }, [searchParams]);
 
   // Auto-save logic
-  const handleAutoSave = useCallback(async (dataToSave: any) => {
+  const handleAutoSave = useCallback(async (dataToSave: Partial<ResumeData>) => {
     if (!dataToSave) return;
     setIsSaving(true);
     const title = `${dataToSave.personalInfo?.firstName || 'Untitled'} ${dataToSave.personalInfo?.lastName || 'Resume'}`.trim();
@@ -338,7 +340,7 @@ function ResumeEditor() {
   const mainRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offscreenRef = useRef<HTMLCanvasElement | null>(null);
-  const renderTaskRef = useRef<any>(null);
+  const renderTaskRef = useRef<{ cancel: () => void; promise: Promise<void> } | null>(null);
   const requestIdRef = useRef(0);
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
@@ -364,7 +366,7 @@ function ResumeEditor() {
     // Experience (at least 1 entry with key fields)
     if (resume?.experience && resume.experience.length > 0) {
       totalFields += 3; // jobTitle, company, startDate
-      const exp = resume.experience[0] as any;
+      const exp = resume.experience[0];
       if (exp.jobTitle && exp.jobTitle.trim()) filledFields++;
       if (exp.company && exp.company.trim()) filledFields++;
       if (exp.startDate) filledFields++;
@@ -411,7 +413,7 @@ function ResumeEditor() {
   }, []);
 
   // Handle resume changes - Memoized to prevent GenericForm re-renders
-  const handleResumeChange = useCallback((newResume: any) => {
+  const handleResumeChange = useCallback((newResume: Partial<ResumeData>) => {
     setResume(newResume);
   }, []);
 
@@ -428,18 +430,26 @@ function ResumeEditor() {
   const handleProfileImageChange = useCallback((imageUrl: string) => {
     setProfileImage(imageUrl);
     // Save to resume data so it's sent to backend
-    setResume(prev => ({
-      ...prev,
-      personalInfo: {
-        ...prev.personalInfo,
-        profileImage: imageUrl
-      }
-    }));
+    setResume(prev => {
+      // Create a new personalInfo object ensuring we don't spread undefined
+      const currentPersonalInfo = prev.personalInfo || {} as Partial<PersonalInfo>;
+
+      return {
+        ...prev,
+        personalInfo: {
+          ...currentPersonalInfo,
+          profileImage: imageUrl,
+        }
+      };
+    });
   }, []);
 
   // Handle export
   const handleExport = useCallback(async (format: "pdf" | "doc") => {
-    const userName = resume?.personalInfo?.firstName + "_" + resume?.personalInfo?.lastName + "_" + resume?.personalInfo?.jobTitle;
+    const firstName = resume?.personalInfo?.firstName || "";
+    const lastName = resume?.personalInfo?.lastName || "";
+    const jobTitle = resume?.personalInfo?.jobTitle || "";
+    const userName = `${firstName}_${lastName}_${jobTitle}`;
     const fileName = userName.trim().replace(/\s+/g, "_");
 
     // Check if user is logged in
@@ -494,12 +504,12 @@ function ResumeEditor() {
         });
         saveBlobAsPdf(blob, fileName);
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("PDF download error:", error);
 
         // Handle 403/401 errors
         // Check typically error.status or error.response.status depending on the network client implementation
-        const status = error?.status || error?.response?.status;
+        const status = (error as any)?.status || (error as any)?.response?.status;
 
         if (status === 403) {
           // Save state for return
@@ -546,18 +556,18 @@ function ResumeEditor() {
     if (!resume) return;
 
     // Type guard for customSections
-    const resumeWithCustom = resume as any;
+    const resumeWithCustom = resume as ResumeData;
     if (!resumeWithCustom.customSections) return;
 
     const currentSections = Object.keys(schema);
-    const sectionsToAdd: any = {};
+    const sectionsToAdd: Record<string, SectionSchema> = {};
 
-    resumeWithCustom.customSections.forEach((section: any) => {
+    resumeWithCustom.customSections.forEach((section) => {
       if (section.items && section.items.length > 0) {
         // Check if section already exists in schema
         if (!currentSections.includes(section.id)) {
           // Convert fieldDefinitions to the schema format
-          const itemFields: any = {};
+          const itemFields: Record<string, BaseField> = {};
 
           if (section.fieldDefinitions) {
             Object.entries(section.fieldDefinitions).forEach(([key, def]: [string, any]) => {
@@ -602,7 +612,12 @@ function ResumeEditor() {
     if (containerWidth === 0) return;
 
     const requestId = ++requestIdRef.current;
-    const pdfjsLib = (window as any).pdfjsLib;
+
+    // Use extended Window interface locally to avoid 'any'
+    interface PdfWindow extends Window {
+      pdfjsLib: any; // External lib without types
+    }
+    const pdfjsLib = (window as unknown as PdfWindow).pdfjsLib;
 
     //need to move this in constants
     pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -658,9 +673,11 @@ function ResumeEditor() {
     });
 
     try {
-      await renderTaskRef.current.promise;
-    } catch (e: any) {
-      if (e?.name === "RenderingCancelledException") return;
+      if (renderTaskRef.current) {
+        await renderTaskRef.current.promise;
+      }
+    } catch (e: unknown) {
+      if ((e as { name?: string })?.name === "RenderingCancelledException") return;
       throw e;
     }
 
@@ -698,7 +715,7 @@ function ResumeEditor() {
   }, []);
 
   // Refs to hold latest data for PDF generation without triggering re-renders of the callback
-  const latestDataRef = useRef({
+  const latestDataRef = useRef<{ resume: Partial<ResumeData>, sectionLabels: Record<string, string>, templateId: string | null, fontFamily: string, order: string[] }>({
     resume: debouncedResume,
     sectionLabels,
     templateId,
@@ -727,7 +744,7 @@ function ResumeEditor() {
 
       const resumeData = {
         sectionLabels,
-        ...resume as any,
+        ...(resume as ResumeData),
         templateId,
         fontFamily,
         order,
@@ -741,10 +758,10 @@ function ResumeEditor() {
       if (pdfData) {
         await renderPDFPage(pdfData, page);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error rendering PDF:", error);
       // Handle 403/401 during preview if they happen despite being 'public'
-      if (error?.message?.includes('403')) {
+      if ((error as any)?.message?.includes('403')) {
         // router.push('/subscription?returnTo=editor');
       }
     }
@@ -791,7 +808,7 @@ function ResumeEditor() {
   const userName = useMemo(() => {
     const name = `${resume?.personalInfo?.firstName || ""} ${resume?.personalInfo?.lastName || ""}`
     return name.trim();
-  }, [resume.personalInfo.firstName, resume.personalInfo.lastName]);
+  }, [resume?.personalInfo?.firstName, resume?.personalInfo?.lastName]);
 
   // Memoized handlers for ProfileHeader - prevents re-renders
   const handleDownload = useCallback(async () => {
