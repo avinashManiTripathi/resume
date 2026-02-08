@@ -53,7 +53,7 @@ function ResumeEditor() {
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
   // State
-  const [resume, setResume] = useState<Partial<ResumeData>>({});
+  const [resume, setResume] = useState<Partial<ResumeData> | null>(null);
   const debouncedResume = useDebounce(resume, 500);
 
   // Auto-save hook
@@ -290,7 +290,7 @@ function ResumeEditor() {
             const merged = { ...parsedData };
 
             // 1. Preserve Personal Info (especially Profile Image)
-            if (prev.personalInfo) {
+            if (prev?.personalInfo) {
               const prevPersonal = prev.personalInfo;
               const newPersonal = parsedData.personalInfo || {};
               merged.personalInfo = {
@@ -305,7 +305,7 @@ function ResumeEditor() {
             }
 
             // 2. Preserve Custom Sections (AI usually doesn't return these)
-            if (prev.customSections && prev.customSections.length > 0) {
+            if (prev?.customSections && prev.customSections.length > 0) {
               merged.customSections = prev.customSections;
             }
 
@@ -337,7 +337,7 @@ function ResumeEditor() {
   }, [searchParams]);
 
   // Auto-save logic - uses templateId as key (not docId)
-  const handleAutoSave = useCallback(async (dataToSave: Partial<ResumeData>) => {
+  const handleAutoSave = useCallback(async (dataToSave: Partial<ResumeData> | null) => {
     if (!dataToSave || !templateId) return;
     setIsSaving(true);
     const title = `${dataToSave.personalInfo?.firstName || 'Untitled'} ${dataToSave.personalInfo?.lastName || 'Resume'}`.trim();
@@ -495,10 +495,10 @@ function ResumeEditor() {
     // Save to resume data so it's sent to backend
     setResume(prev => {
       // Create a new personalInfo object ensuring we don't spread undefined
-      const currentPersonalInfo = prev.personalInfo || {} as Partial<PersonalInfo>;
+      const currentPersonalInfo = prev?.personalInfo || {} as Partial<PersonalInfo>;
 
       return {
-        ...prev,
+        ...(prev || {}),
         personalInfo: {
           ...currentPersonalInfo,
           profileImage: imageUrl,
@@ -776,7 +776,7 @@ function ResumeEditor() {
   }, []);
 
   // Refs to hold latest data for PDF generation without triggering re-renders of the callback
-  const latestDataRef = useRef<{ resume: Partial<ResumeData>, sectionLabels: Record<string, string>, templateId: string | null, fontFamily: string, order: string[] }>({
+  const latestDataRef = useRef<{ resume: Partial<ResumeData> | null, sectionLabels: Record<string, string>, templateId: string | null, fontFamily: string, order: string[] }>({
     resume: debouncedResume,
     sectionLabels,
     templateId,
@@ -805,7 +805,7 @@ function ResumeEditor() {
 
       const resumeData = {
         sectionLabels,
-        ...(resume as ResumeData),
+        ...(resume || {} as ResumeData),
         templateId,
         fontFamily,
         order,
@@ -957,7 +957,7 @@ function ResumeEditor() {
               ) : (
                 <GenericForm
                   schema={schema}
-                  data={resume}
+                  data={resume || {}}
                   sectionOrder={sectionOrder}
                   setSectionOrder={setSectionOrder}
                   onChange={handleResumeChange}
