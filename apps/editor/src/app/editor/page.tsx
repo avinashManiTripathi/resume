@@ -43,6 +43,7 @@ function ResumeEditor() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   // Track if data has been loaded from the backend/local storage to prevent overwriting with empty state
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadedAsUser, setLoadedAsUser] = useState(false);
 
   // Track last saved state to prevent auto-saving on load
   const lastSavedDataRef = useRef<string>(JSON.stringify({}));
@@ -204,9 +205,15 @@ function ResumeEditor() {
     const loadData = async () => {
       // If we already loaded data and existng, and just switched templates, DON'T fetch fresh data.
       // We want to carry over the existing data to the new template.
+      // EXCEPTION: If we just logged in (isLoggedIn=true) but previously loaded as guest (!loadedAsUser),
+      // we MUST fetch fresh data from backend.
       if (templateId && isLoaded) {
-        console.log('[Editor] Template switch detected, preserving current data.');
-        return;
+        if (isLoggedIn && !loadedAsUser) {
+          console.log('[Editor] User logged in, upgrading from guest load...');
+        } else {
+          console.log('[Editor] Template switch detected, preserving current data.');
+          return;
+        }
       }
 
       setIsLoaded(false);
@@ -267,6 +274,7 @@ function ResumeEditor() {
       }
 
       setIsLoaded(true);
+      setLoadedAsUser(!!isLoggedIn);
     };
 
     loadData();
