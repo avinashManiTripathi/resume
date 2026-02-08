@@ -31,7 +31,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
 
     // Autofill & Input State
     const [inputValue, setInputValue] = useState("");
-    const [suggestions, setSuggestions] = useState<string[]>([]);
+    // const [suggestions, setSuggestions] = useState<string[]>([]); // Removed to fix infinite loop
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -59,19 +59,14 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
         }
     };
 
-    useEffect(() => {
+    const suggestions = React.useMemo(() => {
         if (inputValue.length > 0) {
-            const filtered = suggestionsSource.filter(item =>
+            return suggestionsSource.filter(item =>
                 item.toLowerCase().includes(inputValue.toLowerCase()) &&
                 !items.some((existing: any) => existing[nameKey] === item)
             ).slice(0, 5);
-            setSuggestions(filtered);
-            setShowSuggestions(true);
-            setActiveSuggestionIndex(-1);
-        } else {
-            setSuggestions([]);
-            setShowSuggestions(false);
         }
+        return [];
     }, [inputValue, items, suggestionsSource, nameKey]);
 
     // Close suggestions on click outside
@@ -256,7 +251,16 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                     ref={inputRef}
                     type="text"
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={(e) => {
+                        const val = e.target.value;
+                        setInputValue(val);
+                        if (val.length > 0) {
+                            setShowSuggestions(true);
+                            setActiveSuggestionIndex(-1);
+                        } else {
+                            setShowSuggestions(false);
+                        }
+                    }}
                     onKeyDown={handleKeyDown}
                     onFocus={() => {
                         if (inputValue) setShowSuggestions(true);
