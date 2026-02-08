@@ -131,12 +131,16 @@ export function ProductSchema() {
 
     return (
         <>
-            <script
+            <Script
+                id="organization-product-schema"
                 type="application/ld+json"
+                strategy="afterInteractive"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
             />
-            <script
+            <Script
+                id="product-schema"
                 type="application/ld+json"
+                strategy="afterInteractive"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
             />
         </>
