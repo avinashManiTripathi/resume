@@ -149,7 +149,7 @@ export function Navigation() {
                                                         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden h-full flex flex-col group/card hover:shadow-md transition-all duration-300">
                                                             {/* Image Area */}
                                                             <div className="h-48 bg-gradient-to-br from-blue-500 to-indigo-600 relative overflow-hidden">
-                                                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-overlay transition-transform duration-700 group-hover/card:scale-105" />
+                                                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=400&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-overlay transition-transform duration-700 group-hover/card:scale-105" />
 
                                                                 {/* Overlay Content */}
                                                                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">

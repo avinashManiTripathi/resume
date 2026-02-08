@@ -84,7 +84,7 @@ export default async function LandingPage() {
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map((i) => (
                       <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-200 overflow-hidden relative">
-                        <img src={`https://i.pravatar.cc/100?img=${i + 15}`} alt="User" className="w-full h-full object-cover" />
+                        <img src={`https://i.pravatar.cc/64?img=${i + 15}`} alt="User" className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
@@ -167,7 +167,7 @@ export default async function LandingPage() {
                       <div className="flex -space-x-2">
                         {[1, 2, 3, 4].map((i) => (
                           <div key={i} className="w-7 h-7 rounded-full border-2 border-white bg-gray-100 overflow-hidden ring-4 ring-gray-50/50">
-                            <img width={24} height={24} src={`https://i.pravatar.cc/100?img=${i + 20}`} alt="User" />
+                            <img width={28} height={28} src={`https://i.pravatar.cc/64?img=${i + 20}`} alt="User" />
                           </div>
                         ))}
                       </div>
@@ -183,7 +183,7 @@ export default async function LandingPage() {
               <div className="absolute z-30 top-12 -left-8 lg:-left-16 animate-float-slow">
                 <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-xl p-3 border border-white/50 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl overflow-hidden shadow-inner ring-2 ring-white">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&auto=format&fit=crop" alt="Sarah" className="w-full h-full object-cover" />
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&auto=format&fit=crop" alt="Sarah" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <div className="text-xs font-black text-gray-900 leading-none mb-1">Sarah Mitchell</div>
