@@ -216,12 +216,18 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
         }))
     } : null;
 
-    const qaPageSchema = {
+    const qaPageSchema = questions.length > 0 ? {
         "@context": "https://schema.org",
         "@type": "QAPage",
         "name": interview.title,
         "description": interview.description,
-        "mainEntity": questions.length > 0 ? {
+        "datePublished": interview.publishDate,
+        "author": {
+            "@type": "Person",
+            "name": interview.author.name,
+            "url": ENV.BASE_URL
+        },
+        "mainEntity": {
             "@type": "Question",
             "name": questions[0].question,
             "text": questions[0].question,
@@ -245,8 +251,9 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                     "url": ENV.BASE_URL
                 }
             }
-        } : undefined
-    };
+        }
+    } : null;
+
 
     return (
         <>
@@ -265,10 +272,13 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
                 />
             )}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(qaPageSchema) }}
-            />
+            {qaPageSchema && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(qaPageSchema) }}
+                />
+            )}
+
 
             <article className="min-h-screen bg-white" itemScope itemType="https://schema.org/Article">
                 {/* Breadcrumbs */}
