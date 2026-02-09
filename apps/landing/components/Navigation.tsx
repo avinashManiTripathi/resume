@@ -108,7 +108,7 @@ export function Navigation() {
                                                                             <div className="text-gray-700 text-lg group-hover:scale-110 transition-transform duration-300">
                                                                                 {item.icon}
                                                                             </div>
-                                                                            <h4 className="font-bold text-gray-900 text-sm group-hover:text-blue-600 transition-colors">
+                                                                            <h4 className="font-bold text-gray-900 text-sm">
                                                                                 {item.title}
                                                                             </h4>
                                                                         </div>
