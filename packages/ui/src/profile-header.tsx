@@ -105,6 +105,23 @@ const sliderStyles = `
 
 
 
+const FONTS = [
+    { name: 'Inter', label: 'Inter' },
+    { name: 'Roboto', label: 'Roboto' },
+    { name: 'Open Sans', label: 'Open Sans' },
+    { name: 'Lato', label: 'Lato' },
+    { name: 'Montserrat', label: 'Montserrat' },
+    { name: 'Poppins', label: 'Poppins' },
+    { name: 'Merriweather', label: 'Merriweather' },
+    { name: 'Playfair Display', label: 'Playfair Display' },
+    { name: 'Georgia', label: 'Georgia' },
+    { name: 'Times New Roman', label: 'Times New Roman' },
+    { name: 'Calibri', label: 'Calibri' },
+    { name: 'Arial', label: 'Arial' },
+    { name: 'Helvetica', label: 'Helvetica' },
+    { name: 'Cambria', label: 'Cambria' },
+];
+
 export interface TypographySettings {
     fontFamily: string;
     fontSize: number;
@@ -157,7 +174,9 @@ export function ProfileHeader({
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [showTypographyPanel, setShowTypographyPanel] = useState(false);
+    const [showMobileTypography, setShowMobileTypography] = useState(false);
     const typographyPanelRef = useRef<HTMLDivElement>(null);
+    const mobileTypographyRef = useRef<HTMLDivElement>(null);
 
     // Inject slider styles
     useEffect(() => {
@@ -176,32 +195,20 @@ export function ProfileHeader({
             if (typographyPanelRef.current && !typographyPanelRef.current.contains(event.target as Node)) {
                 setShowTypographyPanel(false);
             }
+            if (mobileTypographyRef.current && !mobileTypographyRef.current.contains(event.target as Node)) {
+                setShowMobileTypography(false);
+            }
         };
 
-        if (showTypographyPanel) {
+        if (showTypographyPanel || showMobileTypography) {
             document.addEventListener("mousedown", handleClickOutside);
         }
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showTypographyPanel]);
+    }, [showTypographyPanel, showMobileTypography]);
 
-    const fonts = useMemo(() => [
-        { name: 'Inter', label: 'Inter' },
-        { name: 'Roboto', label: 'Roboto' },
-        { name: 'Open Sans', label: 'Open Sans' },
-        { name: 'Lato', label: 'Lato' },
-        { name: 'Montserrat', label: 'Montserrat' },
-        { name: 'Poppins', label: 'Poppins' },
-        { name: 'Merriweather', label: 'Merriweather' },
-        { name: 'Playfair Display', label: 'Playfair Display' },
-        { name: 'Georgia', label: 'Georgia' },
-        { name: 'Times New Roman', label: 'Times New Roman' },
-        { name: 'Calibri', label: 'Calibri' },
-        { name: 'Arial', label: 'Arial' },
-        { name: 'Helvetica', label: 'Helvetica' },
-        { name: 'Cambria', label: 'Cambria' },
-    ], []);
+
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -264,9 +271,24 @@ export function ProfileHeader({
                         </div>
                     </div>
 
-                    <Button variant="outline" onClick={handleDownload} className="md:hidden">
-                        <Download size={18} />
-                    </Button>
+                    <div className="flex md:hidden items-center gap-2">
+                        <div className="relative" ref={mobileTypographyRef}>
+                            <Button variant="outline" onClick={() => setShowMobileTypography(!showMobileTypography)} className="px-2">
+                                <Settings2 size={18} />
+                            </Button>
+                            {showMobileTypography && (
+                                <div className="absolute top-full right-[-50px] mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 w-72 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="px-1 py-2 border-b border-gray-50 mb-3">
+                                        <span className="text-sm font-bold text-gray-900">Typography</span>
+                                    </div>
+                                    <TypographyPanelContent settings={typographySettings} onChange={onTypographyChange} />
+                                </div>
+                            )}
+                        </div>
+                        <Button variant="outline" onClick={handleDownload}>
+                            <Download size={18} />
+                        </Button>
+                    </div>
                     <div className="hidden md:flex  ml-2 md:ml-4  items-center gap-2">
                         <svg className="w-12 h-12 md:w-12 md:h-12" viewBox="0 0 36 36">
                             <circle
@@ -341,147 +363,7 @@ export function ProfileHeader({
                                             <span className="text-sm font-bold text-gray-900">Typography Settings</span>
                                             <p className="text-xs text-gray-500 mt-0.5">Customize spacing and fonts</p>
                                         </div>
-                                        <div className="space-y-4 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
-                                            {/* Font Family */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Font Family</label>
-                                                <select
-                                                    value={typographySettings.fontFamily}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, fontFamily: e.target.value })}
-                                                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                                >
-                                                    {fonts.map((font) => (
-                                                        <option key={font.name} value={font.name}>{font.label}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-
-                                            {/* Font Size */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Font Size</span>
-                                                    <span className="text-indigo-600">{typographySettings.fontSize}pt</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="10"
-                                                    max="16"
-                                                    step="0.5"
-                                                    value={typographySettings.fontSize}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, fontSize: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.fontSize - 10) / (16 - 10)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Line Height */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Line Height</span>
-                                                    <span className="text-indigo-600">{typographySettings.lineHeight}</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="1.0"
-                                                    max="1.5"
-                                                    step="0.01"
-                                                    value={typographySettings.lineHeight}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, lineHeight: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.lineHeight - 1.0) / (1.5 - 1.0)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Section Gap */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Section Gap</span>
-                                                    <span className="text-indigo-600">{typographySettings.sectionGap}px</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="8"
-                                                    max="24"
-                                                    step="1"
-                                                    value={typographySettings.sectionGap}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, sectionGap: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.sectionGap - 8) / (24 - 8)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Item Gap */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Item Gap</span>
-                                                    <span className="text-indigo-600">{typographySettings.itemGap}px</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="2"
-                                                    max="8"
-                                                    step="0.5"
-                                                    value={typographySettings.itemGap}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, itemGap: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.itemGap - 2) / (8 - 2)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Heading Size */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Heading Size</span>
-                                                    <span className="text-indigo-600">{typographySettings.headingSize}pt</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="14"
-                                                    max="20"
-                                                    step="0.5"
-                                                    value={typographySettings.headingSize}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, headingSize: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.headingSize - 14) / (20 - 14)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Name Size */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Name Size</span>
-                                                    <span className="text-indigo-600">{typographySettings.nameSize}pt</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="24"
-                                                    max="32"
-                                                    step="0.5"
-                                                    value={typographySettings.nameSize}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, nameSize: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.nameSize - 24) / (32 - 24)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-
-                                            {/* Page Margin */}
-                                            <div>
-                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                                                    <span>Page Margin</span>
-                                                    <span className="text-indigo-600">{typographySettings.pageMargin}px</span>
-                                                </label>
-                                                <input
-                                                    type="range"
-                                                    min="32"
-                                                    max="64"
-                                                    step="2"
-                                                    value={typographySettings.pageMargin}
-                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, pageMargin: Number(e.target.value) })}
-                                                    className="custom-slider w-full"
-                                                    style={{ '--value-percent': `${((typographySettings.pageMargin - 32) / (64 - 32)) * 100}%` } as React.CSSProperties}
-                                                />
-                                            </div>
-                                        </div>
+                                        <TypographyPanelContent settings={typographySettings} onChange={onTypographyChange} />
                                     </div>
                                 )}
                             </div>
@@ -515,6 +397,157 @@ export function ProfileHeader({
                         </Button>
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+}
+
+interface TypographyPanelContentProps {
+    settings: TypographySettings;
+    onChange: ((settings: TypographySettings) => void) | undefined;
+}
+
+function TypographyPanelContent({ settings, onChange }: TypographyPanelContentProps) {
+    return (
+        <div className="space-y-4 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
+            {/* Font Family */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Font Family</label>
+                <select
+                    value={settings.fontFamily}
+                    onChange={(e) => onChange?.({ ...settings, fontFamily: e.target.value })}
+                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    {FONTS.map((font) => (
+                        <option key={font.name} value={font.name}>{font.label}</option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Font Size */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Font Size</span>
+                    <span className="text-indigo-600">{settings.fontSize}pt</span>
+                </label>
+                <input
+                    type="range"
+                    min="10"
+                    max="16"
+                    step="0.5"
+                    value={settings.fontSize}
+                    onChange={(e) => onChange?.({ ...settings, fontSize: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.fontSize - 10) / (16 - 10)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Line Height */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Line Height</span>
+                    <span className="text-indigo-600">{settings.lineHeight}</span>
+                </label>
+                <input
+                    type="range"
+                    min="1.0"
+                    max="1.5"
+                    step="0.01"
+                    value={settings.lineHeight}
+                    onChange={(e) => onChange?.({ ...settings, lineHeight: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.lineHeight - 1.0) / (1.5 - 1.0)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Section Gap */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Section Gap</span>
+                    <span className="text-indigo-600">{settings.sectionGap}px</span>
+                </label>
+                <input
+                    type="range"
+                    min="1"
+                    max="24"
+                    step="1"
+                    value={settings.sectionGap}
+                    onChange={(e) => onChange?.({ ...settings, sectionGap: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.sectionGap - 1) / (24 - 1)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Item Gap */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Item Gap</span>
+                    <span className="text-indigo-600">{settings.itemGap}px</span>
+                </label>
+                <input
+                    type="range"
+                    min="0"
+                    max="8"
+                    step="0.5"
+                    value={settings.itemGap}
+                    onChange={(e) => onChange?.({ ...settings, itemGap: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.itemGap - 0) / (8 - 0)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Heading Size */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Heading Size</span>
+                    <span className="text-indigo-600">{settings.headingSize}pt</span>
+                </label>
+                <input
+                    type="range"
+                    min="14"
+                    max="20"
+                    step="0.5"
+                    value={settings.headingSize}
+                    onChange={(e) => onChange?.({ ...settings, headingSize: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.headingSize - 14) / (20 - 14)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Name Size */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Name Size</span>
+                    <span className="text-indigo-600">{settings.nameSize}pt</span>
+                </label>
+                <input
+                    type="range"
+                    min="24"
+                    max="32"
+                    step="0.5"
+                    value={settings.nameSize}
+                    onChange={(e) => onChange?.({ ...settings, nameSize: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.nameSize - 24) / (32 - 24)) * 100}%` } as React.CSSProperties}
+                />
+            </div>
+
+            {/* Page Margin */}
+            <div>
+                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                    <span>Page Margin</span>
+                    <span className="text-indigo-600">{settings.pageMargin}px</span>
+                </label>
+                <input
+                    type="range"
+                    min="32"
+                    max="64"
+                    step="2"
+                    value={settings.pageMargin}
+                    onChange={(e) => onChange?.({ ...settings, pageMargin: Number(e.target.value) })}
+                    className="custom-slider w-full"
+                    style={{ '--value-percent': `${((settings.pageMargin - 32) / (64 - 32)) * 100}%` } as React.CSSProperties}
+                />
             </div>
         </div>
     );
