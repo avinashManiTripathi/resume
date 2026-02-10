@@ -1,8 +1,120 @@
 "use client";
 
-import { Share2, Download, RotateCcw, RotateCw, CircleArrowUp, CircleArrowDown, MousePointer, Hand, PencilLine, Loader2, Sparkles, LayoutGrid, Type, Trophy, ChevronDown, Check } from "lucide-react";
+import { Share2, Download, RotateCcw, RotateCw, CircleArrowUp, CircleArrowDown, MousePointer, Hand, PencilLine, Loader2, Sparkles, LayoutGrid, Type, Trophy, ChevronDown, Check, Settings2 } from "lucide-react";
 import { Button } from "./button";
 import { useState, useMemo, useRef, useEffect } from "react";
+
+const sliderStyles = `
+  /* Custom slider styling */
+  input[type="range"].custom-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* Track - WebKit (Chrome, Safari, Edge) */
+  input[type="range"].custom-slider::-webkit-slider-track {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    transition: background 0.1s ease;
+  }
+
+  input[type="range"].custom-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(to right, #6366f1 var(--value-percent, 0%), #e5e7eb var(--value-percent, 0%));
+    border-radius: 12px;
+    transition: background 0.1s ease;
+  }
+
+  /* Track - Firefox */
+  input[type="range"].custom-slider::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    border: none;
+  }
+
+  input[type="range"].custom-slider::-moz-range-progress {
+    height: 8px;
+    background: #6366f1;
+    border-radius: 12px 0 0 12px;
+  }
+
+  /* Thumb - WebKit */
+  input[type="range"].custom-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.1);
+    cursor: pointer;
+    margin-top: -8px;
+    position: relative;
+    background-image: radial-gradient(circle, white 1.5px, transparent 1.5px);
+    background-size: 6px 6px;
+    background-position: 3px 3px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Thumb - Firefox */
+  input[type="range"].custom-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #6366f1;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.1);
+    cursor: pointer;
+    background-image: radial-gradient(circle, white 1.5px, transparent 1.5px);
+    background-size: 6px 6px;
+    background-position: 3px 3px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Hover effects */
+  input[type="range"].custom-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  }
+
+  input[type="range"].custom-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.2);
+  }
+
+  /* Active state */
+  input[type="range"].custom-slider:active::-webkit-slider-thumb {
+    transform: scale(1.05);
+  }
+
+  input[type="range"].custom-slider:active::-moz-range-thumb {
+    transform: scale(1.05);
+  }
+`;
+
+
+
+export interface TypographySettings {
+    fontFamily: string;
+    fontSize: number;
+    lineHeight: number;
+    sectionGap: number;
+    itemGap: number;
+    headingSize: number;
+    nameSize: number;
+    pageMargin: number;
+}
 
 interface ProfileHeaderProps {
     name: string;
@@ -15,9 +127,8 @@ interface ProfileHeaderProps {
     // Redesign - Sidebar actions in header
     onSmartImport?: () => void;
     onTemplateChange?: () => void;
-    fontFamily?: string;
-    onFontChange?: (font: string) => void;
-    onTailor?: () => void;
+    typographySettings?: TypographySettings;
+    onTypographyChange?: (settings: TypographySettings) => void;
     classNameLeft?: string;
 }
 
@@ -30,31 +141,50 @@ export function ProfileHeader({
     onProfileImageChange,
     onSmartImport,
     onTemplateChange,
-    fontFamily = "Inter",
-    onFontChange,
-    onTailor,
+    typographySettings = {
+        fontFamily: "Inter",
+        fontSize: 13,
+        lineHeight: 1.15,
+        sectionGap: 12,
+        itemGap: 4,
+        headingSize: 16,
+        nameSize: 28,
+        pageMargin: 48
+    },
+    onTypographyChange,
     classNameLeft = "md:w-[45%]",
 }: ProfileHeaderProps) {
 
     const [isDownloading, setIsDownloading] = useState(false);
-    const [showFontSelector, setShowFontSelector] = useState(false);
-    const fontSelectorRef = useRef<HTMLDivElement>(null);
+    const [showTypographyPanel, setShowTypographyPanel] = useState(false);
+    const typographyPanelRef = useRef<HTMLDivElement>(null);
+
+    // Inject slider styles
+    useEffect(() => {
+        const styleId = 'custom-slider-styles';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = sliderStyles;
+            document.head.appendChild(style);
+        }
+    }, []);
 
     // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (fontSelectorRef.current && !fontSelectorRef.current.contains(event.target as Node)) {
-                setShowFontSelector(false);
+            if (typographyPanelRef.current && !typographyPanelRef.current.contains(event.target as Node)) {
+                setShowTypographyPanel(false);
             }
         };
 
-        if (showFontSelector) {
+        if (showTypographyPanel) {
             document.addEventListener("mousedown", handleClickOutside);
         }
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showFontSelector]);
+    }, [showTypographyPanel]);
 
     const fonts = useMemo(() => [
         { name: 'Inter', label: 'Inter' },
@@ -193,54 +323,176 @@ export function ProfileHeader({
                                 <span className="text-sm font-medium hidden lg:inline">Template</span>
                             </button>
 
-                            {/* Font Selector */}
-                            <div className="relative" ref={fontSelectorRef}>
+                            {/* Typography Settings Panel */}
+                            <div className="relative" ref={typographyPanelRef}>
                                 <button
-                                    onClick={() => setShowFontSelector(!showFontSelector)}
-                                    className={`flex items-center gap-2 px-3 h-10 hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border ${showFontSelector ? 'bg-gray-50 border-gray-200' : 'border-transparent hover:border-gray-200'}`}
-                                    title="Select Font"
+                                    onClick={() => setShowTypographyPanel(!showTypographyPanel)}
+                                    className={`flex items-center gap-2 px-3 h-10 hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-all border ${showTypographyPanel ? 'bg-gray-50 border-gray-200' : 'border-transparent hover:border-gray-200'}`}
+                                    title="Typography Settings"
                                 >
-                                    <Type size={16} />
-                                    <span className="text-xs font-bold truncate max-w-[80px]">{fontFamily}</span>
-                                    <ChevronDown size={14} className={`transition-transform duration-200 ${showFontSelector ? 'rotate-180' : ''}`} />
+                                    <Settings2 size={16} />
+                                    <span className="text-xs font-semibold hidden lg:inline">Typography</span>
+                                    <ChevronDown size={14} className={`transition-transform duration-200 ${showTypographyPanel ? 'rotate-180' : ''}`} />
                                 </button>
 
-                                {showFontSelector && (
-                                    <div className="absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 w-64 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                                        <div className="px-3 py-2 border-b border-gray-50 mb-1">
-                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Select Font Family</span>
+                                {showTypographyPanel && (
+                                    <div className="absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 w-80 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                                        <div className="px-1 py-2 border-b border-gray-50 mb-3">
+                                            <span className="text-sm font-bold text-gray-900">Typography Settings</span>
+                                            <p className="text-xs text-gray-500 mt-0.5">Customize spacing and fonts</p>
                                         </div>
-                                        <div className="space-y-0.5 max-h-80 overflow-y-auto pr-1 custom-scrollbar">
-                                            {fonts.map((font) => (
-                                                <button
-                                                    key={font.name}
-                                                    onClick={() => {
-                                                        onFontChange?.(font.name);
-                                                        setShowFontSelector(false);
-                                                    }}
-                                                    className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-all flex items-center justify-between group ${fontFamily === font.name
-                                                        ? 'bg-indigo-50 text-indigo-700 font-semibold'
-                                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                                        }`}
+                                        <div className="space-y-4 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
+                                            {/* Font Family */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Font Family</label>
+                                                <select
+                                                    value={typographySettings.fontFamily}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, fontFamily: e.target.value })}
+                                                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                                 >
-                                                    <span style={{ fontFamily: font.name }}>{font.label}</span>
-                                                    {fontFamily === font.name && (
-                                                        <Check size={14} className="text-indigo-600" />
-                                                    )}
-                                                </button>
-                                            ))}
+                                                    {fonts.map((font) => (
+                                                        <option key={font.name} value={font.name}>{font.label}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            {/* Font Size */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Font Size</span>
+                                                    <span className="text-indigo-600">{typographySettings.fontSize}pt</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="10"
+                                                    max="16"
+                                                    step="0.5"
+                                                    value={typographySettings.fontSize}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, fontSize: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.fontSize - 10) / (16 - 10)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Line Height */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Line Height</span>
+                                                    <span className="text-indigo-600">{typographySettings.lineHeight}</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="1.0"
+                                                    max="1.5"
+                                                    step="0.01"
+                                                    value={typographySettings.lineHeight}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, lineHeight: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.lineHeight - 1.0) / (1.5 - 1.0)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Section Gap */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Section Gap</span>
+                                                    <span className="text-indigo-600">{typographySettings.sectionGap}px</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="8"
+                                                    max="24"
+                                                    step="1"
+                                                    value={typographySettings.sectionGap}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, sectionGap: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.sectionGap - 8) / (24 - 8)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Item Gap */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Item Gap</span>
+                                                    <span className="text-indigo-600">{typographySettings.itemGap}px</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="2"
+                                                    max="8"
+                                                    step="0.5"
+                                                    value={typographySettings.itemGap}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, itemGap: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.itemGap - 2) / (8 - 2)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Heading Size */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Heading Size</span>
+                                                    <span className="text-indigo-600">{typographySettings.headingSize}pt</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="14"
+                                                    max="20"
+                                                    step="0.5"
+                                                    value={typographySettings.headingSize}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, headingSize: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.headingSize - 14) / (20 - 14)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Name Size */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Name Size</span>
+                                                    <span className="text-indigo-600">{typographySettings.nameSize}pt</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="24"
+                                                    max="32"
+                                                    step="0.5"
+                                                    value={typographySettings.nameSize}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, nameSize: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.nameSize - 24) / (32 - 24)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
+
+                                            {/* Page Margin */}
+                                            <div>
+                                                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+                                                    <span>Page Margin</span>
+                                                    <span className="text-indigo-600">{typographySettings.pageMargin}px</span>
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="32"
+                                                    max="64"
+                                                    step="2"
+                                                    value={typographySettings.pageMargin}
+                                                    onChange={(e) => onTypographyChange?.({ ...typographySettings, pageMargin: Number(e.target.value) })}
+                                                    className="custom-slider w-full"
+                                                    style={{ '--value-percent': `${((typographySettings.pageMargin - 32) / (64 - 32)) * 100}%` } as React.CSSProperties}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )}
                             </div>
 
-                            {onTailor && <button
+                            {/* {onTailor && <button
                                 onClick={onTailor}
                                 className="hidden lg:flex items-center gap-2 px-4 h-10 bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-xl transition-all border border-amber-200/50"
                             >
                                 <Trophy size={16} className="fill-amber-700/20" />
                                 <span className="text-xs font-black uppercase tracking-widest">Tailor</span>
-                            </button>}
+                            </button>} */}
                         </div>
 
                         <div className="w-px h-6 bg-gray-100 mx-1"></div>
