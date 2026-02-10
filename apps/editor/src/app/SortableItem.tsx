@@ -52,12 +52,17 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
         opacity: isDragging ? 0.5 : 1,
     };
 
+    const handleToggle = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsOpen(!isOpen);
+    };
+
     return (
         <div
             ref={setNodeRef}
             style={style}
-            onClick={() => setIsOpen(true)}
-            className={'p-4 bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300 cursor-pointer ' + (!isOpen ? ' hover:bg-gray-50 transition-colors cursor-pointer group' : '')}
+            onClick={() => !isOpen && setIsOpen(true)}
+            className={'p-4 bg-white rounded-lg border border-slate-200 shadow-sm transition-all duration-300 ' + (!isOpen ? 'hover:bg-gray-50 transition-colors cursor-pointer group' : '')}
         >
             <div className={`flex items-center justify-between ${isOpen ? 'mb-4' : 'mb-0'} transition-all duration-300`}>
                 <div className="flex items-center gap-2">
@@ -83,6 +88,7 @@ export function SortableItem({ id, index, label, onRemove, children, defaultOpen
                         <span>Delete</span>
                     </button>
                     <button
+                        onClick={handleToggle}
                         className="p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 rounded-md transition-colors"
                         title={isOpen ? "Collapse" : "Expand"}
                     >
