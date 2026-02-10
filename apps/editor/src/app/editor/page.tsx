@@ -14,7 +14,7 @@ import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
 import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
-import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo } from "../constants";
+import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo, TypographySettings } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
 import { useResumeDownload } from "../hooks/useResumeDownload";
@@ -47,7 +47,16 @@ function ResumeEditor() {
 
   // Track last saved state to prevent auto-saving on load
   const lastSavedDataRef = useRef<string>(JSON.stringify({}));
-  const lastSavedFontRef = useRef<string>('Inter');
+  const lastSavedTypographyRef = useRef<TypographySettings>({
+    fontFamily: 'Inter',
+    fontSize: 13,
+    lineHeight: 1.15,
+    sectionGap: 12,
+    itemGap: 4,
+    headingSize: 16,
+    nameSize: 28,
+    pageMargin: 48
+  });
   // Track last saved template to detect switches
   const lastSavedTemplateIdRef = useRef<string | null>(null);
 
@@ -74,7 +83,16 @@ function ResumeEditor() {
   const [showSmartImport, setShowSmartImport] = useState(false);
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
-  const [fontFamily, setFontFamily] = useState('Inter');
+  const [typographySettings, setTypographySettings] = useState<TypographySettings>({
+    fontFamily: 'Inter',
+    fontSize: 13,
+    lineHeight: 1.15,
+    sectionGap: 12,
+    itemGap: 4,
+    headingSize: 16,
+    nameSize: 28,
+    pageMargin: 48
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);
   const [downloadingStep, setDownloadingStep] = useState(0);
@@ -174,7 +192,7 @@ function ResumeEditor() {
           const parsed = JSON.parse(storedData);
           if (parsed.resume) setResume(parsed.resume);
           if (parsed.templateId) setTemplateId(parsed.templateId);
-          if (parsed.fontFamily) setFontFamily(parsed.fontFamily);
+          if (parsed.typography) setTypographySettings(parsed.typography);
           if (parsed.sectionOrder) setSectionOrder(parsed.sectionOrder);
 
           console.log('[Editor] Resume state restored');
@@ -230,9 +248,9 @@ function ResumeEditor() {
             console.log('[Editor] Recovered draft for template:', templateId);
             if (parsed.resume && Object.keys(parsed.resume).length > 0) {
               setResume(parsed.resume);
-              if (parsed.fontFamily) {
-                setFontFamily(parsed.fontFamily);
-                lastSavedFontRef.current = parsed.fontFamily;
+              if (parsed.typography) {
+                setTypographySettings(parsed.typography);
+                lastSavedTypographyRef.current = parsed.typography;
               }
               if (parsed.profileImage) setProfileImage(parsed.profileImage);
 
@@ -253,9 +271,9 @@ function ResumeEditor() {
             if (savedDoc.data?.personalInfo?.profileImage) {
               setProfileImage(savedDoc.data.personalInfo.profileImage);
             }
-            if (savedDoc.data?.fontFamily) {
-              setFontFamily(savedDoc.data.fontFamily);
-              lastSavedFontRef.current = savedDoc.data.fontFamily;
+            if (savedDoc.data?.typography) {
+              setTypographySettings(savedDoc.data.typography);
+              lastSavedTypographyRef.current = savedDoc.data.typography;
             }
 
             // Set reference to loaded data so we don't auto-save it immediately
@@ -354,7 +372,7 @@ function ResumeEditor() {
       title,
       type: 'resume',
       templateId: templateId, // Template is the key
-      data: { ...dataToSave, fontFamily: fontFamily || 'Inter' }
+      data: { ...dataToSave, typography: typographySettings }
     });
 
     if (result.success) {
@@ -366,7 +384,7 @@ function ResumeEditor() {
       }
     }
     setIsSaving(false);
-  }, [templateId, saveDocument, fontFamily]);
+  }, [templateId, saveDocument, typographySettings]);
 
   // Debounced auto-save
   useEffect(() => {
@@ -376,20 +394,20 @@ function ResumeEditor() {
     // Check if data has actually changed from what we last loaded/saved
     const currentDataString = JSON.stringify(debouncedResume);
     const hasDataChanged = currentDataString !== lastSavedDataRef.current;
-    const hasFontChanged = fontFamily !== lastSavedFontRef.current;
+    const hasTypographyChanged = JSON.stringify(typographySettings) !== JSON.stringify(lastSavedTypographyRef.current);
     const hasTemplateChanged = templateId !== lastSavedTemplateIdRef.current;
 
     // Only save if there's a real change OR template changed (cloning data to new template)
-    if (hasDataChanged || hasFontChanged || hasTemplateChanged) {
-      console.log('[AutoSave] Changes detected (Data/Font/Template), saving...');
+    if (hasDataChanged || hasTypographyChanged || hasTemplateChanged) {
+      console.log('[AutoSave] Changes detected (Data/Typography/Template), saving...');
       handleAutoSave(debouncedResume);
 
       // Update refs to current state
       lastSavedDataRef.current = currentDataString;
-      lastSavedFontRef.current = fontFamily;
+      lastSavedTypographyRef.current = typographySettings;
       lastSavedTemplateIdRef.current = templateId || null;
     }
-  }, [debouncedResume, fontFamily, templateId, handleAutoSave, isLoaded]);
+  }, [debouncedResume, typographySettings, templateId, handleAutoSave, isLoaded]);
 
   // Memoize section labels computation - used in multiple places
   const sectionLabels = useMemo(() => {
@@ -546,7 +564,7 @@ function ResumeEditor() {
       const stateToSave = {
         resume,
         templateId,
-        fontFamily,
+        typography: typographySettings,
         sectionOrder
       };
       sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
@@ -562,7 +580,7 @@ function ResumeEditor() {
         templateId,
         sectionLabels,
         ...resume,
-        fontFamily,
+        typography: typographySettings,
         order: sectionOrder,
         intent: 'download'
       };
@@ -606,7 +624,7 @@ function ResumeEditor() {
       const content = mainRef.current?.innerHTML || "";
       exportToDoc(content, `${fileName}.doc`);
     }
-  }, [isLoggedIn, router, templateId, sectionLabels, fontFamily, resume, sectionOrder, apiUrl, subscription]);
+  }, [isLoggedIn, router, templateId, sectionLabels, typographySettings, resume, sectionOrder, apiUrl, subscription]);
 
 
   // Auto-download hook - Encapsulated logic for performance
@@ -784,11 +802,11 @@ function ResumeEditor() {
   }, []);
 
   // Refs to hold latest data for PDF generation without triggering re-renders of the callback
-  const latestDataRef = useRef<{ resume: Partial<ResumeData> | null, sectionLabels: Record<string, string>, templateId: string | null, fontFamily: string, order: string[] }>({
+  const latestDataRef = useRef<{ resume: Partial<ResumeData> | null, sectionLabels: Record<string, string>, templateId: string | null, typography: TypographySettings, order: string[] }>({
     resume: debouncedResume,
     sectionLabels,
     templateId,
-    fontFamily,
+    typography: typographySettings,
     order: debouncedSectionOrder
   });
 
@@ -798,10 +816,10 @@ function ResumeEditor() {
       resume: debouncedResume,
       sectionLabels,
       templateId,
-      fontFamily,
+      typography: typographySettings,
       order: debouncedSectionOrder
     };
-  }, [debouncedResume, sectionLabels, templateId, fontFamily, debouncedSectionOrder]);
+  }, [debouncedResume, sectionLabels, templateId, typographySettings, debouncedSectionOrder]);
 
   // Render PDF with loading state and auto-cancellation - Memoized
   // Now depends only on stable things + currentPage
@@ -809,13 +827,13 @@ function ResumeEditor() {
     if (!canvasRef.current || !mainRef.current) return;
 
     try {
-      const { resume, sectionLabels, templateId, fontFamily, order } = latestDataRef.current;
+      const { resume, sectionLabels, templateId, typography, order } = latestDataRef.current;
 
       const resumeData = {
         sectionLabels,
         ...(resume || {} as ResumeData),
         templateId,
-        fontFamily,
+        typography,
         order,
         intent: 'preview'
       };
@@ -841,7 +859,7 @@ function ResumeEditor() {
   useEffect(() => {
     // We only want to auto-render when content changes, not when loading states change
     renderPdf();
-  }, [debouncedResume, templateId, fontFamily, debouncedSectionOrder, renderPdf]); // Including renderPdf is safe now as it's stable
+  }, [debouncedResume, templateId, typographySettings, debouncedSectionOrder, renderPdf]); // Including renderPdf is safe now as it's stable
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
@@ -933,9 +951,8 @@ function ResumeEditor() {
           onDownload={handleDownload}
           onSmartImport={() => setShowSmartImport(true)}
           onTemplateChange={() => setShowTemplates(true)}
-          fontFamily={fontFamily}
-          onFontChange={setFontFamily}
-          onTailor={() => router.push(`/tailor`)}
+          typographySettings={typographySettings}
+          onTypographyChange={setTypographySettings}
         />
 
         {/* Main Content - Split Glass Content */}
@@ -1148,33 +1165,6 @@ function ResumeEditor() {
                       <div className="text-xs text-gray-600">Choose a new design</div>
                     </div>
                   </button>
-
-                  {/* Font Selection */}
-                  <div className="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-xl">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h18M9 3v18m-6-6h18" />
-                        </svg>
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div className="font-semibold text-gray-900">Font Family</div>
-                        <div className="text-xs text-gray-600">Choose your font</div>
-                      </div>
-                    </div>
-                    <select
-                      value={fontFamily}
-                      onChange={(e) => setFontFamily(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="Inter">Inter</option>
-                      <option value="Arial">Arial</option>
-                      <option value="Georgia">Georgia</option>
-                      <option value="Times New Roman">Times New Roman</option>
-                      <option value="Courier New">Courier New</option>
-                      <option value="Verdana">Verdana</option>
-                    </select>
-                  </div>
                 </div>
               </div>
             </div>

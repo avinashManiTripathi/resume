@@ -136,6 +136,17 @@ export interface ResumeData {
   order?: string[];
 }
 
+export interface TypographySettings {
+  fontFamily: string;
+  fontSize: number;          // Base font size in pt
+  lineHeight: number;        // Line height multiplier (e.g., 1.15)
+  sectionGap: number;        // Gap between sections in px
+  itemGap: number;           // Gap between items within sections in px  
+  headingSize: number;       // Heading font size in pt
+  nameSize: number;          // Name/title size in pt
+  pageMargin: number;        // Page margin in pixels
+}
+
 export const dummyData: ResumeData = {
   "personalInfo": {
     "firstName": "John",

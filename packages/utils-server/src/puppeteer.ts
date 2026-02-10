@@ -345,8 +345,9 @@ export const htmlToPdf = async (
         });
 
         // 🔥 Inject Google Font via Node memory cache
-        if (jsonData?.fontFamily) {
-            await injectGoogleFont(page, jsonData.fontFamily);
+        const fontFamily = jsonData.typography?.fontFamily || jsonData.fontFamily;
+        if (fontFamily) {
+            await injectGoogleFont(page, fontFamily);
         }
 
         // Optional hydration
@@ -363,10 +364,10 @@ export const htmlToPdf = async (
                 printBackground: true,
                 preferCSSPageSize: true,
                 margin: {
-                    top: '48px',
-                    bottom: '48px',
-                    left: '48px',
-                    right: '48px',
+                    top: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    bottom: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    left: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    right: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
                 },
             }),
             page,
@@ -429,8 +430,9 @@ export const htmlToPdfStream = async (
         });
 
         // 🔥 Inject Google Font
-        if (jsonData?.fontFamily) {
-            await injectGoogleFont(page, jsonData.fontFamily);
+        const fontFamily = jsonData.typography?.fontFamily || jsonData.fontFamily;
+        if (fontFamily) {
+            await injectGoogleFont(page, fontFamily);
         }
 
         // Optional hydration
@@ -447,10 +449,10 @@ export const htmlToPdfStream = async (
                 printBackground: true,
                 preferCSSPageSize: true,
                 margin: {
-                    top: '48px',
-                    bottom: '48px',
-                    left: '48px',
-                    right: '48px',
+                    top: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    bottom: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    left: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
+                    right: jsonData.typography?.pageMargin ? `${jsonData.typography.pageMargin}px` : '48px',
                 },
                 timeout: 120000
             }),

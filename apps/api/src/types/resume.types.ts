@@ -118,9 +118,21 @@ export interface CustomSection {
     }>;
 }
 
+export interface TypographySettings {
+    fontFamily: string;
+    fontSize: number;
+    lineHeight: number;
+    sectionGap: number;
+    itemGap: number;
+    headingSize: number;
+    nameSize: number;
+    pageMargin: number;
+}
+
 export interface ResumeData {
     templateId?: string;
     fontFamily?: string;
+    typography?: TypographySettings;
     order?: string[];
     personalInfo?: PersonalInfo;
     experience?: Experience[];
