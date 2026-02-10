@@ -13,7 +13,7 @@ import { saveBlobAsPdf } from "@repo/utils-client";
 import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid } from "lucide-react";
 import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo, TypographySettings } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
@@ -21,6 +21,7 @@ import { useResumeDownload } from "../hooks/useResumeDownload";
 import { ENV } from "../env";
 import { StepLoader } from '@repo/ui/step-loader';
 import { EditorSidebar } from "../../components/EditorSidebar";
+import { TypographyPanelContent } from "@repo/ui/profile-header";
 
 
 function ResumeEditor() {
@@ -83,6 +84,7 @@ function ResumeEditor() {
   const [showSmartImport, setShowSmartImport] = useState(false);
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
+  const [mobileMenuView, setMobileMenuView] = useState<'menu' | 'typography'>('menu');
   const [typographySettings, setTypographySettings] = useState<TypographySettings>({
     fontFamily: 'Inter',
     fontSize: 13,
@@ -604,7 +606,7 @@ function ResumeEditor() {
           const stateToSave = {
             resume,
             templateId,
-            fontFamily,
+            typographySettings,
             sectionOrder
           };
           sessionStorage.setItem('redirect_resume_data', JSON.stringify(stateToSave));
@@ -1074,7 +1076,10 @@ function ResumeEditor() {
 
         {/* Mobile Menu Button - Only visible on mobile */}
         <button
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
+          onClick={() => {
+            setShowMobileMenu(!showMobileMenu);
+            setMobileMenuView('menu');
+          }}
           className="md:hidden fixed bottom-4 left-4 z-50 bg-white text-slate-700 p-3 md:p-4 rounded-full shadow-lg hover:bg-slate-50 transition-all border-2 border-slate-200 min-w-[56px] min-h-[56px]"
           aria-label="Menu"
         >
@@ -1108,63 +1113,98 @@ function ResumeEditor() {
                 </div>
 
                 <div className="space-y-3">
-                  {/* Tailor My Resume */}
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      router.push('/tailor');
-                    }}
-                    className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl hover:border-purple-400 transition-all"
-                  >
-                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  {mobileMenuView === 'menu' ? (
+                    <>
+                      {/* Tailor My Resume */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          router.push('/tailor');
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-200 rounded-xl hover:border-purple-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
 
-                      </svg>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-semibold text-gray-900">Tailor My Resume</div>
-                      <div className="text-xs text-gray-600">AI-powered customization</div>
-                    </div>
-                  </button>
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Tailor My Resume</div>
+                          <div className="text-xs text-gray-600">AI-powered customization</div>
+                        </div>
+                      </button>
 
-                  {/* Smart Import */}
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      setShowSmartImport(true);
-                    }}
-                    className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
-                  >
-                    <div className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </svg>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-semibold text-gray-900">Build with AI</div>
-                      <div className="text-xs text-gray-600">AI-powered data extraction</div>
-                    </div>
-                  </button>
+                      {/* Smart Import */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowSmartImport(true);
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Build with AI</div>
+                          <div className="text-xs text-gray-600">AI-powered data extraction</div>
+                        </div>
+                      </button>
 
-                  {/* Change Template */}
-                  <button
-                    onClick={() => {
-                      setShowMobileMenu(false);
-                      setShowTemplates(true);
-                    }}
-                    className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
-                  >
-                    <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
-                      </svg>
+                      {/* Change Template */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowTemplates(true);
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Change Template</div>
+                          <div className="text-xs text-gray-600">Choose a new design</div>
+                        </div>
+                      </button>
+
+                      {/* Typography */}
+                      <button
+                        onClick={() => {
+                          setMobileMenuView('typography');
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Settings2 className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Typography</div>
+                          <div className="text-xs text-gray-600">Customize fonts and spacing</div>
+                        </div>
+                      </button>
+                    </>
+                  ) : (
+                    <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+                      <div className="flex items-center gap-2 mb-4">
+                        <button
+                          onClick={() => setMobileMenuView('menu')}
+                          className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <span className="font-bold text-gray-900">Settings</span>
+                      </div>
+                      <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 pb-10">
+                        <TypographyPanelContent settings={typographySettings} onChange={setTypographySettings} />
+                      </div>
                     </div>
-                    <div className="flex-1 text-left">
-                      <div className="font-semibold text-gray-900">Change Template</div>
-                      <div className="text-xs text-gray-600">Choose a new design</div>
-                    </div>
-                  </button>
+                  )}
                 </div>
               </div>
             </div>

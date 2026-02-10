@@ -174,9 +174,7 @@ export function ProfileHeader({
 
     const [isDownloading, setIsDownloading] = useState(false);
     const [showTypographyPanel, setShowTypographyPanel] = useState(false);
-    const [showMobileTypography, setShowMobileTypography] = useState(false);
     const typographyPanelRef = useRef<HTMLDivElement>(null);
-    const mobileTypographyRef = useRef<HTMLDivElement>(null);
 
     // Inject slider styles
     useEffect(() => {
@@ -195,18 +193,15 @@ export function ProfileHeader({
             if (typographyPanelRef.current && !typographyPanelRef.current.contains(event.target as Node)) {
                 setShowTypographyPanel(false);
             }
-            if (mobileTypographyRef.current && !mobileTypographyRef.current.contains(event.target as Node)) {
-                setShowMobileTypography(false);
-            }
         };
 
-        if (showTypographyPanel || showMobileTypography) {
+        if (showTypographyPanel) {
             document.addEventListener("mousedown", handleClickOutside);
         }
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [showTypographyPanel, showMobileTypography]);
+    }, [showTypographyPanel]);
 
 
 
@@ -272,19 +267,6 @@ export function ProfileHeader({
                     </div>
 
                     <div className="flex md:hidden items-center gap-2">
-                        <div className="relative" ref={mobileTypographyRef}>
-                            <Button variant="outline" onClick={() => setShowMobileTypography(!showMobileTypography)} className="px-2">
-                                <Settings2 size={18} />
-                            </Button>
-                            {showMobileTypography && (
-                                <div className="absolute top-full right-[-50px] mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 p-4 w-72 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                                    <div className="px-1 py-2 border-b border-gray-50 mb-3">
-                                        <span className="text-sm font-bold text-gray-900">Typography</span>
-                                    </div>
-                                    <TypographyPanelContent settings={typographySettings} onChange={onTypographyChange} />
-                                </div>
-                            )}
-                        </div>
                         <Button variant="outline" onClick={handleDownload}>
                             <Download size={18} />
                         </Button>
@@ -402,12 +384,12 @@ export function ProfileHeader({
     );
 }
 
-interface TypographyPanelContentProps {
+export interface TypographyPanelContentProps {
     settings: TypographySettings;
     onChange: ((settings: TypographySettings) => void) | undefined;
 }
 
-function TypographyPanelContent({ settings, onChange }: TypographyPanelContentProps) {
+export function TypographyPanelContent({ settings, onChange }: TypographyPanelContentProps) {
     return (
         <div className="space-y-4 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
             {/* Font Family */}
