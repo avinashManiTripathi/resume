@@ -419,6 +419,8 @@ function ResumeEditor() {
     }, {} as Record<string, string>);
   }, [schema]);
 
+  const debouncedSectionLabels = useDebounce(sectionLabels, 500);
+
   // Initialize section order based on schema keys
   const initialSectionOrder = useMemo(() => Object.keys(schema), []);
   const [sectionOrder, setSectionOrder] = useState<string[]>(initialSectionOrder);
@@ -821,7 +823,7 @@ function ResumeEditor() {
       typography: typographySettings,
       order: debouncedSectionOrder
     };
-  }, [debouncedResume, sectionLabels, templateId, typographySettings, debouncedSectionOrder]);
+  }, [debouncedResume, sectionLabels, templateId, typographySettings, debouncedSectionOrder, debouncedSectionLabels]);
 
   // Render PDF with loading state and auto-cancellation - Memoized
   // Now depends only on stable things + currentPage
@@ -861,7 +863,7 @@ function ResumeEditor() {
   useEffect(() => {
     // We only want to auto-render when content changes, not when loading states change
     renderPdf();
-  }, [debouncedResume, templateId, typographySettings, debouncedSectionOrder, renderPdf]); // Including renderPdf is safe now as it's stable
+  }, [debouncedResume, templateId, typographySettings, debouncedSectionOrder, debouncedSectionLabels, renderPdf]); // Including renderPdf is safe now as it's stable
 
   // Re-render PDF when switching to mobile preview
   useEffect(() => {
