@@ -14,10 +14,22 @@ export const NAVIGATION = {
                 description: "Automate and easily manage the pre and post purchase experience of your clients.",
                 items: [
                     {
-                        icon: "✏️",
-                        title: "Resume Builder",
-                        description: "Create professional resumes in minutes",
-                        href: "/resume-builder"
+                        icon: "🚀",
+                        title: "Free Resume Builder",
+                        description: "100% free, no credit card required",
+                        href: "/free-resume-builder"
+                    },
+                    {
+                        icon: "🤖",
+                        title: "AI Resume Builder",
+                        description: "Smart AI-powered resume writing",
+                        href: "/ai-resume-builder"
+                    },
+                    {
+                        icon: "🛡️",
+                        title: "ATS Resume Builder",
+                        description: "Guaranteed ATS-friendly layouts",
+                        href: "/ats-resume-builder"
                     },
                     {
                         icon: "🔍",
@@ -28,26 +40,14 @@ export const NAVIGATION = {
                     {
                         icon: "🎯",
                         title: "AI Resume Tailor",
-                        description: "Customize for each job",
+                        description: "Customize for each job description",
                         href: "/tailor"
                     },
                     {
                         icon: "📄",
-                        title: "Templates",
-                        description: "200+ professional designs",
+                        title: "Resume Templates",
+                        description: "Browse 50+ professional designs",
                         href: "/templates"
-                    },
-                    {
-                        icon: "📊",
-                        title: "Resume Score",
-                        description: "Get instant feedback",
-                        href: "/resources/resume-checker"
-                    },
-                    {
-                        icon: "✨",
-                        title: "Examples",
-                        description: "Real resume showcases",
-                        href: "/examples"
                     }
                 ],
                 featured: {

@@ -56,44 +56,36 @@ const breadcrumbs = [
 
 const faqs = [
     {
-        question: "What is an ATS resume checker?",
-        answer: "An ATS resume checker is a specialized tool that scans your resume using the same algorithms as corporate hiring software (like Taleo, Greenhouse, or Workday). It evaluates readability, keyword matching, and formatting compatibility to predict your chances of passing the initial digital screening."
+        question: "How accurate is the Hirecta ATS Resume Checker?",
+        answer: "Our scanner utilizes the same parsing engines found in enterprise-grade software like Workday and Oracle Taleo. By simulating a 'raw text extraction' layer, we can predict with over 95% accuracy how a real ATS will categorize your skills, experience, and contact information. We update our algorithms monthly to stay aligned with the latest HR tech releases."
     },
     {
-        question: "Is PDF or Word better for ATS?",
-        answer: "We recommend Microsoft Word (.docx) for the highest safety, as some older ATS systems struggle with parsing PDFs. However, most modern systems handle text-based PDFs well. Always avoid 'Image PDFs' (scanned documents) as they are unreadable by most parsers."
+        question: "Why should I use an ATS checker before applying?",
+        answer: "In the modern job market, 75% of resumes are discarded by automated filters before they ever reach a human. An ATS checker identifies the 'technical deal-breakers'—like text in headers, non-standard fonts, or missing critical keywords—that cause these instant rejections. It's your only way to guarantee your application is actually visible to recruiters."
     },
     {
-        question: "How does the ATS checker work?",
-        answer: "Our ATS checker uses advanced AI to simulate real Applicant Tracking Systems. It parses your uploaded document (PDF or DOCX), identifies entities like skills and dates, checks against standard job description keywords, and flags formatting issues that could cause rejection."
+        question: "Does the checker store or sell my resume data?",
+        answer: "No. Your privacy is paramount. Hirecta uses bank-level encryption during the upload process, and we do not share your personal information with third-party advertisers or recruiters. You have full control over your data and can delete your uploaded files at any time."
     },
     {
-        question: "Is the ATS checker really free?",
-        answer: "Yes! Our ATS resume checker is completely free to use. There are no hidden costs, no credit cards required, and no watermarks on your results. You can scan and optimize your resume as many times as needed."
+        question: "What is the difference between a 'Keyword Match' and 'Semantic Relevance'?",
+        answer: "Older ATS systems looked for exact word matches (e.g., 'Project Management'). Modern systems use AI to understand semantic relevance. For example, if you mention 'Docker' and 'Kubernetes', the system infers 'Cloud Infrastructure' skills. Our checker analyzes both to ensure you satisfy both old and new algorithms."
     },
     {
-        question: "Can I use ChatGPT to write my resume for ATS?",
-        answer: "Yes, but be careful. While AI can help with phrasing, you need to ensure the specific keywords from the job description are included naturally. Our AI Resume Tailor tool helps you do this automatically while maintaining a human tone."
+        question: "Can an ATS read my resume if it's a PDF?",
+        answer: "Yes, as long as it is a 'text-based' PDF. If you scan a physical piece of paper and save it as a PDF, the ATS sees an image, not text. Hirecta's builder always exports 'parsable-native' PDFs that are perfectly readable by any bot."
     },
     {
-        question: "What is a good ATS score?",
-        answer: "Generally, a score of 80% or higher is considered excellent and ready for application. A score between 60-79% is competitive but needs optimization (usually more keywords). Anything below 60% indicates a high risk of rejection due to formatting errors or missing core skills."
+        question: "How often should I check my resume score?",
+        answer: "You should run a check for every single job application. Because every job description uses different keyword weights, a resume that scores 90% for one role might score only 65% for another. Customization is the key to success."
     },
     {
-        question: "Why do I need an ATS-friendly resume?",
-        answer: "95% of Fortune 500 companies and 75% of large employers use ATS to filter applicants. Nearly 75% of qualified resumes are rejected by these systems before a human ever sees them. Optimizing for ATS is the only way to ensure your application gets read."
+        question: "Is Hirecta's ATS scanner really free?",
+        answer: "Yes, 100%. We provide a full compatibility report, keyword gap analysis, and formatting checklist without any hidden fees or credit card requirements. We believe the tools to find work should be free for everyone."
     },
     {
-        question: "What file formats are supported?",
-        answer: "We support PDF (.pdf) and Microsoft Word (.docx) formats. These are the industry standards. Avoid using .txt, .pages, or graphic formats like .jpg or .png for your professional resume."
-    },
-    {
-        question: "How do I know which keywords to add?",
-        answer: "Read the job description carefully. Look for 'Hard Skills' (e.g., Python, SEO, Project Management) and specific tools that are mentioned multiple times. Our tool will also suggest missing keywords based on common industry standards for your role."
-    },
-    {
-        question: "What is the best font for ATS?",
-        answer: "Stick to standard, clean sans-serif fonts like Arial, Calibri, Helvetica, or Roboto. Serif fonts like Times New Roman are safe but can look dated. Avoid custom, decorative, or script fonts as parsers may not recognize the characters."
+        question: "What should I do if my ATS score is below 60%?",
+        answer: "A score below 60% indicates a high risk of rejection. You likely have either severe formatting issues (like using tables/columns) or a significant 'skills gap' compared to the job description. Use our <Link href='/templates' className='text-indigo-600 hover:underline'>ATS Templates</Link> to fix formatting and our AI writer to bridge the keyword gap."
     }
 ];
 
@@ -150,7 +142,7 @@ export default function ATSCheckerMarketingPage() {
                         </h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
                             <strong>75% of resumes are rejected by robots</strong> before a human ever reads them.
-                            Get your free compatibility score, keyword gap analysis, and fix your resume in seconds.
+                            Get your free compatibility score, keyword gap analysis, and fix your resume in seconds with our <Link href="/tailor" className="text-indigo-600 hover:underline font-semibold">AI Resume Tailor</Link>.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
@@ -194,7 +186,7 @@ export default function ATSCheckerMarketingPage() {
                         <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-100 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                         <h2 className="text-3xl font-bold text-gray-900 mb-4 relative z-10">What is an ATS Resume Checker?</h2>
                         <p className="text-lg text-gray-700 leading-relaxed relative z-10">
-                            An <strong>ATS Resume Checker</strong> (Applicant Tracking System Checker) is a specialized software tool that scans your resume using the same algorithms as corporate hiring platforms. It parses your document to evaluate <strong>readability</strong>, <strong>keyword matching</strong>, and <strong>formatting compatibility</strong>, generating a predicted "match score" that estimates your probability of passing the automated screening used by modern employers.
+                            An <strong>ATS Resume Checker</strong> (Applicant Tracking System Checker) is a specialized software tool that scans your resume using the same algorithms as corporate hiring platforms. It parses your document to evaluate <strong>readability</strong>, <strong>keyword matching</strong>, and <strong>formatting compatibility</strong>. To ensure your formatting is flawless, use our <Link href="/templates" className="text-indigo-600 hover:underline font-semibold">ATS-Friendly Templates</Link>.
                         </p>
                     </div>
 
@@ -373,10 +365,104 @@ export default function ATSCheckerMarketingPage() {
                 </div>
             </section>
 
-            {/* Industry Examples */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+            {/* Deep Dive Content Section */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-100">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-3xl font-extrabold text-gray-900 mb-12 text-center">ATS Optimization by Industry</h2>
+                    <div className="prose prose-lg max-w-none text-gray-700">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-8">The Science of the ATS Resume Check: Why Your Score Matters</h2>
+                        <p>
+                            In the competitive landscape of 2026, finding a job is no longer just about who you know or even what you know—it's about how well a machine can <em>read</em> what you know. This is where the <strong>Hirecta ATS Resume Checker</strong> becomes your most powerful ally. Let's dive deep into the technical mechanics of how we evaluate your resume and why achieving a high score is the single most important step in your job search.
+                        </p>
+
+                        <section className="my-12 p-8 bg-indigo-50 rounded-3xl border border-indigo-100">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                                <Shield className="text-indigo-600" /> Defining the 'Black Hole' of Recruitment
+                            </h3>
+                            <p className="text-lg leading-relaxed">
+                                When you apply for a job at a major company, your resume enters an Applicant Tracking System (ATS). Most of these systems are programmed to reduce the recruiter's workload by automatically ranking candidates. If your resume has a formatting error—like a text box the bot can't read—your score drops to near zero. Essentially, you've entered a 'Black Hole' where no human will ever find your application. Our checker is designed to shine a light on these hidden errors before you hit submit.
+                            </p>
+                        </section>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Technical Standards: How We Analyze Your OCR Layer</h3>
+                        <p>
+                            Our scanner doesn't just look at words; it analyzes the <strong>Optical Character Recognition (OCR)</strong> layer of your PDF. This is the 'invisible' text that the ATS bot sees. We check for:
+                        </p>
+                        <div className="grid md:grid-cols-2 gap-8 my-8 not-prose">
+                            <div className="bg-white p-6 rounded-2xl border border-gray-200">
+                                <h4 className="font-bold text-gray-900 mb-2">Character Encoding</h4>
+                                <p className="text-sm text-gray-600">We ensure your PDF uses standard UTF-8 encoding. Non-standard encoding can turn your bullet points into weird symbols in the recruiter's view.</p>
+                            </div>
+                            <div className="bg-white p-6 rounded-2xl border border-gray-200">
+                                <h4 className="font-bold text-gray-900 mb-2">Linear Data Parsing</h4>
+                                <p className="text-sm text-gray-600">Bots read top-to-bottom. If you use custom columns, the bot might read Line 1 of Column A then Line 1 of Column B, creating nonsense sentences. We verify your document's reading order.</p>
+                            </div>
+                        </div>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Keyword Density vs. Keyword Relevance</h3>
+                        <p>
+                            A common mistake is 'Keyword Stuffing'—listing the same skill twenty times. Modern AI-driven ATS like Greenhouse or Lever see right through this. Our checker evaluates <strong>Contextual Relevance</strong>.
+                        </p>
+                        <p>
+                            For example, if the job requires 'Python', our AI looks for supporting terms like 'Django', 'Flask', or 'Data Processing' to verify that your mention of Python is legitimate. We call this 'Cluster Keyword Analysis', and it's the secret to moving from a 70% score to a 95% score.
+                        </p>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Hirecta 10-Point Technical Audit</h3>
+                        <p>When you run our free check, we perform a 10-point audit of your document's health:</p>
+                        <div className="bg-slate-900 text-white p-10 rounded-3xl my-10 shadow-2xl overflow-hidden relative">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                            <ul className="grid md:grid-cols-2 gap-x-12 gap-y-6 list-none pl-0 relative z-10">
+                                {[
+                                    "Is the contact info in the body (not header)?",
+                                    "Are dates in a standard MM/YYYY format?",
+                                    "Are headings using standard hierarchy (H1, H2)?",
+                                    "Is the file under 2MB for faster parsing?",
+                                    "Are images tagged with meaningful Alt-text?",
+                                    "Is the font size between 10pt and 12pt?",
+                                    "Are margins at least 0.5 inches?",
+                                    "Is the work history in reverse-chronological order?",
+                                    "Are the bullet points starting with action verbs?",
+                                    "Is the file name professionally formatted?"
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3">
+                                        <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
+                                        <span className="text-sm font-medium">{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Industry-Specific ATS Standards</h3>
+                        <p>Not all ATS are created equal. Depending on your industry, the 'Bot' might be looking for very different things:</p>
+                        <ul className="space-y-4">
+                            <li><strong>Tech & Engineering:</strong> Heavily focuses on Hard Skills and Toolsets. The system filters by 'Essential vs. Desirable' tech stacks.</li>
+                            <li><strong>Healthcare & Public Sector:</strong> Focuses on Certifications and Education. Missing a specific license tag can trigger an auto-rejection.</li>
+                            <li><strong>Creative & Design:</strong> These systems are often newer and more lenient on layout, but they scan for 'Software Proficiency' (Adobe Suite, Figma).</li>
+                        </ul>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">How to React to Your Score results</h3>
+                        <p>Got a low score? Don't panic. Our checker provides a step-by-step roadmap to fix it. Usually, the solution takes less than 10 minutes:</p>
+                        <div className="flex flex-col md:flex-row gap-6 my-12">
+                            <div className="flex-1 p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                                <h4 className="font-bold text-gray-900 mb-2">1. Use an Optimized Template</h4>
+                                <p className="text-sm">90% of formatting errors are fixed by switching to an <Link href="/templates" className="text-indigo-600 hover:underline">ATS-Friendly Template</Link>.</p>
+                            </div>
+                            <div className="flex-1 p-6 bg-slate-50 rounded-2xl border border-slate-200">
+                                <h4 className="font-bold text-gray-900 mb-2">2. Use our AI Tailor</h4>
+                                <p className="text-sm">Paste the Job Description into our <Link href="/tailor" className="text-indigo-600 hover:underline">Tailor tool</Link> to automatically bridge the keyword gap.</p>
+                            </div>
+                        </div>
+
+                        <p className="text-xl font-medium text-gray-900 bg-indigo-50 p-6 rounded-2xl border border-indigo-100 text-center">
+                            Your career path shouldn't be blocked by a technical glitch. Check your resume score now and ensure you're getting the visibility you deserve.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Industry Examples */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-100">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-12 text-center">Industry Comparison: Resume Standards</h2>
                     <div className="space-y-6">
                         <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200">
                             <h3 className="text-xl font-bold text-slate-900 flex items-center gap-3 mb-4">

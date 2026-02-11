@@ -33,6 +33,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Pillar pages (critical SEO content - highest priority)
     const pillarPages = [
         'free-resume-builder',
+        'ai-resume-builder',
+        'ats-resume-builder',
         'best-resume-builder',
         'professional-resume-service',
     ].map((slug) => ({

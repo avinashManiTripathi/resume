@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { Sparkles, CheckCircle, Download, Zap, Brain, Target, Users, Shield, FileText, ArrowRight, Star, Award, Mic, Clock } from 'lucide-react';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
+import { ArticleSchema } from '@/components/ArticleSchema';
+import { GlobalSchema } from '@/components/SchemaMarkup';
 import Link from 'next/link';
 import { ENV } from "@/app/env";
 
@@ -53,16 +55,16 @@ const productSchema = {
 
 export default function FreeResumeBuilderPage() {
     const faqs = [
-        { question: "Is this really free?", answer: "Yes, 100% free. No credit card required, no hidden charges, no watermarks. Create unlimited resumes and download as many times as you need." },
-        { question: "What file formats can I download?", answer: "You can download your resume as PDF (recommended for job applications) or DOCX (for further editing). Both formats are completely free." },
-        { question: "How many resumes can I create?", answer: "Unlimited! Create as many resume versions as you need for different jobs. Save them all and edit anytime." },
-        { question: "Do you add watermarks to free resumes?", answer: "No, absolutely not. All downloads are completely watermark-free, even on the free plan." },
-        { question: "Is my data safe?", answer: "Yes, we use bank-level encryption to protect your data. We never sell your information to third parties. Read our privacy policy for details." },
-        { question: "How long does it take to create a resume?", answer: "Most users complete their professional resume in 10-15 minutes using our AI-powered suggestions and pre-written content." },
-        { question: "Are the resumes ATS-friendly?", answer: "Yes! All our templates are designed to pass Applicant Tracking Systems (ATS) used by 99% of companies. Clean formatting, proper structure, standard fonts." },
-        { question: "Can I edit my resume later?", answer: "Absolutely. Save your resume and come back anytime to make updates. Your resumes are stored securely in your account." },
-        { question: "Do I need to sign up?", answer: "Yes, a free account is required to save your work and access your resumes later. Sign up takes less than 30 seconds." },
-        { question: "What makes this different from other free resume builders?", answer: "We offer unique features like voice input (speak your experience), job description pasting for auto-tailoring, and true unlimited free access with no tricks or upsells." }
+        { question: "Is Hirecta's resume builder really 100% free?", answer: "Yes, absolutely. We believe that job seekers should have professional career tools regardless of their budget. There are no credit card requirements, no hidden 'premium' download fees, and zero watermarks on your PDFs. Our model is built on helping the most candidates possible." },
+        { question: "Can I download my resume as a PDF for free?", answer: "Yes. Unlike many 'free' builders that charge you at the final step, Hirecta provides unlimited, high-quality PDF downloads for free. PDFs are the industry standard because they preserve formatting across all devices and Applicant Tracking Systems." },
+        { question: "How many resumes can I create on the free plan?", answer: "You can create unlimited resumes. We encourage you to create a different version for every job application to maximize your chances of getting an interview." },
+        { question: "Do you add watermarks to my resume?", answer: "Never. Your resume is your professional brand. We will never clutter it with our logo or any watermarks." },
+        { question: "Is my data protected and private?", answer: "We use bank-level 256-bit encryption to protect your data. We do not sell your personal information to third-party recruiters or advertisers. You have the right to delete your data at any time." },
+        { question: "How does the voice-input resume feature work?", answer: "Simply click the microphone icon in our editor and describe your work experience as if you were in an interview. Our AI will transcribe your voice and automatically transform it into professional, metrics-driven bullet points." },
+        { question: "Are these resumes compatible with Workday and Greenhouse?", answer: "Yes. All our templates are rigorously tested against major ATS platforms. We use clean, parsable HTML structures to ensure high deliverability." },
+        { question: "Can I use Hirecta on my mobile phone?", answer: "Yes, our builder is fully responsive. You can edit your resume on your phone and download it directly to apply for jobs on the go." },
+        { question: "Do you offer resume templates for specific industries?", answer: "Yes, we have over 20+ templates tailored for Tech, Healthcare, Creative, Finance, and Entry-Level roles." },
+        { question: "Why is Hirecta free while others charge $20/month?", answer: "Our goal is to build the world's best career platform. By offering the builder for free, we help more people land jobs. We sustain our platform through optional career services and enterprise partnerships." }
     ];
 
     const breadcrumbs = [
@@ -113,8 +115,16 @@ export default function FreeResumeBuilderPage() {
 
     return (
         <div className="min-h-screen bg-white">
+            <GlobalSchema />
             <BreadcrumbSchema items={breadcrumbs} />
             <FAQSchema faqs={faqs} />
+            <ArticleSchema
+                title="Free Resume Builder: Create Your Professional Resume Online"
+                description="Learn how to use Hirecta's free resume builder to create a job-winning, ATS-friendly resume in minutes without any hidden costs."
+                url={`${ENV.BASE_URL}/free-resume-builder`}
+                datePublished="2025-02-11"
+                author="Hirecta Career Experts"
+            />
 
             {/* Product Schema */}
             <script
@@ -141,7 +151,7 @@ export default function FreeResumeBuilderPage() {
                             Create Professional, ATS-Friendly Resumes in Minutes
                         </p>
                         <p className="text-lg text-gray-500 max-w-3xl mx-auto mb-8">
-                            Build beautiful resumes with 20+ templates. 100% free forever. No credit card required. No watermarks. Unlimited downloads. AI-powered suggestions included.
+                            Build beautiful resumes with 20+ <Link href="/templates" className="text-blue-600 hover:underline font-semibold">ATS-friendly templates</Link>. 100% free forever. No credit card required. No watermarks. Unlimited downloads. AI-powered suggestions included.
                         </p>
 
                         {/* Social Proof */}
@@ -207,9 +217,9 @@ export default function FreeResumeBuilderPage() {
                             { icon: <Mic className="w-6 h-6" />, title: "Voice Input Feature", desc: "Speak your experience, we'll format it" },
                             { icon: <Download className="w-6 h-6" />, title: "Unlimited PDF Downloads", desc: "Download as many times as you need" },
                             { icon: <FileText className="w-6 h-6" />, title: "No Watermarks Ever", desc: "Your resume, completely clean and professional" },
-                            { icon: <Shield className="w-6 h-6" />, title: "ATS-Friendly Formatting", desc: "Passes all major applicant tracking systems" },
+                            { icon: <Shield className="w-6 h-6" />, title: "ATS-Friendly Formatting", desc: "Passes all major systems. Check your score with our Free ATS Checker" },
                             { icon: <Sparkles className="w-6 h-6" />, title: "Real-Time Preview", desc: "See changes instantly as you edit" },
-                            { icon: <Target className="w-6 h-6" />, title: "Job Matching Keywords", desc: "Paste job descriptions for optimization" },
+                            { icon: <Target className="w-6 h-6" />, title: "Job Matching Keywords", desc: "Use our Tailor tool to optimize for any JD" },
                             { icon: <Users className="w-6 h-6" />, title: "Multiple Resume Versions", desc: "Create unlimited versions for different jobs" },
                         ].map((item, index) => (
                             <div key={index} className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-100 hover:border-blue-300 transition-all">
@@ -368,19 +378,116 @@ export default function FreeResumeBuilderPage() {
             </section>
 
             {/* Final CTA */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white border-t border-gray-100">
+                <div className="max-w-4xl mx-auto">
+                    <div className="prose prose-lg max-w-none text-gray-700">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-8">The Ultimate Guide to Building a Winning Resume for Free</h2>
+                        <p>
+                            In today's economy, the cost of job hunting is rising. From professional headshots to premium LinkedIn subscriptions, the expenses add up. At Hirecta, we believe your resume builder shouldn't be another bill. Here is why choosing a <strong>Free Resume Builder</strong> is a strategic move for your career.
+                        </p>
+
+                        <section className="my-12 p-8 bg-blue-50 rounded-3xl border border-blue-100">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                                <Shield className="text-blue-600" /> The Hirecta Philosophy: Why We Are Free
+                            </h3>
+                            <p className="text-lg leading-relaxed">
+                                Most "free" resume builders on the internet use a "bait-and-switch" model. They let you spend 30 minutes building your resume, only to demand a credit card at the final download step. We find this practice unethical. Hirecta was founded on the principle that the tools to land a job should be accessible to everyone. Our <strong>Unlimited Free Downloads</strong> and <strong>No Watermark</strong> policy is our commitment to your success.
+                            </p>
+                        </section>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">How to Build a High-Impact Resume in 2026</h3>
+                        <p>
+                            Having a free tool is one thing; knowing how to use it is another. To stand out among thousands of applicants, your resume must be a masterclass in professional storytelling.
+                        </p>
+                        <ul className="space-y-6 list-none pl-0">
+                            <li className="flex gap-4">
+                                <div className="shrink-0 w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">1</div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900">Focus on Outcomes, Not Duties</h4>
+                                    <p className="text-sm">Don't just list what you did. List what you *achieved*. Use our AI suggestions to turn "Managed social media" into "Increased organic social media engagement by 45% in 6 months using data-driven content strategies."</p>
+                                </div>
+                            </li>
+                            <li className="flex gap-4">
+                                <div className="shrink-0 w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">2</div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900">Leverage the 'Voice-to-Resume' Feature</h4>
+                                    <p className="text-sm">Many people are better at talking about their work than writing about it. Use our unique <span className="font-semibold">Voice Input</span> tool to describe your last project. Our AI will clean up the filler words and output professional bullet points that sound authoritative.</p>
+                                </div>
+                            </li>
+                            <li className="flex gap-4">
+                                <div className="shrink-0 w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">3</div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900">Tailor for the ATS</h4>
+                                    <p className="text-sm">Every job description is a list of answers. Use our <Link href="/tailor" className="text-blue-600 hover:underline font-semibold">AI Tailoring Tool</Link> to ensure your resume mirrors the language of the JD. This is the #1 way to move from the 'Rejected' pile to the 'Interview' list.</p>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Free Resume Strategy for Students and Freshers</h3>
+                        <p>
+                            If you're just starting your career, you might feel like you have nothing to write. Our AI is specifically trained to help entry-level candidates bridge the "Experience Gap."
+                        </p>
+                        <div className="grid md:grid-cols-2 gap-6 my-8 not-prose">
+                            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                                <h4 className="font-bold text-gray-900 mb-2">Highlight Projects</h4>
+                                <p className="text-sm text-gray-600">University projects, volunteer work, and personal coding repos are valuable experiences. Our builder treats these sections with the same professional weight as full-time jobs.</p>
+                            </div>
+                            <div className="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                                <h4 className="font-bold text-gray-900 mb-2">Skill-Based Layouts</h4>
+                                <p className="text-sm text-gray-600">When you lack years of experience, focus on your skills. Choose a template that emphasizes your certifications and technical proficiencies.</p>
+                            </div>
+                        </div>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Hidden Cost of "Paid" Resume Builders</h3>
+                        <ol className="space-y-4">
+                            <li><strong>Subscription Traps:</strong> Many builders sign you up for a $20/month fee after an initial $1 "trial." Hirecta is permanently free.</li>
+                            <li><strong>Data Reselling:</strong> Some free tools sell your contact information to data brokers. We keep your data encrypted and private.</li>
+                            <li><strong>Formatting Locked Behind Paywalls:</strong> Don't get stuck with a resume you can't edit without paying more. With Hirecta, you own your data.</li>
+                        </ol>
+
+                        <h3 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Step-by-Step: 10 Minutes to a New Career</h3>
+                        <p>Our goal is to make the process as frictionless as possible. Here is how to use Hirecta to its full potential:</p>
+                        <div className="bg-gray-50 p-8 rounded-3xl border border-gray-100 my-8">
+                            <div className="space-y-6">
+                                <div className="flex gap-4">
+                                    <CheckCircle className="text-blue-600 shrink-0" />
+                                    <p><strong>Step 1:</strong> Select an <Link href="/templates" className="text-blue-600 hover:underline font-semibold">ATS-optimized template</Link>.</p>
+                                </div>
+                                <div className="flex gap-4">
+                                    <CheckCircle className="text-blue-600 shrink-0" />
+                                    <p><strong>Step 2:</strong> Use the "AI Enhance" button on your work experience to boost the professional tone.</p>
+                                </div>
+                                <div className="flex gap-4">
+                                    <CheckCircle className="text-blue-600 shrink-0" />
+                                    <p><strong>Step 3:</strong> Perform a final scan with our <Link href="/ats-checker" className="text-blue-600 hover:underline font-semibold">Free ATS Score tool</Link>.</p>
+                                </div>
+                                <div className="flex gap-4">
+                                    <CheckCircle className="text-blue-600 shrink-0" />
+                                    <p><strong>Step 4:</strong> Download your watermark-free PDF and start applying!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p className="text-xl font-medium text-gray-900 mt-12">
+                            A great career shouldn't be gated by a subscription fee. Start building your future today with Hirecta.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
-                        Ready to Create Your Free Resume?
+                        Stop Paying for Resume Builders
                     </h2>
                     <p className="text-xl mb-8 opacity-90">
-                        Join 50,000+ job seekers who've created professional resumes with our free builder
+                        Join 50,000+ job seekers who've switched to Hirecta for a truly free, professional experience.
                     </p>
                     <Link
                         href={`${ENV.EDITOR_URL}/editor`}
                         className="inline-flex items-center gap-2 px-10 py-5 bg-white text-blue-600 rounded-xl font-bold text-xl hover:bg-gray-100 transition-all shadow-2xl"
                     >
-                        Start Building Now - It's Free <ArrowRight className="w-6 h-6" />
+                        Create My Free Resume Now <ArrowRight className="w-6 h-6" />
                     </Link>
                     <p className="mt-6 text-sm opacity-80">
                         No credit card required • No watermarks • 100% free forever

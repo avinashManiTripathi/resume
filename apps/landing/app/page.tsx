@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award, Bell, X, HelpCircle } from "lucide-react";
+import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award, Bell, X, HelpCircle, Rocket, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { TemplatesSection } from "@/components/TemplatesSection";
@@ -699,68 +699,125 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
-              Everything You Need to Know About Resume Building
+              Professional Resume Tools & Resources
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Comprehensive guides to help you create the perfect resume
+              Master your job search with our AI-powered suite of resume tools
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Free Resume Builder */}
             <Link
               href="/free-resume-builder"
-              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-green-400 hover:shadow-xl transition-all group"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all group"
             >
-              <div className="w-12 h-12 bg-green-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Sparkles className="w-6 h-6" />
+              <div className="w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Rocket className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Free Resume Builder
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Create professional resumes 100% free. No credit card, no watermarks. 20+ templates and unlimited downloads.
+                Create professional resumes 100% free. No credit card, no watermarks, unlimited downloads.
               </p>
-              <div className="flex items-center gap-2 text-green-800 font-semibold text-sm">
+              <div className="flex items-center gap-2 text-blue-600 font-semibold text-sm">
                 Start Building Free <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
 
-            {/* Best Resume Builder */}
+            {/* AI Resume Builder */}
             <Link
-              href="/best-resume-builder"
-              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all group"
+              href="/ai-resume-builder"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-purple-500 hover:shadow-xl transition-all group"
             >
-              <div className="w-12 h-12 bg-blue-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Award className="w-6 h-6" />
+              <div className="w-12 h-12 bg-purple-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Brain className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                Best Resume Builder
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                AI Resume Builder
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Discover what makes a great resume builder. Learn about AI features, ATS optimization, and tools that work.
+                Let AI write your resume in minutes. Smart content suggestions and keyword optimization built-in.
               </p>
-              <div className="flex items-center gap-2 text-blue-600 font-semibold text-sm">
-                Learn More <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-2 text-purple-600 font-semibold text-sm">
+                Try AI Builder <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
 
-            {/* Professional Resume Service */}
+            {/* ATS Resume Builder */}
             <Link
-              href="/professional-resume-service"
-              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-purple-400 hover:shadow-xl transition-all group"
+              href="/ats-resume-builder"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-emerald-500 hover:shadow-xl transition-all group"
             >
-              <div className="w-12 h-12 bg-purple-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Users className="w-6 h-6" />
+              <div className="w-12 h-12 bg-emerald-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Shield className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-                Service vs Builder
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-emerald-600 transition-colors">
+                ATS Resume Builder
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Compare professional resume services with builders. Find the right option for your situation and budget.
+                Tested templates guaranteed to pass Applicant Tracking Systems. Beat the filters and get hired.
               </p>
-              <div className="flex items-center gap-2 text-purple-600 font-semibold text-sm">
-                Compare Options <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-2 text-emerald-600 font-semibold text-sm">
+                Check ATS Templates <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* ATS Checker */}
+            <Link
+              href="/ats-checker"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-orange-500 hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-orange-500 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Search className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
+                Free ATS Checker
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Scan your existing resume for ATS compatibility. Get scores, missing keywords, and fixes.
+              </p>
+              <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm">
+                Scan My Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Resume Tailor */}
+            <Link
+              href="/tailor"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-pink-500 hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-pink-500 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Target className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-pink-600 transition-colors">
+                AI Resume Tailor
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Target your resume to specific job descriptions instantly. Triple your interview callbacks.
+              </p>
+              <div className="flex items-center gap-2 text-pink-600 font-semibold text-sm">
+                Tailor My Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+
+            {/* Resume Templates */}
+            <Link
+              href="/templates"
+              className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-indigo-500 hover:shadow-xl transition-all group"
+            >
+              <div className="w-12 h-12 bg-indigo-600 text-white rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <FileText className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-indigo-600 transition-colors">
+                Resume Templates
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Choose from 50+ professional, modern, and creative templates designed by hiring experts.
+              </p>
+              <div className="flex items-center gap-2 text-indigo-600 font-semibold text-sm">
+                Browse Templates <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           </div>

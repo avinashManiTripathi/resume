@@ -183,62 +183,72 @@ export default function TemplatesPageClient() {
                 )}
             </div>
 
-            {/* SEO Content & Features Section */}
-            <div className="bg-slate-50 border-t border-slate-200 py-20">
-                <div className="max-w-4xl mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Why use our templates?</h2>
-                        <p className="text-slate-600">Tested by recruiters and optimized for ATS algorithms.</p>
-                    </div>
+            {/* Deep Strategy Content Section */}
+            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-4xl mx-auto">
+                    <div className="prose prose-lg max-w-none text-slate-700">
+                        <h2 className="text-4xl font-extrabold text-slate-900 mb-8">The Psychology of Resume Design: Why Your Template Choice Matters</h2>
+                        <p>
+                            In the 6 seconds it takes for a recruiter to make a first impression, your resume template does 90% of the heavy lifting. Design isn't just about 'looking pretty'—it's about <strong>Information Architecture</strong>. A well-designed template guides the recruiter's eye toward your highest-impact achievements while ensuring that automated systems can index every data point with 100% accuracy.
+                        </p>
 
-                    <div className="grid md:grid-cols-2 gap-12">
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <Check className="w-6 h-6 text-blue-600" />
+                        <div className="my-12 p-8 bg-blue-50 rounded-3xl border border-blue-100 italic">
+                            "Great design is invisible. When a resume is formatted correctly, the recruiter focuses on your skills. When it's formatted poorly, they focus on the layout—which is the fastest way to get rejected."
+                        </div>
+
+                        <h3 className="text-3xl font-bold text-slate-900 mt-12 mb-6">The Technical DNA of an ATS-Friendly Template</h3>
+                        <p>
+                            At Hirecta, our <strong>Professional Templates</strong> aren't just visual skins; they are engineered documents. We follow a strict 'Bot-First' methodology that ensures compatibility with enterprise systems like Taleo, Workday, and Greenhouse. Here is what's happening under the hood:
+                        </p>
+                        <ul className="space-y-6 list-none pl-0">
+                            <li className="flex gap-4">
+                                <div className="shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">1</div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 text-xl">Unicode Character Mapping</h4>
+                                    <p>We avoid special symbols or custom bullet points that can 'break' the text parser. Every character in our library is mapped to standard Unicode, ensuring what you see is what the machine reads.</p>
+                                </div>
+                            </li>
+                            <li className="flex gap-4">
+                                <div className="shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">2</div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 text-xl">Flattened Layout Architecture</h4>
+                                    <p>While many builders use nested tables or text boxes, Hirecta uses a flat HTML-to-PDF engine. This creates a linear document structure that bots can follow from top-to-bottom without skipping sections.</p>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <h3 className="text-3xl font-bold text-slate-900 mt-16 mb-8">Industry-Specific Layout Standards</h3>
+                        <p>Choosing a template is a strategic decision based on your target industry's cultural expectations:</p>
+
+                        <div className="space-y-8 my-10 not-prose">
+                            <div className="p-8 bg-slate-50 rounded-2xl border border-slate-200">
+                                <h4 className="text-xl font-bold text-slate-900 mb-2">Modern Tech & Startups</h4>
+                                <p className="text-slate-600">These industries value <strong>conciseness and clean typography</strong>. Our 'Modern' templates emphasize tech stacks and link-out profiles (Github/Portfolio) while using sans-serif fonts like Roboto or Inter for high readability.</p>
                             </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-900 mb-2">ATS-Friendly</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    Our templates are built with clean code that Applicant Tracking Systems can read correctly.
-                                </p>
+                            <div className="p-8 bg-slate-50 rounded-2xl border border-slate-200">
+                                <h4 className="text-xl font-bold text-slate-900 mb-2">Finance, Law & Consulting</h4>
+                                <p className="text-slate-600">Traditional industries prefer <strong>maximalist density</strong>. Our 'Professional' line uses serif fonts and a single-column layout to fit a decade of experience onto a single, high-impact page.</p>
+                            </div>
+                            <div className="p-8 bg-slate-50 rounded-2xl border border-slate-200">
+                                <h4 className="text-xl font-bold text-slate-900 mb-2">Creative & Marketing</h4>
+                                <p className="text-slate-600">Here, <strong>visual branding</strong> matters. Our 'Creative' templates use subtle color accents and unique header designs to showcase personality while remaining 100% parsable by HR software.</p>
                             </div>
                         </div>
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <Sparkles className="w-6 h-6 text-purple-600" />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-900 mb-2">Easy to Customize</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    Change colors, fonts, and sections in one click. No design skills needed.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <Check className="w-6 h-6 text-green-600" />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-900 mb-2">Expert Approved</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    Designed by HR professionals to highlight your skills and experience effectively.
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex gap-4">
-                            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <ArrowRight className="w-6 h-6 text-orange-600" />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-lg text-slate-900 mb-2">Free to Download</h3>
-                                <p className="text-slate-600 leading-relaxed">
-                                    Export your resume in PDF or TXT format instantly. No hidden paywalls.
-                                </p>
-                            </div>
-                        </div>
+
+                        <h3 className="text-3xl font-bold text-slate-900 mt-16 mb-6">How to Choose the Right Template for Your Career Stage</h3>
+                        <p>
+                            Your template needs to evolve as your career progresses. A student needs a template that highlights <strong>Education</strong>, while a Director needs one that prioritizes <strong>Strategic ROI</strong>.
+                        </p>
+                        <p>
+                            Hirecta's library is categorized by these life stages. If you are a student, look for layouts with large education blocks. If you are an executive, choose our 'Enterprise' series which maximizes space for bullet points and key metrics. Pair your template with our <Link href="/tailor" className="text-blue-600 hover:underline">AI Tailor Tool</Link> for the maximum conversion rate.
+                        </p>
+
+                        <p className="mt-12 text-lg font-medium text-slate-900 bg-slate-100 p-8 rounded-2xl border border-slate-200">
+                            Don't leave your first impression to chance. Browse our library of <Link href="/best-resume-builder" className="text-blue-600 hover:underline">job-winning designs</Link> and start building a resume that actually works.
+                        </p>
                     </div>
                 </div>
-            </div>
+            </section>
 
             {/* Bottom CTA */}
             <div className="bg-slate-900 py-24 text-center px-6">

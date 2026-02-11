@@ -30,12 +30,13 @@ export const FOOTER = {
 
     links: {
         product: [
-            { label: "Resume Builder", href: "/resume-builder" },
+            { label: "Free Resume Builder", href: "/free-resume-builder" },
+            { label: "AI Resume Builder", href: "/ai-resume-builder" },
+            { label: "ATS Resume Builder", href: "/ats-resume-builder" },
             { label: "Resume Templates", href: "/templates" },
             { label: "AI Resume Tailoring", href: "/tailor" },
             { label: "ATS Checker", href: "/ats-checker" },
             { label: "Cover Letter Builder", href: "/cover-letter" },
-            { label: "Resume Examples", href: "/resume-examples" },
         ],
         resources: [
             { label: "Resume Writing Guide", href: "/resources/resume-guide" },
