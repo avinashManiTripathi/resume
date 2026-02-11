@@ -414,13 +414,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="10"
-                    max="16"
+                    min="0"
+                    max="100"
                     step="0.5"
                     value={settings.fontSize}
                     onChange={(e) => onChange?.({ ...settings, fontSize: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.fontSize - 10) / (16 - 10)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.fontSize}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -432,13 +432,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="1.0"
-                    max="1.5"
-                    step="0.01"
+                    min="0"
+                    max="100"
+                    step="0.1"
                     value={settings.lineHeight}
                     onChange={(e) => onChange?.({ ...settings, lineHeight: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.lineHeight - 1.0) / (1.5 - 1.0)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.lineHeight}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -450,13 +450,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="1"
-                    max="24"
+                    min="0"
+                    max="100"
                     step="1"
                     value={settings.sectionGap}
                     onChange={(e) => onChange?.({ ...settings, sectionGap: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.sectionGap - 1) / (24 - 1)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.sectionGap}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -469,12 +469,12 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 <input
                     type="range"
                     min="0"
-                    max="8"
+                    max="100"
                     step="0.5"
                     value={settings.itemGap}
                     onChange={(e) => onChange?.({ ...settings, itemGap: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.itemGap - 0) / (8 - 0)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.itemGap}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -486,13 +486,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="14"
-                    max="20"
+                    min="0"
+                    max="100"
                     step="0.5"
                     value={settings.headingSize}
                     onChange={(e) => onChange?.({ ...settings, headingSize: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.headingSize - 14) / (20 - 14)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.headingSize}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -504,13 +504,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="24"
-                    max="32"
+                    min="0"
+                    max="100"
                     step="0.5"
                     value={settings.nameSize}
                     onChange={(e) => onChange?.({ ...settings, nameSize: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.nameSize - 24) / (32 - 24)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.nameSize}%` } as React.CSSProperties}
                 />
             </div>
 
@@ -522,13 +522,13 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
                 </label>
                 <input
                     type="range"
-                    min="32"
-                    max="64"
-                    step="2"
+                    min="0"
+                    max="100"
+                    step="1"
                     value={settings.pageMargin}
                     onChange={(e) => onChange?.({ ...settings, pageMargin: Number(e.target.value) })}
                     className="custom-slider w-full"
-                    style={{ '--value-percent': `${((settings.pageMargin - 32) / (64 - 32)) * 100}%` } as React.CSSProperties}
+                    style={{ '--value-percent': `${settings.pageMargin}%` } as React.CSSProperties}
                 />
             </div>
         </div>

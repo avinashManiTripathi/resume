@@ -578,7 +578,6 @@ export default async function LandingPage() {
         </div>
       </section >
 
-
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 opacity-5">
