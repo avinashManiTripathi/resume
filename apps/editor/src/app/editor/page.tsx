@@ -796,15 +796,6 @@ function ResumeEditor() {
   }, [templateId, showMobilePreview]);
 
 
-  // Keyboard shortcuts - Empty since Undo/Redo removed
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   // Refs to hold latest data for PDF generation without triggering re-renders of the callback
   const latestDataRef = useRef<{ resume: Partial<ResumeData> | null, sectionLabels: Record<string, string>, templateId: string | null, typography: TypographySettings, order: string[] }>({
     resume: debouncedResume,
@@ -905,6 +896,40 @@ function ResumeEditor() {
   const handleDownload = useCallback(async () => {
     handleExport("pdf");
   }, [handleExport]);
+
+  // Keyboard shortcuts - placed after helper functions to avoid scoping issues
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const cmdKey = isMac ? e.metaKey : e.ctrlKey;
+
+      // Cmd/Ctrl + S: Force Save / Show Notification
+      if (cmdKey && e.key === 's') {
+        e.preventDefault();
+        saveDocument({
+          templateId: templateId || "",
+          data: resume || {},
+          title: (userName || "Untitled") + "'s Resume",
+          type: 'resume'
+        });
+        setSaveDialog({
+          isOpen: true,
+          title: "Progress Saved",
+          description: "Your changes have been saved to your workspace.",
+          type: 'success'
+        });
+      }
+
+      // Cmd/Ctrl + P: Export PDF
+      if (cmdKey && e.key === 'p') {
+        e.preventDefault();
+        handleDownload();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [saveDocument, handleDownload, templateId, resume, userName]);
 
   // Hide loading when editor is fully initialized
   useEffect(() => {

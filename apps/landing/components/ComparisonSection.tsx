@@ -22,7 +22,7 @@ export function ComparisonSection() {
                         Why We Are the <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-purple-700">Best Choice</span>
                     </h2>
                     <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-                        Stop settling for generic templates. Experience the power of AI-driven resume building designed for the modern job market.
+                        Join 500,000+ professionals who stopped settling for generic templates. Experience the power of AI-driven resume building designed for the modern job market.
                     </p>
                 </div>
 
@@ -59,15 +59,15 @@ export function ComparisonSection() {
                             </div>
 
                             <div className="space-y-6">
-                                <FeatureRow text="ATS Compatibility" status={true} positiveText="100% Guaranteed" highlight />
-                                <FeatureRow text="AI Writing Assistant" status={true} positiveText="GPT-4 Powered" highlight />
-                                <FeatureRow text="Design Quality" status={true} positiveText="Premium & Modern" highlight />
-                                <FeatureRow text="Cost" status={true} positiveText="100% Free Forever" highlight />
-                                <FeatureRow text="Real-time Previews" status={true} positiveText="Instant" highlight />
+                                <FeatureRow text="ATS Compatibility" status={true} positiveText="100% ATS-Friendly" highlight />
+                                <FeatureRow text="AI Writing Assistant" status={true} positiveText="Advanced AI Powered" highlight />
+                                <FeatureRow text="Design Quality" status={true} positiveText="50+ Designer Templates" highlight />
+                                <FeatureRow text="Cost" status={true} positiveText="Free Forever & Pro" highlight />
+                                <FeatureRow text="Real-time Previews" status={true} positiveText="Instant Hydration" highlight />
                             </div>
 
                             <div className="mt-8 pt-8 border-t border-gray-100">
-                                <Link href="/resume-builder" className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                                <Link href="/editor" className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold hover:shadow-lg hover:shadow-blue-500/25 transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
                                     <Zap className="w-4 h-4" />
                                     Build My Resume Free
                                 </Link>

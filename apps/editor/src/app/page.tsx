@@ -111,11 +111,22 @@ function DashboardContent() {
     // Sort by lastModified descending
     allDocs.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
 
-    setResumes(allDocs.filter(d => d.type === 'resume'));
-    setCoverLetters(allDocs.filter(d => d.type === 'cover-letter'));
-    setAtsScans(allDocs.filter(d => d.type === 'ats-scan'));
-    setTailorHistory(allDocs.filter(d => d.type === 'tailor-history'));
-    setInterviewSessions(allDocs.filter(d => d.type === 'interview-session'));
+    const query = searchQuery.toLowerCase().trim();
+
+    const filteredDocs = allDocs.filter(d => {
+      if (!query) return true;
+      const title = d.title?.toLowerCase() || "";
+      const fileName = d.data?.fileName?.toLowerCase() || "";
+      const jobTitle = d.data?.jobTitle?.toLowerCase() || "";
+      const company = d.data?.company?.toLowerCase() || "";
+      return title.includes(query) || fileName.includes(query) || jobTitle.includes(query) || company.includes(query);
+    });
+
+    setResumes(filteredDocs.filter(d => d.type === 'resume'));
+    setCoverLetters(filteredDocs.filter(d => d.type === 'cover-letter'));
+    setAtsScans(filteredDocs.filter(d => d.type === 'ats-scan'));
+    setTailorHistory(filteredDocs.filter(d => d.type === 'tailor-history'));
+    setInterviewSessions(filteredDocs.filter(d => d.type === 'interview-session'));
 
     const waitForSteps = () => {
       return new Promise<void>((resolve) => {
@@ -132,7 +143,7 @@ function DashboardContent() {
 
     await waitForSteps();
     setLoading(false);
-  }, [getDocuments, loadingStep, loadingSteps.length]);
+  }, [getDocuments, loadingStep, loadingSteps.length, searchQuery]);
 
   const searchParams = useSearchParams();
 
