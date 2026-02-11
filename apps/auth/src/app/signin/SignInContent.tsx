@@ -38,7 +38,7 @@ export default function SignInContent() {
                             width={140}
                             priority
                             className="cursor-pointer"
-                            onClick={() => window.location.href = '/'}
+                            onClick={() => window.location.href = 'https://hirecta.com'}
                         />
                     </div>
                     <div className="flex items-center gap-4">
