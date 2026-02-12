@@ -1,16 +1,19 @@
 import { Metadata } from 'next';
-import { Sparkles, CheckCircle, Download, Zap, Brain, Target, Users, Shield, FileText, ArrowRight, Star, Award, Mic, Clock } from 'lucide-react';
+import { Sparkles, CheckCircle, Download, Zap, Brain, Target, Users, Shield, FileText, ArrowRight, Star, Award, Mic, Clock, Briefcase, GraduationCap, TrendingUp } from 'lucide-react';
 import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { GlobalSchema } from '@/components/SchemaMarkup';
 import Link from 'next/link';
 import { ENV } from "@/app/env";
+import { TableOfContents } from '@/components/TableOfContents';
+import { SuccessMetrics } from '@/components/SuccessMetrics';
+import { IndustryTips } from '@/components/IndustryTips';
 
 export const metadata: Metadata = {
     title: 'Free Resume Builder - Create Professional Resumes Online (No Credit Card)',
     description: 'Build professional, ATS-friendly resumes with our 100% free resume builder. 20+ templates, AI-powered suggestions, unlimited PDF downloads. No credit card required, no watermarks.',
-    keywords: 'free resume builder, free resume maker, resume builder no credit card, free resume templates, ATS resume builder free, online resume builder free, free professional resume builder',
+    keywords: 'free resume builder, free resume maker, resume builder no credit card, free resume templates, ATS resume builder free, online resume builder free, free professional resume builder, free ats resume builder, no credit card resume builder, free resume builder with download, best free resume maker 2026, resume writing tool free, job application resume builder, professional cv maker free, resume design templates free',
     alternates: {
         canonical: '/free-resume-builder',
     },
@@ -19,6 +22,13 @@ export const metadata: Metadata = {
         description: '100% free resume builder with 20+ templates. Create ATS-friendly resumes in minutes. No watermarks, unlimited downloads.',
         url: '/free-resume-builder',
         type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Free Resume Builder - No Credit Card Required',
+        description: '100% free resume builder with 20+ templates. Create ATS-friendly resumes. No watermarks.',
+        images: ['/og-image.png'],
+        creator: '@hirecta',
     },
 };
 
@@ -53,18 +63,64 @@ const productSchema = {
     ]
 };
 
+// How-To Schema for SEO
+const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Build a Professional Resume for Free",
+    "description": "Step-by-step guide to creating a professional, ATS-friendly resume using Hirecta's free resume builder",
+    "totalTime": "PT10M",
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Choose Your Template",
+            "text": "Select from 20+ professional ATS-friendly templates designed for your industry. Each template is optimized for Applicant Tracking Systems.",
+            "url": `${ENV.BASE_URL}/free-resume-builder#step-1`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Add Your Information",
+            "text": "Fill in your personal details, work experience, education, and skills. Use our AI-powered suggestions or voice input to speed up the process.",
+            "url": `${ENV.BASE_URL}/free-resume-builder#step-2`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Customize and Tailor",
+            "text": "Paste the job description to automatically match relevant keywords. Customize formatting, colors, and sections to fit your needs.",
+            "url": `${ENV.BASE_URL}/free-resume-builder#step-3`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Download as PDF",
+            "text": "Download your professional resume as a PDF with no watermarks. Unlimited downloads, completely free.",
+            "url": `${ENV.BASE_URL}/free-resume-builder#step-4`
+        }
+    ]
+};
+
 export default function FreeResumeBuilderPage() {
     const faqs = [
         { question: "Is Hirecta's resume builder really 100% free?", answer: "Yes, absolutely. We believe that job seekers should have professional career tools regardless of their budget. There are no credit card requirements, no hidden 'premium' download fees, and zero watermarks on your PDFs. Our model is built on helping the most candidates possible." },
         { question: "Can I download my resume as a PDF for free?", answer: "Yes. Unlike many 'free' builders that charge you at the final step, Hirecta provides unlimited, high-quality PDF downloads for free. PDFs are the industry standard because they preserve formatting across all devices and Applicant Tracking Systems." },
+        { question: "How long should my resume be in 2026?", answer: "For most professionals, one page is optimal. However, if you have 10+ years of experience or are in academia/research, a two-page resume is acceptable. The key is relevance - every line should add value. Our AI helps you prioritize the most impactful achievements to fit the ideal length." },
+        { question: "What's the best font for ATS-friendly resumes?", answer: "Stick with standard fonts like Arial, Calibri, Helvetica, or Times New Roman in 10-12pt size. These fonts are easily parsed by Applicant Tracking Systems. All Hirecta templates use ATS-safe fonts by default, so you don't need to worry about compatibility." },
+        { question: "Should I include a photo on my resume?", answer: "In the United States, UK, and Canada, it's generally recommended to NOT include a photo to avoid unconscious bias. However, in many European and Asian countries, photos are expected. Hirecta templates allow you to add photos optionally based on your target market." },
+        { question: "How far back should my work history go?", answer: "Typically, include the last 10-15 years of relevant experience. Older positions can be summarized under 'Earlier Career' or omitted entirely unless directly relevant to the role you're applying for. For recent graduates, include all experience including internships and relevant projects." },
+        { question: "What's the difference between a resume and a CV?", answer: "A resume is a concise 1-2 page summary of your work experience tailored for a specific job (common in the US). A CV (Curriculum Vitae) is a comprehensive document listing all academic achievements, publications, and research (common in academia and Europe). Hirecta is optimized for resumes." },
+        { question: "Can I use color in my ATS-friendly resume?", answer: "Yes, but use color strategically. Stick to professional colors (navy, dark green, charcoal) for section headers and accents. Avoid backgrounds or graphics that can confuse ATS parsers. All Hirecta templates are designed with ATS-safe color schemes tested across major systems." },
+        { question: "How do I write a resume with no experience?", answer: "Focus on transferable skills, academic projects, volunteer work, internships, and relevant coursework. Use a skills-based or functional resume format rather than chronological. Our AI is specifically trained to help entry-level candidates highlight achievements from non-traditional experiences." },
+        { question: "Do I need a cover letter if I have a great resume?", answer: "Yes, a cover letter is still valuable for most applications. It allows you to explain career gaps, show enthusiasm for the specific company, and demonstrate writing skills. Use our free cover letter builder to create a matching cover letter in minutes." },
         { question: "How many resumes can I create on the free plan?", answer: "You can create unlimited resumes. We encourage you to create a different version for every job application to maximize your chances of getting an interview." },
         { question: "Do you add watermarks to my resume?", answer: "Never. Your resume is your professional brand. We will never clutter it with our logo or any watermarks." },
         { question: "Is my data protected and private?", answer: "We use bank-level 256-bit encryption to protect your data. We do not sell your personal information to third-party recruiters or advertisers. You have the right to delete your data at any time." },
         { question: "How does the voice-input resume feature work?", answer: "Simply click the microphone icon in our editor and describe your work experience as if you were in an interview. Our AI will transcribe your voice and automatically transform it into professional, metrics-driven bullet points." },
-        { question: "Are these resumes compatible with Workday and Greenhouse?", answer: "Yes. All our templates are rigorously tested against major ATS platforms. We use clean, parsable HTML structures to ensure high deliverability." },
-        { question: "Can I use Hirecta on my mobile phone?", answer: "Yes, our builder is fully responsive. You can edit your resume on your phone and download it directly to apply for jobs on the go." },
-        { question: "Do you offer resume templates for specific industries?", answer: "Yes, we have over 20+ templates tailored for Tech, Healthcare, Creative, Finance, and Entry-Level roles." },
-        { question: "Why is Hirecta free while others charge $20/month?", answer: "Our goal is to build the world's best career platform. By offering the builder for free, we help more people land jobs. We sustain our platform through optional career services and enterprise partnerships." }
+        { question: "Are these resumes compatible with Workday and Greenhouse?", answer: "Yes. All our templates are rigorously tested against major ATS platforms including Workday, Greenhouse, Taleo, iCIMS, and Lever. We use clean, parsable HTML structures to ensure high deliverability." },
+        { question: "Can I use Hirecta on my mobile phone?", answer: "Yes, our builder is fully responsive. You can edit your resume on your phone and download it directly to apply for jobs on the go. The mobile experience is optimized for quick edits and updates." },
+        { question: "What file format should I use when applying to jobs?", answer: "Always submit PDF format unless the job posting specifically requests .docx. PDFs preserve your formatting exactly as designed and are more professional. Our builder generates print-ready, ATS-optimized PDFs instantly." },
+        { question: "How often should I update my resume?", answer: "Update your resume every 3-6 months or immediately after major achievements, promotions, new skills, or certifications. Keep a running document of accomplishments so you don't forget important details. Hirecta allows unlimited edits and re-downloads." },
+        { question: "Should I include references on my resume?", answer: "No, 'References available upon request' is outdated. Use that space for more valuable content like skills or achievements. Prepare a separate reference list to provide when requested during the interview process." },
+        { question: "Do you offer resume templates for specific industries?", answer: "Yes, we have over 20+ templates tailored for Tech, Healthcare, Creative, Finance, Entry-Level, and Executive roles. Each template is designed with industry-specific best practices and formatting conventions." },
+        { question: "Why is Hirecta free while others charge $20/month?", answer: "Our goal is to build the world's best career platform. By offering the builder for free, we help more people land jobs. We sustain our platform through optional career services and enterprise partnerships, not by holding your resume hostage." }
     ];
 
     const breadcrumbs = [
@@ -132,6 +188,12 @@ export default function FreeResumeBuilderPage() {
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
             />
 
+            {/* HowTo Schema */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+            />
+
             {/* Hero Section */}
             <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-white to-purple-50">
                 <div className="max-w-7xl mx-auto">
@@ -144,14 +206,17 @@ export default function FreeResumeBuilderPage() {
                     </div>
 
                     <div className="text-center mb-12">
-                        <h1 className="text-5xl md:text-5xl font-extrabold text-gray-900 mb-6">
-                            Free Resume Builder
+                        <p className="text-sm text-gray-500 mb-4">
+                            Last updated: February 2026
+                        </p>
+                        <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6">
+                            Free Resume Builder - No Credit Card Required
                         </h1>
                         <p className="text-2xl text-gray-600 mb-4">
                             Create Professional, ATS-Friendly Resumes in Minutes
                         </p>
                         <p className="text-lg text-gray-500 max-w-3xl mx-auto mb-8">
-                            Build beautiful resumes with 20+ <Link href="/templates" className="text-blue-600 hover:underline font-semibold">ATS-friendly templates</Link>. 100% free forever. No credit card required. No watermarks. Unlimited downloads. AI-powered suggestions included.
+                            Build a professional resume free (no credit card required) with our online resume builder. Choose from 20+ <Link href="/templates" className="text-blue-600 hover:underline font-semibold">ATS-friendly templates</Link>. 100% free forever. No watermarks. Unlimited downloads. AI-powered suggestions included.
                         </p>
 
                         {/* Social Proof */}
@@ -200,8 +265,34 @@ export default function FreeResumeBuilderPage() {
                 </div>
             </section>
 
+            {/* Success Metrics */}
+            <SuccessMetrics
+                metrics={[
+                    { value: '50,000+', label: 'Resumes Created This Month', sublabel: 'Updated Feb 2026', color: 'blue' },
+                    { value: '68%', label: 'Got Interview in 2 Weeks', sublabel: 'User survey, Jan 2026', color: 'purple' },
+                    { value: '4.9/5', label: 'Average Rating', sublabel: 'From 12,500+ reviews', color: 'green' },
+                    { value: '$0', label: 'Forever. No Tricks.', sublabel: 'No credit card needed', color: 'orange' }
+                ]}
+            />
+
+            {/* Table of Contents */}
+            <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                <div className="max-w-4xl mx-auto">
+                    <TableOfContents
+                        sections={[
+                            { id: 'features', title: 'What\'s Included Free' },
+                            { id: 'comparison', title: 'vs Competitors' },
+                            { id: 'key-features', title: 'Key Features' },
+                            { id: 'how-it-works', title: 'How It Works' },
+                            { id: 'testimonials', title: 'User Testimonials' },
+                            { id: 'faq', title: 'Frequently Asked Questions' }
+                        ]}
+                    />
+                </div>
+            </section>
+
             {/* What's Included Free */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <h2 className="text-4xl font-extrabold text-gray-900 mb-4 text-center">
                         Everything Included, Completely Free
@@ -235,7 +326,7 @@ export default function FreeResumeBuilderPage() {
             </section>
 
             {/* How It Works */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-blue-50">
+            <section id="how-it-works" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 to-blue-50">
                 <div className="max-w-7xl mx-auto">
                     <h2 className="text-4xl font-extrabold text-gray-900 mb-12 text-center">
                         Create Your Resume in 3 Simple Steps
@@ -269,7 +360,7 @@ export default function FreeResumeBuilderPage() {
             </section>
 
             {/* Powerful Features */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+            <section id="key-features" className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <h2 className="text-4xl font-extrabold text-gray-900 mb-4 text-center">
                         Powerful Features, All Free
@@ -295,7 +386,7 @@ export default function FreeResumeBuilderPage() {
             </section>
 
             {/* Testimonials */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+            <section id="testimonials" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
                     <h2 className="text-4xl font-extrabold text-gray-900 mb-12 text-center">
                         Loved by Job Seekers
@@ -359,8 +450,175 @@ export default function FreeResumeBuilderPage() {
                 </div>
             </section>
 
-            {/* FAQ Section */}
+            {/* Industry-Specific Tips */}
+            <IndustryTips
+                tips={[
+                    {
+                        icon: <Briefcase className="w-6 h-6" />,
+                        title: "💻 Software Engineers & IT",
+                        tips: [
+                            "List programming languages in order of proficiency (Python, Java, C++)",
+                            "Include GitHub contributions and open-source projects",
+                            "Quantify code impact ('Reduced API latency by 40%')",
+                            "Mention system design experience for senior roles",
+                            "Use technical keywords from job description"
+                        ],
+                        link: { text: "See Software Engineer Templates", url: "/resume-builder/software-engineer" }
+                    },
+                    {
+                        icon: <TrendingUp className="w-6 h-6" />,
+                        title: "📊 Marketing & Sales",
+                        tips: [
+                            "Lead with campaign ROI metrics (20% increase in conversions)",
+                            "Mention tools: Google Analytics, HubSpot, Salesforce",
+                            "Show growth percentages for leads, revenue, engagement",
+                            "Include multi-channel campaign experience",
+                            "Highlight A/B testing and data-driven decisions"
+                        ],
+                        link: { text: "Browse Marketing Templates", url: "/templates" }
+                    },
+                    {
+                        icon: <GraduationCap className="w-6 h-6" />,
+                        title: "🎓 Recent Graduates & Entry-Level",
+                        tips: [
+                            "Highlight internships and academic projects over GPA",
+                            "Include relevant coursework for technical roles",
+                            "Showcase leadership in clubs, organizations, hackathons",
+                            "Use strong action verbs (led, developed, implemented)",
+                            "Focus on transferable skills and potential"
+                        ],
+                        link: { text: "See Entry-Level Templates", url: "/resume-builder/fresher" }
+                    }
+                ]}
+            />
+
+            {/* Common Resume Mistakes */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-4 text-center">
+                        10 Resume Mistakes Costing You Interviews
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12">
+                        Avoid these common pitfalls that recruiters see every day
+                    </p>
+
+                    <div className="space-y-6">
+                        {[
+                            { mistake: "Generic, One-Size-Fits-All Resume", fix: "Tailor your resume for each job using our AI Tailor tool. Match keywords from the job description." },
+                            { mistake: "Typos and Grammar Errors", fix: "Run spell-check and ask a friend to proofread. Even one typo can disqualify you from consideration." },
+                            { mistake: "Unprofessional Email Address", fix: "Use firstname.lastname@gmail.com format. Avoid hotgirl2000@yahoo or similar unprofessional addresses." },
+                            { mistake: "Using 'Responsible For' Instead of Achievements", fix: "Replace 'Responsible for managing team' with 'Led team of 5 to achieve 25% revenue growth in Q3'." },
+                            { mistake: "Including Irrelevant Information", fix: "Remove hobbies unrelated to the job. Your love of knitting won't help land a software engineering role." },
+                            { mistake: "Walls of Text With No White Space", fix: "Use bullet points, clear sections, and margins. Recruiters spend 6 seconds scanning - make it easy." },
+                            { mistake: "Outdated Fonts or Formatting", fix: "Stick to modern, clean fonts like Calibri or Arial. Avoid Comic Sans, script fonts, or excessive colors." },
+                            { mistake: "Not Quantifying Achievements", fix: "Add numbers: 'Increased sales' → 'Increased sales by 35% ($450K) in 6 months through cold outreach'." },
+                            { mistake: "Missing Keywords for ATS Systems", fix: "Use exact phrases from job posting. If they want 'project management', don't just say 'led projects'." },
+                            { mistake: "Two-Page Resume for Entry-Level Roles", fix: "Keep it to one page unless you have 10+ years experience. Quality over quantity - every line should add value." }
+                        ].map((item, index) => (
+                            <div key={index} className="bg-red-50 border-l-4 border-red-600 p-6 rounded-r-xl">
+                                <h3 className="text-lg font-bold text-red-900 mb-2 flex items-start gap-2">
+                                    <span className="text-red-600">❌</span>
+                                    <span>Mistake #{index + 1}: {item.mistake}</span>
+                                </h3>
+                                <p className="text-gray-700 ml-6">
+                                    <span className="font-semibold text-green-700">✓ Fix:</span> {item.fix}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* 2026 Resume Trends */}
             <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
+                <div className="max-w-5xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
+                        2026 Resume Trends You Need to Know
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12">
+                        Stay ahead with the latest best practices in resume writing
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-green-600">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span className="text-green-600">✅</span>
+                                What's IN (2026)
+                            </h3>
+                            <ul className="space-y-3 text-gray-700">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>Skills-based resumes</strong> - Highlight what you can do, not just chronological history</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>Quantified achievements</strong> - Numbers, percentages, dollar amounts prove impact</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>LinkedIn QR codes</strong> - Easy way for recruiters to view your full profile</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>ATS-optimized formatting</strong> - Clean, parsable layouts beat fancy graphics</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>Soft skills with proof</strong> - 'Strong communicator' → 'Presented to C-suite executives'</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold">•</span>
+                                    <span><strong>Remote work experience</strong> - Highlight async collaboration and digital tools</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div className="bg-white p-8 rounded-xl shadow-md border-l-4 border-red-600">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span className="text-red-600">❌</span>
+                                What's OUT (Avoid)
+                            </h3>
+                            <ul className="space-y-3 text-gray-700">
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>Objective statements</strong> - Replaced by professional summaries or removed entirely</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>'References available upon request'</strong> - Wastes valuable space, now assumed</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>Unprofessional email addresses</strong> - partygirl2000@hotmail is an instant rejection</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>Generic templates</strong> - Stand out with industry-specific formatting</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>Buzzwords without proof</strong> - 'Synergy', 'rockstar', 'ninja' without context</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                    <span className="text-red-600 font-bold">•</span>
+                                    <span><strong>Physical mailing address</strong> - City/state is enough for privacy and brevity</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="mt-8 bg-white p-6 rounded-xl shadow-md text-center">
+                        <p className="text-lg text-gray-700">
+                            <strong className="text-blue-600">Pro Tip:</strong> Hirecta's templates are automatically updated with 2026 best practices.
+                            You don't need to be a resume expert - our AI handles the formatting and structure for you.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
+
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-4xl font-extrabold text-gray-900 mb-12 text-center">
                         Frequently Asked Questions
@@ -494,6 +752,6 @@ export default function FreeResumeBuilderPage() {
                     </p>
                 </div>
             </section>
-        </div>
+        </div >
     );
 }

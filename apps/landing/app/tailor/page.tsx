@@ -6,6 +6,7 @@ import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 import { ArticleSchema } from '@/components/ArticleSchema';
 import { FAQSchema } from '@/components/FAQSchema';
 import { GlobalSchema } from '@/components/SchemaMarkup';
+import { TableOfContents } from '@/components/TableOfContents';
 
 export const metadata: Metadata = {
     title: 'Free AI Resume Tailor | Customize Your CV for Any Job (2025)',
@@ -18,7 +19,14 @@ export const metadata: Metadata = {
         'Custom Resume Generator',
         'Optimize Resume for Job',
         'tailor resume to job description free',
-        'ai resume optimizer'
+        'ai resume optimizer',
+        'optimize resume for ats',
+        'resume keyword optimizer',
+        'job description resume match',
+        'tailor cv to job',
+        'resume ats score',
+        'customize resume for job posting',
+        'resume job match tool'
     ],
     alternates: {
         canonical: `${ENV.BASE_URL}/tailor`,
@@ -41,6 +49,42 @@ export const metadata: Metadata = {
         description: 'Tailor your resume to any job with AI. Increase interview chances by 3x.',
         images: ['/og-tailor.jpg'],
     },
+};
+
+// HowTo Schema for SEO
+const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Tailor Your Resume to a Job Description",
+    "description": "Step-by-step guide to customizing your resume for specific job applications using AI",
+    "totalTime": "PT30S",
+    "tool": ["Hirecta AI Tailor", "Job Description"],
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Copy the Job Description",
+            "text": "Copy the full job description from the posting, including required skills, qualifications, and responsibilities.",
+            "url": `${ENV.BASE_URL}/tailor#step-1`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Paste into AI Tailor",
+            "text": "Paste the job description into Hirecta's AI Tailor tool which will analyze keywords and requirements.",
+            "url": `${ENV.BASE_URL}/tailor#step-2`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Review AI Suggestions",
+            "text": "Review AI-generated suggestions for keyword optimization and content adjustments to match the job requirements.",
+            "url": `${ENV.BASE_URL}/tailor#step-3`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Apply Changes and Download",
+            "text": "Apply the tailored changes to your resume and download the optimized version as a PDF.",
+            "url": `${ENV.BASE_URL}/tailor#step-4`
+        }
+    ]
 };
 
 const softwareAppSchema = {
@@ -145,6 +189,10 @@ export default function TailorPage() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
             />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+            />
 
             {/* Hero Section */}
             <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-purple-50 via-white to-blue-50">
@@ -195,6 +243,20 @@ export default function TailorPage() {
                             <div className="text-sm font-semibold text-gray-500 mt-2 uppercase tracking-wide">ATS Match Rate</div>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            {/* Table of Contents */}
+            <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
+                <div className="max-w-4xl mx-auto">
+                    <TableOfContents
+                        sections={[
+                            { id: 'features', title: 'Resume Tailoring Features' },
+                            { id: 'how-it-works', title: 'How AI Tailoring Works' },
+                            { id: 'benefits', title: 'Why Tailor Your Resume' },
+                            { id: 'faq', title: 'Frequently Asked Questions' }
+                        ]}
+                    />
                 </div>
             </section>
 
@@ -412,6 +474,241 @@ export default function TailorPage() {
                                 </p>
                             </details>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* ATS Keyword Optimization Strategy */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-teal-50 to-cyan-50">
+                <div className="max-w-5xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
+                        ATS Keyword Optimization: The 2026 Guide
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12">
+                        Master the art of keyword placement to pass automated screening
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-8 mb-12">
+                        {/* Keyword Types */}
+                        <div className="bg-white p-8 rounded-xl shadow-md">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span className="text-blue-600">🎯</span>
+                                3 Types of Keywords to Target
+                            </h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-bold text-gray-800 mb-1">1. Hard Skills</h4>
+                                    <p className="text-gray-700 text-sm">
+                                        Exact tools, technologies, certifications.
+                                        <br /><strong className="text-blue-600">Examples:</strong> Python, Salesforce, PMP, Adobe Creative Suite
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-800 mb-1">2. Action Verbs</h4>
+                                    <p className="text-gray-700 text-sm">
+                                        Powerful verbs that describe what you did.
+                                        <br /><strong className="text-blue-600">Examples:</strong> Spearheaded, Engineered, Optimized, Negotiated
+                                    </p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-800 mb-1">3. Context Keywords</h4>
+                                    <p className="text-gray-700 text-sm">
+                                        Industry terms and soft skills validated by ATS.
+                                        <br /><strong className="text-blue-600">Examples:</strong> Cross-functional collaboration, Agile methodology, Budget oversight
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Keyword Placement */}
+                        <div className="bg-white p-8 rounded-xl shadow-md">
+                            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <span className="text-green-600">📍</span>
+                                Where to Place Keywords
+                            </h3>
+                            <div className="space-y-3">
+                                <div className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold mt-1">1.</span>
+                                    <div>
+                                        <strong className="text-gray-800">Professional Summary</strong>
+                                        <p className="text-sm text-gray-600">Front-load with top 3-5 skills from job description</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold mt-1">2.</span>
+                                    <div>
+                                        <strong className="text-gray-800">Skills Section</strong>
+                                        <p className="text-sm text-gray-600">List exact tool names as they appear in JD</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold mt-1">3.</span>
+                                    <div>
+                                        <strong className="text-gray-800">Work Experience Bullets</strong>
+                                        <p className="text-sm text-gray-600">Naturally integrate keywords with quantified achievements</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                    <span className="text-green-600 font-bold mt-1">4.</span>
+                                    <div>
+                                        <strong className="text-gray-800">Job Titles (When Accurate)</strong>
+                                        <p className="text-sm text-gray-600">If your title matches the JD, use that variation</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Common Keyword Mistakes */}
+                    <div className="bg-red-50 border-l-4 border-red-600 p-8 rounded-r-xl">
+                        <h3 className="text-2xl font-bold text-red-900 mb-4">
+                            ❌ Common Keyword Mistakes That Kill Your ATS Score
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4 text-gray-700">
+                            <div>
+                                <strong>Keyword Stuffing:</strong> Repeating "project management" 15 times looks spammy. Use synonyms (program coordination, team leadership).
+                            </div>
+                            <div>
+                                <strong>Wrong Synonyms:</strong> If JD says "JavaScript," don't write "JS" thinking it's the same. Use exact matches.
+                            </div>
+                            <div>
+                                <strong>Burying Keywords:</strong> Don't hide critical skills in the middle of paragraph 3. Put them in headers and bullet point starts.
+                            </div>
+                            <div>
+                                <strong>Abbreviation Mismatches:</strong> Write "Certified Public Accountant (CPA)" to cover both variations.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Before/After Tailoring Examples */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
+                        Before vs. After: Real Tailoring Examples
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12">
+                        See how AI tailoring transforms generic resumes into job-winning applications
+                    </p>
+
+                    <div className="space-y-12">
+                        {/* Example 1: Software Engineer */}
+                        <div className="bg-gradient-to-br from-gray-50 to-blue-50 p-8 rounded-xl border border-gray-200">
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="text-3xl">💻</span>
+                                <h3 className="text-2xl font-bold text-gray-900">Software Engineer → DevOps Role</h3>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Before */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-red-300">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-red-600 font-bold">❌ BEFORE (Generic)</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm italic">
+                                        "Worked on backend development using Python and helped deploy code to production servers. Fixed bugs and improved system performance."
+                                    </p>
+                                    <div className="mt-3 text-xs text-red-700">
+                                        <strong>ATS Score: 42%</strong> - Missing DevOps keywords
+                                    </div>
+                                </div>
+
+                                {/* After */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-green-500">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-green-600 font-bold">✅ AFTER (Tailored)</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm">
+                                        "Engineered CI/CD pipelines using Jenkins and Docker, achieving 40% faster deployment cycles. Implemented infrastructure-as-code with Terraform, reducing server provisioning time by 35%."
+                                    </p>
+                                    <div className="mt-3 text-xs text-green-700">
+                                        <strong>ATS Score: 91%</strong> - Matches JD keywords: CI/CD, Jenkins, Docker, Terraform
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Example 2: Marketing */}
+                        <div className="bg-gradient-to-br from-gray-50 to-purple-50 p-8 rounded-xl border border-gray-200">
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="text-3xl">📊</span>
+                                <h3 className="text-2xl font-bold text-gray-900">Marketing Specialist → Growth Marketing Manager</h3>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Before */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-red-300">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-red-600 font-bold">❌ BEFORE</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm italic">
+                                        "Ran social media campaigns and email newsletters. Managed company blog and worked with sales team on promotions."
+                                    </p>
+                                    <div className="mt-3 text-xs text-red-700">
+                                        <strong>ATS Score: 38%</strong> - Vague, no metrics
+                                    </div>
+                                </div>
+
+                                {/* After */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-green-500">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-green-600 font-bold">✅ AFTER</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm">
+                                        "Drove 120% user acquisition growth via multi-channel campaigns (SEO, SEM, email). Optimized conversion funnels using Google Analytics and HubSpot, increasing MQL-to-SQL rate by 34%."
+                                    </p>
+                                    <div className="mt-3 text-xs text-green-700">
+                                        <strong>ATS Score: 88%</strong> - Keywords: growth, acquisition, conversion, SEO, Analytics, HubSpot
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Example 3: Project Manager */}
+                        <div className="bg-gradient-to-br from-gray-50 to-green-50 p-8 rounded-xl border border-gray-200">
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="text-3xl">📋</span>
+                                <h3 className="text-2xl font-bold text-gray-900">Coordinator → Agile Project Manager</h3>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Before */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-red-300">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-red-600 font-bold">❌ BEFORE</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm italic">
+                                        "Coordinated team meetings and tracked project timelines. Communicated with stakeholders about project updates."
+                                    </p>
+                                    <div className="mt-3 text-xs text-red-700">
+                                        <strong>ATS Score: 35%</strong> - No Agile methodology keywords
+                                    </div>
+                                </div>
+
+                                {/* After */}
+                                <div className="bg-white p-6 rounded-lg border-2 border-green-500">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <span className="text-green-600 font-bold">✅ AFTER</span>
+                                    </div>
+                                    <p className="text-gray-700 text-sm">
+                                        "Facilitated Scrum ceremonies for 3 cross-functional teams (15 developers). Managed product backlog in Jira, delivering 95% of sprint commitments on-time using Agile best practices."
+                                    </p>
+                                    <div className="mt-3 text-xs text-green-700">
+                                        <strong>ATS Score: 93%</strong> - Keywords: Scrum, Agile, Jira, backlog, sprint
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="mt-12 bg-blue-600 text-white p-8 rounded-xl text-center">
+                        <p className="text-lg font-semibold mb-4">
+                            🚀 Hirecta's AI Tailor does this transformation automatically in 45 seconds
+                        </p>
+                        <p className="text-blue-100">
+                            No guesswork. No manual keyword hunting. Just paste the job description and let AI optimize your resume.
+                        </p>
                     </div>
                 </div>
             </section>
