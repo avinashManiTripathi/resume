@@ -36,10 +36,10 @@ export function canDownload(subscription: any): boolean {
     const status = subscription.status;
     const endDate = subscription.endDate || subscription.expiryDate;
 
-    // Check if plan is pro or premium (not free or lower)
-    const isPremiumTier = plan === 'pro' || plan === 'premium';
+    // Check if plan is a paid tier (lower/basic, pro, or premium - NOT free)
+    const isPaidTier = plan === 'lower' || plan === 'pro' || plan === 'premium';
 
-    if (!isPremiumTier) {
+    if (!isPaidTier) {
         return false;
     }
 
