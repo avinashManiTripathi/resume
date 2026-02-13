@@ -15,7 +15,6 @@ export const COMMON_SKILLS = [
     "SQL",
     "HTML",
     "CSS",
-
     // Frameworks & Libraries
     "React",
     "React Native",
