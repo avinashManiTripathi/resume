@@ -27,7 +27,10 @@ export function hasActiveSubscription(subscription: SubscriptionStatus | null): 
  * Check if user can download based on their subscription tier
  */
 export function canDownload(subscription: any): boolean {
+    console.log('[canDownload] Called with subscription:', subscription);
+
     if (!subscription) {
+        console.log('[canDownload] ❌ No subscription provided');
         return false;
     }
 
@@ -36,15 +39,27 @@ export function canDownload(subscription: any): boolean {
     const status = subscription.status;
     const endDate = subscription.endDate || subscription.expiryDate;
 
+    console.log('[canDownload] Extracted values:', { plan, status, endDate });
+
     // Check if plan is a paid tier (lower/basic, pro, or premium - NOT free)
     const isPaidTier = plan === 'lower' || plan === 'pro' || plan === 'premium';
 
+    console.log('[canDownload] Plan check:', {
+        plan,
+        isPaidTier,
+        isLower: plan === 'lower',
+        isPro: plan === 'pro',
+        isPremium: plan === 'premium'
+    });
+
     if (!isPaidTier) {
+        console.log('[canDownload] ❌ Not a paid tier. Plan:', plan);
         return false;
     }
 
     // Check if subscription is active
     if (status && status !== 'active') {
+        console.log('[canDownload] ❌ Status not active:', status);
         return false;
     }
 
@@ -52,11 +67,20 @@ export function canDownload(subscription: any): boolean {
     if (endDate) {
         const expiryDate = new Date(endDate);
         const now = new Date();
+        console.log('[canDownload] Date check:', {
+            endDate,
+            expiryDate: expiryDate.toISOString(),
+            now: now.toISOString(),
+            isExpired: expiryDate < now
+        });
+
         if (expiryDate < now) {
+            console.log('[canDownload] ❌ Subscription expired');
             return false; // Subscription has expired
         }
     }
 
+    console.log('[canDownload] ✅ Validation passed!');
     return true;
 }
 
