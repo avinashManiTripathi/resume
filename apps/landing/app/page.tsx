@@ -758,7 +758,7 @@ export default async function LandingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 Tested templates guaranteed to pass Applicant Tracking Systems. Beat the filters and get hired.
               </p>
-              <div className="flex items-center gap-2 text-emerald-600 font-semibold text-sm">
+              <div className="flex items-center gap-2 text-emerald-700 font-semibold text-sm">
                 Check ATS Templates <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
@@ -777,7 +777,7 @@ export default async function LandingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 Scan your existing resume for ATS compatibility. Get scores, missing keywords, and fixes.
               </p>
-              <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm">
+              <div className="flex items-center gap-2 text-orange-700 font-semibold text-sm">
                 Scan My Resume <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>

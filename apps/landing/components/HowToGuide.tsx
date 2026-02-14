@@ -93,7 +93,7 @@ export function HowToGuide() {
                                         <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} ${step.shadow} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                                             {step.icon}
                                         </div>
-                                        <span className="text-sm font-bold text-slate-300 group-hover:text-blue-500 transition-colors">
+                                        <span className="text-sm font-bold text-slate-500 group-hover:text-blue-500 transition-colors">
                                             Step {step.id}
                                         </span>
                                     </div>
@@ -132,7 +132,6 @@ export function HowToGuide() {
                 <div className="mt-24 relative">
                     <div className="relative rounded-[2rem] overflow-hidden bg-slate-900 shadow-2xl isolate">
                         {/* Background Effects */}
-                        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
                         <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[100px]" />
                         <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[100px]" />
 
