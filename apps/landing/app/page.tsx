@@ -3,16 +3,20 @@ import type { Metadata } from "next";
 import { ArrowRight, Check, Star, Sparkles, Zap, Shield, Users, FileText, Download, Edit3, Brain, Target, TrendingUp, Clock, Mic, MicOff, Send, Award, Bell, X, HelpCircle, Rocket, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { TemplatesSection } from "@/components/TemplatesSection";
-import { VoiceDemo } from "@/components/VoiceDemo";
 import { ProductSchema } from "@/components/ProductSchema";
-import { HowItWorks } from "@/components/HowItWorks";
-import { ComparisonSection } from "@/components/ComparisonSection";
-import { HowToGuide } from "@/components/HowToGuide";
-import { FAQSection } from "@/components/FAQSection";
 import { Suspense } from "react";
 import { TemplatesSkeleton } from "@/components/TemplatesSkeleton";
+import { TemplatesSection } from "@/components/TemplatesSection";
+import { HowItWorks } from "@/components/HowItWorks";
+import dynamic from "next/dynamic";
 import { URLS } from "@/constants/urls";
+
+import { VoiceDemo } from "@/components/VoiceDemo";
+
+const ComparisonSection = dynamic(() => import("@/components/ComparisonSection").then(mod => mod.ComparisonSection));
+const HowToGuide = dynamic(() => import("@/components/HowToGuide").then(mod => mod.HowToGuide));
+const FAQSection = dynamic(() => import("@/components/FAQSection").then(mod => mod.FAQSection));
+
 
 
 export const metadata: Metadata = {
@@ -46,6 +50,9 @@ export default async function LandingPage() {
       {/* Product Schema for SEO - Star Ratings in Google */}
       <ProductSchema />
       {/* Hero Section */}
+      <Suspense fallback={<TemplatesSkeleton />}>
+        <TemplatesSection />
+      </Suspense>
       <section className="pt-4 pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/50 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
