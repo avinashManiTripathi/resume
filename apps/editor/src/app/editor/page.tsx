@@ -842,8 +842,10 @@ function ResumeEditor() {
       }
     } catch (error: unknown) {
       console.error("Error rendering PDF:", error);
+
       // Handle 403/401 during preview if they happen despite being 'public'
       if ((error as any)?.message?.includes('403')) {
+        window.location.reload()
         // router.push('/subscription?returnTo=editor');
       }
     }

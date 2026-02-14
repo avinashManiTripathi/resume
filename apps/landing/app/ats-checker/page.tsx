@@ -98,13 +98,57 @@ const softwareAppSchema = {
     "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
     },
     "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.8",
-        "ratingCount": "1250"
-    }
+        "ratingCount": "1250",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "featureList": [
+        "Instant ATS Compatibility Score",
+        "Keyword Gap Analysis",
+        "Format & Layout Check",
+        "Job Description Matching",
+        "Actionable Improvement Tips"
+    ]
+};
+
+const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Check Your Resume ATS Score",
+    "description": "Step-by-step guide to checking your resume's compatibility with Applicant Tracking Systems using Hirecta's free tool.",
+    "totalTime": "PT2M",
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Upload Your Resume",
+            "text": "Upload your existing resume in PDF or DOCX format. Our secure system utilizes OCR to parse the text.",
+            "url": `${ENV.BASE_URL}/ats-checker#step-1`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Paste Job Description (Optional)",
+            "text": "For the most accurate results, paste the job description you are applying for to check for keyword matching.",
+            "url": `${ENV.BASE_URL}/ats-checker#step-2`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Get Instant Analysis",
+            "text": "Receive a detailed report with your ATS score, missing keywords, and formatting issues in under 30 seconds.",
+            "url": `${ENV.BASE_URL}/ats-checker#step-3`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Optimize and Download",
+            "text": "Follow the actionable tips to improve your score and download your optimized resume.",
+            "url": `${ENV.BASE_URL}/ats-checker#step-4`
+        }
+    ]
 };
 
 export default function ATSCheckerMarketingPage() {
@@ -124,6 +168,10 @@ export default function ATSCheckerMarketingPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
             />
 
             {/* Hero Section */}
@@ -503,7 +551,317 @@ export default function ATSCheckerMarketingPage() {
                 </div>
             </section>
 
-            {/* Benefits Section */}
+            {/* 7 Common ATS Myths */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-12 text-center">
+                        7 Common ATS Myths Debunked
+                    </h2>
+                    <div className="space-y-6">
+                        {[
+                            {
+                                myth: "Robots accept or reject your resume.",
+                                reality: "ATS ranks you. A human recruiter makes the final decision, but low-ranked resumes are rarely seen."
+                            },
+                            {
+                                myth: "You need 100% keyword match.",
+                                reality: "Aim for 80%+. 100% looks suspicious (like spam). Focus on core skills."
+                            },
+                            {
+                                myth: "White font hacks work.",
+                                reality: "ATS parsers see all text. Hidden white text will display as gibberish and get you flagged/banned."
+                            },
+                            {
+                                myth: "PDFs are not ATS readable.",
+                                reality: "Modern ATS read text-based PDFs perfectly. Only image-based (scanned) PDFs fail."
+                            },
+                            {
+                                myth: "You should stick to one page only.",
+                                reality: "ATS doesn't care about length. However, humans do. 2 pages is fine for experienced roles."
+                            },
+                            {
+                                myth: "Cover letters don't matter.",
+                                reality: "Some ATS scan cover letters for keywords too. Always include one if allowed."
+                            },
+                            {
+                                myth: "Graphics help you stand out.",
+                                reality: "To an ATS, graphics are blank space. Use them only if you are sending a portfolio directly to a human."
+                            }
+                        ].map((item, index) => (
+                            <div key={index} className="flex gap-4 p-4 border rounded-xl hover:bg-gray-50 transition-colors">
+                                <div className="shrink-0 w-8 h-8 bg-red-100 text-red-600 rounded-full flex items-center justify-center font-bold">!</div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900">Myth: "{item.myth}"</h4>
+                                    <p className="text-gray-600 text-sm mt-1"><span className="font-semibold text-green-600">Reality:</span> {item.reality}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* File Formats Section */}
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">
+                        Optimizing File Formats for Maximum Parsing
+                    </h2>
+                    <p className="text-center text-gray-600 mb-12">
+                        The file type you choose can determine if your resume is read or rejected.
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border-t-4 border-blue-600">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <FileText className="text-blue-600" /> PDF (Portable Document Format)
+                            </h3>
+                            <div className="inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold mb-4">RECOMMENDED</div>
+                            <p className="text-gray-600 text-sm mb-4">
+                                The industry standard. Locks in your formatting so it looks the same on every device.
+                            </p>
+                            <ul className="text-sm space-y-2 text-gray-500">
+                                <li className="flex items-center gap-2">✅ Virus-free and secure</li>
+                                <li className="flex items-center gap-2">✅ Preserves design & fonts</li>
+                                <li className="flex items-center gap-2">✅ Accepted by 99% of ATS</li>
+                            </ul>
+                        </div>
+
+                        <div className="bg-white p-6 rounded-xl shadow-sm border-t-4 border-blue-400">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                <FileText className="text-blue-400" /> DOCX (Microsoft Word)
+                            </h3>
+                            <div className="inline-block px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold mb-4">ACCEPTABLE</div>
+                            <p className="text-gray-600 text-sm mb-4">
+                                Good for older systems, but formatting can shift depending on the recruiter's Word version.
+                            </p>
+                            <ul className="text-sm space-y-2 text-gray-500">
+                                <li className="flex items-center gap-2">⚠️ Formatting may break</li>
+                                <li className="flex items-center gap-2">✅ Easily editable</li>
+                                <li className="flex items-center gap-2">✅ Good for very old ATS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Deep Dive Guide: Mastering the ATS */}
+            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200" id="guide-content">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">
+                            Mastering the Applicant Tracking System (ATS): The 2026 Guide
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            The majority of job rejections happen instantly by a computer, not a human. Understanding how the ATS works is the secret weapon of successful job seekers.
+                        </p>
+                    </div>
+
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+                        {/* Sidebar / Table of Contents */}
+                        <aside className="hidden lg:block lg:col-span-3">
+                            <nav className="sticky top-24 space-y-2">
+                                <p className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm">Table of Contents</p>
+                                <a href="#chapter-1" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">1. What is an ATS?</a>
+                                <a href="#chapter-2" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">2. How It Reads You</a>
+                                <a href="#chapter-3" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">3. The Secret Rankings</a>
+                                <a href="#chapter-4" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">4. Optimization Tactics</a>
+                                <a href="#chapter-5" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">5. Power Keywords</a>
+                                <a href="#chapter-6" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">6. The ATS Encyclopedia</a>
+                                <a href="#chapter-7" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">7. Recruiter Secrets</a>
+                                <a href="#chapter-8" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">8. The Hirecta Checklist</a>
+                            </nav>
+                        </aside>
+
+                        {/* Main Content Area */}
+                        <div className="lg:col-span-9 prose prose-lg prose-indigo max-w-none">
+                            <div id="chapter-1" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">1</span>
+                                    What is an ATS?
+                                </h3>
+                                <p>
+                                    An Applicant Tracking System (ATS) is software used by recruiters to collect, sort, scan, and rank job applications.
+                                </p>
+                                <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100 mt-4">
+                                    <p className="text-indigo-900 font-medium">
+                                        <strong>The Reality:</strong> A typical corporate job opening attracts 250+ resumes. The ATS acts as a gatekeeper, filtering out unqualified candidates so recruiters only review the top 10-20%.
+                                    </p>
+                                </div>
+                                <h4 className="font-bold text-gray-900 mt-6 mb-2">Major Players:</h4>
+                                <ul className="list-disc pl-6 space-y-1 text-gray-600">
+                                    <li><strong>Taleo:</strong> The strict legacy giant.</li>
+                                    <li><strong>Greenhouse:</strong> The scorecard-focused startup favorite.</li>
+                                    <li><strong>Lever:</strong> The relationship manager.</li>
+                                </ul>
+                            </div>
+
+                            <div id="chapter-2" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">2</span>
+                                    How the Algorithm "Reads" You
+                                </h3>
+                                <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                                    <h5 className="font-bold text-gray-900 mb-4 text-lg border-b pb-2">The 4-Step Parsing Process</h5>
+                                    <ol className="list-decimal pl-6 space-y-3 text-gray-700">
+                                        <li><strong>Text Extraction:</strong> Converts PDF/DOCX to plain text. Graphics are ignored.</li>
+                                        <li><strong>Semantic Analysis:</strong> Identifies sections (Experience, Education) based on headers.</li>
+                                        <li><strong>Keyword Matching:</strong> Scans for skills defined in the job description (e.g., "React", "Sales").</li>
+                                        <li><strong>Scoring:</strong> Assigns a % match score based on keyword density and placement.</li>
+                                    </ol>
+                                </div>
+                                <p className="mt-4 text-red-600 font-medium">
+                                    ⚠️ If you use a complex graphical template, the parser fails at Step 1. Your score is 0.
+                                </p>
+                            </div>
+
+                            <div id="chapter-3" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">3</span>
+                                    The Secret Rankings
+                                </h3>
+                                <p>Recruiters use "Knockout Questions" to instantly reject candidates.</p>
+                                <div className="grid md:grid-cols-3 gap-4 mt-4">
+                                    <div className="bg-gray-100 p-4 rounded-lg text-center">
+                                        <span className="block text-2xl mb-2">📍</span>
+                                        <strong>Geography</strong>
+                                        <p className="text-xs text-gray-500 mt-1">Must live in New York.</p>
+                                    </div>
+                                    <div className="bg-gray-100 p-4 rounded-lg text-center">
+                                        <span className="block text-2xl mb-2">🎓</span>
+                                        <strong>Education</strong>
+                                        <p className="text-xs text-gray-500 mt-1">Bachelor's Degree Required.</p>
+                                    </div>
+                                    <div className="bg-gray-100 p-4 rounded-lg text-center">
+                                        <span className="block text-2xl mb-2">🛂</span>
+                                        <strong>Visa</strong>
+                                        <p className="text-xs text-gray-500 mt-1">Authorized to work in US?</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-4" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">4</span>
+                                    Advanced Optimization Tactics
+                                </h3>
+                                <div className="grid md:grid-cols-2 gap-8 my-6">
+                                    <div className="bg-green-50 p-6 rounded-xl border border-green-100">
+                                        <h5 className="font-bold text-green-800 mb-3 flex items-center gap-2">✅ DO THIS</h5>
+                                        <ul className="text-sm text-green-900 space-y-2">
+                                            <li className="flex items-start gap-2"><span>Use standard headings (Experience, Education).</span></li>
+                                            <li className="flex items-start gap-2"><span>Use standard bullet points.</span></li>
+                                            <li className="flex items-start gap-2"><span>Spell out acronyms: "SEO (Search Engine Optimization)".</span></li>
+                                            <li className="flex items-start gap-2"><span>Contextualize keywords: "Used Java to build X".</span></li>
+                                        </ul>
+                                    </div>
+                                    <div className="bg-red-50 p-6 rounded-xl border border-red-100">
+                                        <h5 className="font-bold text-red-800 mb-3 flex items-center gap-2">❌ AVOID THIS</h5>
+                                        <ul className="text-sm text-red-900 space-y-2">
+                                            <li className="flex items-start gap-2"><span>Headers/Footers for contact info.</span></li>
+                                            <li className="flex items-start gap-2"><span>Tables or text boxes.</span></li>
+                                            <li className="flex items-start gap-2"><span>Skill rating charts (e.g., 5/5 stars).</span></li>
+                                            <li className="flex items-start gap-2"><span>White text hacking (bannable).</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-5" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">5</span>
+                                    50 Universal Power Keywords
+                                </h3>
+                                <p className="mb-4">Boost your score with these action verbs and nouns:</p>
+                                <div className="flex flex-wrap gap-2 text-sm text-gray-600">
+                                    {["Spearheaded", "Executed", "Orchestrated", "Revenue Growth", "Cost Reduction", "Team Leadership", "Strategic Planning", "Data Analysis", "Project Management", "Stakeholder Management", "ROI", "Efficiency", "Automation", "Innovation", "Mentorship", "Cross-functional", "Lifecycle", "Optimization", "Compliance", "Budget Management"].map((kw) => (
+                                        <span key={kw} className="bg-white px-3 py-1 rounded-full border border-gray-200 shadow-sm hover:border-indigo-300 transition-colors cursor-default">{kw}</span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div id="chapter-6" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">6</span>
+                                    The ATS Encyclopedia
+                                </h3>
+                                <div className="space-y-6">
+                                    <div className="border border-gray-200 rounded-lg p-5">
+                                        <h5 className="font-bold text-red-600 mb-1">Taleo</h5>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Strict & Old School</p>
+                                        <p className="text-sm text-gray-600"><strong>Strategy:</strong> Zero formatting. No columns. Pure text is king.</p>
+                                    </div>
+                                    <div className="border border-gray-200 rounded-lg p-5">
+                                        <h5 className="font-bold text-green-600 mb-1">Greenhouse</h5>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Modern & Data-Driven</p>
+                                        <p className="text-sm text-gray-600"><strong>Strategy:</strong> Focus on "Skills" keywords to populate recruit scorecards.</p>
+                                    </div>
+                                    <div className="border border-gray-200 rounded-lg p-5">
+                                        <h5 className="font-bold text-blue-600 mb-1">Workday</h5>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">The Enterprise Giant</p>
+                                        <p className="text-sm text-gray-600"><strong>Strategy:</strong> Double-check auto-filled fields. It often miscategorizes job titles.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-7" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">7</span>
+                                    Recruiter Secrets
+                                </h3>
+                                <div className="bg-gray-900 text-gray-300 p-6 rounded-xl font-mono text-sm mb-6">
+                                    <p className="mb-2 text-gray-500">// Boolean Search Example</p>
+                                    <p>("Project Manager" OR "Program Manager") AND "SaaS" AND "San Francisco" <span className="text-red-400">NOT "Intern"</span></p>
+                                </div>
+                                <p><strong>The Stoplight System:</strong> Some ATS rank you Green (80%+), Yellow (60-80%), or Red (<60%). Recruiters rarely look at Red.</p>
+                            </div>
+
+                            <div id="chapter-8" className="scroll-mt-24 mb-12">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">8</span>
+                                    The Hirecta Priority Checklist
+                                </h3>
+                                <ul className="space-y-3 bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                                    <li className="flex items-center gap-3 text-gray-700">
+                                        <input type="checkbox" checked readOnly className="h-5 w-5 text-indigo-600 rounded" />
+                                        <span>File Name: LastName_FirstName_Role.pdf</span>
+                                    </li>
+                                    <li className="flex items-center gap-3 text-gray-700">
+                                        <input type="checkbox" checked readOnly className="h-5 w-5 text-indigo-600 rounded" />
+                                        <span>Font: Standard (Arial/Calibri), Size 10-12</span>
+                                    </li>
+                                    <li className="flex items-center gap-3 text-gray-700">
+                                        <input type="checkbox" checked readOnly className="h-5 w-5 text-indigo-600 rounded" />
+                                        <span>No Header/Footers containing contact info</span>
+                                    </li>
+                                    <li className="flex items-center gap-3 text-gray-700">
+                                        <input type="checkbox" checked readOnly className="h-5 w-5 text-indigo-600 rounded" />
+                                        <span>Dates formatted as MM/YYYY</span>
+                                    </li>
+                                    <li className="flex items-center gap-3 text-gray-700">
+                                        <input type="checkbox" checked readOnly className="h-5 w-5 text-indigo-600 rounded" />
+                                        <span>Hyperlinks are live and valid</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 rounded-2xl text-center text-white shadow-lg transform transition hover:scale-[1.01]">
+                                <h3 className="text-2xl font-bold mb-4 text-white">Don't Guess. Test.</h3>
+                                <p className="mb-8 text-indigo-100">
+                                    Upload your resume now to see exactly what the ATS sees. Get a score and step-by-step fix list.
+                                </p>
+                                <Link
+                                    href={`${ENV.EDITOR_URL}/ats-score`}
+                                    className="inline-block px-8 py-4 bg-white text-indigo-900 rounded-full font-bold text-lg hover:bg-gray-100 transition-colors shadow-md"
+                                >
+                                    Check My Score Free
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-indigo-50 to-purple-50">
                 <div className="max-w-6xl mx-auto">
                     <div className="text-center mb-16">

@@ -218,8 +218,7 @@ const getBrowser = async (): Promise<Browser> => {
                 '--disable-dev-shm-usage',
                 '--disable-accelerated-2d-canvas',
                 '--disable-gpu',
-                '--single-process',
-                '--no-zygote',
+                '--disable-gpu',
                 // Performance Flags
                 '--disable-extensions',
                 '--mute-audio',
@@ -337,8 +336,6 @@ export const htmlToPdf = async (
                 req.continue();
             }
         });
-
-
         await page.setContent(htmlContent, {
             waitUntil: 'domcontentloaded',
             timeout: 60000,

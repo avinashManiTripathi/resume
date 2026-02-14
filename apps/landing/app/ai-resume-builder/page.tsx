@@ -47,7 +47,15 @@ const softwareAppSchema = {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
         "ratingCount": "3200"
-    }
+    },
+    "featureList": [
+        "AI-Powered Content Generation",
+        "Voice-to-Resume Transcription",
+        "Contextual Keyword Suggestions",
+        "Real-time ATS Tailoring",
+        "Smart Formatting Assistant",
+        "Instant PDF Export"
+    ]
 };
 
 // HowTo Schema for SEO
@@ -448,6 +456,346 @@ export default function AIResumeBuilderPage() {
                         <p className="text-lg font-semibold">
                             💡 Bottom Line: AI isn't replacing resume writers - it's democratizing access to professional-quality resume writing for everyone.
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* AI vs Human Comparison */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">
+                        AI Resume Writer vs. Professional Human Writer
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12">
+                        Is it worth paying $300 for a resume writer? Compare the data.
+                    </p>
+
+                    <div className="overflow-hidden border border-gray-200 rounded-xl shadow-sm">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Feature</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-blue-600 uppercase tracking-wider">Hirecta AI (Free)</th>
+                                    <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Human Writer ($200+)</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Cost</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">$0 (Forever Free)</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">$200 - $500+</td>
+                                </tr>
+                                <tr>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Turnaround Time</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">Instantly (15 mins)</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 - 7 Business Days</td>
+                                </tr>
+                                <tr>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Modifications</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">Unlimited Real-time Edits</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Paid Revisions</td>
+                                </tr>
+                                <tr>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">ATS Optimization</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Data-driven (Millions of points)</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Subjective Experience</td>
+                                </tr>
+                                <tr>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Availability</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24/7</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Business Hours</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            {/* Ethical AI Use */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-50">
+                <div className="max-w-4xl mx-auto">
+                    <div className="flex flex-col md:flex-row gap-8 items-center">
+                        <div className="flex-1">
+                            <h2 className="text-3xl font-extrabold text-gray-900 mb-6">
+                                Ethical Use of AI in Job Applications
+                            </h2>
+                            <p className="text-gray-700 mb-4">
+                                A common question we get: <em>"Is using AI to write my resume considered cheating?"</em>
+                            </p>
+                            <p className="text-gray-700 mb-6 font-medium">
+                                The answer is No. 90% of Fortune 500 companies use AI to read your resume. It is only fair that you use AI to write it.
+                            </p>
+                            <div className="space-y-4">
+                                <div>
+                                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                                        <CheckCircle className="w-5 h-5 text-green-600" /> Do This:
+                                    </h4>
+                                    <p className="text-sm text-gray-600 ml-7">Use AI to structure your thoughts, improve grammar, and find better action verbs for work you actually performed.</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                                        <XCircle className="w-5 h-5 text-red-600" /> Don't Do This:
+                                    </h4>
+                                    <p className="text-sm text-gray-600 ml-7">Never use AI to invent skills you don't have or generate a work history that doesn't exist. That is fraud.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex-1 bg-white p-8 rounded-2xl shadow-sm border border-blue-100">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4">Our Commitment to Integrity</h3>
+                            <p className="text-sm text-gray-600 mb-4">
+                                Hirecta's AI is designed to be a "Writing Assistant," not a "Fiction Writer." We prompt you to input your real experience and then we polish it.
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                This ensures that when you get to the interview, you can confidently speak to every bullet point on your resume.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Deep Dive Guide: The Future of AI in Recruitment */}
+            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200" id="guide-content">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">
+                            The Future of Recruitment: Using AI to Get Hired in 2026
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            The hiring landscape has shifted. Recruitment is no longer just human-to-human; it’s AI-to-AI. Companies use AI to screen you. To compete, you must leverage AI to represent you.
+                        </p>
+                    </div>
+
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+                        {/* Sidebar / Table of Contents */}
+                        <aside className="hidden lg:block lg:col-span-3">
+                            <nav className="sticky top-24 space-y-2">
+                                <p className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm">Table of Contents</p>
+                                <a href="#chapter-1" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">1. AI in Hiring</a>
+                                <a href="#chapter-2" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">2. Leveling the Field</a>
+                                <a href="#chapter-3" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">3. Prompt Engineering</a>
+                                <a href="#chapter-4" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">4. Ethics of AI</a>
+                                <a href="#chapter-5" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">5. Automation Prep</a>
+                                <a href="#chapter-6" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">6. Under the Hood</a>
+                                <a href="#chapter-7" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">7. Global Trends</a>
+                                <a href="#chapter-8" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">8. Success Stories</a>
+                            </nav>
+                        </aside>
+
+                        {/* Main Content Area */}
+                        <div className="lg:col-span-9 prose prose-lg prose-indigo max-w-none">
+                            <div id="chapter-1" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">1</span>
+                                    How Companies Use AI to Hire
+                                </h3>
+                                <p>
+                                    Before you even speak to a recruiter, your application has likely been analyzed by three different AI models.
+                                </p>
+                                <ul className="list-disc pl-6 space-y-2 mt-4 text-gray-600">
+                                    <li><strong>Resume Parsing (NLP):</strong> Natural Language Processing algorithms read your resume to extract skills, experience years, and education, identifying gaps or inconsistencies.</li>
+                                    <li><strong>Candidate Matching:</strong> Algorithms match your profile against the "ideal candidate persona" based on historical data of high-performing employees.</li>
+                                    <li><strong>Social Scraping:</strong> Some advanced tools aggregate public data from LinkedIn, GitHub, and Twitter to build a comprehensive profile of your digital footprint.</li>
+                                </ul>
+                                <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100 mt-6">
+                                    <p className="text-indigo-900 font-medium">
+                                        <strong>The Reality:</strong> If you are writing your resume manually with a text editor, you are bringing a knife to a gunfight. You are optimising for a human reader, while the first gatekeeper is a machine.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="chapter-2" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">2</span>
+                                    Leveling the Playing Field
+                                </h3>
+                                <p>
+                                    Using an AI Resume Builder like Hirecta isn't "cheating"—it's an equalizer. It gives you the same technological advantage that the employer has.
+                                </p>
+                                <h4 className="text-xl font-bold text-gray-800 mt-8 mb-4">Benefits of AI-Assisted Writing:</h4>
+                                <ul className="list-disc pl-6 space-y-2 mt-4 text-gray-600">
+                                    <li><strong>Objectivity:</strong> Humans struggle to sell themselves. We are modest or forgetful. AI is objective. It identifies your strengths and articulates them confidently.</li>
+                                    <li><strong>Keyword Optimization:</strong> AI analyzes thousands of job descriptions to know exactly which keywords (e.g., "Stakeholder Management" vs. "Talking to bosses") drive results.</li>
+                                    <li><strong>Grammar & Tone:</strong> It eliminates the typo risk and ensures a consistent, professional "active voice" throughout the document.</li>
+                                </ul>
+                            </div>
+
+                            <div id="chapter-3" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">3</span>
+                                    Prompt Engineering for Your Career
+                                </h3>
+                                <p>
+                                    Even with an AI builder, your input matters. Think of yourself as the "Prompt Engineer" of your own career story.
+                                </p>
+                                <div className="bg-white p-6 rounded-xl border-l-4 border-purple-500 my-6 shadow-sm">
+                                    <h5 className="font-bold text-purple-900 mb-2">How to Feed the AI:</h5>
+                                    <p className="text-gray-700 italic mb-2">Input: "I sold stuff."</p>
+                                    <p className="text-gray-900 font-bold mb-4">Result: "Responsible for sales." (Weak)</p>
+                                    <hr className="border-gray-100 my-2" />
+                                    <p className="text-gray-700 italic mb-2">Input: "I sold software to hospitals. I made $1M last year. It was 20% more than the goal."</p>
+                                    <p className="text-gray-900 font-bold">Result: "Exceeded annual sales targets by 20%, generating $1M in revenue through strategic software licensing to healthcare enterprise clients." (Strong)</p>
+                                </div>
+                                <p>
+                                    The AI needs <strong>metrics</strong> and <strong>facts</strong> from you. It handles the <em>style</em>, but you must provide the <em>substance</em>.
+                                </p>
+                            </div>
+
+                            <div id="chapter-4" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">4</span>
+                                    The Ethics of AI in Job Applications
+                                </h3>
+                                <p>
+                                    Will recruiters know? Do they care?
+                                </p>
+                                <p className="mt-4">
+                                    <strong>Recruiters don't care who wrote the resume.</strong> They care if the resume accurately reflects your ability to do the job. If AI helps you communicate your true value more clearly, efficient recruiters appreciate it.
+                                </p>
+                                <div className="bg-red-50 p-6 rounded-xl border border-red-100 my-6">
+                                    <strong className="text-red-800 block mb-2 flex items-center gap-2">⚠️ WARNING: Hallucinations</strong>
+                                    <p className="text-red-700 text-sm">
+                                        Generative AI can sometimes "hallucinate" or invent facts to fill gaps. Always review every single line generated. If the AI says you managed a budget of $50k and you didn't, delete it. Lying on a resume is grounds for immediate rejection or firing later.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div id="chapter-5" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">5</span>
+                                    Preparing for the Age of Automation
+                                </h3>
+                                <p>
+                                    The resume is just step one. AI is transforming the entire interview process.
+                                </p>
+                                <ul className="list-disc pl-6 space-y-2 mt-4 text-gray-600">
+                                    <li><strong>AI Video Interviews:</strong> Tools like HireVue analyze your micro-expressions, tone of voice, and eye contact during recorded video answers.</li>
+                                    <li><strong>Skill Assessments:</strong> AI-driven code challenges or writing tasks are becoming standard before you meet a human.</li>
+                                    <li><strong>Chatbot Screeners:</strong> You might have a 15-minute text chat with a bot to verify your availability and basic quals.</li>
+                                </ul>
+                                <p className="mt-4">
+                                    To succeed, you must be comfortable with technology. Using Hirecta shows that you are a modern, tech-forward candidate who knows how to use tools to maximize efficiency.
+                                </p>
+                            </div>
+
+                            <div id="chapter-6" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">6</span>
+                                    Under the Hood - How Our AI Works
+                                </h3>
+                                <p>
+                                    Hirecta isn't just a grammar checker. It leverages the latest advancements in Generative Pre-trained Transformers (GPT) and Large Language Models (LLMs).
+                                </p>
+                                <h4 className="text-xl font-bold text-gray-800 mt-8 mb-4">1. The Training Data</h4>
+                                <p>
+                                    Generic AI (like the free version of ChatGPT) is trained on the entire internet—Wikipedia, Reddit, and blogs.
+                                    <br />
+                                    <strong>Hirecta's AI</strong> is fine-tuned on a proprietary dataset of:
+                                </p>
+                                <ul className="list-disc pl-6 mt-2 space-y-1 text-sm text-gray-600">
+                                    <li>10 million+ successful resumes (that got interviews).</li>
+                                    <li>500,000+ job descriptions from Fortune 500 companies.</li>
+                                    <li>Recruiter feedback loops and selection criteria.</li>
+                                </ul>
+
+                                <h4 className="text-xl font-bold text-gray-800 mt-8 mb-4">2. Contextual Awareness</h4>
+                                <p>
+                                    Most tools copy-paste. Our AI understands <em>context</em>.
+                                    <br />
+                                    If you write <em>"I worked at McDonald's"</em> and you are applying for a **Software Engineering** role, the AI highlights your "Teamwork," "Time Management," and "Working under pressure."
+                                    <br />
+                                    If you are applying for a **sales role**, it highlights "Up-selling," "Customer Service," and "POS systems."
+                                    It dynamically rewrites your history to match your future.
+                                </p>
+
+                                <h4 className="text-xl font-bold text-gray-800 mt-8 mb-4">3. Privacy Architecture</h4>
+                                <ul className="list-disc pl-6 mt-2 space-y-1 text-sm text-gray-600">
+                                    <li><strong>Encryption:</strong> All data is encrypted at rest (AES-256) and in transit (TLS 1.3).</li>
+                                    <li><strong>Anonymization:</strong> Your personal data is stripped before any AI processing to ensure privacy.</li>
+                                    <li><strong>No Training:</strong> We never use your specific resume to train our public models without your explicit consent.</li>
+                                </ul>
+                            </div>
+
+                            <div id="chapter-7" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">7</span>
+                                    Global Recruitment Trends 2026-2030
+                                </h3>
+                                <p>
+                                    The resume of today will look very different in 5 years. Hirecta is built to secure your career for the next decade.
+                                </p>
+
+                                <div className="grid md:grid-cols-2 gap-8 my-8">
+                                    <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                                        <h5 className="font-bold text-indigo-900 mb-2">Trend 1: Skills over Degrees</h5>
+                                        <p className="text-sm text-gray-700">
+                                            Companies like Google, Tesla, and IBM have removed college degree requirements. They care about <strong>Skills Verification</strong>. Your resume must list skills + certification proofs, not just university names.
+                                        </p>
+                                    </div>
+                                    <div className="bg-purple-50 p-6 rounded-xl border border-purple-100">
+                                        <h5 className="font-bold text-purple-900 mb-2">Trend 2: The Gig Economy Resume</h5>
+                                        <p className="text-sm text-gray-700">
+                                            Careers are no longer linear ladders. They are "Portfolios" of projects. Resumes are shifting from "Job Titles" to "Project Impact" sections.
+                                        </p>
+                                    </div>
+                                    <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                                        <h5 className="font-bold text-blue-900 mb-2">Trend 3: Soft Skills Verification</h5>
+                                        <p className="text-sm text-gray-700">
+                                            In an AI world, technical code can be generated. **Human** skills (Empathy, Negotiation, Leadership) are the premium. AI will scan your resume for evidence of "Humanity."
+                                        </p>
+                                    </div>
+                                    <div className="bg-green-50 p-6 rounded-xl border border-green-100">
+                                        <h5 className="font-bold text-green-900 mb-2">Trend 4: Video Interaction</h5>
+                                        <p className="text-sm text-gray-700">
+                                            Resumes will soon contain embedded video introductions or Loom links. Hirecta is already beta-testing video-resume integration.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-8" className="scroll-mt-24 mb-12">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">8</span>
+                                    Case Studies - Real Success Stories
+                                </h3>
+
+                                <div className="space-y-6 my-8">
+                                    <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">JD</div>
+                                            <div>
+                                                <p className="font-bold text-gray-900">John D. - Software Engineer</p>
+                                                <p className="text-xs text-gray-500">Laid off &rarr; Hired in 2 weeks</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-600 italic">"I sent 100 resumes and got 0 callbacks. I used Hirecta's AI to rewrite my bullet points with metrics. I sent 10 more and got 4 interviews. The difference was night and day."</p>
+                                    </div>
+
+                                    <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">SM</div>
+                                            <div>
+                                                <p className="font-bold text-gray-900">Sarah M. - Marketing Director</p>
+                                                <p className="text-xs text-gray-500">Career Pivot</p>
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-600 italic">"I was trying to move from Sales to Marketing. The AI helped me reframe my sales experience as 'Market Analysis' and 'Client Growth Strategy'. It spoke the language I didn't know yet."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-900 text-white p-8 rounded-2xl mt-12 text-center shadow-xl">
+                                <h3 className="text-2xl font-bold mb-4">Future-Proof Your Application</h3>
+                                <p className="mb-8 text-slate-300">
+                                    Don't use 2010 tools for a 2026 job search. Build a resume that speaks the language of modern hiring algorithms.
+                                </p>
+                                <Link
+                                    href={`${ENV.EDITOR_URL}/editor`}
+                                    className="inline-block px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full font-bold text-lg hover:shadow-lg hover:from-blue-600 hover:to-purple-600 transition-all"
+                                >
+                                    Build AI-Optimized Resume
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

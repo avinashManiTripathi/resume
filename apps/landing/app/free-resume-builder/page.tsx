@@ -60,6 +60,73 @@ const productSchema = {
         "Unlimited Free PDF Downloads",
         "No Watermarks",
         "No Credit Card Required"
+    ],
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Sarah Martinez"
+            },
+            "reviewBody": "Got 3 interview calls in just one week after using this builder. The AI suggestions were spot-on!"
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "James Chen"
+            },
+            "reviewBody": "The voice input feature saved me hours. I just talked through my experience and it formatted everything professionally."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Emily Rodriguez"
+            },
+            "reviewBody": "Actually free with no tricks! Downloaded my resume as PDF with zero watermarks. Highly recommend."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Michael Brown"
+            },
+            "reviewBody": "The job description pasting feature is brilliant. It automatically matched keywords and highlighted my relevant experience."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Priya Patel"
+            },
+            "reviewBody": "Templates look genuinely professional. Landed my dream job at a Fortune 500 company. Thank you!"
+        }
     ]
 };
 
@@ -385,6 +452,264 @@ export default function FreeResumeBuilderPage() {
                 </div>
             </section>
 
+            {/* Ultimate Guide: The Definitive Guide to Writing a Resume in 2026 */}
+            <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-200" id="guide-content">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-extrabold text-gray-900 mb-4 font-heading">
+                            The Definitive Guide to Writing a Resume in 2026
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            In the competitive job market of 2026, a generic resume won't cut it. You need a strategic marketing document tailored for both Artificial Intelligence (ATS) and human psychology.
+                        </p>
+                    </div>
+
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+                        {/* Sidebar / Table of Contents */}
+                        <aside className="hidden lg:block lg:col-span-3">
+                            <nav className="sticky top-24 space-y-2">
+                                <p className="font-bold text-gray-900 mb-4 uppercase tracking-wider text-sm">Table of Contents</p>
+                                <a href="#chapter-1" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">1. Modern Resume Anatomy</a>
+                                <a href="#chapter-2" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">2. Work Experience (STAR)</a>
+                                <a href="#chapter-3" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">3. Skills (Hard vs Soft)</a>
+                                <a href="#chapter-4" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">4. Education & Certs</a>
+                                <a href="#chapter-5" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">5. ATS Fail-Safes</a>
+                                <a href="#chapter-6" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">6. Strategies by Career Stage</a>
+                                <a href="#chapter-7" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">7. Industry Blueprints</a>
+                                <a href="#chapter-8" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">8. Hidden Sections</a>
+                                <a href="#chapter-9" className="block text-sm text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-md transition-colors">9. The 10 Commandments</a>
+                            </nav>
+                        </aside>
+
+                        {/* Main Content Area */}
+                        <div className="lg:col-span-9 prose prose-lg prose-indigo max-w-none">
+
+                            <div id="chapter-1" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">1</span>
+                                    The Modern Resume Anatomy
+                                </h3>
+                                <p>
+                                    Gone are the days of listing every job you've ever had since high school. The modern resume is a highlight reel, not a biography. It must be concise, relevant, and quantifiable.
+                                </p>
+                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm mt-6">
+                                    <h4 className="text-xl font-bold text-gray-800 mb-4">Crucial Components:</h4>
+                                    <ul className="space-y-4">
+                                        <li className="flex items-start gap-3">
+                                            <div className="mt-1 w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0"></div>
+                                            <div>
+                                                <strong className="text-gray-900 block">The Header:</strong>
+                                                <span className="text-gray-600">Name (20-24pt), Job Title (Target Role), Location (City, State), and Clickable Links (LinkedIn/Portfolio).</span>
+                                            </div>
+                                        </li>
+                                        <li className="flex items-start gap-3">
+                                            <div className="mt-1 w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0"></div>
+                                            <div>
+                                                <strong className="text-gray-900 block">Professional Summary:</strong>
+                                                <span className="text-gray-600">Your elevator pitch. "Marketing Specialist with 5+ years managing $50k budgets." <strong>Start with this, not an objective.</strong></span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="chapter-2" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">2</span>
+                                    Writing Work Experience (STAR Method)
+                                </h3>
+                                <p>
+                                    Most people make the mistake of listing duties ("Responsible for sales"). Instead, list <strong>achievements</strong> ("Increased sales by 20%").
+                                </p>
+                                <div className="grid md:grid-cols-2 gap-6 mt-8">
+                                    <div className="bg-red-50 p-6 rounded-xl border border-red-100">
+                                        <h5 className="font-bold text-red-800 mb-2">❌ Bad Example</h5>
+                                        <p className="text-red-700 text-sm">"Managed a team of designers."</p>
+                                    </div>
+                                    <div className="bg-green-50 p-6 rounded-xl border border-green-100">
+                                        <h5 className="font-bold text-green-800 mb-2">✅ Good Example (STAR)</h5>
+                                        <p className="text-green-700 text-sm">"<strong>Led</strong> a cross-functional team of 10 designers (Task) to launch a new mobile app (Action), resulting in a <strong>15% increase</strong> in user retention (Result)."</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-3" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">3</span>
+                                    Skills: Hard vs. Soft
+                                </h3>
+                                <div className="grid md:grid-cols-2 gap-8 my-8">
+                                    <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-indigo-500">
+                                        <h5 className="font-bold text-indigo-900 mb-3 text-lg">Hard Skills (Technical)</h5>
+                                        <ul className="text-sm text-gray-600 space-y-2">
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Python, Java, React</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Adobe Creative Suite</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Financial Modeling</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Data Analysis (SQL)</li>
+                                        </ul>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-pink-500">
+                                        <h5 className="font-bold text-pink-900 mb-3 text-lg">Soft Skills (Interpersonal)</h5>
+                                        <ul className="text-sm text-gray-600 space-y-2">
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Communication</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Leadership</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Problem Solving</li>
+                                            <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Adaptability</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-4" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">4</span>
+                                    Education & Certifications
+                                </h3>
+                                <p className="mb-4">Keep this simple unless you are a recent grad.</p>
+                                <ul className="list-disc pl-6 space-y-2 text-gray-600 bg-white p-6 rounded-xl border border-gray-200">
+                                    <li><strong>Degree:</strong> Name of degree & major (e.g., "BS Computer Science").</li>
+                                    <li><strong>University:</strong> Name of institution.</li>
+                                    <li><strong>Graduation Year:</strong> Optional if >15 years ago.</li>
+                                    <li><strong>GPA:</strong> Only if >3.5 and recent grad.</li>
+                                    <li className="pt-2 border-t mt-2"><strong>Certifications:</strong> List relevant courses from Coursera, Udemy, etc.</li>
+                                </ul>
+                            </div>
+
+                            <div id="chapter-5" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">5</span>
+                                    Tailoring for the ATS
+                                </h3>
+                                <p>75% of resumes are never seen by a human. Beat the bot.</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                    <div className="p-4 bg-gray-100 rounded-lg">
+                                        <strong className="block text-gray-900 mb-1">File Format</strong>
+                                        <p className="text-sm text-gray-600">Always PDF unless Word is requested.</p>
+                                    </div>
+                                    <div className="p-4 bg-gray-100 rounded-lg">
+                                        <strong className="block text-gray-900 mb-1">No Graphics</strong>
+                                        <p className="text-sm text-gray-600">Avoid columns, tables, and icons.</p>
+                                    </div>
+                                    <div className="p-4 bg-gray-100 rounded-lg">
+                                        <strong className="block text-gray-900 mb-1">Keywords</strong>
+                                        <p className="text-sm text-gray-600">Edit your "Skills" section to match the Job Description exactly.</p>
+                                    </div>
+                                    <div className="p-4 bg-gray-100 rounded-lg">
+                                        <strong className="block text-gray-900 mb-1">Fonts</strong>
+                                        <p className="text-sm text-gray-600">Use Arial, Calibri, or Roboto. No scripts.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-6" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">6</span>
+                                    Strategies by Career Stage
+                                </h3>
+                                <div className="space-y-6">
+                                    <div className="bg-white p-6 rounded-lg shadow-sm">
+                                        <h4 className="font-bold text-lg text-gray-900">Students & Grads</h4>
+                                        <p className="text-sm text-gray-600 mt-2">Focus on <strong>Potential</strong>. Move education to the top. Treat projects like jobs.</p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-lg shadow-sm">
+                                        <h4 className="font-bold text-lg text-gray-900">Mid-Level Managers</h4>
+                                        <p className="text-sm text-gray-600 mt-2">Focus on <strong>Impact</strong>. Summarize your track record. Remove internships.</p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-lg shadow-sm">
+                                        <h4 className="font-bold text-lg text-gray-900">Executives (C-Suite)</h4>
+                                        <p className="text-sm text-gray-600 mt-2">Focus on <strong>ROI & Vision</strong>. Mention board seats and P&L ownership.</p>
+                                    </div>
+                                    <div className="bg-white p-6 rounded-lg shadow-sm">
+                                        <h4 className="font-bold text-lg text-gray-900">Career Changers</h4>
+                                        <p className="text-sm text-gray-600 mt-2">Focus on <strong>Transferable Skills</strong>. Use a hybrid format with a "Core Competencies" section.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-7" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">7</span>
+                                    Industry Blueprints
+                                </h3>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                        <h5 className="font-bold text-indigo-600 mb-2">💻 Tech</h5>
+                                        <p className="text-sm text-gray-600">GitHub links mandatory. Group skills by Language/Framework.</p>
+                                    </div>
+                                    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                        <h5 className="font-bold text-green-600 mb-2">🏥 Healthcare</h5>
+                                        <p className="text-sm text-gray-600">Credentials (RN, MD) in header. EMR proficiency listed.</p>
+                                    </div>
+                                    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                        <h5 className="font-bold text-blue-600 mb-2">📊 Finance</h5>
+                                        <p className="text-sm text-gray-600">Conservative format. Deal sheets attached.</p>
+                                    </div>
+                                    <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+                                        <h5 className="font-bold text-purple-600 mb-2">🎨 Creative</h5>
+                                        <p className="text-sm text-gray-600">Portfolio link front & center. Clean typography.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="chapter-8" className="scroll-mt-24 mb-16">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">8</span>
+                                    Hidden Sections
+                                </h3>
+                                <ul className="space-y-4">
+                                    <li className="bg-gray-100 p-4 rounded-lg">
+                                        <strong className="block text-gray-900">Volunteering</strong>
+                                        <span className="text-sm text-gray-600">Fills gaps and shows empathy.</span>
+                                    </li>
+                                    <li className="bg-gray-100 p-4 rounded-lg">
+                                        <strong className="block text-gray-900">Languages</strong>
+                                        <span className="text-sm text-gray-600">Essential for global roles. List proficiency level.</span>
+                                    </li>
+                                    <li className="bg-gray-100 p-4 rounded-lg">
+                                        <strong className="block text-gray-900">Hobbies</strong>
+                                        <span className="text-sm text-gray-600">Only if unique or shows discipline (e.g., Marathon Runner).</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div id="chapter-9" className="scroll-mt-24 mb-12">
+                                <h3 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                    <span className="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 text-lg font-bold">9</span>
+                                    The 10 Commandments
+                                </h3>
+                                <div className="bg-indigo-900 text-gray-100 p-8 rounded-2xl shadow-xl">
+                                    <ol className="list-decimal pl-6 space-y-3 font-medium">
+                                        <li>No typos. Ever.</li>
+                                        <li>Tailor every single resume.</li>
+                                        <li>Summary > Objective.</li>
+                                        <li>Quantify achievements (Numbers!).</li>
+                                        <li>Keep it 1-2 pages maximum.</li>
+                                        <li>Professional email address only.</li>
+                                        <li>ATS-friendly formatting.</li>
+                                        <li>Use active verbs.</li>
+                                        <li>Honesty is non-negotiable.</li>
+                                        <li>PDF format always.</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div className="bg-gradient-to-r from-indigo-600 to-blue-600 p-8 rounded-2xl text-center text-white shadow-lg transform transition hover:scale-[1.01]">
+                                <h3 className="text-2xl font-bold mb-4 text-white">Ready to Build Your Perfect Resume?</h3>
+                                <p className="mb-8 text-indigo-100">
+                                    Apply everything you just learned with our free, AI-powered builder. It handles the formatting and ATS optimization for you.
+                                </p>
+                                <Link
+                                    href={`${ENV.EDITOR_URL}/editor`}
+                                    className="inline-block px-8 py-4 bg-white text-indigo-900 rounded-full font-bold text-lg hover:bg-gray-100 transition-colors shadow-md"
+                                >
+                                    Create My Resume Free
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Testimonials */}
             <section id="testimonials" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
@@ -446,6 +771,118 @@ export default function FreeResumeBuilderPage() {
                                 </div>
                             </Link>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Resume Formats Guide */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 mb-4 text-center">
+                        Which Resume Format is Right for You?
+                    </h2>
+                    <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
+                        Choosing the right structure is the first step to getting hired. Hirecta supports all three major professional formats.
+                    </p>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        <div className="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
+                                Chronological
+                            </h3>
+                            <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block mb-4">Most Popular</div>
+                            <p className="text-gray-600 mb-4">
+                                Lists your work history in reverse order (newest first). Best for showing steady career progression.
+                            </p>
+                            <ul className="space-y-2 text-sm text-gray-500 mb-6">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Best for ATS parsing</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Preferred by recruiters</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Shows growth clearly</li>
+                            </ul>
+                            <p className="text-sm font-medium text-gray-900">Recommended for:</p>
+                            <p className="text-sm text-gray-600">Professionals with consistent work history in the same industry.</p>
+                        </div>
+
+                        <div className="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
+                                Functional (Skills)
+                            </h3>
+                            <div className="text-sm font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full inline-block mb-4">For Career Changers</div>
+                            <p className="text-gray-600 mb-4">
+                                Focuses on your skills and abilities rather than chronological work history.
+                            </p>
+                            <ul className="space-y-2 text-sm text-gray-500 mb-6">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Hides employment gaps</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Highlights transferable skills</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Good for portfolio work</li>
+                            </ul>
+                            <p className="text-sm font-medium text-gray-900">Recommended for:</p>
+                            <p className="text-sm text-gray-600">Freelancers, career changers, or those with employment gaps.</p>
+                        </div>
+
+                        <div className="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+                            <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                                Hybrid (Combination)
+                            </h3>
+                            <div className="text-sm font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full inline-block mb-4">Modern & Flexible</div>
+                            <p className="text-gray-600 mb-4">
+                                Combines a functional skills summary with a chronological work history.
+                            </p>
+                            <ul className="space-y-2 text-sm text-gray-500 mb-6">
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Extensive skill set</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Senior level roles</li>
+                                <li className="flex items-start gap-2"><CheckCircle className="w-4 h-4 text-green-500 mt-0.5" /> Very adaptable</li>
+                            </ul>
+                            <p className="text-sm font-medium text-gray-900">Recommended for:</p>
+                            <p className="text-sm text-gray-600">Senior professionals and executives with diverse experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* 2026 Checklist */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-4xl font-extrabold mb-8 text-center">
+                        The Ultimate 2026 Resume Checklist
+                    </h2>
+                    <p className="text-xl text-slate-300 text-center mb-12">
+                        Before you download, make sure your resume checks all these boxes.
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-x-12 gap-y-6">
+                        {[
+                            "Contact Info: Name, Phone, Professional Email, LinkedIn URL",
+                            "Summary: 3-4 lines highlighting years of experience & top achievements",
+                            "Skills: Mixed 'Hard Skills' (Python, SEO) and 'Soft Skills' (Leadership)",
+                            "Experience: Reverse-chronological order (newest first)",
+                            "Metrics: Quantified achievements (e.g., 'Increased revenue by 20%')",
+                            "Formatting: Standard fonts (Arial, Calibri), 10-12pt size",
+                            "Length: 1 page (unless 10+ years experience)",
+                            "ATS Check: Comparison with job description keywords",
+                            "Grammar: Zero typos or spelling errors",
+                            "File Type: PDF format (unless DOCX is requested)"
+                        ].map((item, index) => (
+                            <div key={index} className="flex items-start gap-3">
+                                <div className="shrink-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-black font-bold text-xs">
+                                    ✓
+                                </div>
+                                <span className="text-slate-200">{item}</span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="mt-12 text-center">
+                        <Link
+                            href={`${ENV.EDITOR_URL}/editor`}
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 rounded-xl font-bold text-lg hover:bg-green-400 transition-all"
+                        >
+                            <FileText className="w-5 h-5" />
+                            Build My Resume Now
+                        </Link>
                     </div>
                 </div>
             </section>

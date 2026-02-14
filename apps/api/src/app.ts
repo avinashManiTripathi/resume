@@ -143,6 +143,7 @@ export class App {
             'http://localhost:3005'
         ];
 
+
         this.app.use(cors({
             origin: (origin, callback) => {
                 // Allow requests with no origin (like mobile apps or curl)
