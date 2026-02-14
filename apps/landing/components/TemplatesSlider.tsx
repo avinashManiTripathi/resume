@@ -94,7 +94,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                                         width={320}
                                         height={415}
                                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
-                                        priority={index < 2}
+                                        priority={index < 4}
                                     />
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center">
