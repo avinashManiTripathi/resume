@@ -79,7 +79,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                 className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4 px-4 md:px-8"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', minHeight: '500px' }}
             >
-                {templates.map((template) => (
+                {templates.map((template, index) => (
                     <Link
                         key={template._id}
                         href={`${ENV.EDITOR_URL}/editor?templateId=${template._id}`}
@@ -94,6 +94,7 @@ export function TemplatesSlider({ templates }: TemplatesSliderProps) {
                                         width={320}
                                         height={415}
                                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform"
+                                        priority={index < 2}
                                     />
                                 ) : (
                                     <div className="absolute inset-0 flex items-center justify-center">

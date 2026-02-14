@@ -117,7 +117,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
         <meta name="theme-color" content="#3b82f6" />
 
-        <link rel="preconnect" href="https://images.unsplash.com" />
+
 
         <link rel="manifest" href="/manifest.json" />
         <meta name="google-adsense-account" content="ca-pub-3262304083143736"></meta>
