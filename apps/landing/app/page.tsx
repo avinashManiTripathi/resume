@@ -960,6 +960,7 @@ export default async function LandingPage() {
                     src={"/images/prateek.png"}
                     alt="Prateek - Product Designer success story using Hirecta"
                     fill
+                    unoptimized
                     className="object-cover"
                   />
                 </div>
@@ -992,6 +993,7 @@ export default async function LandingPage() {
                     src="/images/abhishek.jpeg"
                     alt="Abhishek - Product Manager success story using AI resume tailoring"
                     fill
+                    unoptimized
                     className="object-cover"
                   />
                 </div>
