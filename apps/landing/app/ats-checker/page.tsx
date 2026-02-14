@@ -812,7 +812,7 @@ export default function ATSCheckerMarketingPage() {
                                     <p className="mb-2 text-gray-500">// Boolean Search Example</p>
                                     <p>("Project Manager" OR "Program Manager") AND "SaaS" AND "San Francisco" <span className="text-red-400">NOT "Intern"</span></p>
                                 </div>
-                                <p><strong>The Stoplight System:</strong> Some ATS rank you Green (80%+), Yellow (60-80%), or Red (<60%). Recruiters rarely look at Red.</p>
+                                <p><strong>The Stoplight System:</strong> Some ATS rank you Green (80%+), Yellow (60-80%), or Red (&lt;60%). Recruiters rarely look at Red.</p>
                             </div>
 
                             <div id="chapter-8" className="scroll-mt-24 mb-12">

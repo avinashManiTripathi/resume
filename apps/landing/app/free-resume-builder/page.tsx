@@ -569,8 +569,8 @@ export default function FreeResumeBuilderPage() {
                                 <ul className="list-disc pl-6 space-y-2 text-gray-600 bg-white p-6 rounded-xl border border-gray-200">
                                     <li><strong>Degree:</strong> Name of degree & major (e.g., "BS Computer Science").</li>
                                     <li><strong>University:</strong> Name of institution.</li>
-                                    <li><strong>Graduation Year:</strong> Optional if >15 years ago.</li>
-                                    <li><strong>GPA:</strong> Only if >3.5 and recent grad.</li>
+                                    <li><strong>Graduation Year:</strong> Optional if &gt;15 years ago.</li>
+                                    <li><strong>GPA:</strong> Only if &gt;3.5 and recent grad.</li>
                                     <li className="pt-2 border-t mt-2"><strong>Certifications:</strong> List relevant courses from Coursera, Udemy, etc.</li>
                                 </ul>
                             </div>
@@ -681,7 +681,7 @@ export default function FreeResumeBuilderPage() {
                                     <ol className="list-decimal pl-6 space-y-3 font-medium">
                                         <li>No typos. Ever.</li>
                                         <li>Tailor every single resume.</li>
-                                        <li>Summary > Objective.</li>
+                                        <li>Summary &gt; Objective.</li>
                                         <li>Quantify achievements (Numbers!).</li>
                                         <li>Keep it 1-2 pages maximum.</li>
                                         <li>Professional email address only.</li>
