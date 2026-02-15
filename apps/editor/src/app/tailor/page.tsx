@@ -232,7 +232,7 @@ export default function TailorResume() {
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
                     <Link href={ENV.BASE_URL} className="flex items-center gap-2.5 no-underline group">
                         <Image
-                            src="/logo.avif"
+                            src="/logo.png"
                             alt="Hirecta Logo"
                             width={120}   // w-15 → 60px
                             height={30}  // h-9 → 36px
