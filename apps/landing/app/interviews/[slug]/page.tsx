@@ -49,6 +49,7 @@ async function getInterview(slug: string): Promise<InterviewData | null> {
 
 // Extract questions from HTML content for FAQ schema
 function extractQuestionsForSchema(content: string): Array<{ question: string; answer: string }> {
+    if (!content) return [];
     // Split content by h2 tags and process each section
     const sections = content.split(/<h2[^>]*>/gi);
     const questions: Array<{ question: string; answer: string }> = [];
@@ -316,11 +317,11 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                             </span>
                             <span>•</span>
                             <time itemProp="datePublished" dateTime={interview.publishDate}>
-                                {new Date(interview.publishDate).toLocaleDateString('en-US', {
+                                {interview.publishDate ? new Date(interview.publishDate).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric'
-                                })}
+                                }) : ''}
                             </time>
                             <span>•</span>
                             <span className="text-blue-600" itemProp="articleSection">{interview.category}</span>
