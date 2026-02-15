@@ -11,6 +11,7 @@ import { usePersistence } from "../hooks/usePersistence";
 import { ENV } from "../env";
 import { API_ENDPOINTS } from "@repo/utils-client";
 import { useAppNetwork } from "../hooks/useAppNetwork";
+import Link from "next/link";
 
 
 interface ATSResult {
@@ -303,24 +304,26 @@ export default function ATSCheckerPage() {
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-4 md:px-8 py-4">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100">
-                            <Target className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-lg font-bold text-gray-900 tracking-tight">ATS Checker</h1>
-                            <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">AI Optimization</p>
-                        </div>
-                    </div>
+                    <Link href={ENV.BASE_URL} className="flex items-center gap-2.5 no-underline group">
+                        <Image
+                            src="/logo.avif"
+                            alt="Hirecta Logo"
+                            width={120}   // w-15 → 60px
+                            height={30}  // h-9 → 36px
+                            className="transition-transform object-contain"
+                            priority
+                            unoptimized
+                        />
+                    </Link>
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => router.push('/editor')}
+                            onClick={() => router.push('/')}
                             className="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-blue-600 transition-colors"
                         >
-                            Back to Editor
+                            Back to Dashboard
                         </button>
                         <button
-                            onClick={() => router.push('/editor')}
+                            onClick={() => router.push('/')}
                             className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
                             aria-label="Close"
                         >
