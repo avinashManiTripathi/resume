@@ -20,7 +20,7 @@ interface InterviewData {
     image?: string;
     featuredImage?: string;
     tags: string[];
-    author: {
+    author?: {
         name: string;
         avatar?: string;
         role?: string;
@@ -39,6 +39,12 @@ async function getInterview(slug: string): Promise<InterviewData | null> {
         const response = await serverNetwork.get<InterviewData | null>(`${ENV.API_URL}${API_ENDPOINTS.BLOG.SLUG(slug)}`, {
             next: { revalidate: 60 }, // Revalidate every 60 seconds
         });
+
+        if (response && !response.author) {
+            response.author = {
+                name: "Hirecta Team"
+            };
+        }
 
         return response;
     } catch (error) {
@@ -87,7 +93,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: `${interview.title} | Hirecta Interview Prep`,
         description: description,
         keywords: [interview.category, ...interview.tags, 'interview questions', 'interview prep', 'job interview'].join(', '),
-        authors: [{ name: interview.author.name }],
+        authors: [{ name: interview.author?.name || 'Hirecta Team' }],
         creator: "Hirecta",
         publisher: "Hirecta",
         alternates: {
@@ -101,7 +107,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             locale: "en_US",
             type: "article",
             publishedTime: interview.publishDate,
-            authors: [interview.author.name],
+            authors: [interview.author?.name || 'Hirecta Team'],
             tags: interview.tags,
             images: interview.featuredImage ? [
                 {
@@ -184,8 +190,8 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
         "dateModified": interview.publishDate,
         "author": {
             "@type": "Person",
-            "name": interview.author.name,
-            "email": interview.author.email
+            "name": interview.author?.name,
+            "email": interview.author?.email
         },
         "publisher": {
             "@type": "Organization",
@@ -225,7 +231,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
         "datePublished": interview.publishDate,
         "author": {
             "@type": "Person",
-            "name": interview.author.name,
+            "name": interview.author?.name,
             "url": ENV.BASE_URL
         },
         "mainEntity": {
@@ -237,7 +243,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
             "datePublished": interview.publishDate,
             "author": {
                 "@type": "Person",
-                "name": interview.author.name,
+                "name": interview.author?.name,
                 "url": ENV.BASE_URL
             },
             "acceptedAnswer": {
@@ -248,7 +254,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                 "upvoteCount": 0,
                 "author": {
                     "@type": "Person",
-                    "name": interview.author.name,
+                    "name": interview.author?.name,
                     "url": ENV.BASE_URL
                 }
             }
@@ -313,7 +319,7 @@ export default async function InterviewDetailPage({ params }: { params: Promise<
                         </p>
                         <div className="flex items-center gap-4 text-sm text-slate-500">
                             <span itemProp="author" itemScope itemType="https://schema.org/Person">
-                                <span itemProp="name">{interview.author.name}</span>
+                                <span itemProp="name">{interview.author?.name}</span>
                             </span>
                             <span>•</span>
                             <time itemProp="datePublished" dateTime={interview.publishDate}>
