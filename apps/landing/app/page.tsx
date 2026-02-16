@@ -79,7 +79,7 @@ export default async function LandingPage() {
                   target="_blank"
                   className="bg-blue-600 text-white font-bold px-7 py-3.5 rounded-lg hover:bg-blue-700 transition-all text-center"
                 >
-                  Try Hirecta — Free
+                  Create Resume for Free
                 </Link>
                 <Link
                   href={URLS.EDITOR_ATS_CHECKER}
