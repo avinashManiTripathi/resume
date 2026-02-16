@@ -88,10 +88,9 @@ export const useResumeDownload = ({
                     await handleExport(pendingFormat as "pdf" | "doc");
                 } else {
                     // User logged in but NO subscription.
-                    console.log('[useResumeDownload] User logged in but needs subscription, triggering export to handle redirect');
+                    console.log('[useResumeDownload] User logged in but needs subscription, NOT auto-redirecting. Waiting for user action.');
                     downloadProcessedRef.current = true;
-                    // The handleExport inside page.tsx handles the "redirect to subscription" logic
-                    await handleExport(pendingFormat as "pdf" | "doc");
+                    sessionStorage.removeItem('pending_download');
                 }
             }
         };
