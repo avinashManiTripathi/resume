@@ -131,47 +131,15 @@ function CoverLetterCreateForm() {
                 setIsTemplateChanging(true);
             }
 
-            // Try to fetch specific template
-            try {
-                const data: any = await network.get(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${id}`);
+            const data: any = await network.get(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${id}`);
 
-                if (data.success && data.template) {
-                    setTemplate(data.template);
-                    return;
-                }
-            } catch (specificError) {
-                console.warn(`Failed to fetch template ${id}, attempting fallback...`, specificError);
-            }
-
-            // Fallback: Fetch all templates and pick the first one
-            console.log("Attempting to fetch all templates as fallback...");
-            const allTemplatesData: any = await network.get(API_ENDPOINTS.COVER_LETTER.TEMPLATES);
-
-            if (allTemplatesData.success && allTemplatesData.data && allTemplatesData.data.length > 0) {
-                const fallbackTemplate = allTemplatesData.data[0];
-                console.log("Fallback successful, using template:", fallbackTemplate.id);
-                setTemplate(fallbackTemplate);
-
-                // Update URL to match fallback
-                const url = new URL(window.location.href);
-                url.searchParams.set('templateId', fallbackTemplate.id);
-                window.history.replaceState({}, '', url.toString());
+            if (data.success) {
+                setTemplate(data.template);
             } else {
-                // Double fallback check - sometimes API returns 'templates' array directly or inside 'data'
-                const templatesList = allTemplatesData.templates || allTemplatesData.data || [];
-                if (templatesList.length > 0) {
-                    const fallbackTemplate = templatesList[0];
-                    setTemplate(fallbackTemplate);
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('templateId', fallbackTemplate.id || fallbackTemplate._id);
-                    window.history.replaceState({}, '', url.toString());
-                } else {
-                    setError("Template not found and no fallback available");
-                }
+                setError("Template not found");
             }
-
         } catch (err) {
-            console.error("Error in template fetch/fallback:", err);
+            console.error("Error fetching template:", err);
             setError("Failed to load template");
         } finally {
             if (isInitial) {
