@@ -1,6 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-
-
+import { generateAICacheKey, getCachedAnalysis, cacheAnalysis } from './ai-cache.service';
 
 
 let ai: any
@@ -32,6 +31,22 @@ export const parseResumeWithAI = async (
   company?: string
 ): Promise<any> => {
   try {
+    // 1. Generate Cache Key
+    const cacheKey = generateAICacheKey({
+      type: 'parse_resume', // Distinct prefix for this operation
+      resumeText,
+      jobDescription,
+      jobTitle,
+      company
+    });
+
+    // 2. Check Cache
+    const cachedResult = await getCachedAnalysis(cacheKey);
+    if (cachedResult) {
+      console.log(`🚀 Returning cached AI result for: ${cacheKey}`);
+      return cachedResult;
+    }
+
     const prompt = `You are an expert resume parser and ATS optimization specialist. Your task is to:
 
 1. Extract all information from the provided resume text
@@ -108,7 +123,7 @@ ${company ? `**COMPANY:** ${company}` : ''}
     - name, jobTitle, company, email, phone
     - Professional references (only if explicitly mentioned)
 
-**CRITICAL RULES:**
+11. **CRITICAL RULES:**
 - Return ONLY valid JSON, no markdown, no explanations
 - Use the exact field names specified
 - All dates must be in YYYY-MM format
@@ -253,6 +268,9 @@ Return ONLY the JSON object, nothing else.`;
     // Parse the JSON
     const parsedData = JSON.parse(cleanedText);
 
+    // 3. Cache the success result
+    await cacheAnalysis(cacheKey, parsedData);
+
     return parsedData;
   } catch (error) {
     console.error('AI Resume Parsing Error:', error);
@@ -266,6 +284,18 @@ Return ONLY the JSON object, nothing else.`;
  * Analyze resume with AI - Strict ATS Checker
  */
 export async function analyzeResumeWithAI(resumeText: string): Promise<any> {
+  // 1. Generate Cache Key
+  const cacheKey = generateAICacheKey({
+    type: 'analyze_resume',
+    resumeText
+  });
+
+  // 2. Check Cache
+  const cachedResult = await getCachedAnalysis(cacheKey);
+  if (cachedResult) {
+    console.log(`🚀 Returning cached AI Analysis for: ${cacheKey}`);
+    return cachedResult;
+  }
 
   const prompt = `
 You are an expert ATS (Applicant Tracking System) analyzer. Perform a STRICT analysis of the resume.
@@ -377,7 +407,10 @@ Return ONLY the JSON object (Analysis + fixedData keys).`;
   // Extract JSON from response
   const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
-    return JSON.parse(jsonMatch[0]);
+    const parsedData = JSON.parse(jsonMatch[0]);
+    // 3. Cache Result
+    await cacheAnalysis(cacheKey, parsedData);
+    return parsedData;
   }
 
   throw new Error('Failed to parse AI response: No valid JSON found');
