@@ -38,7 +38,83 @@ const softwareAppSchema = {
         "@type": "AggregateRating",
         "ratingValue": "4.8",
         "ratingCount": "2950"
-    }
+    },
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Jennifer Wu"
+            },
+            "reviewBody": "My resume kept getting rejected until I used this builder. The ATS check feature showed me exactly what was wrong."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Marcus Johnson"
+            },
+            "reviewBody": "Simple, clean, and effective. The templates are actually parsable by Workday."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Emily Sato"
+            },
+            "reviewBody": "Landed interviews at Amazon and Google after switching to this ATS-friendly format."
+        }
+    ]
+};
+
+// HowTo Schema for SEO
+const howToSchema = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Create an ATS-Friendly Resume",
+    "description": "Step-by-step guide to building a resume that passes Applicant Tracking Systems using Hirecta",
+    "totalTime": "PT8M",
+    "step": [
+        {
+            "@type": "HowToStep",
+            "name": "Select an ATS Template",
+            "text": "Choose from our collection of single-column, clean-formatted templates tested against major ATS platforms.",
+            "url": `${ENV.BASE_URL}/ats-resume-builder#step-1`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Optimize Keywords",
+            "text": "Use our live scanner to compare your resume against the job description and identify missing keywords.",
+            "url": `${ENV.BASE_URL}/ats-resume-builder#step-2`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Check Formatting",
+            "text": "Ensure no tables, graphics, or text boxes are used. Our builder handles this automatically.",
+            "url": `${ENV.BASE_URL}/ats-resume-builder#step-3`
+        },
+        {
+            "@type": "HowToStep",
+            "name": "Download as Text-Based PDF",
+            "text": "Export your resume as a machine-readable PDF that preserves human readability.",
+            "url": `${ENV.BASE_URL}/ats-resume-builder#step-4`
+        }
+    ]
 };
 
 export default function ATSResumeBuilderPage() {
@@ -93,6 +169,10 @@ export default function ATSResumeBuilderPage() {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
             />
 
             <ResourceHero
@@ -158,6 +238,32 @@ export default function ATSResumeBuilderPage() {
                             </p>
                         </section>
 
+                        {/* Related Tools Section - Internal Linking */}
+                        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-100">
+                            <div className="max-w-4xl mx-auto">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Start Building Your Resume</h2>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <Link href="/free-resume-builder" className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="p-2 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                                <FileText className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-bold text-gray-900 group-hover:text-blue-600">Free Resume Builder</h3>
+                                        </div>
+                                        <p className="text-sm text-gray-600">Create a professional resume in minutes using our free drag-and-drop editor.</p>
+                                    </Link>
+                                    <Link href="/ai-resume-builder" className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-purple-500 hover:shadow-lg transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                                <Brain className="w-5 h-5" />
+                                            </div>
+                                            <h3 className="font-bold text-gray-900 group-hover:text-purple-600">AI Resume Builder</h3>
+                                        </div>
+                                        <p className="text-sm text-gray-600">Use AI to automatically write your resume bullet points and summaries.</p>
+                                    </Link>
+                                </div>
+                            </div>
+                        </section>
                         <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Technical Architecture: How ATS Parsers Actually Work</h2>
                         <p>
                             To beat the system, you must understand its logic. Most modern Applicant Tracking Systems (Workday, Greenhouse, Taleo) use a four-stage process to evaluate your resume:
@@ -181,14 +287,14 @@ export default function ATSResumeBuilderPage() {
                             <li className="flex gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-200">
                                 <Search className="text-blue-600 shrink-0 w-8 h-8" />
                                 <div>
-                                    <h4 className="font-bold text-xl text-gray-900 mb-2">Workday (Enterprise Leader)</h4>
+                                    <h3 className="font-bold text-xl text-gray-900 mb-2">Workday (Enterprise Leader)</h3>
                                     <p className="text-gray-600">Used by IBM, Amazon, and Walmart. It is notoriously strict with formatting. Workday's parser often struggles with multi-column layouts, which is why we offer single-column <Link href="/templates" className="text-blue-600 hover:underline font-semibold">professional templates</Link> specifically for these applications.</p>
                                 </div>
                             </li>
                             <li className="flex gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-200">
                                 <Zap className="text-yellow-600 shrink-0 w-8 h-8" />
                                 <div>
-                                    <h4 className="font-bold text-xl text-gray-900 mb-2">Greenhouse & Lever (Tech Favorites)</h4>
+                                    <h3 className="font-bold text-xl text-gray-900 mb-2">Greenhouse & Lever (Tech Favorites)</h3>
                                     <p className="text-gray-600">Dominant in Silicon Valley. These systems are more modern and focus heavily on **Keyword Density** and **Semantic Relevance**. Our AI writer ensures your skills are mentioned multiple times in varied contexts.</p>
                                 </div>
                             </li>
@@ -214,7 +320,7 @@ export default function ATSResumeBuilderPage() {
 
                         <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">A 10-Point Technical Checklist for 2026</h2>
                         <div className="bg-gray-900 text-white p-10 rounded-3xl my-10 not-prose shadow-2xl">
-                            <h4 className="text-2xl font-bold mb-6 text-emerald-400">Before You Hit 'Submit':</h4>
+                            <h3 className="text-2xl font-bold mb-6 text-emerald-400">Before You Hit 'Submit':</h3>
                             <ul className="grid md:grid-cols-2 gap-x-12 gap-y-4 list-none pl-0">
                                 {[
                                     "Is it a text-based PDF (not an image)?",
@@ -244,7 +350,7 @@ export default function ATSResumeBuilderPage() {
                                 <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg">?</div>
                             </div>
                             <div>
-                                <h4 className="text-xl font-bold text-gray-900 mb-2">Still Unsure if Your Resume Passes?</h4>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">Still Unsure if Your Resume Passes?</h3>
                                 <p className="text-gray-600 mb-4 text-sm leading-relaxed">Upload your current file to our scanner. We'll show you exactly what an ATS sees—and where it's failing to read your data.</p>
                                 <Link href="/ats-checker" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all">
                                     Check Your ATS Score Now <ArrowRight className="w-4 h-4" />

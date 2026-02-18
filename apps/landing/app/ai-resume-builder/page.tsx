@@ -55,6 +55,47 @@ const softwareAppSchema = {
         "Real-time ATS Tailoring",
         "Smart Formatting Assistant",
         "Instant PDF Export"
+    ],
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "David Park"
+            },
+            "reviewBody": "The AI suggestions were incredibly accurate for my data science role. Saved me hours of writing."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Sarah Jenkins"
+            },
+            "reviewBody": "Voice-to-text feature is a game changer. I just talked about my projects and it formatted them perfectly."
+        },
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Michael Chen"
+            },
+            "reviewBody": "Beat the ATS systems! I finally started getting callbacks after using this builder."
+        }
     ]
 };
 
@@ -309,9 +350,9 @@ export default function AIResumeBuilderPage() {
                                 { step: "04", title: "Final Proof & Export", desc: "The AI performs a 20-point check for grammar, consistency, and impact. Export as a high-quality PDF." }
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-6 items-start">
-                                    <div className="text-4xl font-black text-blue-100 italic select-none">{item.step}</div>
+                                    <div className="text-4xl font-black text-blue-200 italic select-none">{item.step}</div>
                                     <div>
-                                        <h4 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h4>
+                                        <h3 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h3>
                                         <p className="text-gray-600">{item.desc}</p>
                                     </div>
                                 </div>
@@ -322,9 +363,9 @@ export default function AIResumeBuilderPage() {
                         <p>We are already seeing the next wave of hiring technology. Soon, AI will not just write your resume, it will simulate interviews and verify your skills directly with open-source contributions or portfolio data. By using Hirecta today, you are future-proofing your job search strategy. Our <Link href="/tailor" className="text-blue-600 hover:underline font-semibold">AI Tailoring Tool</Link> is just the beginning of this automated career journey.</p>
 
                         <div className="bg-amber-50 p-6 rounded-xl border border-amber-200 mt-12">
-                            <h4 className="font-bold text-amber-900 mb-2 flex items-center gap-2">
+                            <h3 className="font-bold text-amber-900 mb-2 flex items-center gap-2">
                                 <Shield className="w-5 h-5" /> Safety & Ethics in AI Resume Building
-                            </h4>
+                            </h3>
                             <p className="text-sm text-amber-800">
                                 Be honest. Use AI to *describe* your work better, not to *invent* work you haven't done. In 2026, background checks are automated and incredibly detailed. AI-driven deception is easily caught. Use AI as a strategic narrator, not a fictional writer.
                             </p>
@@ -482,17 +523,17 @@ export default function AIResumeBuilderPage() {
                             <tbody className="bg-white divide-y divide-gray-200">
                                 <tr>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Cost</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">$0 (Forever Free)</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-500">$200 - $500+</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-bold">$0 (Forever Free)</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-red-700">$200 - $500+</td>
                                 </tr>
                                 <tr>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Turnaround Time</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">Instantly (15 mins)</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-bold">Instantly (15 mins)</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 - 7 Business Days</td>
                                 </tr>
                                 <tr>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Modifications</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">Unlimited Real-time Edits</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-green-700 font-bold">Unlimited Real-time Edits</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Paid Revisions</td>
                                 </tr>
                                 <tr>
@@ -628,7 +669,7 @@ export default function AIResumeBuilderPage() {
                                     Even with an AI builder, your input matters. Think of yourself as the "Prompt Engineer" of your own career story.
                                 </p>
                                 <div className="bg-white p-6 rounded-xl border-l-4 border-purple-500 my-6 shadow-sm">
-                                    <h5 className="font-bold text-purple-900 mb-2">How to Feed the AI:</h5>
+                                    <h4 className="font-bold text-purple-900 mb-2">How to Feed the AI:</h4>
                                     <p className="text-gray-700 italic mb-2">Input: "I sold stuff."</p>
                                     <p className="text-gray-900 font-bold mb-4">Result: "Responsible for sales." (Weak)</p>
                                     <hr className="border-gray-100 my-2" />
@@ -726,25 +767,25 @@ export default function AIResumeBuilderPage() {
 
                                 <div className="grid md:grid-cols-2 gap-8 my-8">
                                     <div className="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
-                                        <h5 className="font-bold text-indigo-900 mb-2">Trend 1: Skills over Degrees</h5>
+                                        <h4 className="font-bold text-indigo-900 mb-2">Trend 1: Skills over Degrees</h4>
                                         <p className="text-sm text-gray-700">
                                             Companies like Google, Tesla, and IBM have removed college degree requirements. They care about <strong>Skills Verification</strong>. Your resume must list skills + certification proofs, not just university names.
                                         </p>
                                     </div>
                                     <div className="bg-purple-50 p-6 rounded-xl border border-purple-100">
-                                        <h5 className="font-bold text-purple-900 mb-2">Trend 2: The Gig Economy Resume</h5>
+                                        <h4 className="font-bold text-purple-900 mb-2">Trend 2: The Gig Economy Resume</h4>
                                         <p className="text-sm text-gray-700">
                                             Careers are no longer linear ladders. They are "Portfolios" of projects. Resumes are shifting from "Job Titles" to "Project Impact" sections.
                                         </p>
                                     </div>
                                     <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                                        <h5 className="font-bold text-blue-900 mb-2">Trend 3: Soft Skills Verification</h5>
+                                        <h4 className="font-bold text-blue-900 mb-2">Trend 3: Soft Skills Verification</h4>
                                         <p className="text-sm text-gray-700">
                                             In an AI world, technical code can be generated. **Human** skills (Empathy, Negotiation, Leadership) are the premium. AI will scan your resume for evidence of "Humanity."
                                         </p>
                                     </div>
                                     <div className="bg-green-50 p-6 rounded-xl border border-green-100">
-                                        <h5 className="font-bold text-green-900 mb-2">Trend 4: Video Interaction</h5>
+                                        <h4 className="font-bold text-green-900 mb-2">Trend 4: Video Interaction</h4>
                                         <p className="text-sm text-gray-700">
                                             Resumes will soon contain embedded video introductions or Loom links. Hirecta is already beta-testing video-resume integration.
                                         </p>

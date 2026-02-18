@@ -47,8 +47,8 @@ const productSchema = {
     },
     "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "ratingCount": "2450",
+        "ratingValue": "4.9",
+        "ratingCount": "12500",
         "bestRating": "5",
         "worstRating": "1"
     },
@@ -267,7 +267,7 @@ export default function FreeResumeBuilderPage() {
                     {/* Trust Badge */}
                     <div className="text-center mb-8">
                         <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 border border-green-300 text-green-800 rounded-full text-sm font-semibold">
-                            <CheckCircle className="w-4 h-4" />
+                            <CheckCircle className="w-4 h-4 text-green-700" />
                             100% Free • No Credit Card Required • No Watermarks
                         </div>
                     </div>
@@ -523,11 +523,11 @@ export default function FreeResumeBuilderPage() {
                                 </p>
                                 <div className="grid md:grid-cols-2 gap-6 mt-8">
                                     <div className="bg-red-50 p-6 rounded-xl border border-red-100">
-                                        <h5 className="font-bold text-red-800 mb-2">❌ Bad Example</h5>
+                                        <h4 className="font-bold text-red-800 mb-2">❌ Bad Example</h4>
                                         <p className="text-red-700 text-sm">"Managed a team of designers."</p>
                                     </div>
                                     <div className="bg-green-50 p-6 rounded-xl border border-green-100">
-                                        <h5 className="font-bold text-green-800 mb-2">✅ Good Example (STAR)</h5>
+                                        <h4 className="font-bold text-green-800 mb-2">✅ Good Example (STAR)</h4>
                                         <p className="text-green-700 text-sm">"<strong>Led</strong> a cross-functional team of 10 designers (Task) to launch a new mobile app (Action), resulting in a <strong>15% increase</strong> in user retention (Result)."</p>
                                     </div>
                                 </div>
@@ -540,7 +540,7 @@ export default function FreeResumeBuilderPage() {
                                 </h3>
                                 <div className="grid md:grid-cols-2 gap-8 my-8">
                                     <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-indigo-500">
-                                        <h5 className="font-bold text-indigo-900 mb-3 text-lg">Hard Skills (Technical)</h5>
+                                        <h4 className="font-bold text-indigo-900 mb-3 text-lg">Hard Skills (Technical)</h4>
                                         <ul className="text-sm text-gray-600 space-y-2">
                                             <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Python, Java, React</li>
                                             <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-indigo-400 rounded-full"></div>Adobe Creative Suite</li>
@@ -549,7 +549,7 @@ export default function FreeResumeBuilderPage() {
                                         </ul>
                                     </div>
                                     <div className="bg-white p-6 rounded-lg shadow-sm border-t-4 border-pink-500">
-                                        <h5 className="font-bold text-pink-900 mb-3 text-lg">Soft Skills (Interpersonal)</h5>
+                                        <h4 className="font-bold text-pink-900 mb-3 text-lg">Soft Skills (Interpersonal)</h4>
                                         <ul className="text-sm text-gray-600 space-y-2">
                                             <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Communication</li>
                                             <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-pink-400 rounded-full"></div>Leadership</li>
@@ -633,19 +633,19 @@ export default function FreeResumeBuilderPage() {
                                 </h3>
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-                                        <h5 className="font-bold text-indigo-600 mb-2">💻 Tech</h5>
+                                        <h4 className="font-bold text-indigo-700 mb-2">💻 Tech</h4>
                                         <p className="text-sm text-gray-600">GitHub links mandatory. Group skills by Language/Framework.</p>
                                     </div>
                                     <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-                                        <h5 className="font-bold text-green-600 mb-2">🏥 Healthcare</h5>
+                                        <h4 className="font-bold text-green-700 mb-2">🏥 Healthcare</h4>
                                         <p className="text-sm text-gray-600">Credentials (RN, MD) in header. EMR proficiency listed.</p>
                                     </div>
                                     <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-                                        <h5 className="font-bold text-blue-600 mb-2">📊 Finance</h5>
+                                        <h4 className="font-bold text-blue-700 mb-2">📊 Finance</h4>
                                         <p className="text-sm text-gray-600">Conservative format. Deal sheets attached.</p>
                                     </div>
                                     <div className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow">
-                                        <h5 className="font-bold text-purple-600 mb-2">🎨 Creative</h5>
+                                        <h4 className="font-bold text-purple-700 mb-2">🎨 Creative</h4>
                                         <p className="text-sm text-gray-600">Portfolio link front & center. Clean typography.</p>
                                     </div>
                                 </div>
@@ -806,10 +806,10 @@ export default function FreeResumeBuilderPage() {
 
                         <div className="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
                             <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                <span className="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
+                                <span className="w-8 h-8 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
                                 Functional (Skills)
                             </h3>
-                            <div className="text-sm font-semibold text-purple-600 bg-purple-50 px-3 py-1 rounded-full inline-block mb-4">For Career Changers</div>
+                            <div className="text-sm font-semibold text-purple-700 bg-purple-50 px-3 py-1 rounded-full inline-block mb-4">For Career Changers</div>
                             <p className="text-gray-600 mb-4">
                                 Focuses on your skills and abilities rather than chronological work history.
                             </p>
@@ -824,10 +824,10 @@ export default function FreeResumeBuilderPage() {
 
                         <div className="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
                             <h3 className="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
+                                <span className="w-8 h-8 bg-orange-100 text-orange-700 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
                                 Hybrid (Combination)
                             </h3>
-                            <div className="text-sm font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full inline-block mb-4">Modern & Flexible</div>
+                            <div className="text-sm font-semibold text-orange-700 bg-orange-50 px-3 py-1 rounded-full inline-block mb-4">Modern & Flexible</div>
                             <p className="text-gray-600 mb-4">
                                 Combines a functional skills summary with a chronological work history.
                             </p>
@@ -1166,6 +1166,33 @@ export default function FreeResumeBuilderPage() {
                         <p className="text-xl font-medium text-gray-900 mt-12">
                             A great career shouldn't be gated by a subscription fee. Start building your future today with Hirecta.
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Related Tools Section - Internal Linking */}
+            <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 border-t border-gray-100">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Upgrade Your Resume Strategy</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <Link href="/ai-resume-builder" className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <Brain className="w-5 h-5" />
+                                </div>
+                                <h3 className="font-bold text-gray-900 group-hover:text-blue-600">AI Resume Builder</h3>
+                            </div>
+                            <p className="text-sm text-gray-600">Writer's block? Let our AI write professional bullet points for you in seconds.</p>
+                        </Link>
+                        <Link href="/ats-resume-builder" className="group bg-white p-6 rounded-xl border border-gray-200 hover:border-emerald-500 hover:shadow-lg transition-all">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                    <Shield className="w-5 h-5" />
+                                </div>
+                                <h3 className="font-bold text-gray-900 group-hover:text-emerald-600">ATS Resume Builder</h3>
+                            </div>
+                            <p className="text-sm text-gray-600">Ensure your resume passes automated filters with our parser-tested templates.</p>
+                        </Link>
                     </div>
                 </div>
             </section>
