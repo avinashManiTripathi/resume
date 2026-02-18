@@ -350,7 +350,7 @@ export default function AIResumeBuilderPage() {
                                 { step: "04", title: "Final Proof & Export", desc: "The AI performs a 20-point check for grammar, consistency, and impact. Export as a high-quality PDF." }
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-6 items-start">
-                                    <div className="text-4xl font-black text-blue-200 italic select-none">{item.step}</div>
+                                    <div className="text-4xl font-black text-blue-600 italic select-none">{item.step}</div>
                                     <div>
                                         <h3 className="text-xl font-bold text-gray-900 mb-1">{item.title}</h3>
                                         <p className="text-gray-600">{item.desc}</p>
@@ -568,15 +568,15 @@ export default function AIResumeBuilderPage() {
                             </p>
                             <div className="space-y-4">
                                 <div>
-                                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                                    <h3 className="font-bold text-gray-900 flex items-center gap-2 text-base">
                                         <CheckCircle className="w-5 h-5 text-green-600" /> Do This:
-                                    </h4>
+                                    </h3>
                                     <p className="text-sm text-gray-600 ml-7">Use AI to structure your thoughts, improve grammar, and find better action verbs for work you actually performed.</p>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                                    <h3 className="font-bold text-gray-900 flex items-center gap-2 text-base">
                                         <XCircle className="w-5 h-5 text-red-600" /> Don't Do This:
-                                    </h4>
+                                    </h3>
                                     <p className="text-sm text-gray-600 ml-7">Never use AI to invent skills you don't have or generate a work history that doesn't exist. That is fraud.</p>
                                 </div>
                             </div>
