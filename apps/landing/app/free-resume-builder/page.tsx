@@ -1053,6 +1053,7 @@ export default function FreeResumeBuilderPage() {
                 </div>
             </section>
 
+
             {/* FAQ Section */}
             <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-purple-50">
 
