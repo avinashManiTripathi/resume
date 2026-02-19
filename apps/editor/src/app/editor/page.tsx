@@ -170,8 +170,6 @@ function ResumeEditor() {
     }
   }, [isLoading, loadingStep, loadingSteps.length]);
 
-
-
   // Auto-progress downloading steps
   useEffect(() => {
     if (isDownloadingPdf && downloadingStep < downloadingSteps.length - 1) {
@@ -397,7 +395,23 @@ function ResumeEditor() {
 
     if (result.success) {
       setLastSaved(new Date());
-      // No need to update URL or docId anymore
+
+      // Update URL with ID if it's missing or different
+      // This ensures that if the user refreshes, they reload THIS specific resume
+      // Fix: Handle both id and _id, and avoid result.data access which causes TS error
+      const savedId = result.id || (result as any)._id;
+
+      if (savedId) {
+        const newId = String(savedId);
+        const currentUrl = new URL(window.location.href);
+        const currentId = currentUrl.searchParams.get('id');
+
+        if (currentId !== newId) {
+          console.log('[Editor] Updating URL with saved ID:', newId);
+          currentUrl.searchParams.set('id', newId);
+          window.history.replaceState({}, '', currentUrl.toString());
+        }
+      }
 
       if (result.storage === 'local' && !sessionStorage.getItem('persistence_popup_shown')) {
         sessionStorage.setItem('persistence_popup_shown', 'true');
