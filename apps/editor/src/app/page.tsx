@@ -941,7 +941,7 @@ function DashboardContent() {
                         ) : (
                           resumes.slice(0, 4).map(doc => (
                             <div key={doc.id || doc._id} className="group relative bg-white border border-slate-200 hover:border-indigo-400 rounded-xl p-5 hover:shadow-md transition-all cursor-pointer">
-                              <Link href={`/editor?id=${doc.id || doc._id}`} className="absolute inset-0 z-0" />
+                              <Link href={`/editor?templateId=${doc.templateId || '696e14fce15299e55244d1ce'}&id=${doc.id || doc._id}`} className="absolute inset-0 z-0" />
                               <div className="flex justify-between items-start mb-2 relative z-10">
                                 <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                                   <FileText size={18} />

@@ -163,6 +163,18 @@ export default function TailorResume() {
 
                 } catch (err: any) {
                     console.error("Analysis Error", err);
+
+                    // Check for subscription/plan limits
+                    if (err.message && (
+                        err.message.toLowerCase().includes("upgrade your plan") ||
+                        err.message.toLowerCase().includes("subscription") ||
+                        err.message.toLowerCase().includes("limit reached")
+                    )) {
+                        setIsAnalyzing(false);
+                        router.push('/subscription');
+                        return;
+                    }
+
                     setDialog({
                         isOpen: true,
                         title: "Analysis Failed",
@@ -214,6 +226,17 @@ export default function TailorResume() {
                 router.push('/editor?fromTailor=true');
             }
         } catch (error: any) {
+            // Check for subscription/plan limits
+            if (error.message && (
+                error.message.toLowerCase().includes("upgrade your plan") ||
+                error.message.toLowerCase().includes("subscription") ||
+                error.message.toLowerCase().includes("limit reached")
+            )) {
+                setIsAnalyzing(false);
+                router.push('/subscription');
+                return;
+            }
+
             setDialog({
                 isOpen: true,
                 title: "Analysis Failed",

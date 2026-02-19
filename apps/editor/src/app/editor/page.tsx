@@ -29,8 +29,9 @@ function ResumeEditor() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Get template ID from URL or use default
+  // Get template ID & Resume ID from URL
   const urlTemplateId = searchParams.get('templateId');
+  const urlResumeId = searchParams.get('id');
 
   // Clean default template ID - will be set from fetched templates
   const [defaultTemplateId, setDefaultTemplateId] = useState<string>("696e14fce15299e55244d1ce");
@@ -133,8 +134,8 @@ function ResumeEditor() {
     const fromSub = searchParams.get('fromSubscription');
 
     // Only set default if NOT returning from subscription
-    if (!templatesLoading && templates && templates.length > 0 && fromSub !== 'true') {
-      if (templates[0]._id) {
+    if (!templatesLoading && fromSub !== 'true') {
+      if (templates && templates.length > 0 && templates[0]._id) {
         setDefaultTemplateId(templates[0]._id);
 
         // If no template ID in URL, set it to the first template
@@ -146,9 +147,18 @@ function ResumeEditor() {
           url.searchParams.set('templateId', templates[0]._id);
           window.history.replaceState({}, '', url.toString());
         }
+      } else if (!urlTemplateId && !templateId) {
+        // Fallback: If templates failed to load or list is empty, use the default hardcoded ID
+        // This prevents the "Preparing Workspace..." hang
+        console.warn('[Editor] Templates not available or empty, using default fallback.');
+        setTemplateId(defaultTemplateId);
+
+        const url = new URL(window.location.href);
+        url.searchParams.set('templateId', defaultTemplateId);
+        window.history.replaceState({}, '', url.toString());
       }
     }
-  }, [templates, templatesLoading, urlTemplateId, templateId, searchParams]);
+  }, [templates, templatesLoading, urlTemplateId, templateId, searchParams, defaultTemplateId]);
 
   // Auto-progress loading steps
   useEffect(() => {
@@ -159,6 +169,8 @@ function ResumeEditor() {
       return () => clearTimeout(timer);
     }
   }, [isLoading, loadingStep, loadingSteps.length]);
+
+
 
   // Auto-progress downloading steps
   useEffect(() => {
@@ -228,11 +240,16 @@ function ResumeEditor() {
       // EXCEPTION: If we just logged in (isLoggedIn=true) but previously loaded as guest (!loadedAsUser),
       // we MUST fetch fresh data from backend.
       if (templateId && isLoaded) {
-        if (isLoggedIn && !loadedAsUser) {
-          console.log('[Editor] User logged in, upgrading from guest load...');
-        } else {
-          console.log('[Editor] Template switch detected, preserving current data.');
-          return;
+        // Only skip fetch if we actually have data to preserve
+        const hasResumeData = resume && Object.keys(resume).length > 0;
+
+        if (hasResumeData) {
+          if (isLoggedIn && !loadedAsUser) {
+            console.log('[Editor] User logged in, upgrading from guest load...');
+          } else {
+            console.log('[Editor] Template switch detected, preserving current data.');
+            return;
+          }
         }
       }
 
@@ -264,29 +281,30 @@ function ResumeEditor() {
             }
           }
 
-          // If no draft, check backend/localStorage via persistence hook
-          const savedDoc = await getResumeByTemplate(templateId);
+          // STRICT ID-BASED LOADING
+          // If URL has an ID, load that specific resume
+          if (urlResumeId) {
+            console.log('[Editor] Loading specific resume by ID:', urlResumeId);
+            const savedDoc = await getDocument(urlResumeId, 'resume');
 
-          if (savedDoc) {
-            console.log('[Editor] Loaded saved data for template:', templateId);
-            setResume(savedDoc.data || {});
-            if (savedDoc.data?.personalInfo?.profileImage) {
-              setProfileImage(savedDoc.data.personalInfo.profileImage);
+            if (savedDoc && savedDoc.data) {
+              setResume(savedDoc.data);
+              if (savedDoc.data.personalInfo?.profileImage) {
+                setProfileImage(savedDoc.data.personalInfo.profileImage);
+              }
+              if (savedDoc.data.typography) {
+                setTypographySettings(savedDoc.data.typography);
+                lastSavedTypographyRef.current = savedDoc.data.typography;
+              }
+              lastSavedDataRef.current = JSON.stringify(savedDoc.data);
+              lastSavedTemplateIdRef.current = templateId;
             }
-            if (savedDoc.data?.typography) {
-              setTypographySettings(savedDoc.data.typography);
-              lastSavedTypographyRef.current = savedDoc.data.typography;
-            }
-
-            // Set reference to loaded data so we don't auto-save it immediately
-            lastSavedDataRef.current = JSON.stringify(savedDoc.data || {});
-            // Set initial template ref so we know if it changes later
-            lastSavedTemplateIdRef.current = templateId;
           } else {
-            console.log('[Editor] No data found for template:', templateId, '- starting fresh');
-            // Only start fresh if we truly found nothing
+            // NO ID PROVIDED -> START FRESH (Do NOT auto-load latest by template)
+            console.log('[Editor] No Resume ID provided - Starting Fresh.');
             setResume({});
           }
+
         } catch (error) {
           console.error('Failed to load template data:', error);
           setResume({});
