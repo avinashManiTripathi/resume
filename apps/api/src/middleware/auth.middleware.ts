@@ -153,7 +153,7 @@ export const requireSubscription = (featureName: FeatureName, allowPreview: bool
             const subscription = await Subscription.findOne({
                 userId,
                 status: 'active',
-                plan: { $in: ['pro', 'premium'] }
+                plan: { $in: ['pro', 'premium', 'lower'] }
             });
 
             if (!subscription) {
