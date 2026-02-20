@@ -13,7 +13,7 @@ import { saveBlobAsPdf } from "@repo/utils-client";
 import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid, Pencil } from "lucide-react";
+import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid, Pencil, ScanSearch } from "lucide-react";
 import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo, TypographySettings } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
@@ -1330,6 +1330,40 @@ function ResumeEditor() {
                         <div className="flex-1 text-left">
                           <div className="font-semibold text-gray-900">Build with AI</div>
                           <div className="text-xs text-gray-600">AI-powered data extraction</div>
+                        </div>
+                      </button>
+
+                      {/* Check ATS */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          router.push(`/ats-check${window.location.search}`);
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-amber-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <ScanSearch className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Check ATS</div>
+                          <div className="text-xs text-gray-600">Scan your resume for ATS</div>
+                        </div>
+                      </button>
+
+                      {/* Cover Letter */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          router.push(`/cover-letter${window.location.search}`);
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-blue-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Cover Letter</div>
+                          <div className="text-xs text-gray-600">Generate a cover letter</div>
                         </div>
                       </button>
 

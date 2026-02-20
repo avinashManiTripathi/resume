@@ -62,6 +62,18 @@ export function EditorSidebar({
             onClick: onTemplate
         },
         {
+            label: "Check ATS",
+            id: "check-ats",
+            icon: ScanSearch,
+            onClick: () => router.push(`/ats-check${window.location.search}`)
+        },
+        {
+            label: "Cover Letter",
+            id: "cover-letter",
+            icon: FileText,
+            onClick: () => router.push(`/cover-letter${window.location.search}`)
+        },
+        {
             label: "Typography",
             id: "typography",
             icon: Settings2,
@@ -96,6 +108,14 @@ export function EditorSidebar({
 
         if (item.label === "Typography") {
             return `${baseClass} bg-cyan-50/40 text-cyan-600 hover:bg-cyan-100 hover:text-cyan-700`;
+        }
+
+        if (item.label === "Check ATS") {
+            return `${baseClass} bg-amber-50/40 text-amber-600 hover:bg-amber-100 hover:text-amber-700`;
+        }
+
+        if (item.label === "Cover Letter") {
+            return `${baseClass} bg-blue-50/40 text-blue-600 hover:bg-blue-100 hover:text-blue-700`;
         }
 
         if (item.label === "Download PDF") {
