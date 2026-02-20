@@ -6,6 +6,21 @@ const apiHostname = new URL(apiUrl).hostname;
 
 const nextConfig: NextConfig = {
   compress: true,
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.hirecta.com',
+          },
+        ],
+        destination: 'https://hirecta.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
   // Security & SEO Headers
   async headers() {
     return [
