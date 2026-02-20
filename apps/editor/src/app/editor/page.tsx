@@ -5,7 +5,7 @@ import { useEffect, useLayoutEffect, useRef, useState, useMemo, useCallback, Sus
 import { useDebounce, exportToDoc, canDownload, type SubscriptionTier, API_ENDPOINTS } from "@repo/utils-client";
 import { useTemplates } from "@repo/hooks/useTemplate";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ProfileHeader } from "@repo/ui/profile-header";
+// ProfileHeader removed
 import { FormSchema, SectionSchema, BaseField } from "../FieldRenderer";
 import GenericForm from "../GenericForm";
 import TemplateSelector from "../TemplateSelector";
@@ -13,7 +13,7 @@ import { saveBlobAsPdf } from "@repo/utils-client";
 import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
 import { Dialog } from "@repo/ui/dialog";
-import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid } from "lucide-react";
+import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid, Pencil } from "lucide-react";
 import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo, TypographySettings } from "../constants";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { usePersistence } from "../hooks/usePersistence";
@@ -61,6 +61,7 @@ function ResumeEditor() {
   });
   // Track last saved template to detect switches
   const lastSavedTemplateIdRef = useRef<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // State
   // const [resume, setResume] = useState<ResumeData>(dummyData);
@@ -461,6 +462,7 @@ function ResumeEditor() {
   // Page navigation
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
+  const [leftPanelView, setLeftPanelView] = useState<'form' | 'templates' | 'typography'>('form');
 
   const mainRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -568,6 +570,22 @@ function ResumeEditor() {
       };
     });
   }, []);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size should be less than 5MB");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleProfileImageChange(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Handle export
   const handleExport = useCallback(async (format: "pdf" | "doc") => {
@@ -980,7 +998,12 @@ function ResumeEditor() {
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
       <div className="hidden lg:block">
-        <EditorSidebar />
+        <EditorSidebar
+          onBuildWithAI={() => setShowSmartImport(true)}
+          onTemplate={() => setLeftPanelView('templates')}
+          onTypography={() => setLeftPanelView('typography')}
+          onDownload={handleDownload}
+        />
       </div>
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
         {/* Hirecta Analysis Modal (Initial Loading) */}
@@ -1004,19 +1027,8 @@ function ResumeEditor() {
             fullScreen={true}
           />
         )}
-        {/* Header */}
-        <ProfileHeader
-          name={userName + "'s Resume"}
-          title={resume?.personalInfo?.jobTitle || "Senior Product Designer"}
-          progress={progress}
-          profileImage={profileImage}
-          onProfileImageChange={handleProfileImageChange}
-          onDownload={handleDownload}
-          onSmartImport={() => setShowSmartImport(true)}
-          onTemplateChange={() => setShowTemplates(true)}
-          typographySettings={typographySettings}
-          onTypographyChange={setTypographySettings}
-        />
+
+        {/* Header Removed - Main Content expands */}
 
         {/* Main Content - Split Glass Content */}
         <div className="flex-1 flex overflow-hidden relative">
@@ -1029,19 +1041,125 @@ function ResumeEditor() {
           {/* Left Section - Form (45%) */}
           <div className={`w-full md:w-[45%] flex flex-col rounded-none md:rounded-lg relative bg-white/50 backdrop-blur-xl border-r border-slate-200/60 overflow-hidden transition-all duration-500 ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
 
+            {/* Profile Header */}
+            <div className="shrink-0 flex items-center justify-between px-6 py-3 border-b border-slate-200/60 bg-white/80 backdrop-blur-md z-10 sticky top-0 h-[72px]">
+              <div className="flex items-center gap-3">
+                <div className="relative group">
+                  <div
+                    className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-100 shadow-sm cursor-pointer hover:border-indigo-100 transition-all"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <img
+                      src={profileImage || "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D"}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute -bottom-1 -right-1 w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center border border-white shadow-sm hover:bg-white hover:scale-105 transition-all text-slate-600"
+                  >
+                    <Pencil size={10} />
+                  </button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+                <div className="flex flex-col justify-center">
+                  <h2 className="text-base font-bold text-slate-800 leading-tight">
+                    {resume?.personalInfo?.firstName ? `${resume.personalInfo.firstName} ${resume.personalInfo.lastName || ''}'s Resume` : 'Your Resume'}
+                  </h2>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {resume?.personalInfo?.firstName ? `${resume.personalInfo.firstName} ${resume.personalInfo.lastName || ''}` : 'Your Name'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* Progress Circle */}
+                <div className="relative w-10 h-10 flex items-center justify-center">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      fill="transparent"
+                      className="text-slate-100"
+                    />
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="16"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      fill="transparent"
+                      strokeDasharray={2 * Math.PI * 16}
+                      strokeDashoffset={2 * Math.PI * 16 * (1 - progress / 100)}
+                      className="text-blue-600 transition-all duration-1000 ease-out"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-[9px] font-bold text-slate-700">{progress}%</span>
+                  </div>
+                </div>
+
+                {/* Mobile Download Button */}
+                <button
+                  onClick={handleDownload}
+                  className="md:hidden w-9 h-9 flex items-center justify-center bg-indigo-600 text-white rounded-[8px] shadow-sm hover:bg-indigo-700 transition-all active:scale-95"
+                  aria-label="Download Resume"
+                >
+                  {isDownloadingPdf ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Download size={16} />
+                  )}
+                </button>
+              </div>
+            </div>
+
             <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
-              {showTemplates ? (
+              {leftPanelView === 'templates' ? (
                 <TemplateSelector
                   apiBase={API_BASE}
                   selectedTemplateId={templateId || ''}
-                  onBack={() => setShowTemplates(false)}
+                  onBack={() => setLeftPanelView('form')}
                   onSelectTemplate={(template) => {
                     const params = new URLSearchParams(searchParams.toString());
                     params.set('templateId', template._id);
                     router.replace(`?${params.toString()}`, { scroll: false });
                     setTemplateId(template._id);
+                    setLeftPanelView('form');
                   }}
                 />
+              ) : leftPanelView === 'typography' ? (
+                <div className="p-4">
+
+                  <button
+                    onClick={() => setLeftPanelView('form')}
+                    className="mb-4 flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+                  >
+                    <ChevronLeft size={16} />
+                    <span className="font-medium text-sm">Back to Editor</span>
+                  </button>
+
+                  <div className="mb-6">
+                    <h2 className="text-xl font-bold text-slate-800">Typography</h2>
+                    <p className="text-sm text-slate-500">Customize fonts and spacing</p>
+                  </div>
+
+                  <TypographyPanelContent
+                    settings={typographySettings}
+                    onChange={setTypographySettings}
+                  />
+                </div>
               ) : (
                 <GenericForm
                   schema={schema}
@@ -1059,13 +1177,13 @@ function ResumeEditor() {
           {/* Right Section - Canvas (55%) */}
           <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
 
-            <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4">
-              <div className="relative w-full flex justify-center">
+            <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4 py-8">
+              <div className="relative w-full flex justify-center mb-8">
                 <canvas
                   ref={canvasRef}
                   width={794}
                   height={1123}
-                  className="bg-white border-r border-slate-200/60 max-w-full object-contain"
+                  className="bg-white shadow-lg rounded-sm max-w-full object-contain"
                 />
               </div>
 
