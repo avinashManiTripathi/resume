@@ -133,7 +133,7 @@ function CoverLetterCreateForm() {
 
             const data: any = await network.get(`${API_ENDPOINTS.COVER_LETTER.TEMPLATES}/${id}`);
 
-            if (data.success) {
+            if (data.template) {
                 setTemplate(data.template);
             } else {
                 setError("Template not found");
