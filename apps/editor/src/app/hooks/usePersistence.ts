@@ -158,28 +158,27 @@ export function usePersistence() {
             }
         }
 
-        if (isLoggedIn) {
-            try {
-                const endpoint = type === 'resume'
-                    ? API_ENDPOINTS.RESUME.GET(id)
-                    : API_ENDPOINTS.COVER_LETTER.GET(id);
+        // Try backend if it's not a local id
+        try {
+            const endpoint = type === 'resume'
+                ? API_ENDPOINTS.RESUME.GET(id)
+                : API_ENDPOINTS.COVER_LETTER.GET(id);
 
-                const result = await get<{ data: any }>(endpoint);
+            const result = await get<{ data: any }>(endpoint);
 
-                return {
-                    id: result.data._id || result.data.id,
-                    title: result.data.title,
-                    type,
-                    templateId: result.data.template || result.data.templateId,
-                    data: result.data.data,
-                    lastModified: result.data.updatedAt
-                } as SavedDocument;
-            } catch (error) {
-                console.error('Failed to fetch document:', error);
-            }
+            return {
+                id: result.data._id || result.data.id,
+                title: result.data.title,
+                type,
+                templateId: result.data.template || result.data.templateId,
+                data: result.data.data,
+                lastModified: result.data.updatedAt
+            } as SavedDocument;
+        } catch (error) {
+            console.error('Failed to fetch document:', error);
+            return null;
         }
-        return null;
-    }, [isLoggedIn, get]);
+    }, [get]);
 
     const getResumeByTemplate = useCallback(async (templateId: string) => {
         if (isLoggedIn) {
