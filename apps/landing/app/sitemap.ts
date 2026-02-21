@@ -7,55 +7,46 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const currentDate = new Date()
 
     // Homepage (highest priority)
-    const homepage = [{
+    const homepage: MetadataRoute.Sitemap = [{
         url: baseUrl,
         lastModified: currentDate,
-        changeFrequency: 'daily' as const,
+        changeFrequency: 'daily',
         priority: 1.0,
     }]
 
-    // Core product pages (high priority)
-    const productPages = [
-        'templates',
-        'pricing',
-        'examples',
-        'resume-builder',
-        'ats-checker',
-        'tailor',
-        'cover-letter',
-    ].map((slug) => ({
-        url: `${baseUrl}/${slug}`,
-        lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
-        priority: 0.9,
-    }))
-
-    // Tool sub-pages (high priority SEO entry points)
-    const toolSubPages = [
-        { url: `${baseUrl}/ats-checker/check`, priority: 0.85 },
-    ].map((page) => ({
-        ...page,
-        lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
-    }))
-
     // Pillar pages (critical SEO content - highest priority)
-    const pillarPages = [
+    const pillarPages: MetadataRoute.Sitemap = [
         'free-resume-builder',
         'ai-resume-builder',
         'ats-resume-builder',
         'best-resume-builder',
         'professional-resume-service',
-        'interviews',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
+        changeFrequency: 'weekly',
         priority: 0.95,
     }))
 
+    // Core product pages (high priority)
+    const productPages: MetadataRoute.Sitemap = [
+        'templates',
+        'pricing',
+        'examples',
+        'resume-builder',
+        'ats-checker',
+        'ats-checker/check',
+        'tailor',
+        'cover-letter',
+    ].map((slug) => ({
+        url: `${baseUrl}/${slug}`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly',
+        priority: 0.9,
+    }))
+
     // Resume builder category pages (high priority SEO content)
-    const resumeBuilderPages = [
+    const resumeBuilderPages: MetadataRoute.Sitemap = [
         'software-engineer',
         'fresher',
         'it-professional',
@@ -68,37 +59,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ].map((slug) => ({
         url: `${baseUrl}/resume-builder/${slug}`,
         lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
+        changeFrequency: 'weekly',
         priority: 0.85,
     }))
 
     // High-value resource pages (SEO content)
-    const resourcePages = [
-        '',                              // /resources (index)
-        'targeted-resume',
-        'resume-critique',
-        'ai-resume-review',
-        'resume-booster',
-        'resume-keyword-generator',
-        'resume-checker',
-        'resume-fixer',
-        'resume-scanner',
-        'for-organizations',
-        'resume-guide',
-        'ats-guide',
-        'cover-letter-guide',
-        'career-tips',
-        'industry-examples',
-        'update-your-resume-io-resume',
-    ].map((slug) => ({
-        url: slug ? `${baseUrl}/resources/${slug}` : `${baseUrl}/resources`,
+    const resourcePages: MetadataRoute.Sitemap = [
+        `${baseUrl}/resources`,
+        `${baseUrl}/resources/targeted-resume`,
+        `${baseUrl}/resources/resume-critique`,
+        `${baseUrl}/resources/ai-resume-review`,
+        `${baseUrl}/resources/resume-booster`,
+        `${baseUrl}/resources/resume-keyword-generator`,
+        `${baseUrl}/resources/resume-checker`,
+        `${baseUrl}/resources/resume-fixer`,
+        `${baseUrl}/resources/resume-scanner`,
+        `${baseUrl}/resources/for-organizations`,
+        `${baseUrl}/resources/resume-guide`,
+        `${baseUrl}/resources/ats-guide`,
+        `${baseUrl}/resources/cover-letter-guide`,
+        `${baseUrl}/resources/career-tips`,
+        `${baseUrl}/resources/industry-examples`,
+        `${baseUrl}/resources/update-your-resume-io-resume`,
+    ].map((url) => ({
+        url,
         lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
+        changeFrequency: 'weekly',
         priority: 0.8,
     }))
 
     // Blog category pages (good for SEO)
-    const blogCategoryPages = [
+    const blogCategoryPages: MetadataRoute.Sitemap = [
         'tips-tricks',
         'career-advice',
         'ats',
@@ -110,12 +101,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ].map((slug) => ({
         url: `${baseUrl}/blog/category/${slug}`,
         lastModified: currentDate,
-        changeFrequency: 'weekly' as const,
+        changeFrequency: 'weekly',
         priority: 0.75,
     }))
 
     // Supporting pages (medium priority)
-    const supportPages = [
+    const supportPages: MetadataRoute.Sitemap = [
         'about',
         'contact',
         'help',
@@ -129,12 +120,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
-        changeFrequency: 'monthly' as const,
+        changeFrequency: 'monthly',
         priority: 0.6,
     }))
 
     // Legal pages (low priority but required)
-    const legalPages = [
+    const legalPages: MetadataRoute.Sitemap = [
         'privacy',
         'terms',
         'cookies',
@@ -143,13 +134,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
-        changeFrequency: 'yearly' as const,
+        changeFrequency: 'yearly',
         priority: 0.3,
     }))
 
     // Interview Question Articles (dynamic from API)
     // Note: Interview questions are stored in the Blog model
-    let interviewPages: any[] = []
+    let interviewPages: MetadataRoute.Sitemap = []
     try {
         // Fetch interview articles from Blog API (filter by category if needed)
         const response = await fetch(`${ENV.API_URL}${API_ENDPOINTS.BLOG.BASE}?limit=100`, {
@@ -168,10 +159,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 )
             )
 
-            console.log({ interviews })
             // Add individual interview pages
             if (interviews.length > 0) {
-                interviewPages = interviews.map((interview: any) => {
+                interviewPages = interviews.map((interview: any): MetadataRoute.Sitemap[number] => {
                     let parsedDate = currentDate;
                     if (interview.updatedAt) {
                         const d = new Date(interview.updatedAt);
@@ -182,47 +172,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                     return {
                         url: `${baseUrl}/interviews/${interview.slug}`,
                         lastModified: parsedDate,
-                        changeFrequency: 'weekly' as const,
+                        changeFrequency: 'weekly',
                         priority: 0.9,
                     };
                 })
             }
-
-            // Add the main interviews index page
-            interviewPages.push({
-                url: `${baseUrl}/interviews`,
-                lastModified: currentDate,
-                changeFrequency: 'weekly' as const,
-                priority: 0.9,
-            })
         } else {
             console.warn('Failed to fetch blogs for interview sitemap')
-
-            // Fallback: Add at least the main interviews page
-            interviewPages.push({
-                url: `${baseUrl}/interviews`,
-                lastModified: currentDate,
-                changeFrequency: 'weekly' as const,
-                priority: 0.9,
-            })
         }
     } catch (e) {
         console.error("Error generating interview sitemap:", e)
-
-        // Fallback: Add at least the main interviews page
-        interviewPages.push({
-            url: `${baseUrl}/interviews`,
-            lastModified: currentDate,
-            changeFrequency: 'weekly' as const,
-            priority: 0.9,
-        })
     }
+
+    // Always include the main interviews index page
+    interviewPages.push({
+        url: `${baseUrl}/interviews`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly',
+        priority: 0.95,
+    })
 
     return [
         ...homepage,
         ...pillarPages,
         ...productPages,
-        ...toolSubPages,
         ...resumeBuilderPages,
         ...resourcePages,
         ...blogCategoryPages,
