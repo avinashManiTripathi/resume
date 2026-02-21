@@ -83,19 +83,21 @@ export function usePersistence() {
                 ? documents.findIndex(d => d.type === 'resume' && d.templateId === doc.templateId)
                 : documents.findIndex(d => d.id === doc.id);
 
+            let savedId = doc.id;
+
             if (existingIndex > -1) {
                 // Keep the existing ID if it exists, but update content
-                const existingId = documents[existingIndex].id;
-                documents[existingIndex] = { ...doc, id: existingId, lastModified: now };
+                savedId = documents[existingIndex].id;
+                documents[existingIndex] = { ...doc, id: savedId, lastModified: now };
             } else {
                 documents.push({ ...doc, lastModified: now });
             }
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(documents));
-            return true;
+            return savedId;
         } catch (error) {
             console.error('Failed to save to local storage:', error);
-            return false;
+            return null;
         }
     }, []);
 
@@ -129,8 +131,8 @@ export function usePersistence() {
 
         // ATS Scans and Tailor History are always local for now
         if (doc.type === 'ats-scan' || doc.type === 'tailor-history') {
-            const success = saveToLocalStorage({ ...doc, id: documentId });
-            return { success, id: documentId, storage: 'local' as const };
+            const savedId = saveToLocalStorage({ ...doc, id: documentId });
+            return { success: !!savedId, id: savedId || documentId, storage: 'local' as const };
         }
 
         if (isLoggedIn) {
@@ -139,8 +141,8 @@ export function usePersistence() {
         } else {
             // Show popup if it hasn't been shown in this segment or something
             // For now, let's just save and return
-            const success = saveToLocalStorage({ ...doc, id: documentId });
-            return { success, id: documentId, storage: 'local' as const };
+            const savedId = saveToLocalStorage({ ...doc, id: documentId });
+            return { success: !!savedId, id: savedId || documentId, storage: 'local' as const };
         }
     }, [isLoggedIn, saveToBackend, saveToLocalStorage]);
 

@@ -297,16 +297,59 @@ function ResumeEditor() {
               }
               lastSavedDataRef.current = JSON.stringify(savedDoc.data);
               lastSavedTemplateIdRef.current = templateId;
+            } else {
+              console.log('[Editor] Failed to load resume by ID or missing data - Starting Fresh.');
+              setResume({});
+              // Remove invalid/inaccessible ID from URL to avoid confusion
+              const url = new URL(window.location.href);
+              url.searchParams.delete('id');
+              window.history.replaceState({}, '', url.toString());
             }
           } else {
-            // NO ID PROVIDED -> START FRESH (Do NOT auto-load latest by template)
-            console.log('[Editor] No Resume ID provided - Starting Fresh.');
-            setResume({});
+            // NO ID PROVIDED
+            if (isLoggedIn === false && templateId) {
+              console.log('[Editor] No Resume ID provided - trying to recover guest local draft by template');
+              const localDoc = await getResumeByTemplate(templateId);
+              if (localDoc && localDoc.data) {
+                console.log('[Editor] Recovered local draft by template:', templateId);
+                setResume(localDoc.data);
+                if (localDoc.data.personalInfo?.profileImage) {
+                  setProfileImage(localDoc.data.personalInfo.profileImage);
+                }
+                if (localDoc.data.typography) {
+                  setTypographySettings(localDoc.data.typography);
+                  lastSavedTypographyRef.current = localDoc.data.typography;
+                }
+                lastSavedDataRef.current = JSON.stringify(localDoc.data);
+                lastSavedTemplateIdRef.current = templateId;
+
+                // Make sure to add the ID to the URL so they have it
+                if (localDoc.id || (localDoc as any)._id) {
+                  const recoveredId = localDoc.id || (localDoc as any)._id;
+                  const url = new URL(window.location.href);
+                  url.searchParams.set('id', recoveredId);
+                  window.history.replaceState({}, '', url.toString());
+                }
+              } else {
+                console.log('[Editor] No local draft found for guest - Starting Fresh.');
+                setResume({});
+              }
+            } else if (isLoggedIn === true || isLoggedIn === null) {
+              // Logged in user without ID, or auth state still loading, start fresh or await auth
+              // (Usually if logged in without ID, they want to start a new resume for this template)
+              console.log('[Editor] No Resume ID provided - Starting Fresh.');
+              setResume({});
+            }
           }
 
         } catch (error) {
           console.error('Failed to load template data:', error);
           setResume({});
+          if (urlResumeId) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('id');
+            window.history.replaceState({}, '', url.toString());
+          }
         }
       }
 
