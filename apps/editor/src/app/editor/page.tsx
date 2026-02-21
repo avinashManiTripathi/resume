@@ -1183,7 +1183,7 @@ function ResumeEditor() {
                   ref={canvasRef}
                   width={794}
                   height={1123}
-                  className="bg-white shadow-lg rounded-sm max-w-full object-contain"
+                  className="bg-white  rounded-sm max-w-full object-contain"
                 />
               </div>
 
