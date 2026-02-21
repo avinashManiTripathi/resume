@@ -93,19 +93,19 @@ export function GlobalSchema() {
             <Script
                 id="website-schema"
                 type="application/ld+json"
-                strategy="afterInteractive"
+                strategy="beforeInteractive"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
             />
             <Script
                 id="organization-schema"
                 type="application/ld+json"
-                strategy="afterInteractive"
+                strategy="beforeInteractive"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
             />
             <Script
                 id="software-schema"
                 type="application/ld+json"
-                strategy="afterInteractive"
+                strategy="beforeInteractive"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareAppSchema) }}
             />
         </>

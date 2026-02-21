@@ -30,6 +30,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.9,
     }))
 
+    // Tool sub-pages (high priority SEO entry points)
+    const toolSubPages = [
+        { url: `${baseUrl}/ats-checker/check`, priority: 0.85 },
+    ].map((page) => ({
+        ...page,
+        lastModified: currentDate,
+        changeFrequency: 'weekly' as const,
+    }))
+
     // Pillar pages (critical SEO content - highest priority)
     const pillarPages = [
         'free-resume-builder',
@@ -37,6 +46,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'ats-resume-builder',
         'best-resume-builder',
         'professional-resume-service',
+        'interviews',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
@@ -50,6 +60,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'fresher',
         'it-professional',
         'manager',
+        'nurse',
+        'teacher',
+        'marketing',
+        'data-scientist',
+        'product-manager',
     ].map((slug) => ({
         url: `${baseUrl}/resume-builder/${slug}`,
         lastModified: currentDate,
@@ -59,6 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // High-value resource pages (SEO content)
     const resourcePages = [
+        '',                              // /resources (index)
         'targeted-resume',
         'resume-critique',
         'ai-resume-review',
@@ -75,7 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'industry-examples',
         'update-your-resume-io-resume',
     ].map((slug) => ({
-        url: `${baseUrl}/resources/${slug}`,
+        url: slug ? `${baseUrl}/resources/${slug}` : `${baseUrl}/resources`,
         lastModified: currentDate,
         changeFrequency: 'weekly' as const,
         priority: 0.8,
@@ -109,6 +125,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'integrations',
         'use-cases',
         'vs',
+        'delete-account',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
@@ -205,6 +222,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...homepage,
         ...pillarPages,
         ...productPages,
+        ...toolSubPages,
         ...resumeBuilderPages,
         ...resourcePages,
         ...blogCategoryPages,

@@ -1,18 +1,29 @@
 import { Check, Sparkles, Zap, Crown, Shield, Star } from "lucide-react";
 import { Metadata } from "next";
 import { ENV } from "../env";
+import { FAQSchema } from '@/components/FAQSchema';
+import { BreadcrumbSchema } from '@/components/BreadcrumbSchema';
 
 export const metadata: Metadata = {
-    title: 'Pricing - Choose Your Plan | Hirecta',
-    description: 'Affordable pricing for every job seeker. Start free and upgrade to Pro or Premium for advanced AI features and unlimited downloads.',
+    title: 'Resume Builder Pricing — Free, Pro & Premium Plans | Hirecta',
+    description: 'Hirecta offers a 100% free resume builder plan with unlimited edits. Upgrade to Pro (₹799/mo) or Premium (₹1599/mo) for unlimited PDF downloads, 50+ templates, AI tools & priority support. No credit card for free plan.',
+    keywords: 'resume builder pricing, free resume builder, resume builder cost, Hirecta pricing, resume maker price, ATS resume builder plans, CV builder subscription, resume builder free plan',
     alternates: {
         canonical: '/pricing',
     },
     openGraph: {
-        title: 'Simple and Transparent Pricing | Hirecta',
-        description: 'Choose the right plan for your career. Free, Pro, and Premium options available.',
+        title: 'Resume Builder Pricing — Free, Pro & Premium | Hirecta',
+        description: '100% free resume builder. Upgrade to Pro or Premium for AI tools, unlimited downloads, and 50+ templates. Transparent pricing, cancel anytime.',
         url: '/pricing',
         type: 'website',
+        images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Hirecta Resume Builder Pricing' }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Resume Builder Pricing | Free, Pro & Premium | Hirecta',
+        description: '100% free plan available. Pro from ₹799/mo — AI tools, unlimited downloads, 50+ templates.',
+        images: ['/og-image.png'],
+        creator: '@hirecta',
     },
 };
 
@@ -63,8 +74,26 @@ const testimonials = [
     }
 ];
 
+const pricingFaqs = [
+    { q: "Is Hirecta's resume builder really free?", a: "Yes, 100% free. No credit card required, no watermarks, no hidden fees. Our free plan lets you create, edit, and preview your resume indefinitely." },
+    { q: "Can I download my resume as PDF on the free plan?", a: "The free plan gives you limited PDF downloads. Upgrade to Pro or Premium for unlimited high-quality PDF downloads with no watermarks." },
+    { q: "Can I cancel my subscription anytime?", a: "Absolutely! You can cancel anytime from your account settings. No long-term contracts. If you cancel, you keep access until the end of your billing cycle." },
+    { q: "Do you offer a money-back guarantee?", a: "Yes! We offer a 30-day money-back guarantee on all paid plans, no questions asked. Contact our support team to process your refund." },
+    { q: "What's the difference between Pro and Premium?", a: "Pro gives you unlimited PDF downloads, 15+ premium templates, and cover letter builder. Premium adds 50+ templates, priority support, custom branding, resume analytics, and LinkedIn profile optimization." },
+    { q: "Are the prices in INR or USD?", a: "All our prices are listed in Indian Rupees (INR). Pro is ₹799/month and Premium is ₹1,599/month. International payment cards (Visa, Mastercard) are accepted." },
+    { q: "Do you offer annual pricing discounts?", a: "Yes! Annual plans save you up to 30% compared to monthly billing. Switch to annual billing in your account settings to save." },
+    { q: "Can I create multiple resumes on one account?", a: "Yes! All plans — including the free plan — allow you to create and manage multiple versions of your resume for different job applications." },
+    { q: "Is my payment information secure?", a: "All payments are processed through Razorpay, a PCI-DSS Level 1 compliant payment gateway. We never store your card details on our servers." },
+    { q: "Do you offer student or non-profit discounts?", a: "Yes! Students and verified non-profit employees can apply for a 50% discount. Contact us at support@hirecta.com with your institutional email for verification." },
+];
+
 export default async function PricingPage() {
     const plans = await getPlans();
+
+    const breadcrumbs = [
+        { name: 'Home', url: ENV.BASE_URL },
+        { name: 'Pricing', url: `${ENV.BASE_URL}/pricing` },
+    ];
 
     const getIcon = (planId: string) => {
         switch (planId) {
@@ -155,6 +184,8 @@ export default async function PricingPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+            <FAQSchema faqs={pricingFaqs.map(f => ({ question: f.q, answer: f.a }))} />
+            <BreadcrumbSchema items={breadcrumbs} />
             {/* Hero Section */}
             <section className="pt-32 pb-16 px-6">
                 <div className="max-w-6xl mx-auto text-center">
@@ -303,21 +334,12 @@ export default async function PricingPage() {
                     </section>
 
                     {/* FAQ */}
-                    <div className="mb-8">
+                    <div className="mb-8" id="faq">
                         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                            Frequently Asked Questions
+                            Frequently Asked Questions About Pricing
                         </h2>
                         <div className="space-y-4">
-                            {[
-                                {
-                                    q: "Can I cancel my subscription anytime?",
-                                    a: "Yes! You can cancel your subscription at any time from your account settings."
-                                },
-                                {
-                                    q: "Do you offer a money-back guarantee?",
-                                    a: "Absolutely! We offer a 30-day money-back guarantee on all paid plans."
-                                }
-                            ].map((faq, idx) => (
+                            {pricingFaqs.map((faq, idx) => (
                                 <div key={idx} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                                     <h3 className="font-bold text-gray-900 mb-2">{faq.q}</h3>
                                     <p className="text-gray-600">{faq.a}</p>
