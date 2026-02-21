@@ -154,12 +154,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             console.log({ interviews })
             // Add individual interview pages
             if (interviews.length > 0) {
-                interviewPages = interviews.map((interview: any) => ({
-                    url: `${baseUrl}/interviews/${interview.slug}`,
-                    lastModified: interview.updatedAt ? new Date(interview.updatedAt) : currentDate,
-                    changeFrequency: 'weekly' as const,
-                    priority: 0.9,
-                }))
+                interviewPages = interviews.map((interview: any) => {
+                    let parsedDate = currentDate;
+                    if (interview.updatedAt) {
+                        const d = new Date(interview.updatedAt);
+                        if (!isNaN(d.getTime())) {
+                            parsedDate = d;
+                        }
+                    }
+                    return {
+                        url: `${baseUrl}/interviews/${interview.slug}`,
+                        lastModified: parsedDate,
+                        changeFrequency: 'weekly' as const,
+                        priority: 0.9,
+                    };
+                })
             }
 
             // Add the main interviews index page
