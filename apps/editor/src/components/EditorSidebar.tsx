@@ -24,6 +24,7 @@ interface EditorSidebarProps {
     onTemplate?: () => void;
     onTypography?: () => void;
     onDownload?: () => void;
+    page?: "resume" | "cover-letter";
 }
 
 export function EditorSidebar({
@@ -32,7 +33,8 @@ export function EditorSidebar({
     onBuildWithAI,
     onTemplate,
     onTypography,
-    onDownload
+    onDownload,
+    page
 }: EditorSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
@@ -67,12 +69,17 @@ export function EditorSidebar({
             icon: ScanSearch,
             onClick: () => router.push(`/ats-check${window.location.search}`)
         },
-        {
+        ...(page !== "cover-letter" ? [{
             label: "Cover Letter",
             id: "cover-letter",
             icon: FileText,
-            onClick: () => router.push(`/cover-letter${window.location.search}`)
-        },
+            onClick: () => router.push(`/cover-letter`)
+        }] : [{
+            label: "Resume",
+            id: "resume",
+            icon: FileText,
+            onClick: () => router.push(`/editor`)
+        }]),
         {
             label: "Typography",
             id: "typography",

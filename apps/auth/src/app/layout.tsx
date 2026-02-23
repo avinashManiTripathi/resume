@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "Resume Builder - Sign In",
   description: "Sign in to create your professional resume with AI-powered optimization",
 
+  // Auth pages must never be indexed — query params (?redirect=...) create
+  // duplicate URLs with identical login content, triggering GSC warnings.
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
+  },
+
   // Icons (Next.js App Router best practice)
   icons: {
     icon: [

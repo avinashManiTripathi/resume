@@ -62,16 +62,17 @@ async function getAllArticles(): Promise<ArticleData[]> {
 }
 
 export const metadata: Metadata = {
+    metadataBase: new URL('https://hirecta.com'),
     title: "Interview Questions & Answers 2026 — Technical Interview Prep Guides | Hirecta",
     description: "Master your technical interview with 500+ curated questions and expert answers. Comprehensive guides for React, Angular, Node.js, Python, JavaScript, System Design, and more. Free interview prep by Hirecta.",
     keywords: "interview questions, technical interview questions, coding interview prep, React interview questions, Node.js interview questions, Python interview questions, JavaScript interview questions, Angular interview questions, system design interview, behavioral interview questions, software engineer interview, mock interview practice, interview preparation guide 2026",
     alternates: {
-        canonical: "/interviews",
+        canonical: "https://hirecta.com/interviews",
     },
     openGraph: {
         title: "500+ Technical Interview Questions & Expert Answers | Hirecta",
         description: "Free technical interview prep guides for React, Node.js, Python, Angular & more. Curated questions with detailed answers from expert engineers. Start practicing now.",
-        url: "/interviews",
+        url: "https://hirecta.com/interviews",
         type: "website",
         images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Hirecta Technical Interview Preparation Guides" }],
     },

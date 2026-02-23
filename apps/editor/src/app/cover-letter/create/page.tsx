@@ -2,16 +2,13 @@
 
 import { useState, useEffect, useCallback, Suspense, useRef, useMemo, useLayoutEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, Sparkles, Wand2, UserCircle, Brain, Target, CheckCircle2 } from "lucide-react";
+import { Loader2, Sparkles, UserCircle, Brain, Target, Pencil, Download } from "lucide-react";
 import { usePersistence } from "../../hooks/usePersistence";
 import { usePostArrayBuffer } from "@repo/hooks/network";
 import { useDebounce } from "@repo/utils-client";
 import { Dialog } from "@repo/ui/dialog";
-import { Button } from "@repo/ui/button";
-import { ProfileHeader } from "@repo/ui/profile-header";
 import { StepLoader } from "@repo/ui/step-loader";
 import { EditorSidebar } from "../../../components/EditorSidebar";
-import { mapFormDataToStructured } from "../../../libs/cover-letter-utils";
 import TemplateSelector from "../../TemplateSelector";
 import SmartImportModal from "../../SmartImportModal";
 import { RichTextEditor } from "@repo/ui/rich-text-editor";
@@ -58,6 +55,20 @@ function CoverLetterCreateForm() {
     const [fontFamily, setFontFamily] = useState('Inter');
     const [showSmartImport, setShowSmartImport] = useState(false);
     const [smartImportMode, setSmartImportMode] = useState<'voice' | 'text'>('voice');
+    const [profileImage, setProfileImage] = useState<string>("https://images.unsplash.com/photo-1560250097-0b93528c311a?w=80&auto=format&fit=crop&q=60");
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [showMobilePreview, setShowMobilePreview] = useState(false);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) { alert("File size should be less than 5MB"); return; }
+            const reader = new FileReader();
+            reader.onloadend = () => setProfileImage(reader.result as string);
+            reader.readAsDataURL(file);
+        }
+    };
 
     const apiUrl = ENV.API_URL
 
@@ -120,6 +131,15 @@ function CoverLetterCreateForm() {
 
     // Rendering state
     const [isCanvasRendering, setIsCanvasRendering] = useState(false);
+
+    // Always-fresh form data ref — updated synchronously inside handleInputChange
+    // so renderPdf always sends the latest typed values without needing React deps.
+    const latestFormDataRef = useRef<FormData>({
+        fullName: "", email: "", phone: "", jobTitle: "",
+        companyName: "", experience: "", skills: [], customParagraph: "",
+    });
+    // Debounce timer ref — plain setTimeout, no React hooks chain
+    const renderTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch Template Info
     const fetchTemplate = useCallback(async (id: string, isInitial = false) => {
@@ -302,45 +322,47 @@ function CoverLetterCreateForm() {
         ctx.drawImage(offscreen, 0, 0);
     }, []);
 
-    // Render PDF with loading state and auto-cancellation
-    // Render PDF with loading state and auto-cancellation
+    // Render PDF — reads from latestFormDataRef (always fresh, avoids stale closures).
+    // renderPdf itself is stable (only recreates when template/page/url change).
     const renderPdf = useCallback(async (page = currentPage) => {
-        if (!canvasRef.current || !template || isCanvasRendering) return;
+        if (!canvasRef.current || !template) return;
 
-        // requestData must be stable to prevent effect loops, but here we construct it inside
-        // the callback which is triggered by debouncedFormData changes
+        const resolvedTemplateId = (template as any).id || templateIdParam;
+        if (!resolvedTemplateId) return;
 
         setIsCanvasRendering(true);
         try {
             const requestData = {
-                templateId: template.id,
-                userData: { ...debouncedFormData, fontFamily },
+                templateId: resolvedTemplateId,
+                userData: { ...latestFormDataRef.current, fontFamily },
                 format: 'pdf'
             };
 
+            console.log('[CoverLetter] pdf-preview →', resolvedTemplateId, latestFormDataRef.current.fullName);
             const pdfData = await generatePDF(requestData);
 
             if (pdfData) {
                 await renderPDFPage(pdfData, page);
             }
         } catch (error) {
-            console.error("Error rendering PDF:", error);
+            console.error('Error rendering PDF:', error);
         } finally {
             setIsCanvasRendering(false);
         }
-    }, [currentPage, template?.id, debouncedFormData, fontFamily, generatePDF, renderPDFPage]); // Removed isCanvasRendering from deps to avoid loop starter
+    }, [currentPage, template, templateIdParam, fontFamily, generatePDF, renderPDFPage]);
+    // Note: debouncedFormData intentionally NOT in deps — data read via latestFormDataRef
 
-    // Cleanup scale on template change (similar to editor)
+    // Cleanup scale on template change
     useEffect(() => {
         scaleRef.current = null;
     }, [template?.id, isTemplateChanging]);
 
-    // Auto-render PDF when data changes - FIXED DEPENDENCIES
+    // Fire once when template first loads (initial preview)
     useEffect(() => {
         if (template?.id) {
             renderPdf();
         }
-    }, [renderPdf, template?.id]); // renderPdf now has stable dependencies
+    }, [template?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Re-render on window resize - DEBOUNCED
     useEffect(() => {
@@ -412,8 +434,17 @@ function CoverLetterCreateForm() {
         }
     }, [debouncedFormData, handleAutoSave]);
 
-    const handleInputChange = (field: keyof FormData, value: string) => {
+    const handleInputChange = (field: keyof FormData, value: string | string[]) => {
+        // 1. Sync-update the ref immediately so renderPdf always sends fresh data
+        latestFormDataRef.current = { ...latestFormDataRef.current, [field]: value };
+        // 2. Update React state (for controlled inputs / UI)
         setFormData((prev) => ({ ...prev, [field]: value }));
+        // 3. Direct debounce — schedule renderPdf after 600ms of inactivity
+        //    This bypasses the useCallback dep chain and stale closure problems entirely.
+        if (renderTimerRef.current) clearTimeout(renderTimerRef.current);
+        renderTimerRef.current = setTimeout(() => {
+            renderPdf();
+        }, 600);
     };
 
     const handleAddSkill = () => {
@@ -501,6 +532,10 @@ function CoverLetterCreateForm() {
         }
     };
 
+    const handleTemplateChange = () => {
+        setShowTemplates(prev => !prev);
+    };
+
     if (isInitialLoading) {
         return (
             <StepLoader
@@ -528,32 +563,9 @@ function CoverLetterCreateForm() {
     return (
         <div className="flex h-screen w-full bg-slate-50 overflow-hidden gap-2">
             <div className="hidden lg:block">
-                <EditorSidebar />
+                <EditorSidebar page="cover-letter" onDownload={handleGenerate} onTemplate={handleTemplateChange} />
             </div>
             <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
-                {/* Header */}
-                <ProfileHeader
-                    name={`${formData.fullName || 'Untitled'}'s Cover Letter`}
-                    title={formData.jobTitle || "Job Title"}
-                    progress={progress}
-                    onDownload={async () => { await handleGenerate(); }}
-                    onTemplateChange={() => setShowTemplates(true)}
-                    // onFontChange={setFontFamily}
-                    onSmartImport={() => {
-                        setSmartImportMode('voice');
-                        setShowSmartImport(true);
-                    }}
-                    // Hide unsupported props
-                    classNameLeft="md:w-[45%]"
-                />
-
-                {/* Smart Import Modal */}
-                <SmartImportModal
-                    isOpen={showSmartImport}
-                    onClose={() => setShowSmartImport(false)}
-                    onApply={handleSmartImportApply}
-                    mode={smartImportMode}
-                />
 
                 {/* Main Content - Split Glass Content */}
                 <div className="flex-1 flex overflow-hidden relative">
@@ -564,7 +576,62 @@ function CoverLetterCreateForm() {
                     </div>
 
                     {/* Left: Input Form (45%) */}
-                    <div className="w-full md:w-[45%] shrink-0 flex flex-col relative bg-white border-r border-slate-200/60 overflow-hidden">
+                    <div className={`w-full md:w-[45%] shrink-0 flex flex-col relative bg-white border-r border-slate-200/60 overflow-hidden ${showMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+                        {/* Editor-style inline sticky header — inside left panel only */}
+                        <div className="shrink-0 flex items-center justify-between px-6 py-3 border-b border-slate-200/60 bg-white/80 backdrop-blur-md z-10 sticky top-0 h-[72px]">
+                            <div className="flex items-center gap-3">
+                                <div className="relative group">
+                                    <div
+                                        className="w-10 h-10 rounded-full overflow-hidden border-2 border-slate-100 shadow-sm cursor-pointer hover:border-indigo-100 transition-all"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                                    </div>
+                                    <button
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="absolute -bottom-1 -right-1 w-5 h-5 bg-slate-100 rounded-full flex items-center justify-center border border-white shadow-sm hover:bg-white hover:scale-105 transition-all text-slate-600"
+                                    >
+                                        <Pencil size={10} />
+                                    </button>
+                                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
+                                </div>
+                                <div className="flex flex-col justify-center">
+                                    <h2 className="text-base font-bold text-slate-800 leading-tight">
+                                        {formData.fullName ? `${formData.fullName}'s Cover Letter` : 'Your Cover Letter'}
+                                    </h2>
+                                    <p className="text-xs text-slate-500 font-medium">
+                                        {formData.jobTitle || 'Cover Letter'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {/* Progress Circle */}
+                                <div className="relative w-10 h-10 flex items-center justify-center">
+                                    <svg className="w-full h-full transform -rotate-90">
+                                        <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-slate-100" />
+                                        <circle cx="20" cy="20" r="16" stroke="currentColor" strokeWidth="3" fill="transparent"
+                                            strokeDasharray={2 * Math.PI * 16}
+                                            strokeDashoffset={2 * Math.PI * 16 * (1 - progress / 100)}
+                                            className="text-blue-600 transition-all duration-1000 ease-out"
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-[9px] font-bold text-slate-700">{progress}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Smart Import Modal */}
+                        <SmartImportModal
+                            isOpen={showSmartImport}
+                            onClose={() => setShowSmartImport(false)}
+                            onApply={handleSmartImportApply}
+                            mode={smartImportMode}
+                        />
+
                         <div className="flex-1 overflow-y-auto custom-scrollbar bg-white">
                             {showTemplates ? (
                                 <TemplateSelector
@@ -661,10 +728,32 @@ function CoverLetterCreateForm() {
                                 </div>
                             )}
                         </div>
+
+                        {/* Sticky action footer */}
+                        <div className="shrink-0 flex items-center gap-3 px-5 py-4 border-t border-slate-100 bg-white">
+                            <button
+                                onClick={() => setShowTemplates(true)}
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-all border border-slate-200"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+                                </svg>
+                                Change Template
+                            </button>
+                            <button
+                                onClick={handleGenerate}
+                                disabled={generating}
+                                className="flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-70 rounded-xl shadow-sm transition-all active:scale-95"
+                            >
+                                {generating
+                                    ? <><Loader2 size={15} className="animate-spin" /> Generating…</>
+                                    : <><Download size={15} /> Download</>}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Right: Real-time Preview */}
-                    <div className="flex-1 relative flex flex-col items-center bg-transparent">
+                    <div className={`flex-1 relative flex flex-col items-center bg-transparent ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
                         <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-8">
                             <div className="relative w-full max-w-[794px] flex justify-center">
                                 <div className="relative bg-white border-r border-slate-200/60 w-full" style={{ aspectRatio: '210/297' }}>
@@ -711,6 +800,105 @@ function CoverLetterCreateForm() {
 
                 <Dialog isOpen={dialog.isOpen} onClose={() => setDialog(prev => ({ ...prev, isOpen: false }))} title={dialog.title} description={dialog.description} type={dialog.type} primaryActionLabel="Got it" />
             </div>
+
+            {/* Floating Preview/Edit FAB - mobile only */}
+            <button
+                onClick={() => setShowMobilePreview(!showMobilePreview)}
+                className="md:hidden fixed bottom-4 right-4 z-50 bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:bg-indigo-700 transition-all flex items-center gap-2 min-w-[56px] min-h-[56px]"
+                aria-label={showMobilePreview ? 'Show Form' : 'Show Preview'}
+            >
+                {showMobilePreview ? (
+                    <>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        <span className="text-sm font-semibold">Edit</span>
+                    </>
+                ) : (
+                    <>
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        <span className="text-sm font-semibold">Preview</span>
+                    </>
+                )}
+            </button>
+
+            {/* Hamburger Menu FAB - mobile only */}
+            <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="md:hidden fixed bottom-4 left-4 z-50 bg-white text-slate-700 p-3 rounded-full shadow-lg hover:bg-slate-50 transition-all border-2 border-slate-200 min-w-[56px] min-h-[56px]"
+                aria-label="Menu"
+            >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+
+            {/* Mobile Slide-up Menu */}
+            {showMobileMenu && (
+                <>
+                    <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setShowMobileMenu(false)} />
+                    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-50">
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-lg font-bold text-gray-900">Actions</h3>
+                                <button onClick={() => setShowMobileMenu(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="space-y-3">
+                                {/* Build with AI */}
+                                <button
+                                    onClick={() => { setShowMobileMenu(false); setShowSmartImport(true); }}
+                                    className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
+                                >
+                                    <div className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <Sparkles className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div className="flex-1 text-left">
+                                        <div className="font-semibold text-gray-900">Build with AI</div>
+                                        <div className="text-xs text-gray-600">Import from voice or file</div>
+                                    </div>
+                                </button>
+
+                                {/* Change Template */}
+                                <button
+                                    onClick={() => { setShowMobileMenu(false); setShowTemplates(true); }}
+                                    className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-indigo-400 transition-all"
+                                >
+                                    <div className="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z" />
+                                        </svg>
+                                    </div>
+                                    <div className="flex-1 text-left">
+                                        <div className="font-semibold text-gray-900">Change Template</div>
+                                        <div className="text-xs text-gray-600">Choose a new design</div>
+                                    </div>
+                                </button>
+
+                                {/* Download */}
+                                <button
+                                    onClick={() => { setShowMobileMenu(false); handleGenerate(); }}
+                                    className="w-full flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl hover:border-blue-400 transition-all"
+                                >
+                                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <Download className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div className="flex-1 text-left">
+                                        <div className="font-semibold text-gray-900">Download</div>
+                                        <div className="text-xs text-gray-600">Save as PDF or DOCX</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
