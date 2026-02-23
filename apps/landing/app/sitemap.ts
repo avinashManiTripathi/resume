@@ -56,6 +56,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'marketing',
         'data-scientist',
         'product-manager',
+        // New high-traffic pages added Feb 2026
+        'student',
+        'entry-level',
+        'executive',
+        'accountant',
+        'sales',
+        'graphic-designer',
+        'customer-service',
+        'lawyer',
+        'hr-manager',
+        'finance',
     ].map((slug) => ({
         url: `${baseUrl}/resume-builder/${slug}`,
         lastModified: currentDate,
