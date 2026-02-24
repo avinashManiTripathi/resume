@@ -307,7 +307,7 @@ export function RichTextEditor({
                         ) : (
                             <>
                                 <Wand2 className="w-4 h-4" />
-                                <span className="text-[11px] font-semibold hidden sm:inline-block">Fix Grammar</span>
+                                <span className="text-[11px] font-semibold inline-block whitespace-nowrap">Fix Grammar</span>
                             </>
                         )}
                     </button>
@@ -324,7 +324,7 @@ export function RichTextEditor({
                         ) : (
                             <>
                                 <Sparkles className="w-4 h-4" />
-                                <span className="text-[11px] font-semibold hidden sm:inline-block">AI Rewrite</span>
+                                <span className="text-[11px] font-semibold inline-block whitespace-nowrap">AI Rewrite</span>
                             </>
                         )}
                     </button>
