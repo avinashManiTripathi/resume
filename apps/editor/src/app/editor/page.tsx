@@ -90,14 +90,14 @@ function ResumeEditor() {
   const [templateId, setTemplateId] = useState(urlTemplateId);
   const [mobileMenuView, setMobileMenuView] = useState<'menu' | 'typography'>('menu');
   const [typographySettings, setTypographySettings] = useState<TypographySettings>({
-    fontFamily: 'Inter',
-    fontSize: 13,
-    lineHeight: 1.15,
-    sectionGap: 12,
-    itemGap: 4,
-    headingSize: 16,
-    nameSize: 28,
-    pageMargin: 48
+    "fontFamily": "Merriweather",
+    "fontSize": 10,
+    "lineHeight": 1.15,
+    "sectionGap": 12,
+    "itemGap": 4,
+    "headingSize": 16,
+    "nameSize": 28,
+    "pageMargin": 48
   });
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStep, setLoadingStep] = useState(0);

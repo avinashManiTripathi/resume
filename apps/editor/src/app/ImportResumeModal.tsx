@@ -119,20 +119,6 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
 
     if (!isOpen) return null;
 
-    if (isProcessing) {
-        return (
-            <div className="fixed inset-0 z-50">
-                <StepLoader
-                    loading={isProcessing}
-                    message="Importing Resume"
-                    subMessage={loadingSteps[loadingStep]}
-                    logoSrc="/logo.png"
-                    fullScreen={true}
-                />
-            </div>
-        );
-    }
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-none md:rounded-3xl shadow-2xl w-full max-w-5xl h-full md:h-[650px] max-h-[100dvh] overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-200">
@@ -231,9 +217,9 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
                     </div>
 
                     {/* Scrollable Content Area */}
-                    <div className="flex-1 overflow-y-auto px-6 pb-6 md:px-10 md:pb-6 mt-4 flex flex-col items-center justify-center">
+                    <div className="flex-1 overflow-y-auto px-6 pb-6 md:px-10 md:pb-6 mt-4 flex flex-col items-center justify-center relative">
                         {/* Mobile Error Display */}
-                        {error && (
+                        {error && !isProcessing && (
                             <div className="md:hidden w-full mb-4 bg-red-50 border border-red-100 rounded-2xl p-4 animate-in slide-in-from-bottom-2 shadow-sm">
                                 <div className="flex items-start gap-3">
                                     <div className="bg-white p-1.5 rounded-full shadow-sm flex-shrink-0 border border-red-100">
@@ -249,53 +235,65 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
                             </div>
                         )}
 
-                        <div
-                            className={`w-full max-w-lg p-10 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center transition-all cursor-pointer ${isDragging
-                                ? 'border-indigo-500 bg-indigo-50/50'
-                                : file
-                                    ? 'border-emerald-500 bg-emerald-50/30'
-                                    : 'border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'
-                                }`}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                            onClick={() => fileInputRef.current?.click()}
-                        >
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                onChange={handleFileSelect}
-                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                className="hidden"
-                            />
+                        {isProcessing ? (
+                            <div className="w-full h-full min-h-[300px] flex items-center justify-center bg-slate-50 border-2 border-slate-100 border-dashed rounded-3xl p-10">
+                                <StepLoader
+                                    loading={isProcessing}
+                                    message="Importing Resume"
+                                    subMessage={loadingSteps[loadingStep]}
+                                    logoSrc="/logo.png"
+                                    fullScreen={false}
+                                />
+                            </div>
+                        ) : (
+                            <div
+                                className={`w-full max-w-lg p-10 border-2 border-dashed rounded-3xl flex flex-col items-center justify-center transition-all cursor-pointer ${isDragging
+                                    ? 'border-indigo-500 bg-indigo-50/50'
+                                    : file
+                                        ? 'border-emerald-500 bg-emerald-50/30'
+                                        : 'border-slate-200 bg-slate-50 hover:bg-slate-100 hover:border-slate-300'
+                                    }`}
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileSelect}
+                                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    className="hidden"
+                                />
 
-                            {file ? (
-                                <>
-                                    <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-600">
-                                        <FileText className="w-8 h-8" />
-                                    </div>
-                                    <p className="font-bold text-slate-900 text-lg text-center mb-1">
-                                        {file.name}
-                                    </p>
-                                    <p className="text-slate-500 text-sm">
-                                        {(file.size / 1024 / 1024).toFixed(2)} MB
-                                    </p>
-                                </>
-                            ) : (
-                                <>
-                                    <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 text-indigo-600">
-                                        <Upload className="w-8 h-8" />
-                                    </div>
-                                    <p className="font-bold text-slate-900 text-lg mb-2">
-                                        Drop your resume here
-                                    </p>
-                                    <p className="text-slate-500 text-sm text-center">
-                                        or click to browse from your computer <br />
-                                        <span className="text-xs opacity-75 mt-1 block">(PDF, DOCX up to 10MB)</span>
-                                    </p>
-                                </>
-                            )}
-                        </div>
+                                {file ? (
+                                    <>
+                                        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4 text-emerald-600">
+                                            <FileText className="w-8 h-8" />
+                                        </div>
+                                        <p className="font-bold text-slate-900 text-lg text-center mb-1">
+                                            {file.name}
+                                        </p>
+                                        <p className="text-slate-500 text-sm">
+                                            {(file.size / 1024 / 1024).toFixed(2)} MB
+                                        </p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 text-indigo-600">
+                                            <Upload className="w-8 h-8" />
+                                        </div>
+                                        <p className="font-bold text-slate-900 text-lg mb-2">
+                                            Drop your resume here
+                                        </p>
+                                        <p className="text-slate-500 text-sm text-center">
+                                            or click to browse from your computer <br />
+                                            <span className="text-xs opacity-75 mt-1 block">(PDF, DOCX up to 10MB)</span>
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer - Main Action */}
