@@ -99,6 +99,7 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
 
     if (!isOpen) return null;
 
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-none md:rounded-3xl shadow-2xl w-full max-w-5xl h-full md:h-[650px] max-h-[100dvh] overflow-hidden flex flex-col md:flex-row animate-in fade-in zoom-in duration-200">
