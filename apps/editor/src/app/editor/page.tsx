@@ -12,6 +12,7 @@ import TemplateSelector from "../TemplateSelector";
 import { saveBlobAsPdf } from "@repo/utils-client";
 import { useAppNetwork } from "../../hooks/useAppNetwork";
 import SmartImportModal from "../SmartImportModal";
+import ImportResumeModal from "../ImportResumeModal";
 import { Dialog } from "@repo/ui/dialog";
 import { CloudCheck, FileText, Brain, Sparkles, Target, Zap, Loader2, ChevronLeft, ChevronRight, Settings2, Download, LayoutGrid, Pencil, ScanSearch } from "lucide-react";
 import { dummyData, ResumeFormSchema, ResumeData, PersonalInfo, TypographySettings } from "../constants";
@@ -84,6 +85,7 @@ function ResumeEditor() {
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showSmartImport, setShowSmartImport] = useState(false);
+  const [showImportResume, setShowImportResume] = useState(false);
   const [mode, setMode] = useState<'voice' | 'text'>('voice');
   const [templateId, setTemplateId] = useState(urlTemplateId);
   const [mobileMenuView, setMobileMenuView] = useState<'menu' | 'typography'>('menu');
@@ -1043,6 +1045,7 @@ function ResumeEditor() {
       <div className="hidden lg:block">
         <EditorSidebar
           onBuildWithAI={() => setShowSmartImport(true)}
+          onImportResume={() => setShowImportResume(true)}
           onTemplate={() => setLeftPanelView('templates')}
           onTypography={() => setLeftPanelView('typography')}
           onDownload={handleDownload}
@@ -1376,6 +1379,25 @@ function ResumeEditor() {
                         </div>
                       </button>
 
+                      {/* Import Resume */}
+                      <button
+                        onClick={() => {
+                          setShowMobileMenu(false);
+                          setShowImportResume(true);
+                        }}
+                        className="w-full flex items-center gap-3 p-4 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-violet-400 transition-all"
+                      >
+                        <div className="w-10 h-10 bg-violet-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 text-left">
+                          <div className="font-semibold text-gray-900">Import Resume</div>
+                          <div className="text-xs text-gray-600">Upload your existing PDF or Word file</div>
+                        </div>
+                      </button>
+
                       {/* Check ATS */}
                       <button
                         onClick={() => {
@@ -1475,6 +1497,14 @@ function ResumeEditor() {
           onClose={() => setShowSmartImport(false)}
           onApply={(data) => {
             // Apply extracted data to resume
+            setResume(data);
+          }}
+        />
+
+        <ImportResumeModal
+          isOpen={showImportResume}
+          onClose={() => setShowImportResume(false)}
+          onApply={(data) => {
             setResume(data);
           }}
         />

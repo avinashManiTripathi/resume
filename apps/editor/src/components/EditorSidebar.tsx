@@ -11,7 +11,8 @@ import {
     Trophy,
     Settings2,
     Download,
-    LayoutTemplate
+    LayoutTemplate,
+    FileUp
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
@@ -21,6 +22,7 @@ interface EditorSidebarProps {
     onTabChange?: (tab: string) => void;
     activeTab?: string;
     onBuildWithAI?: () => void;
+    onImportResume?: () => void;
     onTemplate?: () => void;
     onTypography?: () => void;
     onDownload?: () => void;
@@ -31,6 +33,7 @@ export function EditorSidebar({
     onTabChange,
     activeTab: propActiveTab,
     onBuildWithAI,
+    onImportResume,
     onTemplate,
     onTypography,
     onDownload,
@@ -56,6 +59,12 @@ export function EditorSidebar({
             id: "build-ai",
             icon: Wand2,
             onClick: onBuildWithAI
+        },
+        {
+            label: "Import Resume",
+            id: "import-resume",
+            icon: FileUp,
+            onClick: onImportResume
         },
         {
             label: "Template",
@@ -111,6 +120,10 @@ export function EditorSidebar({
 
         if (item.label === "Template") {
             return `${baseClass} bg-indigo-50/40 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-700`;
+        }
+
+        if (item.label === "Import Resume") {
+            return `${baseClass} bg-violet-50/40 text-violet-600 hover:bg-violet-100 hover:text-violet-700`;
         }
 
         if (item.label === "Typography") {
