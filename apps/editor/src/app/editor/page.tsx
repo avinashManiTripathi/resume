@@ -1199,7 +1199,7 @@ function ResumeEditor() {
 
               {/* Floating Typography Settings Popup */}
               {leftPanelView === 'typography' && (
-                <div className="absolute top-6 right-6 z-50 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute top-1/2 -translate-y-1/2 left-4 md:left-24 z-50 w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                   <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 backdrop-blur-sm">
                     <div>
                       <h2 className="text-base font-bold text-slate-800">Typography</h2>
