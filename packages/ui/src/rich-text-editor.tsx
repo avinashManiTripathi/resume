@@ -16,6 +16,7 @@ interface RichTextEditorProps {
     onChange: (value: string) => void;
     placeholder?: string;
     apiUrl?: string;
+    label?: string;
 }
 
 export function RichTextEditor({
@@ -23,6 +24,7 @@ export function RichTextEditor({
     onChange,
     placeholder = "Write something...",
     apiUrl,
+    label,
 }: RichTextEditorProps) {
     const editorRef = useRef<HTMLDivElement>(null);
     const [mounted, setMounted] = useState(false);
@@ -229,122 +231,135 @@ export function RichTextEditor({
     }
 
     return (
-        <div className="rich-text-editor border border-gray-200 rounded-lg overflow-hidden">
-            {/* Toolbar */}
-            <div className="flex items-center gap-1 p-2 bg-gray-50 border-b border-gray-200">
-                <button
-                    type="button"
-                    onClick={() => execCommand("bold")}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Bold"
-                >
-                    <Bold className="w-4 h-4" />
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("italic")}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Italic"
-                >
-                    <Italic className="w-4 h-4" />
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("underline")}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Underline"
-                >
-                    <Underline className="w-4 h-4" />
-                </button>
-                <div className="w-px h-6 bg-gray-300 mx-1" />
-                <button
-                    type="button"
-                    onClick={() => execCommand("insertUnorderedList")}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Bullet List"
-                >
-                    <List className="w-4 h-4" />
-                </button>
-                <button
-                    type="button"
-                    onClick={() => execCommand("insertOrderedList")}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Numbered List"
-                >
-                    <ListOrdered className="w-4 h-4" />
-                </button>
-                <div className="w-px h-6 bg-gray-300 mx-1" />
-                <button
-                    type="button"
-                    onClick={insertLink}
-                    className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
-                    title="Insert Link"
-                >
-                    <LinkIcon className="w-4 h-4" />
-                </button>
+        <div className="w-full flex flex-col gap-1.5 focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 rounded-lg group/wrapper">
+            {label && (
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">
+                    {label}
+                </label>
+            )}
+            <div className="rich-text-editor border border-gray-200 rounded-lg overflow-hidden group-focus-within/wrapper:border-indigo-500 transition-colors">
+                {/* Toolbar */}
+                <div className="flex items-center gap-1 p-2 bg-gray-50 border-b border-gray-200">
+                    <button
+                        type="button"
+                        onClick={() => execCommand("bold")}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Bold"
+                    >
+                        <Bold className="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => execCommand("italic")}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Italic"
+                    >
+                        <Italic className="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => execCommand("underline")}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Underline"
+                    >
+                        <Underline className="w-4 h-4" />
+                    </button>
+                    <div className="w-px h-6 bg-gray-300 mx-1" />
+                    <button
+                        type="button"
+                        onClick={() => execCommand("insertUnorderedList")}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Bullet List"
+                    >
+                        <List className="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => execCommand("insertOrderedList")}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Numbered List"
+                    >
+                        <ListOrdered className="w-4 h-4" />
+                    </button>
+                    <div className="w-px h-6 bg-gray-300 mx-1" />
+                    <button
+                        type="button"
+                        onClick={insertLink}
+                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        title="Insert Link"
+                    >
+                        <LinkIcon className="w-4 h-4" />
+                    </button>
 
-                <div className="w-px h-6 bg-gray-300 mx-1" />
+                    <div className="w-px h-6 bg-gray-300 mx-1" />
 
-                {/* AI & Voice Tools */}
+                    {/* AI & Voice Tools */}
 
-                <button
-                    type="button"
-                    onClick={() => enhanceText('fix_grammar')}
-                    disabled={isEnhancing}
-                    className="p-2 hover:bg-purple-50 rounded transition-colors text-purple-600 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed group relative"
-                    title="Fix Grammar"
-                >
-                    {isEnhancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
-                </button>
+                    <button
+                        type="button"
+                        onClick={() => enhanceText('fix_grammar')}
+                        disabled={isEnhancing}
+                        className="p-2 hover:bg-purple-50 rounded transition-colors text-purple-600 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 group relative"
+                        title="Fix Grammar"
+                    >
+                        {isEnhancing ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <>
+                                <Wand2 className="w-4 h-4" />
+                                <span className="text-[11px] font-semibold hidden sm:inline-block">Fix Grammar</span>
+                            </>
+                        )}
+                    </button>
 
-                <button
-                    type="button"
-                    onClick={() => enhanceText('improve')}
-                    disabled={isEnhancing}
-                    className="p-2 hover:bg-indigo-50 rounded transition-colors text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                    title="Write with AI"
-                >
-                    {isEnhancing ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                        <>
-                            <Sparkles className="w-4 h-4" />
-                            <span className="text-[11px] font-semibold hidden sm:inline-block">AI Rewrite</span>
-                        </>
-                    )}
-                </button>
-            </div>
+                    <button
+                        type="button"
+                        onClick={() => enhanceText('improve')}
+                        disabled={isEnhancing}
+                        className="p-2 hover:bg-indigo-50 rounded transition-colors text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                        title="Write with AI"
+                    >
+                        {isEnhancing ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <>
+                                <Sparkles className="w-4 h-4" />
+                                <span className="text-[11px] font-semibold hidden sm:inline-block">AI Rewrite</span>
+                            </>
+                        )}
+                    </button>
+                </div>
 
-            {/* Editor */}
-            <div className="relative group/editor">
-                <div
-                    ref={editorRef}
-                    contentEditable
-                    onInput={handleInput}
-                    className="p-4 min-h-[120px] focus:outline-none bg-white text-gray-900 pb-10 custom-scrollbar overflow-y-auto max-h-[400px]"
-                    data-placeholder={placeholder}
-                    style={{
-                        minHeight: "120px",
-                    }}
-                />
+                {/* Editor */}
+                <div className="relative group/editor">
+                    <div
+                        ref={editorRef}
+                        contentEditable
+                        onInput={handleInput}
+                        className="p-4 min-h-[120px] focus:outline-none bg-white text-gray-900 pb-10 custom-scrollbar overflow-y-auto max-h-[400px]"
+                        data-placeholder={placeholder}
+                        style={{
+                            minHeight: "120px",
+                        }}
+                    />
 
-                {/* Floating Dictation Tool */}
-                <button
-                    type="button"
-                    onClick={startDictation}
-                    className={`absolute bottom-3 right-3 p-2 rounded-full shadow-sm border transition-all flex items-center justify-center
+                    {/* Floating Dictation Tool */}
+                    <button
+                        type="button"
+                        onClick={startDictation}
+                        className={`absolute bottom-3 right-3 p-2 rounded-full shadow-sm border transition-all flex items-center justify-center z-10
                         ${isListening
-                            ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100 shadow-red-100 animate-pulse'
-                            : 'bg-white border-slate-200 text-slate-400 hover:text-indigo-600 hover:border-indigo-100 hover:bg-indigo-50 hover:shadow-md opacity-60 group-hover/editor:opacity-100'
-                        }`}
-                    title={isListening ? "Stop Dictation" : "Start Dictation"}
-                >
-                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                </button>
-            </div>
+                                ? 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100 shadow-red-100 animate-pulse'
+                                : 'bg-blue-600 text-white hover:bg-blue-700 border-transparent hover:shadow-md opacity-80 group-hover/editor:opacity-100'
+                            }`}
+                        title={isListening ? "Stop Dictation" : "Start Dictation"}
+                    >
+                        {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                    </button>
+                </div>
 
-            <style dangerouslySetInnerHTML={{
-                __html: `
+                <style dangerouslySetInnerHTML={{
+                    __html: `
           .rich-text-editor [contenteditable]:empty:before {
             content: attr(data-placeholder);
             color: #9ca3af;
@@ -373,7 +388,8 @@ export function RichTextEditor({
             list-style-type: square;
           }
         `
-            }} />
+                }} />
+            </div>
         </div>
     );
 }
