@@ -506,13 +506,11 @@ function ResumeEditor() {
 
   // Page navigation
   const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
   const [leftPanelView, setLeftPanelView] = useState<'form' | 'templates' | 'typography'>('form');
 
   const mainRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const offscreenRef = useRef<HTMLCanvasElement | null>(null);
-  const renderTaskRef = useRef<{ cancel: () => void; promise: Promise<void> } | null>(null);
+  const pdfContainerRef = useRef<HTMLDivElement>(null);
+  const renderTasksRef = useRef<{ cancel: () => void; promise: Promise<void> }[]>([]);
   const requestIdRef = useRef(0);
 
   const apiUrl = `${API_BASE}/convert-html-to-pdf`;
@@ -589,14 +587,7 @@ function ResumeEditor() {
     setResume(newResume);
   }, []);
 
-  // Page navigation - Memoized for ProfileHeader
-  const nextPage = useCallback(() => {
-    setCurrentPage(prev => prev < totalPages ? prev + 1 : prev);
-  }, [totalPages]);
-
-  const prevPage = useCallback(() => {
-    setCurrentPage(prev => prev > 1 ? prev - 1 : prev);
-  }, []);
+  // Page navigation removed in favor of infinite vertical scroll
 
   // Handle profile image change - Memoized for ProfileHeader
   const handleProfileImageChange = useCallback((imageUrl: string) => {
@@ -788,10 +779,10 @@ function ResumeEditor() {
 
   const scaleRef = useRef<number | null>(null);
 
-  const renderPDFPage = useCallback(async (pdfData: ArrayBuffer, page: number) => {
-    if (!canvasRef.current) return;
+  const renderPDFPage = useCallback(async (pdfData: ArrayBuffer) => {
+    if (!pdfContainerRef.current) return;
 
-    const container = canvasRef.current.parentElement;
+    const container = pdfContainerRef.current;
     if (!container) return;
 
     const containerWidth = Math.floor(container.clientWidth);
@@ -799,91 +790,70 @@ function ResumeEditor() {
 
     const requestId = ++requestIdRef.current;
 
-    // Use extended Window interface locally to avoid 'any'
     interface PdfWindow extends Window {
-      pdfjsLib: any; // External lib without types
+      pdfjsLib: any;
     }
     const pdfjsLib = (window as unknown as PdfWindow).pdfjsLib;
 
-    //need to move this in constants
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     setTotalPages(pdf.numPages);
 
-    const pdfPage = await pdf.getPage(
-      Math.min(Math.max(page, 1), pdf.numPages)
-    );
-
     const dpr = window.devicePixelRatio || 1;
-    const baseViewport = pdfPage.getViewport({ scale: 1 });
-
     const padding = 20;
 
+    // Clear existing canvases & cancel pending tasks
+    container.innerHTML = '';
+    renderTasksRef.current.forEach(task => {
+      try { task.cancel(); } catch (e) { }
+    });
+    renderTasksRef.current = [];
+
     if (!scaleRef.current) {
-      scaleRef.current =
-        (containerWidth - padding) / baseViewport.width;
+      const firstPage = await pdf.getPage(1);
+      const baseViewport = firstPage.getViewport({ scale: 1 });
+      scaleRef.current = (containerWidth - padding) / baseViewport.width;
     }
 
-    const viewport = pdfPage.getViewport({
-      scale: scaleRef.current,
-    });
+    const currentScale = scaleRef.current;
 
-    const offscreen =
-      offscreenRef.current ?? document.createElement("canvas");
-    offscreenRef.current = offscreen;
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      if (requestId !== requestIdRef.current) return;
 
-    const targetWidth = Math.floor(viewport.width * dpr);
-    const targetHeight = Math.floor(viewport.height * dpr);
+      const pdfPage = await pdf.getPage(pageNum);
+      const viewport = pdfPage.getViewport({ scale: currentScale });
 
-    if (
-      offscreen.width !== targetWidth ||
-      offscreen.height !== targetHeight
-    ) {
-      offscreen.width = targetWidth;
-      offscreen.height = targetHeight;
-    }
+      const targetWidth = Math.floor(viewport.width * dpr);
+      const targetHeight = Math.floor(viewport.height * dpr);
 
-    const offCtx = offscreen.getContext("2d")!;
-    offCtx.setTransform(1, 0, 0, 1, 0, 0);
-    offCtx.scale(dpr, dpr);
-
-    if (renderTaskRef.current) {
-      renderTaskRef.current.cancel();
-    }
-
-    renderTaskRef.current = pdfPage.render({
-      canvasContext: offCtx,
-      viewport,
-    });
-
-    try {
-      if (renderTaskRef.current) {
-        await renderTaskRef.current.promise;
-      }
-    } catch (e: unknown) {
-      if ((e as { name?: string })?.name === "RenderingCancelledException") return;
-      throw e;
-    }
-
-    if (requestId !== requestIdRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d")!;
-
-    if (
-      canvas.width !== targetWidth ||
-      canvas.height !== targetHeight
-    ) {
+      const canvas = document.createElement("canvas");
+      canvas.className = "bg-white rounded-sm shadow border border-slate-200/60 max-w-full object-contain overflow-hidden";
       canvas.width = targetWidth;
       canvas.height = targetHeight;
       canvas.style.width = `${viewport.width}px`;
       canvas.style.height = `${viewport.height}px`;
-    }
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.drawImage(offscreen, 0, 0);
+      container.appendChild(canvas);
+
+      const ctx = canvas.getContext("2d")!;
+
+      const renderTask = pdfPage.render({
+        canvasContext: ctx,
+        viewport,
+        transform: [dpr, 0, 0, dpr, 0, 0]
+      });
+
+      renderTasksRef.current.push(renderTask);
+
+      try {
+        await renderTask.promise;
+      } catch (e: unknown) {
+        if ((e as { name?: string })?.name === "RenderingCancelledException") continue;
+        console.error(e);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -912,9 +882,9 @@ function ResumeEditor() {
   }, [debouncedResume, sectionLabels, templateId, typographySettings, debouncedSectionOrder, debouncedSectionLabels]);
 
   // Render PDF with loading state and auto-cancellation - Memoized
-  // Now depends only on stable things + currentPage
-  const renderPdf = useCallback(async (page = currentPage) => {
-    if (!canvasRef.current || !mainRef.current) return;
+  // Now depends only on stable things
+  const renderPdf = useCallback(async () => {
+    if (!pdfContainerRef.current || !mainRef.current) return;
 
     try {
       const { resume, sectionLabels, templateId, typography, order } = latestDataRef.current;
@@ -933,7 +903,7 @@ function ResumeEditor() {
       const pdfData = await generatePDF(resumeData);
 
       if (pdfData) {
-        await renderPDFPage(pdfData, page);
+        await renderPDFPage(pdfData);
       }
     } catch (error: unknown) {
       console.error("Error rendering PDF:", error);
@@ -941,10 +911,9 @@ function ResumeEditor() {
       // Handle 403/401 during preview if they happen despite being 'public'
       if ((error as any)?.message?.includes('403')) {
         window.location.reload()
-        // router.push('/subscription?returnTo=editor');
       }
     }
-  }, [currentPage, generatePDF, renderPDFPage]);
+  }, [generatePDF, renderPDFPage]);
 
   // Auto-render PDF when data changes
   // Explicitly trigger on data changes, NOT on renderPdf function change
@@ -958,10 +927,10 @@ function ResumeEditor() {
     if (showMobilePreview) {
       // Small delay to ensure container is visible and has dimensions
       setTimeout(() => {
-        renderPdf(currentPage);
+        renderPdf();
       }, 100);
     }
-  }, [showMobilePreview, currentPage, renderPdf]);
+  }, [showMobilePreview, renderPdf]);
 
   // Re-render on window resize - renderPdf is memoized
   useLayoutEffect(() => {
@@ -977,9 +946,6 @@ function ResumeEditor() {
       url.searchParams.set('templateId', defaultTemplateId);
       window.history.replaceState({}, '', url.toString());
     }
-    // Reset to first page when template changes
-    setCurrentPage(1);
-
     // Re-render PDF with new template
     renderPdf();
   }, [urlTemplateId, defaultTemplateId]);
@@ -1204,43 +1170,12 @@ function ResumeEditor() {
           <main ref={mainRef} className={`flex-1 relative flex flex-col items-center bg-transparent transition-all duration-500 ${showMobilePreview ? 'flex' : 'hidden md:flex'}`}>
 
             <div className="flex-1 w-full overflow-y-auto custom-scrollbar flex flex-col items-center bg-slate-100/30 px-4 py-8">
-              <div className="relative w-full flex justify-center mb-8">
-                <canvas
-                  ref={canvasRef}
-                  width={794}
-                  height={1123}
-                  className="bg-white  rounded-sm max-w-full object-contain"
-                />
+              <div
+                ref={pdfContainerRef}
+                className="relative w-full flex flex-col items-center gap-6 mb-8"
+              >
+                {/* Dynamically injected canvases for each page will appear here */}
               </div>
-
-              {/* Pagination Controls */}
-              {totalPages > 1 && (
-                <div className="mt-4 flex items-center justify-center gap-3 bg-white p-2 px-4 rounded-full shadow-md border border-slate-200/60 sticky bottom-4 z-10 transition-all duration-300 hover:shadow-lg">
-                  <button
-                    onClick={prevPage}
-                    disabled={currentPage <= 1}
-                    className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
-                    aria-label="Previous Page"
-                  >
-                    <ChevronLeft className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
-                  </button>
-
-                  <div className="flex flex-col items-center">
-                    <span className="font-semibold text-sm text-slate-700 tabular-nums">
-                      {currentPage} <span className="text-slate-400 font-normal text-sm mx-1">/</span> {totalPages}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={nextPage}
-                    disabled={currentPage >= totalPages}
-                    className="p-1.5 hover:bg-slate-100 rounded-full disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 group"
-                    aria-label="Next Page"
-                  >
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-900" />
-                  </button>
-                </div>
-              )}
               {/* Overlay when loading */}
               {/* Small loader on canvas (top-right) */}
               {isPdfGenerating && (
