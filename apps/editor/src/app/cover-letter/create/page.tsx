@@ -714,6 +714,7 @@ function CoverLetterCreateForm() {
                                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Professional Summary</label>
                                                     <div className="bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all">
                                                         <RichTextEditor
+                                                            apiUrl={apiUrl}
                                                             value={formData.experience}
                                                             onChange={(value: string) => handleInputChange("experience", value)}
                                                             placeholder="I have 5 years of experience..."

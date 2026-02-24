@@ -2,6 +2,7 @@ import { TextArea } from "@repo/ui/text-area"
 import { Input } from "@repo/ui/input"
 import { RichTextEditor } from "@repo/ui/rich-text-editor"
 import { MonthPicker } from "@repo/ui/month-picker"
+import { ENV } from "@/app/env";
 export type FieldType =
     | "text"
     | "email"
@@ -52,6 +53,7 @@ const FieldRenderer = ({ field, value, onChange }: Props) => {
     if (field.type === "richtext") {
         return (
             <RichTextEditor
+                apiUrl={ENV.API_URL}
                 value={value || ""}
                 onChange={onChange}
                 placeholder="Write your bio..."

@@ -4,6 +4,7 @@ import { X, Plus, Type, Tags, GripVertical, ChevronDown, Check, Sparkles } from 
 import { RichTextEditor } from '@repo/ui/rich-text-editor';
 import { Button } from '@repo/ui/button';
 import { COMMON_SKILLS, COMMON_LANGUAGES } from './common-skills';
+import { ENV } from "@/app/env";
 
 interface SkillsInputProps {
     value: any;
@@ -165,6 +166,7 @@ export const SkillsInput: React.FC<SkillsInputProps> = ({ value, onChange, varia
                     </div>
                 </div>
                 <RichTextEditor
+                    apiUrl={ENV.API_URL}
                     value={typeof value === 'string' ? value : ''}
                     onChange={onChange}
                 />

@@ -106,23 +106,23 @@ export function EditorSidebar({
             icon: LayoutTemplate,
             onClick: onTemplate
         },
-        {
-            label: "Check ATS",
-            id: "check-ats",
-            icon: ScanSearch,
-            onClick: () => router.push(`/ats-check${window.location.search}`)
-        },
-        ...(page !== "cover-letter" ? [{
-            label: "Cover Letter",
-            id: "cover-letter",
-            icon: FileText,
-            onClick: () => router.push(`/cover-letter`)
-        }] : [{
-            label: "Resume",
-            id: "resume",
-            icon: FileText,
-            onClick: () => router.push(`/editor`)
-        }]),
+        // {
+        //     label: "Check ATS",
+        //     id: "check-ats",
+        //     icon: ScanSearch,
+        //     onClick: () => router.push(`/ats-check${window.location.search}`)
+        // },
+        // ...(page !== "cover-letter" ? [{
+        //     label: "Cover Letter",
+        //     id: "cover-letter",
+        //     icon: FileText,
+        //     onClick: () => router.push(`/cover-letter`)
+        // }] : [{
+        //     label: "Resume",
+        //     id: "resume",
+        //     icon: FileText,
+        //     onClick: () => router.push(`/editor`)
+        // }]),
 
         {
             label: "Download PDF",

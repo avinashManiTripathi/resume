@@ -15,12 +15,14 @@ interface RichTextEditorProps {
     value: string;
     onChange: (value: string) => void;
     placeholder?: string;
+    apiUrl?: string;
 }
 
 export function RichTextEditor({
     value,
     onChange,
     placeholder = "Write something...",
+    apiUrl,
 }: RichTextEditorProps) {
     const editorRef = useRef<HTMLDivElement>(null);
     const [mounted, setMounted] = useState(false);
@@ -178,8 +180,8 @@ export function RichTextEditor({
         try {
             const token = localStorage.getItem('token');
             // Using a relative /api path or standard fallback for proxy
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-            const response = await fetch(`${apiUrl}/api/v1/resume/enhance`, {
+            const apiBase = apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+            const response = await fetch(`${apiBase}/api/v1/resume/enhance`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
