@@ -12,11 +12,14 @@ import {
     Settings2,
     Download,
     LayoutTemplate,
-    FileUp
+    FileUp,
+    X
 } from "lucide-react";
 import { Tooltip } from "@repo/ui/tooltip";
 import { usePersistence } from "../app/hooks/usePersistence";
 import { ENV } from "@/app/env";
+import { TypographyPanelContent } from "@repo/ui/profile-header";
+import { useState, useRef, useEffect } from "react";
 
 interface EditorSidebarProps {
     onTabChange?: (tab: string) => void;
@@ -27,6 +30,8 @@ interface EditorSidebarProps {
     onTypography?: () => void;
     onDownload?: () => void;
     page?: "resume" | "cover-letter";
+    typographySettings?: any;
+    onTypographyChange?: (settings: any) => void;
 }
 
 export function EditorSidebar({
@@ -37,12 +42,32 @@ export function EditorSidebar({
     onTemplate,
     onTypography,
     onDownload,
-    page
+    page,
+    typographySettings,
+    onTypographyChange
 }: EditorSidebarProps) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const { logout } = usePersistence();
+    const [showTypography, setShowTypography] = useState(false);
+    const sidebarRef = useRef<HTMLDivElement>(null);
+
+    // Close on click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+                setShowTypography(false);
+            }
+        };
+
+        if (showTypography) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showTypography]);
 
     // Determine active tab from prop, query param, or pathname
     const activeTab = propActiveTab || searchParams.get('tab') || (pathname === '/editor' ? 'editor' : pathname.split('/')[1]);
@@ -67,6 +92,15 @@ export function EditorSidebar({
             onClick: onImportResume
         },
         {
+            label: "Typography",
+            id: "typography",
+            icon: Settings2,
+            onClick: () => {
+                setShowTypography(!showTypography);
+                if (onTypography) onTypography();
+            }
+        },
+        {
             label: "Template",
             id: "template",
             icon: LayoutTemplate,
@@ -89,12 +123,7 @@ export function EditorSidebar({
             icon: FileText,
             onClick: () => router.push(`/editor`)
         }]),
-        {
-            label: "Typography",
-            id: "typography",
-            icon: Settings2,
-            onClick: onTypography
-        },
+
         {
             label: "Download PDF",
             id: "download",
@@ -147,7 +176,7 @@ export function EditorSidebar({
     };
 
     return (
-        <div className="w-20 md:w-24 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-2 md:py-5 shrink-0 z-50">
+        <div ref={sidebarRef} className="w-20 md:w-24 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-2 md:py-5 shrink-0 z-50">
             {/* Logo area */}
             <div className="mb-6 pb-2 md:pb-5 border-b border-slate-100 w-full flex justify-center">
                 <button
@@ -165,12 +194,41 @@ export function EditorSidebar({
                         <Tooltip content={item.label} position="right">
                             <button
                                 onClick={item.onClick}
-                                className={getItemStyles(item).replace('w-10 h-10 md:w-12 md:h-12', 'w-full aspect-square md:aspect-auto md:py-3').replace('rounded-2xl', 'rounded-xl') + " flex-col gap-1.5 p-2 h-auto"}
+                                className={getItemStyles(item).replace('w-10 h-10 md:w-12 md:h-12', 'w-full aspect-square md:aspect-auto md:py-3').replace('rounded-2xl', 'rounded-xl') + " flex-col gap-1.5 p-2 h-auto" + (item.id === 'typography' && showTypography ? " ring-2 ring-indigo-500 ring-offset-2" : "")}
                             >
                                 <item.icon size={22} strokeWidth={2} className="shrink-0" />
                                 <span className="text-[10px] font-medium leading-none text-center">{item.label}</span>
                             </button>
                         </Tooltip>
+
+                        {/* Typography Popup inside the sidebar item */}
+                        {item.id === 'typography' && showTypography && (
+                            <div
+                                className="absolute left-[calc(100%+16px)] top-1/2 -translate-y-1/2 z-[100] w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 cursor-default"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 backdrop-blur-sm">
+                                    <div className="text-left">
+                                        <h2 className="text-base font-bold text-slate-800">Typography</h2>
+                                        <p className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 mt-0.5">Global Styles</p>
+                                    </div>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); setShowTypography(false); }}
+                                        className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/50 transition-colors"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
+                                <div className="p-5 max-h-[65vh] overflow-y-auto custom-scrollbar bg-white text-left">
+                                    {typographySettings && (
+                                        <TypographyPanelContent
+                                            settings={typographySettings}
+                                            onChange={onTypographyChange}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>

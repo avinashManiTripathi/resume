@@ -1047,8 +1047,9 @@ function ResumeEditor() {
           onBuildWithAI={() => setShowSmartImport(true)}
           onImportResume={() => setShowImportResume(true)}
           onTemplate={() => setLeftPanelView('templates')}
-          onTypography={() => setLeftPanelView('typography')}
           onDownload={handleDownload}
+          typographySettings={typographySettings}
+          onTypographyChange={setTypographySettings}
         />
       </div>
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative">
@@ -1195,30 +1196,6 @@ function ResumeEditor() {
                   onSchemaChange={setSchema}
                   onSectionNameChange={handleSectionNameChange}
                 />
-              )}
-
-              {/* Floating Typography Settings Popup */}
-              {leftPanelView === 'typography' && (
-                <div className="absolute top-[280px] left-16 md:left-[104px] z-50 w-[340px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                  <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80 backdrop-blur-sm">
-                    <div>
-                      <h2 className="text-base font-bold text-slate-800">Typography</h2>
-                      <p className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 mt-0.5">Global Styles</p>
-                    </div>
-                    <button
-                      onClick={() => setLeftPanelView('form')}
-                      className="p-1.5 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-200/50 transition-colors"
-                    >
-                      <X size={18} />
-                    </button>
-                  </div>
-                  <div className="p-5 max-h-[65vh] overflow-y-auto custom-scrollbar bg-white">
-                    <TypographyPanelContent
-                      settings={typographySettings}
-                      onChange={setTypographySettings}
-                    />
-                  </div>
-                </div>
               )}
             </div>
           </div>
