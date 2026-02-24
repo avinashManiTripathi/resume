@@ -176,9 +176,9 @@ export function EditorSidebar({
     };
 
     return (
-        <div ref={sidebarRef} className="w-20 md:w-24 h-screen bg-white border-r border-slate-200 flex flex-col items-center py-2 md:py-5 shrink-0 z-50">
+        <div ref={sidebarRef} className="w-20 md:w-24 h-screen bg-white border-r border-slate-200 flex flex-col items-center pb-2 md:pb-5 shrink-0 z-50">
             {/* Logo area */}
-            <div className="mb-6 pb-2 md:pb-5 border-b border-slate-100 w-full flex justify-center">
+            <div className="h-[72px] shrink-0 w-full flex items-center justify-center border-b border-slate-200/60 mb-6 bg-white">
                 <button
                     onClick={() => window.location.href = ENV.EDITOR_URL}
                     className="w-10 h-10 flex items-center justify-center hover:scale-105 transition-transform"
