@@ -416,3 +416,36 @@ Return ONLY the JSON object (Analysis + fixedData keys).`;
   throw new Error('Failed to parse AI response: No valid JSON found');
 }
 
+
+/**
+ * Enhance text (fix grammar or improve clarity) using AI
+ * @param text - The text to enhance
+ * @param action - The action to perform ('fix_grammar' or 'improve')
+ * @returns Enhanced string
+ */
+export const enhanceTextWithAI = async (
+  text: string,
+  action: 'fix_grammar' | 'improve'
+): Promise<string> => {
+  try {
+    const prompt = action === 'fix_grammar'
+      ? `You are an expert English copy editor. Fix any grammatical, spelling, or punctuation errors in the following text. Do not make major changes to the tone or meaning. Only return the corrected text, without any conversational fluff, markdown formatting, or explanations.\n\nText:\n${text}`
+      : `You are an expert resume writer and copyeditor. Improve the following text for a professional resume. Make it sound more impactful, concise, and professional without losing the core meaning. Only return the improved text, without any conversational fluff, markdown formatting, or explanations.\n\nText:\n${text}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+    });
+
+    const responseText = response.text;
+
+    if (!responseText) {
+      throw new Error('AI returned empty response');
+    }
+
+    return responseText.trim();
+  } catch (error) {
+    console.error('Text enhancement error:', error);
+    throw new Error('Failed to enhance text with AI');
+  }
+};

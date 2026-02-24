@@ -3,7 +3,10 @@ import multer from 'multer';
 import pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import { resumeExtractionService } from '../services/resume-extraction.service';
-import { verifyToken, AuthRequest } from '../middleware/auth.middleware';
+import { enhanceTextWithAI } from '../services/ai-analysis.service';
+import { verifyToken, AuthRequest, optionalAuth, requireSubscription } from '../middleware/auth.middleware';
+import { FeatureName } from '../models';
+import { checkUsageLimit } from '../middleware/usage.middleware';
 import { Resume } from '../models';
 import mongoose from 'mongoose';
 
@@ -314,6 +317,45 @@ router.get('/extraction-info', (req: Request, res: Response) => {
             }
         }
     });
+});
+
+/**
+ * POST /api/resume/enhance
+ * Fix grammar or improve selected text via AI
+ */
+router.post('/enhance', optionalAuth, requireSubscription(FeatureName.TAILOR), async (req: Request, res: Response) => {
+    try {
+        const { text, action } = req.body;
+
+        if (!text) {
+            return res.status(400).json({
+                success: false,
+                message: 'Text is required for enhancement'
+            });
+        }
+
+        if (!['fix_grammar', 'improve'].includes(action)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid action. Must be fix_grammar or improve'
+            });
+        }
+
+        const enhancedText = await enhanceTextWithAI(text, action);
+
+        res.json({
+            success: true,
+            data: { enhancedText },
+            message: `Text successfully ${action === 'fix_grammar' ? 'corrected' : 'improved'}`
+        });
+
+    } catch (error: any) {
+        console.error('AI Text enhancement API error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Failed to enhance text. Please try again later.'
+        });
+    }
 });
 
 export default router;
