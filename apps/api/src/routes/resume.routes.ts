@@ -323,7 +323,7 @@ router.get('/extraction-info', (req: Request, res: Response) => {
  * POST /api/resume/enhance
  * Fix grammar or improve selected text via AI
  */
-router.post('/enhance', optionalAuth, requireSubscription(FeatureName.TAILOR), async (req: Request, res: Response) => {
+router.post('/enhance', async (req: Request, res: Response) => {
     try {
         const { text, action } = req.body;
 
