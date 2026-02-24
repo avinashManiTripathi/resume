@@ -239,7 +239,7 @@ export function RichTextEditor({
             )}
             <div className="rich-text-editor border border-gray-200 rounded-lg overflow-hidden group-focus-within/wrapper:border-indigo-500 transition-colors">
                 {/* Toolbar */}
-                <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-50 border-b border-gray-200">
+                <div className="flex items-center gap-0.5 sm:gap-1 p-1.5 sm:p-2 bg-gray-50 border-b border-gray-200 overflow-x-auto no-scrollbar">
                     <button
                         type="button"
                         onClick={() => execCommand("bold")}
@@ -307,7 +307,7 @@ export function RichTextEditor({
                         ) : (
                             <>
                                 <Wand2 className="w-4 h-4" />
-                                <span className="text-[11px] font-semibold inline-block whitespace-nowrap">Fix Grammar</span>
+                                <span className="text-[11px] font-semibold hidden sm:inline-block whitespace-nowrap">Fix Grammar</span>
                             </>
                         )}
                     </button>
@@ -324,7 +324,7 @@ export function RichTextEditor({
                         ) : (
                             <>
                                 <Sparkles className="w-4 h-4" />
-                                <span className="text-[11px] font-semibold inline-block whitespace-nowrap">AI Rewrite</span>
+                                <span className="text-[11px] font-semibold hidden sm:inline-block whitespace-nowrap">AI Rewrite</span>
                             </>
                         )}
                     </button>
