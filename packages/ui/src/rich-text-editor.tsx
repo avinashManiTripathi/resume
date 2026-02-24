@@ -239,11 +239,11 @@ export function RichTextEditor({
             )}
             <div className="rich-text-editor border border-gray-200 rounded-lg overflow-hidden group-focus-within/wrapper:border-indigo-500 transition-colors">
                 {/* Toolbar */}
-                <div className="flex items-center gap-0.5 sm:gap-1 p-1.5 sm:p-2 bg-gray-50 border-b border-gray-200 overflow-x-auto no-scrollbar">
+                <div className="flex items-center justify-between sm:justify-start gap-0 sm:gap-1 px-1 py-1.5 sm:p-2 bg-gray-50 border-b border-gray-200 overflow-x-auto no-scrollbar">
                     <button
                         type="button"
                         onClick={() => execCommand("bold")}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Bold"
                     >
                         <Bold className="w-4 h-4" />
@@ -251,7 +251,7 @@ export function RichTextEditor({
                     <button
                         type="button"
                         onClick={() => execCommand("italic")}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Italic"
                     >
                         <Italic className="w-4 h-4" />
@@ -259,7 +259,7 @@ export function RichTextEditor({
                     <button
                         type="button"
                         onClick={() => execCommand("underline")}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Underline"
                     >
                         <Underline className="w-4 h-4" />
@@ -268,7 +268,7 @@ export function RichTextEditor({
                     <button
                         type="button"
                         onClick={() => execCommand("insertUnorderedList")}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Bullet List"
                     >
                         <List className="w-4 h-4" />
@@ -276,7 +276,7 @@ export function RichTextEditor({
                     <button
                         type="button"
                         onClick={() => execCommand("insertOrderedList")}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Numbered List"
                     >
                         <ListOrdered className="w-4 h-4" />
@@ -285,7 +285,7 @@ export function RichTextEditor({
                     <button
                         type="button"
                         onClick={insertLink}
-                        className="p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
+                        className="p-1.5 sm:p-2 hover:bg-white rounded transition-colors text-gray-700 hover:text-gray-900"
                         title="Insert Link"
                     >
                         <LinkIcon className="w-4 h-4" />
@@ -299,7 +299,7 @@ export function RichTextEditor({
                         type="button"
                         onClick={() => enhanceText('fix_grammar')}
                         disabled={isEnhancing}
-                        className="p-2 hover:bg-purple-50 rounded transition-colors text-purple-600 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 group relative"
+                        className="p-1.5 sm:p-2 hover:bg-purple-50 rounded transition-colors text-purple-600 hover:text-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 group relative"
                         title="Fix Grammar"
                     >
                         {isEnhancing ? (
@@ -316,7 +316,7 @@ export function RichTextEditor({
                         type="button"
                         onClick={() => enhanceText('improve')}
                         disabled={isEnhancing}
-                        className="p-2 hover:bg-indigo-50 rounded transition-colors text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                        className="p-1.5 sm:p-2 hover:bg-indigo-50 rounded transition-colors text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
                         title="Write with AI"
                     >
                         {isEnhancing ? (
