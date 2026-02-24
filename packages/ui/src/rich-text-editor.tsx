@@ -239,7 +239,7 @@ export function RichTextEditor({
             )}
             <div className="rich-text-editor border border-gray-200 rounded-lg overflow-hidden group-focus-within/wrapper:border-indigo-500 transition-colors">
                 {/* Toolbar */}
-                <div className="flex items-center gap-1 p-2 bg-gray-50 border-b border-gray-200">
+                <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-50 border-b border-gray-200">
                     <button
                         type="button"
                         onClick={() => execCommand("bold")}
