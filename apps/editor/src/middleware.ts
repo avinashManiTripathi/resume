@@ -5,6 +5,7 @@ import { ENV } from './app/env';
 // Routes that require authentication
 const protectedRoutes = ['/', '/subscription', '/ats-check', '/tailor'];
 
+
 // Routes that are public (don't require auth)
 const publicRoutes = ['/cover-letter/templates', '/editor', '/cover-letter/create'];
 
