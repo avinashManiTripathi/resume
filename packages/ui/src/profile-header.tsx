@@ -409,7 +409,7 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             {/* Font Size */}
             <div>
                 <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
-                    <span>Font Size</span>
+                    <span>Body Font Size</span>
                     <span className="text-indigo-600">{settings.fontSize}pt</span>
                 </label>
                 <input
