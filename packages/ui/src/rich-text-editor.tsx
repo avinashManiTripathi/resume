@@ -181,7 +181,7 @@ export function RichTextEditor({
             const token = localStorage.getItem('token');
             // Using a relative /api path or standard fallback for proxy
             const apiBase = apiUrl || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-            const response = await fetch(`${apiBase}/api/v1/resume/enhance`, {
+            const response = await fetch(`${apiBase}/api/resume/enhance`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
