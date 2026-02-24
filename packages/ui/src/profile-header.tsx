@@ -10,7 +10,7 @@ const sliderStyles = `
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 8px;
+    height: 6px;
     background: transparent;
     cursor: pointer;
     outline: none;
@@ -19,87 +19,71 @@ const sliderStyles = `
   /* Track - WebKit (Chrome, Safari, Edge) */
   input[type="range"].custom-slider::-webkit-slider-track {
     width: 100%;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 12px;
-    transition: background 0.1s ease;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 9999px;
   }
 
   input[type="range"].custom-slider::-webkit-slider-runnable-track {
     width: 100%;
-    height: 8px;
-    background: linear-gradient(to right, #6366f1 var(--value-percent, 0%), #e5e7eb var(--value-percent, 0%));
-    border-radius: 12px;
-    transition: background 0.1s ease;
+    height: 6px;
+    background: linear-gradient(to right, #4f46e5 var(--value-percent, 0%), #e2e8f0 var(--value-percent, 0%));
+    border-radius: 9999px;
   }
 
   /* Track - Firefox */
   input[type="range"].custom-slider::-moz-range-track {
     width: 100%;
-    height: 8px;
-    background: #e5e7eb;
-    border-radius: 12px;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 9999px;
     border: none;
   }
 
   input[type="range"].custom-slider::-moz-range-progress {
-    height: 8px;
-    background: #6366f1;
-    border-radius: 12px 0 0 12px;
+    height: 6px;
+    background: #4f46e5;
+    border-radius: 9999px 0 0 9999px;
   }
 
   /* Thumb - WebKit */
   input[type="range"].custom-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #6366f1;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.1);
+    background: #4f46e5;
     cursor: pointer;
-    margin-top: -8px;
-    position: relative;
-    background-image: radial-gradient(circle, white 1.5px, transparent 1.5px);
-    background-size: 6px 6px;
-    background-position: 3px 3px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-top: -5px;
+    box-shadow: 0 0 0 3px white, 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.15s ease;
   }
 
   /* Thumb - Firefox */
   input[type="range"].custom-slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #6366f1;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3), 0 0 0 1px rgba(99, 102, 241, 0.1);
+    background: #4f46e5;
     cursor: pointer;
-    background-image: radial-gradient(circle, white 1.5px, transparent 1.5px);
-    background-size: 6px 6px;
-    background-position: 3px 3px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border: none;
+    box-shadow: 0 0 0 3px white, 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.15s ease;
   }
 
-  /* Hover effects */
+  /* Hover and Active effects */
   input[type="range"].custom-slider::-webkit-slider-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.2);
   }
-
   input[type="range"].custom-slider::-moz-range-thumb:hover {
     transform: scale(1.1);
-    box-shadow: 0 3px 12px rgba(99, 102, 241, 0.4), 0 0 0 1px rgba(99, 102, 241, 0.2);
   }
-
-  /* Active state */
   input[type="range"].custom-slider:active::-webkit-slider-thumb {
-    transform: scale(1.05);
+    transform: scale(0.95);
   }
-
   input[type="range"].custom-slider:active::-moz-range-thumb {
-    transform: scale(1.05);
+    transform: scale(0.95);
   }
 `;
 
@@ -394,23 +378,26 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
         <div className="space-y-4 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
             {/* Font Family */}
             <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block">Font Family</label>
-                <select
-                    value={settings.fontFamily}
-                    onChange={(e) => onChange?.({ ...settings, fontFamily: e.target.value })}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    {FONTS.map((font) => (
-                        <option key={font.name} value={font.name}>{font.label}</option>
-                    ))}
-                </select>
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase">Font Family</label>
+                <div className="relative">
+                    <select
+                        value={settings.fontFamily}
+                        onChange={(e) => onChange?.({ ...settings, fontFamily: e.target.value })}
+                        className="w-full px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 rounded-xl text-sm font-medium text-slate-700 shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
+                    >
+                        {FONTS.map((font) => (
+                            <option key={font.name} value={font.name}>{font.label}</option>
+                        ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                </div>
             </div>
 
             {/* Font Size */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Body Font Size</span>
-                    <span className="text-indigo-600">{settings.fontSize}pt</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.fontSize}pt</span>
                 </label>
                 <input
                     type="range"
@@ -425,10 +412,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Line Height */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Line Height</span>
-                    <span className="text-indigo-600">{settings.lineHeight}</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.lineHeight}</span>
                 </label>
                 <input
                     type="range"
@@ -443,10 +430,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Section Gap */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Section Gap</span>
-                    <span className="text-indigo-600">{settings.sectionGap}px</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.sectionGap}px</span>
                 </label>
                 <input
                     type="range"
@@ -461,10 +448,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Item Gap */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Item Gap</span>
-                    <span className="text-indigo-600">{settings.itemGap}px</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.itemGap}px</span>
                 </label>
                 <input
                     type="range"
@@ -479,10 +466,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Heading Size */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Heading Size</span>
-                    <span className="text-indigo-600">{settings.headingSize}pt</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.headingSize}pt</span>
                 </label>
                 <input
                     type="range"
@@ -497,10 +484,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Name Size */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Name Size</span>
-                    <span className="text-indigo-600">{settings.nameSize}pt</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.nameSize}pt</span>
                 </label>
                 <input
                     type="range"
@@ -515,10 +502,10 @@ export function TypographyPanelContent({ settings, onChange }: TypographyPanelCo
             </div>
 
             {/* Page Margin */}
-            <div>
-                <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex justify-between">
+            <div className="mb-4">
+                <label className="text-[11px] font-bold tracking-wide text-slate-500 mb-2 block uppercase flex justify-between">
                     <span>Page Margin</span>
-                    <span className="text-indigo-600">{settings.pageMargin}px</span>
+                    <span className="text-indigo-600 font-semibold normal-case">{settings.pageMargin}px</span>
                 </label>
                 <input
                     type="range"
