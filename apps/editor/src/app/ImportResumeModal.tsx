@@ -5,6 +5,7 @@ import { X, Sparkles, Upload, FileText, Loader2, AlertCircle, FileUp } from 'luc
 import { Button } from '@repo/ui/button';
 import { useAppNetwork } from '../hooks/useAppNetwork';
 import { API_ENDPOINTS } from '@repo/utils-client';
+import { StepLoader } from '@repo/ui/step-loader';
 
 interface ImportResumeModalProps {
     isOpen: boolean;
@@ -16,9 +17,26 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
     const [file, setFile] = useState<File | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [loadingStep, setLoadingStep] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const network = useAppNetwork();
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const loadingSteps = [
+        "Uploading File...",
+        "Parsing Content...",
+        "Analyzing with AI...",
+        "Structuring Data..."
+    ];
+
+    useEffect(() => {
+        if (isProcessing && loadingStep < loadingSteps.length - 1) {
+            const timer = setTimeout(() => {
+                setLoadingStep(prev => prev + 1);
+            }, 1200);
+            return () => clearTimeout(timer);
+        }
+    }, [isProcessing, loadingStep, loadingSteps.length]);
 
     const handleDragOver = (e: React.DragEvent) => {
         e.preventDefault();
@@ -68,6 +86,7 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
         if (!file) return;
 
         setIsProcessing(true);
+        setLoadingStep(0);
         setError(null);
         try {
             const formData = new FormData();
@@ -94,11 +113,25 @@ export default function ImportResumeModal({ isOpen, onClose, onApply }: ImportRe
         setFile(null);
         setError(null);
         setIsProcessing(false);
+        setLoadingStep(0);
         onClose();
     };
 
     if (!isOpen) return null;
 
+    if (isProcessing) {
+        return (
+            <div className="fixed inset-0 z-50">
+                <StepLoader
+                    loading={isProcessing}
+                    message="Importing Resume"
+                    subMessage={loadingSteps[loadingStep]}
+                    logoSrc="/logo.png"
+                    fullScreen={true}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
