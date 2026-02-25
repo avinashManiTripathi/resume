@@ -28,7 +28,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.95,
     }))
 
-    // Core product pages (high priority)
+    // Core product pages & Competitor comparisons (high priority)
     const productPages: MetadataRoute.Sitemap = [
         'templates',
         'pricing',
@@ -38,6 +38,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         'ats-checker/check',
         'tailor',
         'cover-letter',
+        'vs/zety',
+        'vs/canva',
+        'vs/novoresume',
+        'vs/myperfectresume',
+        'vs/enhancv',
     ].map((slug) => ({
         url: `${baseUrl}/${slug}`,
         lastModified: currentDate,
@@ -77,6 +82,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // High-value resource pages (SEO content)
     const resourcePages: MetadataRoute.Sitemap = [
         `${baseUrl}/resources`,
+        `${baseUrl}/resources/resume-action-verbs`,
+        `${baseUrl}/resources/resume-summary-examples`,
+        `${baseUrl}/resources/how-to-write-a-resume`,
         `${baseUrl}/resources/targeted-resume`,
         `${baseUrl}/resources/resume-critique`,
         `${baseUrl}/resources/ai-resume-review`,
